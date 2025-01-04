@@ -18,7 +18,7 @@ M.build_bar = function()
 
     local set_green = "%#GruvboxGreen#"
     local set_normal = "%#Comment#"
-    local file_name = " %t"
+    local file_name = " " .. vim.fn.expand("%:~:.")
 
     local modified = ''
     if vim.bo.readonly then

@@ -1,0 +1,7 @@
+keymap:
+  - name: Emacs binding
+    application:
+      only: firefox
+    remap:
+      C-p: up
+      C-n: down

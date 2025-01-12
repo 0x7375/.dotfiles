@@ -1,0 +1,275 @@
+{ config, pkgs, ... }:
+
+pkgs.writeShellApplication {
+  name = "nd";
+  runtimeInputs = with pkgs; [
+    home-manager
+    coreutils
+    nh
+    git
+    nvd
+    nix-output-monitor
+    jq
+  ];
+  text = # bash
+    ''
+      # modified from https://gist.github.com/0atman/1a5133b842f929ba4c1e195ee67599d5
+      set +o errexit
+
+      doc() {
+          echo "Usage:
+            nd <COMMAND>
+
+          Commands:
+            os     Rebuild nixos configuration
+            home   Rebuild home-manager configuration
+            all    Rebuild nixos configuration with home-manager as a module (default)
+
+          Arguments:
+            HOST   Optional remote hostname to build and deploy to"
+          exit 1
+      }
+
+      silent() {
+          "$@" >/dev/null 2>&1
+      }
+
+      ssh_run() {
+        local user=$1
+        local cmd=$2
+        local interactive=$3
+        local silent=''${4:-}
+
+        ''${silent:+silent} ssh -q "$user@$host" ''${interactive:+-t TERM=$TERM} "$cmd"
+      }
+
+      try_ssh() {
+        local msg="Error: Cannot establish SSH connection to"
+        if ! silent ssh "$user@$host" -o ConnectTimeout=5 true; then
+          echo "$msg $user@$host"
+          exit 1
+        fi
+        if ! silent ssh "$root@$host" -o ConnectTimeout=5 true; then
+          echo "$msg $root@$host"
+          exit 1
+        fi
+      }
+
+      activate_config() {
+        if [[ $mode = "home" ]]; then
+          local cmd="$result/activate"
+          if [[ -n $remote ]]; then
+            ssh_run "$user" "$cmd" 1
+          else
+            eval "$cmd"
+          fi
+        else
+          local cmd1="nix-env -p /nix/var/nix/profiles/system --set $result"
+          local cmd2="$result/bin/switch-to-configuration switch"
+
+          if [[ -n $remote ]]; then
+            ssh_run "$root" "$cmd1" 1
+            ssh_run "$root" "$cmd2" 1
+          else
+            # shellcheck disable=SC2086
+            sudo $cmd1
+            # shellcheck disable=SC2086
+            sudo $cmd2
+          fi
+        fi
+      }
+
+      build_config() {
+        if [[ $mode = "all" ]]; then
+          nom build --no-link --json path:.#nixosConfigurations."$host".config.system.build.toplevel | jq -r '.[].outputs.out'
+        elif [[ $mode = "home" ]]; then
+          nom build --no-link --json path:.#homeConfigurations."$user"@"$host".activationPackage | jq -r '.[].outputs.out'
+        else
+          nom build --no-link --json path:.#nixosWithoutHomeConfigurations."$host".config.system.build.toplevel | jq -r '.[].outputs.out'
+        fi
+      }
+
+      add_gc_root() {
+        local result=$1
+        if [[ -n $remote ]]; then
+          sudo nix-store --realise "$result" --add-root "/nix/var/nix/gcroot/$remote-$mode"
+        fi
+      }
+
+      get_last_commited_gen() {
+        git log --oneline | grep "$mode:" | head -n 1 | cut -d\  -f 3
+      }
+
+      get_exclude() {
+        if [[ $mode == "home" ]]; then
+          echo ":^nixos/* :^*/nixos/* :^configuration.nix :^*/configuration.nix :^hardware.nix :^*/hardware.nix"
+        elif [[ $mode == "os" ]]; then
+          echo ":^home/* :^*/home/* :^*/home.nix :^home.nix"
+        else
+          echo ""
+        fi
+      }
+
+      show_git_diff() {
+        # shellcheck disable=SC2046
+        PAGER=''' git diff \
+        --ignore-blank-lines \
+        --staged \
+        -U1 \
+        --color \
+        --no-prefix \
+        --minimal \
+        -- \
+        '*.nix' \
+        $(get_exclude) \
+        | { grep -v -E "index [0-9a-f]{7}\.\.[0-9a-f]{7}" --color=never || true; }
+      }
+
+      get_current_gen() {
+        local cmd
+        if [[ $mode == "home" ]]; then
+          cmd="readlink ~/.local/state/nix/profiles/home-manager | cut -d- -f 3"
+          if [[ -n $remote ]]; then
+            ssh_run "$user" "$cmd" 0
+          else
+            eval "$cmd"
+          fi
+        else
+          cmd="readlink /nix/var/nix/profiles/system | cut -d- -f 2" 
+          if [[ -n $remote ]]; then
+            ssh_run "$root" "$cmd" 0
+          else
+            eval "$cmd"
+          fi
+        fi
+      }
+
+      get_gen_metadata() {
+        local os_cmd="nixos-version | cut -d\  -f 1"
+        local home_cmd="home-manager --version"
+        local version
+        if [[ -n $remote ]]; then
+          if [[ $mode = "home" ]]; then
+            version=$(ssh_run "$user" "$home_cmd" 0)
+          else
+            version=$(ssh_run "$user" "$os_cmd" 0)
+          fi
+        else
+          if [[ $mode = "home" ]]; then
+            version=$(eval "$home_cmd")
+          else
+            version=$(eval "$os_cmd")
+          fi
+        fi
+        current_generation=$(get_current_gen)
+        current_date=$(date "+%Y-%m-%d %H:%m:%S")
+
+        echo "$mode: $current_generation $current_date $version"
+      }
+
+      show_generation_diff() {
+        local cmd
+        if [[ $mode = "home" ]]; then
+          cmd="nix run nixpkgs#nvd diff ~/.local/state/nix/profiles/home-manager $result"
+          if [[ -n $remote ]]; then
+            ssh_run "$user" "$cmd" 1
+          else
+            eval "$cmd"
+          fi
+        else
+          cmd="nix run nixpkgs#nvd diff /run/current-system $result"
+          if [[ -n $remote ]]; then
+            ssh_run "$root" "$cmd" 1
+          else
+            eval "$cmd"
+          fi
+        fi
+      }
+
+      cleanup() {
+        echo -n "$show_cursor"
+        silent popd; exit
+      }
+
+      restore() {
+        git restore --staged .
+      }
+
+      main() {
+        [[ $# -eq 0 ]] && set -- "all"
+
+        case $1 in 
+          os|home|all) ;;
+          *) doc ;;
+        esac
+
+        export GIT_DIR=.nix-git
+
+        silent pushd ${config.me.flakeDir}
+
+        trap cleanup INT ERR
+
+        green=$(tput setaf 2)
+        reset=$(tput sgr0)
+        green_arrow="''${green}>''${reset}"
+        hide_cursor=$(tput civis)
+        show_cursor=$(tput cnorm)
+        mode="$1"
+        root="root"
+
+        user=$(whoami)
+
+        if [[ $# -eq 2 ]]; then
+          host=$2
+          remote=$2
+
+          try_ssh
+        else
+          host=$(</etc/hostname)
+          remote=""
+        fi
+
+        # shellcheck disable=SC2046
+        git add . -- $(get_exclude)
+        show_git_diff
+
+        echo "$green_arrow Building configuration";
+        result=$(build_config)
+        add_gc_root "$result"
+
+        if [[ -n $remote ]]; then
+          silent env "NIX_SSHOPTS=-q" nix-copy-closure --to "$user"@"$host" "$result"
+        fi
+        
+        echo "$green_arrow Comparing changes"
+        show_generation_diff
+
+        echo "$green_arrow Apply the config?"
+        echo -n "[y/N]$hide_cursor"
+        read -s -r -n 1 answer
+        echo "$show_cursor"
+
+        if [[ $answer == "y" ]]; then
+          echo "yes"
+          echo "$green_arrow Activating configuration"
+          activate_config
+
+          if [[ $(get_current_gen) != $(get_last_commited_gen) && -n $(show_git_diff) ]]; then
+            changes=$(git diff --cached --name-status | awk '{print $1 " " $2}' | sed 's/^A /Add /; s/^M /Update /; s/^D /Delete /')
+            metadata=$(get_gen_metadata)
+            commit_message=$(printf "%s\n\n%s" "$metadata" "$changes")
+            git commit -m "$commit_message"
+          else
+            restore
+          fi
+        else
+          echo "no"
+          restore
+        fi
+
+        cleanup
+      }
+
+      main "$@"
+    '';
+}

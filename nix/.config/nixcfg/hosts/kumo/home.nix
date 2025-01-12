@@ -1,0 +1,6 @@
+{
+  imports = [
+    ../../home
+    ./options.nix
+  ];
+}

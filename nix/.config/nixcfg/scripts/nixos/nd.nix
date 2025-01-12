@@ -254,7 +254,7 @@ pkgs.writeShellApplication {
           echo "$green_arrow Activating configuration"
           activate_config
 
-          if [[ $(get_current_gen) != $(get_last_commited_gen) && -n $(show_git_diff) ]]; then
+          if [[ $(get_current_gen) != $(get_last_commited_gen) && -n $(show_git_diff) && -z $remote ]]; then
             changes=$(git diff --cached --name-status | awk '{print $1 " " $2}' | sed 's/^A /Add /; s/^M /Update /; s/^D /Delete /')
             metadata=$(get_gen_metadata)
             commit_message=$(printf "%s\n\n%s" "$metadata" "$changes")

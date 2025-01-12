@@ -12,7 +12,7 @@ pkgs.writeShellApplication {
     if [[ $# -eq 1 ]]; then
       selected="$1"
     else
-      selected=$(find ~/ ~/.config ~/uni ~/perso ~/repos \
+      selected=$(find -L ~/ ~/.config ~/uni ~/perso ~/repos \
         -maxdepth 1 -mindepth 1 -type d ! -name '.stfolder' ! -name '.stversions' \
         | sed "s|^$HOME|~|" \
         | fzf --reverse)

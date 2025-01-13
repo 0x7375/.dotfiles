@@ -245,11 +245,11 @@
     "secrets": {
       "flake": false,
       "locked": {
-        "lastModified": 1736118849,
-        "narHash": "sha256-1Mrb6F7CYr/JTRdkeH6gg3RtUlEAl0fiLnJ4FaEn5D0=",
+        "lastModified": 1736772362,
+        "narHash": "sha256-a9Z7KGeGKO6mM+JSugFFU5pukvQ1OvRLpFTZiWaGKVM=",
         "owner": "~ayko",
         "repo": "nix-secrets",
-        "rev": "be0e3311961eba4701d6d137542da31c02416f78",
+        "rev": "57a9ece4fda2a45d19fb38c005b14ab00002ce72",
         "type": "sourcehut"
       },
       "original": {

@@ -48,6 +48,7 @@ lib.mkIf config.me.secrets.enable {
     {
       local-syncthing = backupConfig "/srv/backups/syncthing" "Sat *-*-* 18:00:00";
       mega-syncthing = backupConfig "rclone:mega:syncthing" "Sat *-*-* 20:00:00";
-      proton-syncthing = backupConfig "rclone:proton:syncthing" "Sat *-*-* 22:00:00";
+      google-syncthing = backupConfig "rclone:google:syncthing" "Sat *-*-* 22:00:00";
+      # proton-syncthing = backupConfig "rclone:proton:syncthing" "Sat *-*-* 22:00:00";
     };
 }

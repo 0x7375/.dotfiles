@@ -1,6 +1,10 @@
 { config, ... }:
 
 {
+  systemd.tmpfiles.rules = [
+    "d /home/${config.me.user}/.local/share/gnupg 0700 ${config.me.user} users -"
+  ];
+
   environment.variables = rec {
     XDG_DATA_HOME = "$HOME/.local/share";
     XDG_STATE_HOME = "$HOME/.local/state";

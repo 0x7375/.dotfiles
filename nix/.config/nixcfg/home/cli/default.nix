@@ -41,14 +41,6 @@
           setup_history()
     '';
 
-  home.file.".ssh/config.d/agent".text = # sshconfig
-    ''
-      ForwardAgent yes
-
-      Host *
-        IdentityAgent ~/.1password/agent.sock
-    '';
-
   services.udiskie = {
     enable = true;
     tray = "never";

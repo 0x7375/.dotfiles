@@ -11,8 +11,7 @@ in
 lib.mkIf (config.me.syncthing.enable && config.me.secrets.enable) {
   systemd.services.syncthing.environment.STNODEFAULTFOLDER = "true"; # Don't create default ~/Sync folder
 
-  age.secrets.syncthing-pw = {
-    file = "${secrets}/syncthing-pw.age";
+  sops.secrets.syncthing_pw = {
     owner = user;
   };
 
@@ -22,7 +21,7 @@ lib.mkIf (config.me.syncthing.enable && config.me.secrets.enable) {
     dataDir = "/home/${user}";
     overrideDevices = true;
     overrideFolders = true;
-    guiPasswordFile = if config.me.secrets.enable then config.age.secrets.syncthing-pw.path else null;
+    guiPasswordFile = if config.me.secrets.enable then config.sops.secrets.syncthing_pw.path else null;
     settings = {
       options = {
         urAccepted = -1;

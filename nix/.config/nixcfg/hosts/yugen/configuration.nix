@@ -15,6 +15,12 @@
 
   networking.hostName = config.me.hostname;
 
+  users.users.${config.me.user} = {
+    openssh.authorizedKeys.keys = [
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIH9wtfhfEPZ6GVA4FWRUk5KXtTttn6Q4qjxO1apMc7RK ryusei"
+    ];
+  };
+
   boot.supportedFilesystems = [ "ntfs" ];
 
   services.xserver.displayManager.setupCommands = ''
@@ -27,19 +33,17 @@
 
   services.xserver.videoDrivers = [ "nvidia" ];
 
-  age.secrets.syncthing-yugen-cert = {
-    file = "${secrets}/syncthing-yugen-cert.age";
+  sops.secrets."yugen/syncthing/cert" = {
     owner = config.me.user;
   };
 
-  age.secrets.syncthing-yugen-key = {
-    file = "${secrets}/syncthing-yugen-key.age";
+  sops.secrets."yugen/syncthing/key" = {
     owner = config.me.user;
   };
 
   services.syncthing = {
-    key = "${config.age.secrets.syncthing-yugen-key.path}";
-    cert = "${config.age.secrets.syncthing-yugen-cert.path}";
+    cert = "${config.sops.secrets."yugen/syncthing/cert".path}";
+    key = "${config.sops.secrets."yugen/syncthing/key".path}";
   };
 
   services.autorandr.profiles =

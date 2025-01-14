@@ -26,20 +26,6 @@
         psk = "$PSK_AWAY_2";
       };
     };
-    Sekai = {
-      connection = {
-        id = "sekai";
-        type = "wifi";
-      };
-      wifi = {
-        mode = "infrastructure";
-        ssid = "sekai";
-      };
-      wifi-security = {
-        key-mgmt = "wpa-psk";
-        psk = "$PSK_SEKAI";
-      };
-    };
     Eduroam = {
       "802-1x" = {
         anonymous-identity = "anonymous@unicaen.fr";

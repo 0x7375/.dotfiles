@@ -9,21 +9,19 @@
 lib.mkIf config.me.secrets.enable {
   networking.firewall.allowedTCPPorts = [ 8384 ];
 
-  age.secrets.syncthing-hikari-cert = {
-    file = "${secrets}/syncthing-hikari-cert.age";
+  sops.secrets."hikari/syncthing/cert" = {
     owner = config.me.user;
   };
 
-  age.secrets.syncthing-hikari-key = {
-    file = "${secrets}/syncthing-hikari-key.age";
+  sops.secrets."hikari/syncthing/key" = {
     owner = config.me.user;
   };
 
   services.syncthing = {
     guiAddress = "0.0.0.0:8384";
     openDefaultPorts = true;
-    key = "${config.age.secrets.syncthing-hikari-key.path}";
-    cert = "${config.age.secrets.syncthing-hikari-cert.path}";
+    key = "${config.sops.secrets."hikari/syncthing/key".path}";
+    cert = "${config.sops.secrets."hikari/syncthing/cert".path}";
     settings = {
       devices = {
         "neiro" = {
@@ -104,7 +102,7 @@ lib.mkIf config.me.secrets.enable {
           };
         };
         universite = syncthingDirConfig {
-          path = "documents/universite";
+          path = "documents/pdf/universite";
           devices = [
             "neiro"
           ];

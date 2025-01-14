@@ -7,15 +7,13 @@
 }:
 
 lib.mkIf config.me.secrets.enable {
-  age.secrets.protonvpn = {
-    file = "${secrets}/protonvpn.age";
-  };
+  sops.secrets."hikari/protonvpn_pk" = { };
 
   services.protonvpn = {
     enable = true;
 
     interface = {
-      privateKeyFile = config.age.secrets.protonvpn.path;
+      privateKeyFile = config.sops.secrets."hikari/protonvpn_pk".path;
     };
 
     endpoint = {

@@ -6,9 +6,7 @@
 }:
 
 {
-  age.secrets.cachix = {
-    file = "${secrets}/cachix.age";
-  };
+  sops.secrets.cachix = { };
 
   services = {
     locate.enable = true;
@@ -59,7 +57,7 @@
     cachix-watch-store = lib.mkIf config.me.secrets.enable {
       enable = true;
       cacheName = "ayko";
-      cachixTokenFile = config.age.secrets.cachix.path;
+      cachixTokenFile = config.sops.secrets.cachix.path;
     };
   };
 }

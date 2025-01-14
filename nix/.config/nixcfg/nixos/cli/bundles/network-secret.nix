@@ -6,35 +6,55 @@
   ...
 }:
 
+let
+  template = "@nextdnsId@";
+in
 lib.mkIf (config.me.secrets.enable && config.me.network.enable) {
-  age.secrets.networking = {
-    file = "${secrets}/networking.age";
+  sops.secrets.networkingEnvironment = {
+    sopsFile = "${secrets}/networking-environment.env";
+    format = "dotenv";
+    key = "";
     owner = config.me.user;
   };
 
-  age.secrets.nextdnsId = {
-    file = "${secrets}/nextdnsId.age";
+  sops.secrets.nextdns_id = {
+    owner = config.me.user;
   };
 
   system.activationScripts."resolved-secret-substitution" = ''
-    secret=$(cat "${config.age.secrets.nextdnsId.path}")
+    secret=$(cat "${config.sops.secrets.nextdns_id.path}")
     configFile=/etc/systemd/resolved.conf
-    ${pkgs.gnused}/bin/sed -i "s#@nextdnsId@#$secret#" "$configFile"
+    ${pkgs.gnused}/bin/sed -i "s#${template}#$secret#" "$configFile"
   '';
 
   services.resolved = {
     enable = true;
     extraConfig = ''
-      [Resolve]
-      DNS=45.90.28.0#@nextdnsId@.dns.nextdns.io
-      DNS=2a07:a8c0::#@nextdnsId@.dns.nextdns.io
-      DNS=45.90.30.0#@nextdnsId@.dns.nextdns.io
-      DNS=2a07:a8c1::#@nextdnsId@.dns.nextdns.io
+      DNS=45.90.28.0#${template}.dns.nextdns.io
+      DNS=2a07:a8c0::#${template}.dns.nextdns.io
+      DNS=45.90.30.0#${template}.dns.nextdns.io
+      DNS=2a07:a8c1::#${template}.dns.nextdns.io
       DNSOverTLS=yes
     '';
   };
 
   networking.networkmanager.ensureProfiles = {
-    environmentFiles = [ config.age.secrets.networking.path ];
+    environmentFiles = [ config.sops.secrets.networkingEnvironment.path ];
+    profiles = {
+      Sekai = {
+        connection = {
+          id = "sekai";
+          type = "wifi";
+        };
+        wifi = {
+          mode = "infrastructure";
+          ssid = "sekai";
+        };
+        wifi-security = {
+          key-mgmt = "wpa-psk";
+          psk = "$PSK_SEKAI";
+        };
+      };
+    };
   };
 }

@@ -7,22 +7,18 @@
 }:
 
 lib.mkIf config.me.secrets.enable {
-  age.secrets.uni-ssh-server = {
-    file = "${secrets}/uni-ssh-server.age";
-  };
+  sops.secrets."server_uni/server" = { };
+  sops.secrets."server_uni/user" = { };
 
-  age.secrets.uni-ssh-user = {
-    file = "${secrets}/uni-ssh-user.age";
-  };
-
-  age.secrets.uni-git-config = {
-    file = "${secrets}/uni-git-config.age";
+  sops.secrets.git-config = {
+    sopsFile = "${secrets}/uni-git-config.ini";
+    format = "ini";
     owner = config.me.user;
   };
 
   system.activationScripts."ssh-secret-substitution" = ''
-    server=$(cat "${config.age.secrets.uni-ssh-server.path}")
-    user=$(cat "${config.age.secrets.uni-ssh-user.path}")
+    server=$(cat "${config.sops.secrets."server_uni/server".path}")
+    user=$(cat "${config.sops.secrets."server_uni/user".path}")
     configFile=/etc/ssh/ssh_config
     ${pkgs.gnused}/bin/sed -i "s#@server@#$server#" "$configFile"
     ${pkgs.gnused}/bin/sed -i "s#@user@#$user#" "$configFile"
@@ -38,7 +34,7 @@ lib.mkIf config.me.secrets.enable {
     git = {
       config =
         let
-          path = config.age.secrets.uni-git-config.path;
+          path = config.sops.secrets.git-config.path;
         in
         [
           {

@@ -1,6 +1,6 @@
 {
+  pkgs,
   myLib,
-  system,
   inputs,
   ...
 }:
@@ -12,8 +12,8 @@
     ./cli
     ./gui
     ../lib
-    inputs.agenix.nixosModules.default
+    inputs.sops-nix.nixosModules.sops
   ] ++ (myLib.filesIn ./modules);
 
-  environment.systemPackages = [ inputs.agenix.packages.${system}.default ];
+  environment.systemPackages = with pkgs; [ sops ];
 }

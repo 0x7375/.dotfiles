@@ -11,7 +11,7 @@
 
   config = lib.mkIf config.me.gui.enable {
     environment.systemPackages = with pkgs; [
-      localsend
+      auto.localsend
       via
       gnome-themes-extra
     ];

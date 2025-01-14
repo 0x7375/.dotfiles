@@ -45,9 +45,7 @@ in
     };
   };
 
-  age.secrets.acme-cert = {
-    file = "${secrets}/acme-cert.age";
-  };
+  sops.secrets."hikari/duckdns_token" = { };
 
   security.acme = lib.mkIf config.me.secrets.enable {
     acceptTerms = true;
@@ -55,7 +53,7 @@ in
     certs."${url}" = {
       extraDomainNames = [ "*.${url}" ];
       dnsProvider = "duckdns";
-      environmentFile = config.age.secrets.acme-cert.path;
+      environmentFile = config.sops.secrets."hikari/duckdns_token".path;
       webroot = null;
     };
   };

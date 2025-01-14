@@ -42,8 +42,5 @@ lib.mkIf config.me.gui.enable {
         control.w = C-backspace
         control.d = C-w
       '';
-    onChange = ''
-      systemctl --user restart keyd-application-mapper.service
-    '';
   };
 }

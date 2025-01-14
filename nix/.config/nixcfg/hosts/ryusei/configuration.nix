@@ -16,6 +16,13 @@
 
   networking.hostName = config.me.hostname;
 
+  users.users.${config.me.user} = {
+    openssh.authorizedKeys.keys = [
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJahc82zjVv6+UDKi3eN9oZRfGRE7zhBivo5TYtDLe53 yugen"
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOcGpmfziJoYbPbfdZi/REVStrNgl+F8lwVf1t2oLdaZ kumo"
+    ];
+  };
+
   hardware.brillo.enable = true;
 
   services.udev.extraRules = # bash
@@ -95,29 +102,26 @@
     disableWhileTyping = true;
   };
 
-  age.secrets.syncthing-ryusei-cert = {
-    file = "${secrets}/syncthing-ryusei-cert.age";
+  sops.secrets."ryusei/syncthing/cert" = {
     owner = config.me.user;
   };
 
-  age.secrets.syncthing-ryusei-key = {
-    file = "${secrets}/syncthing-ryusei-key.age";
+  sops.secrets."ryusei/syncthing/key" = {
     owner = config.me.user;
   };
 
   services.syncthing = lib.mkIf config.me.secrets.enable {
-    key = "${config.age.secrets.syncthing-ryusei-key.path}";
-    cert = "${config.age.secrets.syncthing-ryusei-cert.path}";
+    key = "${config.sops.secrets."ryusei/syncthing/key".path}";
+    cert = "${config.sops.secrets."ryusei/syncthing/cert".path}";
   };
 
-  age.secrets.laptop-vpn-pk = {
-    file = "${secrets}/laptop-vpn-pk.age";
+  sops.secrets."ryusei/laptop_vpn_pk" = {
     owner = config.me.user;
   };
 
   # networking.wg-quick.interfaces."homevpn" = {
   #   autostart = false;
-  #   privateKeyFile = config.age.secrets.laptop-vpn-pk.path;
+  #   privateKeyFile = config.sops.secrets."ryusei/laptop_vpn_pk".path;
   #   address = [ "10.0.0.2/24" ];
   #   listenPort = 51820;
   #

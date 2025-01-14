@@ -11,14 +11,13 @@
   config = lib.mkIf (config.me.gui.enable && config.me.secrets.enable) {
     location.provider = "manual";
 
-    age.secrets.coordinates = {
-      file = "${secrets}/coordinates.age";
+    sops.secrets.coordinates = {
       owner = config.me.user;
     };
 
     services.redshift = {
       enable = true;
-      coordinatesFile = config.age.secrets.coordinates.path;
+      coordinatesFile = config.sops.secrets.coordinates.path;
       temperature = {
         night = 3000;
         day = 6500;

@@ -16,16 +16,13 @@
       "wheel"
       "video"
     ];
-    openssh.authorizedKeys.keys = [
-      config.me.gitPublicKey
-    ];
   };
 
   users.users.root = {
     initialPassword = "root";
     initialHashedPassword = lib.mkForce null;
     openssh.authorizedKeys.keys = [
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGWI0J9d+d35sPWOwXOG2nYq1jMicJlI7buXPd1lMR/a"
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJahc82zjVv6+UDKi3eN9oZRfGRE7zhBivo5TYtDLe53 yugen"
     ];
   };
 }

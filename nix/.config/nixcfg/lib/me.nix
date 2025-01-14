@@ -19,9 +19,9 @@
       description = "System hostname";
     };
 
-    gitPublicKey = lib.mkOption {
+    publicKey = lib.mkOption {
       type = lib.types.str;
-      default = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJahc82zjVv6+UDKi3eN9oZRfGRE7zhBivo5TYtDLe53";
+      default = "ssh-ed25519 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
       description = "Public key used for commit signing";
     };
 
@@ -52,7 +52,7 @@
     secrets.enable = lib.mkOption {
       type = lib.types.bool;
       default = true;
-      description = "Use agenix secrets";
+      description = "Use secrets";
     };
 
     devPkgs.enable = lib.mkEnableOption "Install development packages";

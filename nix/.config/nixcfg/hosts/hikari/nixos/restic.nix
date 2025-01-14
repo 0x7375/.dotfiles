@@ -12,20 +12,19 @@ lib.mkIf config.me.secrets.enable {
     restic
   ];
 
-  age.secrets.rclone = {
-    file = "${secrets}/rclone.age";
-  };
+  sops.secrets."hikari/restic_pw" = { };
 
-  age.secrets.restic = {
-    file = "${secrets}/restic.age";
+  sops.secrets.rclone_config = {
+    sopsFile = "${secrets}/rclone-config.ini";
+    format = "ini";
   };
 
   services.restic.backups =
     let
       backupConfig = repo: calendar: {
         initialize = true;
-        passwordFile = config.age.secrets.restic.path;
-        rcloneConfigFile = config.age.secrets.rclone.path;
+        passwordFile = config.sops.secrets."hikari/restic_pw".path;
+        rcloneConfigFile = config.sops.secrets.rclone_config.path;
         repository = repo;
         paths = map (path: "/home/${config.me.user}/${path}") [
           "documents"
@@ -47,8 +46,7 @@ lib.mkIf config.me.secrets.enable {
     in
     {
       local-syncthing = backupConfig "/srv/backups/syncthing" "Sat *-*-* 18:00:00";
-      mega-syncthing = backupConfig "rclone:mega:syncthing" "Sat *-*-* 20:00:00";
+      koofr-syncthing = backupConfig "rclone:koofr:syncthing" "Sat *-*-* 20:00:00";
       google-syncthing = backupConfig "rclone:google:syncthing" "Sat *-*-* 22:00:00";
-      # proton-syncthing = backupConfig "rclone:proton:syncthing" "Sat *-*-* 22:00:00";
     };
 }

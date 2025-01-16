@@ -31,6 +31,7 @@
           ${pkgs.git}/bin/git -C ${dotfiles} add .;
           changes=$(${pkgs.git}/bin/git -C ${dotfiles} diff --cached --name-status | awk '{print $1 " " $2}' | sed 's/^A /Add /; s/^M /Update /; s/^D /Delete /');
           ${pkgs.git}/bin/git -C ${dotfiles} commit -m "$(printf "%s\n" "$changes")";
+          ${pkgs.git}/bin/git -C ${dotfiles} pull --rebase;
           ${pkgs.git}/bin/git -C ${dotfiles} push
         '';
       du = "${pkgs.git}/bin/git -C ${dotfiles} pull --rebase";

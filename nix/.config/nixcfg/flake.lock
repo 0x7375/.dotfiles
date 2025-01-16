@@ -203,15 +203,15 @@
       "locked": {
         "lastModified": 1736814855,
         "narHash": "sha256-SjM6UATF3Ruq1icu587eqSy86///ZhiGLBuMuMmfufM=",
-        "owner": "~ayko",
-        "repo": "nix-secrets",
+        "ref": "refs/heads/main",
         "rev": "ce4664f8b353429b46c723fac18c985ff587b4bc",
-        "type": "sourcehut"
+        "revCount": 39,
+        "type": "git",
+        "url": "ssh://git@git.sr.ht/~ayko/nix-secrets"
       },
       "original": {
-        "owner": "~ayko",
-        "repo": "nix-secrets",
-        "type": "sourcehut"
+        "type": "git",
+        "url": "ssh://git@git.sr.ht/~ayko/nix-secrets"
       }
     },
     "sops-nix": {

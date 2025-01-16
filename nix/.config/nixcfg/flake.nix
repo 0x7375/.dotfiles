@@ -28,7 +28,7 @@
     };
 
     secrets = {
-      url = "sourcehut:~ayko/nix-secrets";
+      url = "git+ssh://git@git.sr.ht/~ayko/nix-secrets";
       flake = false;
     };
 

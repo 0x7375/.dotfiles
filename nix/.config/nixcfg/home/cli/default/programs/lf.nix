@@ -290,7 +290,7 @@ in
             }}
           '';
         open = "&mimeo \"$f\"";
-        share = "$''${pkgs.curl}/bin/curl -F\"file=@$f\" https://0x0.st | ${pkgs.xclip}/bin/xclip -selection c";
+        share = "$''${pkgs.curl}/bin/curl -F\"file=@$f\" https://0x0.st | ${pkgs.xsel}/bin/xsel -ib";
         paste-overwrite = # bash
           ''
             %{{
@@ -304,6 +304,20 @@ in
                 lf -remote 'send load'
                 lf -remote 'send clear'
                 lf -remote "send $id reload"
+            }}
+          '';
+        copy-path = # bash
+          ''
+            ''${{
+              echo -en "$fx" | tr ' ' '\n' | ${pkgs.xsel}/bin/xsel -ib
+              lf -remote 'send echo "Path copied to clipboard"'
+            }}
+          '';
+        external-copy = # bash
+          ''
+            ''${{
+              echo -en "$fx" | sed 's|^|file://|' | tr ' ' '\n' | ${pkgs.xclip}/bin/xclip -i -sel clip -t text/uri-list
+              lf -remote 'send echo "Files copied to clipboard"'
             }}
           '';
         open-sushi = # bash
@@ -332,7 +346,6 @@ in
         zt = "";
         "<pgup>" = "";
         "<pgdn>" = "";
-        "H" = "";
         "M" = "";
         "L" = "";
         m = "";
@@ -351,6 +364,8 @@ in
         N = "search-prev";
         D = "delete";
         y = "copy";
+        Y = "external-copy";
+        H = "copy-path";
         C = "clear";
         x = "cut";
         s = "toggle";
@@ -398,13 +413,6 @@ in
         E = "$sudoedit $f";
         ze = "extract";
         zc = "compress";
-        B = # bash
-          ''
-            ''${{
-              echo "$f" | ${pkgs.xsel}/bin/xsel -ib
-              lf -remote 'send echo "Path copied to clipboard"'
-            }}
-          '';
 
         O = "&${pkgs.xdragon}/bin/dragon $fx";
         md = "mkdir";

@@ -1,6 +1,11 @@
-{ pkgs, ... }:
-
 {
+  lib,
+  config,
+  pkgs,
+  ...
+}:
+
+lib.mkIf config.me.capsLockRemap.enable {
   environment.etc."dual-function-keys.yaml".text = ''
     MAPPINGS:
       - KEY: KEY_CAPSLOCK

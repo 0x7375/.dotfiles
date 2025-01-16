@@ -81,11 +81,11 @@ pkgs.writeShellApplication {
 
       build_config() {
         if [[ $mode = "all" ]]; then
-          nom build --no-link --json .#nixosConfigurations."$host".config.system.build.toplevel | jq -r '.[].outputs.out'
+          nom build --no-link --json path:.#nixosConfigurations."$host".config.system.build.toplevel | jq -r '.[].outputs.out'
         elif [[ $mode = "home" ]]; then
-          nom build --no-link --json .#homeConfigurations."$user"@"$host".activationPackage | jq -r '.[].outputs.out'
+          nom build --no-link --json path:.#homeConfigurations."$user"@"$host".activationPackage | jq -r '.[].outputs.out'
         else
-          nom build --no-link --json .#nixosWithoutHomeConfigurations."$host".config.system.build.toplevel | jq -r '.[].outputs.out'
+          nom build --no-link --json path:.#nixosWithoutHomeConfigurations."$host".config.system.build.toplevel | jq -r '.[].outputs.out'
         fi
       }
 

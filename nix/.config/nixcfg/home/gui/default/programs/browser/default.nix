@@ -295,6 +295,17 @@ lib.mkIf config.me.gui.enable {
                 metaData.alias = "!p";
                 # icon = "${pkgs.nixos-icons}/share/icons/hicolor/scalable/apps/nix-snowflake.svg";
               };
+              "Nixhub" = {
+                urls = [
+                  {
+                    template = "https://www.nixhub.io/packages/{searchTerms}";
+                  }
+                ];
+
+                iconUpdateURL = "https://icons.duckduckgo.com/ip3/mynixos.com.ico";
+                updateInterval = day;
+                metaData.alias = "!u";
+              };
               "Github" = {
                 urls = [
                   {

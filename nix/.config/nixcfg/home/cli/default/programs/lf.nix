@@ -310,6 +310,7 @@ in
           ''
             ''${{
               echo -en "$fx" | tr ' ' '\n' | ${pkgs.xsel}/bin/xsel -ib
+              lf -remote 'send unselect'
               lf -remote 'send echo "Path copied to clipboard"'
             }}
           '';
@@ -317,6 +318,7 @@ in
           ''
             ''${{
               echo -en "$fx" | sed 's|^|file://|' | tr ' ' '\n' | ${pkgs.xclip}/bin/xclip -i -sel clip -t text/uri-list
+              lf -remote 'send unselect'
               lf -remote 'send echo "Files copied to clipboard"'
             }}
           '';

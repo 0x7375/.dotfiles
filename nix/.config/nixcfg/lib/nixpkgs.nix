@@ -98,7 +98,6 @@
               "https://youtube.com"
               "https://google.com"
               "https://claude.ai"
-              "https://krosmoz.com"
             ];
           };
           ExtensionSettings =

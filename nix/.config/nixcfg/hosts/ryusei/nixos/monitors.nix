@@ -7,65 +7,65 @@ let
 in
 {
   services.autorandr = {
-    hooks = {
-      postswitch = {
-        "restart-i3" = "${pkgs.i3}/bin/i3-msg restart";
-        "disable-dpms" = "${pkgs.xorg.xset}/bin/xset s off -dpms";
-      };
-    };
-    profiles = {
-      "home: right monitor" = {
-        fingerprint = {
-          HDMI-1 = f-benq;
-          eDP-1 = f-internal;
-        };
-        config = {
-          eDP-1 = {
-            enable = false;
-            position = "0x1080";
-            mode = "1920x1080";
-          };
-          HDMI-1 = {
-            enable = true;
-            primary = true;
-            position = "0x0";
-            mode = "1920x1080";
-            rate = "120";
-          };
-        };
-      };
-      "home: left monitor" = {
-        fingerprint = {
-          HDMI-1 = f-acer;
-          eDP-1 = f-internal;
-        };
-        config = {
-          eDP-1 = {
-            enable = true;
-            position = "0x1080";
-            mode = "1920x1080";
-          };
-          HDMI-1 = {
-            enable = true;
-            primary = true;
-            position = "0x0";
-            mode = "1920x1080";
-            rate = "120";
-          };
-        };
-      };
-      default = {
-        fingerprint = {
-          eDP-1 = f-internal;
-        };
-        config = {
-          eDP-1 = {
-            primary = true;
-            enable = true;
-            mode = "1920x1080";
-          };
-        };
-      };
-    };
+    # hooks = {
+    #   postswitch = {
+    #     "restart-i3" = "${pkgs.i3}/bin/i3-msg restart";
+    #     "disable-dpms" = "${pkgs.xorg.xset}/bin/xset s off -dpms";
+    #   };
+    # };
+    # profiles = {
+    #   "home: right monitor" = {
+    #     fingerprint = {
+    #       HDMI-1 = f-benq;
+    #       eDP-1 = f-internal;
+    #     };
+    #     config = {
+    #       eDP-1 = {
+    #         enable = false;
+    #         position = "0x1080";
+    #         mode = "1920x1080";
+    #       };
+    #       HDMI-1 = {
+    #         enable = true;
+    #         primary = true;
+    #         position = "0x0";
+    #         mode = "1920x1080";
+    #         rate = "120";
+    #       };
+    #     };
+    #   };
+    #   "home: left monitor" = {
+    #     fingerprint = {
+    #       HDMI-1 = f-acer;
+    #       eDP-1 = f-internal;
+    #     };
+    #     config = {
+    #       eDP-1 = {
+    #         enable = true;
+    #         position = "0x1080";
+    #         mode = "1920x1080";
+    #       };
+    #       HDMI-1 = {
+    #         enable = true;
+    #         primary = true;
+    #         position = "0x0";
+    #         mode = "1920x1080";
+    #         rate = "120";
+    #       };
+    #     };
+    #   };
+    #   default = {
+    #     fingerprint = {
+    #       eDP-1 = f-internal;
+    #     };
+    #     config = {
+    #       eDP-1 = {
+    #         primary = true;
+    #         enable = true;
+    #         mode = "1920x1080";
+    #       };
+    #     };
+    #   };
+    # };
   };
 }

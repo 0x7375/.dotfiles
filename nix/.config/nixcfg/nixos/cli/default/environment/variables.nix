@@ -30,7 +30,6 @@
     STACK_XDG = "1";
     __GL_SHADER_DISK_CACHE_SKIP_CLEANUP = "1";
 
-    XIDLEHOOK_SOCK = "${XDG_RUNTIME_DIR}/xidlehook.sock";
     HISTFILE = "${XDG_STATE_HOME}/bash/history";
     PGPASSFILE = "${XDG_CONFIG_HOME}/pg/pgpass";
     MYSQL_HISTFILE = "${XDG_DATA_HOME}/mysql_history";

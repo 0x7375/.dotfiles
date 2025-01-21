@@ -15,7 +15,6 @@
     enable = true;
     not-when-audio = true;
     detect-sleep = true;
-    socket = "/run/user/1000/xidlehook.sock";
     timers = [
       {
         delay = 600;

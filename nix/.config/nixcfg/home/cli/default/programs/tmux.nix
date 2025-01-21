@@ -97,7 +97,7 @@ in
 
         setw -g mode-keys vi
 
-        bind r source-file ~/.config/tmux/tmux.conf \; \
+        bind R source-file ~/.config/tmux/tmux.conf \; \
           display "Reloaded tmux.conf"
         bind N neww -c "#{pane_current_path}"
 
@@ -130,6 +130,17 @@ in
 
         bind / copy-mode \; send-keys /
         bind ? copy-mode \; send-keys ?
+
+        bind , swap-window -t -1
+        bind . swap-window -t +1
+
+        bind + select-window -t :=1
+        bind [ select-window -t :=2
+        bind \{ select-window -t :=3
+        bind ( select-window -t :=4
+        bind & select-window -t :=5
+
+        bind r command-prompt -I'#W' { rename-window -- '%%' }
 
         # copying
         bind j copy-mode

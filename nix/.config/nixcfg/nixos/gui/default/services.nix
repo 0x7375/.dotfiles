@@ -29,7 +29,6 @@ lib.mkIf config.me.gui.enable {
     };
 
     xbanish.enable = true;
-    autorandr.enable = false;
 
     xserver = {
       enable = true;

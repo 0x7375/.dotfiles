@@ -255,7 +255,14 @@ pkgs.writeShellApplication {
           activate_config
 
           if [[ $(get_current_gen) != $(get_last_commited_gen) && -n $(show_git_diff) && -z $remote ]]; then
-            changes=$(git diff --cached --name-status | awk '{print $1 " " $2}' | sed 's/^A /Add /; s/^M /Update /; s/^D /Delete /')
+            changes=$(git diff --cached --name-status | awk '{
+              if ($1 ~ /^R[0-9]*/) {
+                # For renames, print both old and new filenames
+                print "Rename " $2 " -> " $3
+              } else {
+                print $1 " " $2
+              }
+            }' | sed 's/^A /Add /; s/^M /Update /; s/^D /Delete /');
             metadata=$(get_gen_metadata)
             commit_message=$(printf "%s\n\n%s" "$metadata" "$changes")
             git commit -m "$commit_message"

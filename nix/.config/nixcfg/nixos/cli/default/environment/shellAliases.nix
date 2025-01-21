@@ -29,7 +29,14 @@
       da = # bash
         ''
           ${pkgs.git}/bin/git -C ${dotfiles} add .;
-          changes=$(${pkgs.git}/bin/git -C ${dotfiles} diff --cached --name-status | awk '{print $1 " " $2}' | sed 's/^A /Add /; s/^M /Update /; s/^D /Delete /');
+          changes=$(${pkgs.git}/bin/git -C ${dotfiles} diff --cached --name-status | awk '{
+            if ($1 ~ /^R[0-9]*/) {
+              # For renames, print both old and new filenames
+              print "Rename " $2 " -> " $3
+            } else {
+              print $1 " " $2
+            }
+          }' | sed 's/^A /Add /; s/^M /Update /; s/^D /Delete /');
           ${pkgs.git}/bin/git -C ${dotfiles} commit -m "$(printf "%s\n" "$changes")";
           ${pkgs.git}/bin/git -C ${dotfiles} pull --rebase;
           ${pkgs.git}/bin/git -C ${dotfiles} push

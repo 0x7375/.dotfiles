@@ -1,10 +1,10 @@
-{ pkgs, ... }:
+{ myLib, pkgs, ... }:
 
 {
   imports = [
     ../../home
     ./options.nix
-  ];
+  ] ++ myLib.filesIn ./home;
 
   xsession.windowManager.i3.config = {
     startup = [

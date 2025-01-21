@@ -1,8 +1,6 @@
 { myLib, pkgs, ... }:
 
 {
-  disabledModules = [ "services/xidlehook.nix" ];
-
   imports = [
     ../../home
     ./options.nix

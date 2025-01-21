@@ -17,6 +17,11 @@
   boot.loader.grub.enable = false;
   boot.loader.generic-extlinux-compatible.enable = true;
 
+  # https://github.com/raspberrypi/linux/issues/6049#issuecomment-2485431104
+  boot.extraModprobeConfig = ''
+    options brcmfmac feature_disable=0x82000
+  '';
+
   boot.initrd.availableKernelModules = [
     "xhci_pci"
     "uas"
@@ -28,6 +33,7 @@
   boot.extraModulePackages = [ ];
   boot.kernelPackages = pkgs.linuxKernel.packages.linux_rpi4;
 
+  # allow watching more files for syncthing 
   boot.kernel.sysctl = {
     "fs.inotify.max_user_watches" = 204800;
   };

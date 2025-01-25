@@ -39,8 +39,8 @@ return {
         dir = "", -- directory where `lf` starts ('gwd' is git-working-directory)
         direction = "float",
         border = "single",
-        height = function() return vim.o.lines - 2 - vim.o.cmdheight end,
-        width = function() return vim.o.columns end,
+        height = vim.o.lines - 1 - vim.o.cmdheight,
+        width = vim.o.columns,
         mappings = false,
         escape_quit = true,
         focus_on_open = true,

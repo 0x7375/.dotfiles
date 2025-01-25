@@ -21,7 +21,7 @@ pkgs.writeShellApplication {
       "lock") lock ;;
       "logout") i3-msg exit ;;
       "suspend") systemctl suspend && lock ;;
-      "hibernate") systemctl hibernate ;;
+      "hibernate") pkill 1password; systemctl hibernate ;;
       "shutdown") systemctl poweroff ;;
       "reboot") systemctl --no-wall reboot ;;
       "windows") systemctl --no-wall reboot --boot-loader-entry=auto-windows ;;

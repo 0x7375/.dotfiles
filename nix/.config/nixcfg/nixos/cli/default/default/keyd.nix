@@ -7,20 +7,20 @@
 
 {
   services.keyd = {
-    enable = false;
-    # keyboards = {
-    #   default = {
-    #     ids = [ "*" ];
-    #     settings = {
-    #       main = {
-    #         capslock = "overload(control, esc)";
-    #       };
-    #       global = {
-    #         overload_tap_timeout = 100;
-    #       };
-    #     };
-    #   };
-    # };
+    enable = true;
+    keyboards = {
+      default = {
+        ids = [ "*" ];
+        settings = {
+          main = {
+            capslock = "overload(control, esc)";
+          };
+          global = {
+            overload_tap_timeout = 100;
+          };
+        };
+      };
+    };
   };
 
   # Optional, but makes sure that when you type the make palm rejection work with keyd
@@ -40,7 +40,7 @@
       SUBSYSTEM=="input", ACTION=="add", ATTR{name}!="keyd virtual*", RUN+="${pkgs.systemd}/bin/systemctl try-restart keyd.service"
     '';
 
-  # systemd.services.keyd.serviceConfig = {
-  #   Group = "keyd";
-  # };
+  systemd.services.keyd.serviceConfig = {
+    Group = "keyd";
+  };
 }

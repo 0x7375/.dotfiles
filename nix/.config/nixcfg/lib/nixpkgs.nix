@@ -94,10 +94,10 @@
               "https://monkeytype.com"
               "https://openai.com"
               "https://chatgpt.com"
-              "https://ente.io"
               "https://youtube.com"
               "https://google.com"
               "https://claude.ai"
+              "https://deepseek.com"
             ];
           };
           ExtensionSettings =

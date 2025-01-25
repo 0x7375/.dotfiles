@@ -6,31 +6,20 @@
 }:
 
 lib.mkIf config.me.gui.enable {
-  systemd.user.services.keyd-application-mapper = {
-    Unit = {
-      Description = "Keyd application specific remapping daemon";
-      Documentation = "man:keyd-application-mapper";
-      PartOf = [ "graphical-session.target" ];
-      After = [ "graphical-session.target" ];
-    };
-
-    Service = {
-      Environment = "KEYD_SOCKET=/run/keyd/keyd.sock";
-
-      ExecStart = "${pkgs.keyd}/bin/keyd-application-mapper";
-      Restart = "on-failure";
-      OOMPolicy = "continue";
-    };
-
-    Install = {
-      WantedBy = [ "graphical-session.target" ];
-    };
-  };
+  xsession.windowManager.i3.config.startup = [
+    {
+      command = "KEYD_SOCKET=/run/keyd/keyd.sock ${pkgs.keyd}/bin/keyd-application-mapper";
+      notification = false;
+    }
+  ];
 
   xdg.configFile."keyd/app.conf" = {
     text = # toml
       ''
         [firefox]
+
+        f7 = M-right
+        f8 = M-left
 
         control.p = up
         control.n = down

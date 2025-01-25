@@ -1,11 +1,6 @@
-{
-  lib,
-  config,
-  pkgs,
-  ...
-}:
+{ pkgs, ... }:
 
-lib.mkIf config.me.capsLockRemap.enable {
+{
   environment.etc."dual-function-keys.yaml".text = ''
     MAPPINGS:
       - KEY: KEY_CAPSLOCK
@@ -13,7 +8,7 @@ lib.mkIf config.me.capsLockRemap.enable {
         HOLD: KEY_LEFTCTRL
   '';
   services.interception-tools = {
-    enable = true;
+    enable = false;
     plugins = [ pkgs.interception-tools-plugins.dual-function-keys ];
     udevmonConfig = ''
       - JOB: "${pkgs.interception-tools}/bin/intercept -g $DEVNODE | ${pkgs.interception-tools-plugins.dual-function-keys}/bin/dual-function-keys -c /etc/dual-function-keys.yaml | ${pkgs.interception-tools}/bin/uinput -d $DEVNODE"

@@ -65,7 +65,6 @@
     };
 
     syncthing-client.enable = lib.mkEnableOption "Setup syncthing client";
-    capsLockRemap.enable = lib.mkEnableOption "Remap caps lock to control on hold and escape on tap";
 
     gui = {
       enable = lib.mkEnableOption "Enable graphical config";

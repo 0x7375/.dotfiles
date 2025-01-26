@@ -21,8 +21,8 @@ lib.mkIf config.me.gui.enable {
         f7 = M-right
         f8 = M-left
 
-        control.p = up
-        control.n = down
+        control.p = down
+        control.n = up
         control.m = enter
         control.e = f6
         control.j = C-S-tab
@@ -30,6 +30,18 @@ lib.mkIf config.me.gui.enable {
         control.h = backspace
         control.w = C-backspace
         control.d = C-w
+
+        [io.ente.auth]
+        control.m = enter
+
+        [1password]
+        control.m = enter
+
+        [legcord]
+        control.m = enter
+
+        [polkit-gnome-authentication-agent-1]
+        control.m = enter
       '';
   };
 }

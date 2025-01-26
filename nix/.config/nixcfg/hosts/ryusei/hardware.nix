@@ -45,10 +45,6 @@
   #   "systemd.log_target=kmsg"
   #   "log_buf_len=1M"
   # ];
-  # services.journald.extraConfig = ''
-  #   Storage=persistent
-  #   SystemMaxUse=1G
-  # '';
 
   # non-declarative config
 

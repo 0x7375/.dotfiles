@@ -22,6 +22,10 @@
     ];
   };
 
+  services.journald.extraConfig = ''
+    MaxRetentionSec=2week
+  '';
+
   virtualisation.docker = {
     enable = true;
     rootless = {

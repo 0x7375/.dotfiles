@@ -6,12 +6,13 @@
 }:
 
 let
+  url = "shimu.duckdns.org";
+  ip = "192.168.1.95";
   mkSubDomain = port: {
     forceSSL = true;
     useACMEHost = url;
-    locations."/".proxyPass = "http://${url}:${port}";
+    locations."/".proxyPass = "http://${ip}:${port}";
   };
-  url = "shimu.duckdns.org";
 in
 {
   networking.firewall.allowedTCPPorts = [
@@ -26,7 +27,7 @@ in
       enableACME = true;
       locations."/" = {
         root = "/var/www";
-        proxyPass = "http://${url}:7575";
+        proxyPass = "http://${ip}:7575";
       };
     };
 

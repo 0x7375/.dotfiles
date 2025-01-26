@@ -22,47 +22,42 @@ lib.mkIf config.me.secrets.enable {
     };
   };
 
-  # networking.firewall.allowedUDPPorts = [ 51821 ];
+  environment.systemPackages = with pkgs; [
+    wireguard-tools
+  ];
 
-  # environment.systemPackages = with pkgs; [
-  #   wireguard-tools
-  # ];
+  sops.secrets."hikari/server_vpn_pk" = {
+    owner = config.me.user;
+  };
 
-  # age.secrets.server-vpn-pk = {
-  #   file = "${secrets}/server-vpn-pk.age";
-  #   owner = config.me.user;
-  # };
+  sops.secrets.laptop_vpn_psk = {
+    owner = config.me.user;
+  };
 
-  # networking.nat.enable = true;
-  # networking.nat.externalInterface = "end0";
-  # networking.nat.internalInterfaces = [ "homevpn" ];
+  sops.secrets.phone_vpn_psk = {
+    owner = config.me.user;
+  };
 
-  # networking.wg-quick.interfaces.homevpn =
-  #   let
-  #     interface = "homevpn";
-  #   in
-  #   {
-  #     address = [ "10.0.0.1/24" ];
-  #     listenPort = 51821;
-  #     privateKeyFile = config.age.secrets.server-vpn-pk.path;
-  #
-  #     postUp = ''
-  #       ${pkgs.iptables}/bin/iptables -A FORWARD -i ${interface} -j ACCEPT
-  #       ${pkgs.iptables}/bin/iptables -t nat -A POSTROUTING -s 10.0.0.1/24 -o end0 -j MASQUERADE
-  #     '';
-  #
-  #     preDown = ''
-  #       ${pkgs.iptables}/bin/iptables -D FORWARD -i ${interface} -j ACCEPT
-  #       ${pkgs.iptables}/bin/iptables -t nat -D POSTROUTING -s 10.0.0.1/24 -o end0 -j MASQUERADE
-  #     '';
-  #
-  #     peers = [
-  #       # laptop
-  #       {
-  #         publicKey = "apB8TVyEJ7G/gLe5b3ckvUYJSSKv85rl1jWkZoiEQgE=";
-  #         presharedKeyFile = config.age.secrets.laptop-vpn-psk.path;
-  #         allowedIPs = [ "10.0.0.2/32" ];
-  #       }
-  #     ];
-  #   };
+  networking.firewall.allowedUDPPorts = [ 51821 ];
+
+  networking.wg-quick.interfaces.homevpn = {
+    address = [ "10.0.0.1/24" ];
+    listenPort = 51821;
+    privateKeyFile = config.sops.secrets."hikari/server_vpn_pk".path;
+
+    peers = [
+      # laptop
+      {
+        publicKey = "apB8TVyEJ7G/gLe5b3ckvUYJSSKv85rl1jWkZoiEQgE=";
+        presharedKeyFile = config.sops.secrets.laptop_vpn_psk.path;
+        allowedIPs = [ "10.0.0.2/32" ];
+      }
+      # phone
+      {
+        publicKey = "mEN17hfodGLbe58cS6r7qeegmeQlSebz2JCUIlsWdn0=";
+        presharedKeyFile = config.sops.secrets.phone_vpn_psk.path;
+        allowedIPs = [ "10.0.0.3/32" ];
+      }
+    ];
+  };
 }

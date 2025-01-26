@@ -26,6 +26,21 @@
     MaxRetentionSec=2week
   '';
 
+  environment.shellAliases = {
+    switch-vpn = # bash
+      ''
+        if systemctl is-active --quiet wg-quick-protonvpn; then
+          sudo systemctl stop wg-quick-protonvpn
+          sudo systemctl start wg-quick-homevpn
+          echo "Home VPN enabled"
+        else
+          sudo systemctl start wg-quick-protonvpn
+          sudo systemctl stop wg-quick-homevpn
+          echo "ProtonVPN enabled"
+        fi
+      '';
+  };
+
   virtualisation.docker = {
     enable = true;
     rootless = {

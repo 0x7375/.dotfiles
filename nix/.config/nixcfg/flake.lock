@@ -201,11 +201,11 @@
     "secrets": {
       "flake": false,
       "locked": {
-        "lastModified": 1736814855,
-        "narHash": "sha256-SjM6UATF3Ruq1icu587eqSy86///ZhiGLBuMuMmfufM=",
+        "lastModified": 1737913565,
+        "narHash": "sha256-kd+NX0s7OFbi3OS8m1iMBZ7qCCXLJp4mS3oFFkljV+o=",
         "ref": "refs/heads/main",
-        "rev": "ce4664f8b353429b46c723fac18c985ff587b4bc",
-        "revCount": 39,
+        "rev": "b810e30ad1689fab9ed7af8933c2d2d185a2996a",
+        "revCount": 42,
         "type": "git",
         "url": "ssh://git@git.sr.ht/~ayko/nix-secrets"
       },

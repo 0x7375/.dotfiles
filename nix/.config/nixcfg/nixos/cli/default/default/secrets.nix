@@ -7,6 +7,10 @@
 }:
 
 lib.mkIf config.me.secrets.enable {
+  sops.secrets.server_vpn_endpoint = {
+    owner = config.me.user;
+  };
+
   sops.secrets.laptop_vpn_psk = {
     owner = config.me.user;
   };

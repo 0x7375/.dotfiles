@@ -119,23 +119,22 @@
     owner = config.me.user;
   };
 
-  # networking.wg-quick.interfaces."homevpn" = {
-  #   autostart = false;
-  #   privateKeyFile = config.sops.secrets."ryusei/laptop_vpn_pk".path;
-  #   address = [ "10.0.0.2/24" ];
-  #   listenPort = 51820;
-  #
-  #   peers = [
-  #     {
-  #       allowedIPs = [
-  #         "10.0.0.0/24"
-  #         "192.168.1.0/24"
-  #       ];
-  #       publicKey = "serverPk";
-  #       endpoint = ":51820";
-  #     }
-  #   ];
-  # };
+  sops.templates."homevpn-laptop.conf".content = ''
+    [Interface]
+    Address = 10.0.0.2/24
+    PrivateKey = ${config.sops.placeholder."ryusei/laptop_vpn_pk"}
+
+    [Peer]
+    PublicKey = PpCxUOTz7Heh3B29OnI3XNZAKJ8abUETMzFNj3gpTyo=
+    PresharedKey = ${config.sops.placeholder."laptop_vpn_psk"}
+    AllowedIPs = 10.0.0.0/24,192.168.1.0/24
+    Endpoint = ${config.sops.placeholder.server_vpn_endpoint}
+  '';
+
+  networking.wg-quick.interfaces.homevpn = {
+    autostart = false;
+    configFile = config.sops.templates."homevpn-laptop.conf".path;
+  };
 
   # until systemd is updated in nixpkgs: https://github.com/systemd/systemd/issues/34304#issuecomment-2550498883
   # https://github.com/systemd/systemd/commits/6013dee98d6543ac290a2938c4ec8494e26531ab/

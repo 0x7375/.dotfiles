@@ -26,14 +26,6 @@
     MaxRetentionSec=2week
   '';
 
-  environment.shellInit = # bash
-    ''
-      switch-vpn () {
-        [[ $1 == "home" ]] && sudo systemctl stop wg-quick-protonvpn && sudo systemctl start wg-quick-homevpn 
-        [[ $1 == "proton" ]] && sudo systemctl stop wg-quick-homevpn && sudo systemctl start wg-quick-protonvpn
-      }
-    '';
-
   virtualisation.docker = {
     enable = true;
     rootless = {

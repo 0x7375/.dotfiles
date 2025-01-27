@@ -45,6 +45,8 @@
       df = "${pkgs.git}/bin/git -C ${dotfiles} diff";
       cat = "${pkgs.bat}/bin/bat";
 
+      s = "${pkgs.systemd}/bin/systemctl";
+
       e = "${pkgs.atool}/bin/aunpack";
       c = "${pkgs.atool}/bin/apack";
 
@@ -65,6 +67,8 @@
 
       mount-web = "${pkgs.sshfs}/bin/sshfs -o gid=1000,uid=1000,noauto,_netdev,reconnect,auto_cache,ServerAliveInterval=5,ServerAliveCountMax=3 web:/www-dev/ ~/uni/web";
       unmount-web = "${pkgs.fuse}/bin/fusermount -uz ~/uni/web";
+
+      sudo = "sudo ";
 
       gd = "${pkgs.git}/bin/git diff";
       gds = "${pkgs.git}/bin/git diff --staged";
@@ -92,6 +96,19 @@
       blue=$(${pkgs.ncurses}/bin/tput setaf 4)
       reset=$(${pkgs.ncurses}/bin/tput sgr0)
       export SUDO_PROMPT="''${blue}[sudo] password for %p:''${reset} "
+
+      vpn () {
+          if [ $# -ne 2 ]; then
+              echo "Usage: vpn <up|down> <interface>"
+              return 1
+          fi
+
+          case "$1" in
+              up)   sudo systemctl start wg-quick-$2.service ;;
+              down) sudo systemctl stop wg-quick-$2.service ;;
+              *)    echo "Invalid action. Use 'up' or 'down'"; return 1 ;;
+          esac
+      }
 
       r() {
         ${pkgs.coreutils}/bin/realpath $(where $1);

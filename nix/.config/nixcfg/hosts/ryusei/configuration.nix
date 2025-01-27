@@ -119,7 +119,7 @@
     owner = config.me.user;
   };
 
-  sops.templates."homevpn-laptop.conf".content = ''
+  sops.templates."home-vpn-laptop.conf".content = ''
     [Interface]
     Address = 10.0.0.2/24
     PrivateKey = ${config.sops.placeholder."ryusei/laptop_vpn_pk"}
@@ -131,9 +131,9 @@
     Endpoint = ${config.sops.placeholder.server_vpn_endpoint}
   '';
 
-  networking.wg-quick.interfaces.homevpn = {
+  networking.wg-quick.interfaces.home = {
     autostart = false;
-    configFile = config.sops.templates."homevpn-laptop.conf".path;
+    configFile = config.sops.templates."home-vpn-laptop.conf".path;
   };
 
   # until systemd is updated in nixpkgs: https://github.com/systemd/systemd/issues/34304#issuecomment-2550498883

@@ -88,11 +88,17 @@ in
           description = "The port number of the VPN peer endpoint. See your Wireguard certificate.";
         };
       };
+
+      extraConfig = mkOption {
+        default = null;
+        type = types.attrs;
+        description = "Extra configuration for the Wireguard interface.";
+      };
     };
   };
 
   config = mkIf cfg.enable {
-    networking.wg-quick.interfaces."${cfg.interface.name}" = {
+    networking.wg-quick.interfaces."${cfg.interface.name}" = cfg.extraConfig // {
       autostart = cfg.autostart;
       dns = if cfg.interface.dns.enable then [ cfg.interface.dns.ip ] else [ ];
       privateKeyFile = cfg.interface.privateKeyFile;

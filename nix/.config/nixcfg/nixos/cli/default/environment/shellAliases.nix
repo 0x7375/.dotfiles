@@ -98,40 +98,69 @@
       export SUDO_PROMPT="''${blue}[sudo] password for %p:''${reset} "
 
       vpn () {
-          if [ $# -ne 2 ]; then
-              echo "Usage: vpn <up|down> <interface>"
+          if [ $# -lt 2 ]; then
+              echo "Usage: vpn <up|down|restart> <interface(s)>"
               return 1
           fi
 
-          case "$1" in
-              up)   sudo systemctl start wg-quick-$2.service ;;
-              down) sudo systemctl stop wg-quick-$2.service ;;
-              *)    echo "Invalid action. Use 'up' or 'down'"; return 1 ;;
+          action="$1"
+          shift
+
+          case "$action" in
+              up|down|restart)
+                  for interface in "$@"; do
+                      sudo systemctl "$action" wg-quick-$interface.service
+                  done
+                  ;;
+              *)
+                  echo "Invalid action. Use 'up', 'down', or 'restart'."
+                  return 1
+                  ;;
           esac
       }
 
       r() {
         ${pkgs.coreutils}/bin/realpath $(where $1);
       }
+
       nhv() {
         ${pkgs.nix}/bin/nix eval --json $FLAKE#homeConfigurations."$USER@''${2:-$HOST}".config.$1 | jq
       }
+
       nv() {
         ${pkgs.nix}/bin/nix eval --json $FLAKE#nixosConfigurations.''${2:-$HOST}.config.$1 | jq
       }
+
       d() {
         ${pkgs.coreutils}/bin/nohup $1 > /dev/null &
       }
+
       tm() {
         ${pkgs.scripts.tmux-sessionizer}/bin/tmux-sessionizer $1
       }
-      unlink() {
-        if [ -L "$1" ]; then
+
+      suv() {
+        [[ -L "$1" ]] && {
+          sudo cp "$1" "$1.bak"
+          sudo rm "$1"
+          sudo mv "$1.bak" "$1"
+          sudo chmod 644 "$1"
+          sudo $EDITOR "$1"
+        } || {
+          echo "Not a symlink"
+        }
+      }
+
+      uv() {
+        [[ -L "$1" ]] && {
           cp "$1" "$1.bak"
           rm "$1"
           mv "$1.bak" "$1"
           chmod 644 "$1"
-        fi
+          $EDITOR "$1"
+        } || {
+          echo "Not a symlink"
+        }
       }
     '';
 }

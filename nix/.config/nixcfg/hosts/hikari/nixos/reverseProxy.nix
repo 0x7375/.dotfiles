@@ -1,5 +1,4 @@
 {
-  secrets,
   lib,
   config,
   ...
@@ -20,29 +19,31 @@ in
     443
   ];
 
-  services.nginx.enable = true;
-  services.nginx.virtualHosts = {
-    "${url}" = {
-      forceSSL = true;
-      enableACME = true;
-      locations."/" = {
-        root = "/var/www";
-        proxyPass = "http://${ip}:7575";
+  services.nginx = {
+    enable = true;
+    virtualHosts = {
+      "${url}" = {
+        forceSSL = true;
+        enableACME = true;
+        locations."/" = {
+          root = "/var/www";
+          proxyPass = "http://${ip}:7575";
+        };
       };
-    };
 
-    "jellyfin.${url}" = mkSubDomain "8096";
-    "request.${url}" = mkSubDomain "5055";
-    "sync.${url}" = mkSubDomain "8384";
-    "torrent.${url}" = mkSubDomain "8080";
-    "prowlarr.${url}" = mkSubDomain "9696";
-    "radarr.${url}" = mkSubDomain "7878";
-    "sonarr.${url}" = mkSubDomain "8989";
+      "jellyfin.${url}" = mkSubDomain "8096";
+      "request.${url}" = mkSubDomain "5055";
+      "sync.${url}" = mkSubDomain "8384";
+      "torrent.${url}" = mkSubDomain "8080";
+      "prowlarr.${url}" = mkSubDomain "9696";
+      "radarr.${url}" = mkSubDomain "7878";
+      "sonarr.${url}" = mkSubDomain "8989";
 
-    "router.${url}" = {
-      forceSSL = true;
-      useACMEHost = "${url}";
-      locations."/".proxyPass = "http://192.168.1.254";
+      "router.${url}" = {
+        forceSSL = true;
+        useACMEHost = "${url}";
+        locations."/".proxyPass = "http://192.168.1.254";
+      };
     };
   };
 

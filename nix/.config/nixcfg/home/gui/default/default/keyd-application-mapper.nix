@@ -21,12 +21,12 @@ lib.mkIf config.me.gui.enable {
         f7 = M-right
         f8 = M-left
 
-        control.p = down
-        control.n = up
+        control.p = up
+        control.n = down
         control.m = enter
         control.e = f6
-        control.j = C-S-tab
-        control.k = C-tab
+        control.j = C-tab
+        control.k = C-S-tab
         control.h = backspace
         control.w = C-backspace
         control.d = C-w

@@ -26,20 +26,13 @@
     MaxRetentionSec=2week
   '';
 
-  environment.shellAliases = {
-    switch-vpn = # bash
-      ''
-        if systemctl is-active --quiet wg-quick-protonvpn; then
-          sudo systemctl stop wg-quick-protonvpn
-          sudo systemctl start wg-quick-homevpn
-          echo "Home VPN enabled"
-        else
-          sudo systemctl start wg-quick-protonvpn
-          sudo systemctl stop wg-quick-homevpn
-          echo "ProtonVPN enabled"
-        fi
-      '';
-  };
+  environment.shellInit = # bash
+    ''
+      switch-vpn () {
+        [[ $1 == "home" ]] && sudo systemctl stop wg-quick-protonvpn && sudo systemctl start wg-quick-homevpn 
+        [[ $1 == "proton" ]] && sudo systemctl stop wg-quick-homevpn && sudo systemctl start wg-quick-protonvpn
+      }
+    '';
 
   virtualisation.docker = {
     enable = true;

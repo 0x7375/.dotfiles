@@ -28,7 +28,6 @@ lib.mkIf config.me.gui.enable {
     mpris-proxy.enable = true;
 
     playerctld.enable = true;
-    copyq.enable = true;
     grobi.enable = true;
   };
 }

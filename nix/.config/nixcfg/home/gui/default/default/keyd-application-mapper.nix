@@ -16,6 +16,7 @@ lib.mkIf config.me.gui.enable {
   xdg.configFile."keyd/app.conf" = {
     text = # toml
       ''
+        # A-key and M-key (alt and meta) need to be swapped because I swap alt and windows key
         [firefox]
 
         f7 = M-right
@@ -36,6 +37,12 @@ lib.mkIf config.me.gui.enable {
 
         [1password]
         control.m = enter
+
+        [copyq]
+        control.m = macro(enter 20ms A-q)
+        control.p = up
+        control.n = down
+        control.h = backspace
 
         [legcord]
         control.m = enter

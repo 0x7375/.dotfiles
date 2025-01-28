@@ -226,6 +226,23 @@ lib.mkIf config.me.gui.enable {
                 updateInterval = day;
                 metaData.alias = "!gi";
               };
+              "Dofus" = {
+                urls = [
+                  {
+                    template = "https://www.dofuspourlesnoobs.com/apps/search";
+                    params = [
+                      {
+                        name = "q";
+                        value = "{searchTerms}";
+                      }
+                    ];
+                  }
+                ];
+
+                iconUpdateURL = "https://icons.duckduckgo.com/ip3/dofuspourlesnoobs.com.ico";
+                updateInterval = day;
+                metaData.alias = "!d";
+              };
               "Brave" = {
                 urls = [
                   {

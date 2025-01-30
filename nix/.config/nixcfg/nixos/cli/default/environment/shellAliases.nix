@@ -22,7 +22,7 @@
       t = "history -D | ${pkgs.coreutils}/bin/tail -n 1 | ${pkgs.gawk}/bin/awk '{ print $2 }'";
       lf = "lfcd";
       connect-monitor = "while true; do sleep 0.5; ${pkgs.autorandr}/bin/autorandr --change > /dev/null; done";
-      v = "${pkgs.neovim}/bin/nvim";
+      v = "$EDITOR";
       please = "sudo $(fc -ln -1)";
       dot = "${pkgs.git}/bin/git -C ${dotfiles}";
       ngit = "GIT_DIR=.nix-git ${pkgs.git}/bin/git";

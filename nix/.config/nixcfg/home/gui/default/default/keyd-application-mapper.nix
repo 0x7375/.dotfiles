@@ -14,7 +14,16 @@ lib.mkIf config.me.gui.enable {
   ];
 
   xdg.configFile."keyd/app.conf" = {
-    text = # toml
+    text =
+      let
+        backspace = "control.h = backspace";
+        enter = "control.m = enter";
+        upDown = ''
+          control.p = up
+          control.n = down
+        '';
+      in
+      # toml
       ''
         # A-key and M-key (alt and meta) need to be swapped because I swap alt and windows key
         [firefox]
@@ -22,33 +31,35 @@ lib.mkIf config.me.gui.enable {
         f7 = M-right
         f8 = M-left
 
-        control.p = up
-        control.n = down
-        control.m = enter
+        ${backspace}
+        ${upDown}
+        ${enter}
         control.e = f6
         control.j = C-tab
         control.k = C-S-tab
-        control.h = backspace
         control.w = C-backspace
         control.d = C-w
 
         [io.ente.auth]
-        control.m = enter
+        ${enter}
+        ${backspace}
 
         [1password]
-        control.m = enter
+        ${enter}
+        ${upDown}
 
         [copyq]
         control.m = macro(enter 20ms A-q)
-        control.p = up
-        control.n = down
-        control.h = backspace
+        ${upDown}
+        ${backspace}
 
         [legcord]
-        control.m = enter
+        ${enter}
+        ${backspace}
 
         [polkit-gnome-authentication-agent-1]
-        control.m = enter
+        ${enter}
+        ${backspace}
       '';
   };
 }

@@ -19,7 +19,6 @@
     tree
 
     # neovim
-    neovim
     tree-sitter
 
     # copilot chat

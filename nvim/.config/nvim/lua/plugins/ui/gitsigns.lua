@@ -2,10 +2,11 @@ return {
     'lewis6991/gitsigns.nvim',
     event = "User InGitRepo",
     keys = {
-        { '[h', desc = "Goto previous git change" },
-        { ']h', desc = "Goto next git change" },
-        { 'gb', desc = "Toggle git blame" },
-        { 'gh', desc = "Preview git change" },
+        { '[h', desc = "Goto previous hunk" },
+        { ']h', desc = "Goto next hunk" },
+        { 'gb', desc = "Toggle blame" },
+        { 'gh', desc = "Preview hunk" },
+        { 'gH', desc = "Reset hunk" },
     },
     opts = {
         signs = {
@@ -31,6 +32,7 @@ return {
 
             vim.keymap.set('n', 'gb', gitsigns.toggle_current_line_blame, { buffer = bufnr })
             vim.keymap.set('n', 'gh', gitsigns.preview_hunk_inline, { buffer = bufnr })
+            vim.keymap.set('n', 'gH', gitsigns.reset_hunk, { buffer = bufnr })
         end,
     },
 }

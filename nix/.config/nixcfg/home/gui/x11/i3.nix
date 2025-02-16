@@ -73,6 +73,9 @@ lib.mkIf config.me.gui.enable {
             "${modifier}+r" = "exec --no-startup-id ${pkgs.dunst}/bin/dunstctl history-pop";
             "${modifier}+a" = "exec --no-startup-id ${pkgs.dunst}/bin/dunstctl action";
 
+            "${modifier}+o" = "exec --no-startup-id ${pkgs.gromit-mpx}/bin/gromit-mpx --toggle";
+            "${modifier}+Shift+o" = "exec --no-startup-id ${pkgs.gromit-mpx}/bin/gromit-mpx --clear";
+
             "${modifier}+p" = "exec --no-startup-id ${pkgs.scripts.powermenu}/bin/powermenu";
             "--release ${modifier}+Shift+c" = "exec ${pkgs.scripts.color-picker}/bin/color-picker";
             "--release ${modifier}+Shift+m" = "exec $tmux -s 'xprop' '${pkgs.xorg.xprop}/bin/xprop; exec $SHELL";

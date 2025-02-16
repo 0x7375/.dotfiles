@@ -8,10 +8,22 @@
 lib.mkIf config.me.gui.enable {
   xsession.windowManager.i3.config.startup = [
     {
-      command = "KEYD_SOCKET=/run/keyd/keyd.sock ${pkgs.keyd}/bin/keyd-application-mapper";
+      command = "${pkgs.systemd}/bin/systemctl --user start keyd-application-mapper";
       notification = false;
     }
   ];
+
+  systemd.user.services.keyd-application-mapper = {
+    Unit = {
+      Description = "keyd application mapper";
+    };
+
+    Service = {
+      Environment = "KEYD_SOCKET=/run/keyd/keyd.sock";
+      ExecStart = "${pkgs.keyd}/bin/keyd-application-mapper";
+      Restart = "always";
+    };
+  };
 
   xdg.configFile."keyd/app.conf" = {
     text =
@@ -54,6 +66,10 @@ lib.mkIf config.me.gui.enable {
         ${backspace}
 
         [legcord]
+        ${enter}
+        ${backspace}
+
+        [ssh-askpass]
         ${enter}
         ${backspace}
 

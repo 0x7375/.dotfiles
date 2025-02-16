@@ -25,7 +25,7 @@
         };
         github = {
           user = {
-            name = "0xayko";
+            name = "0xB0F";
             email = "github.gimmick175@slmails.com";
           };
         };

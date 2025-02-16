@@ -1,5 +1,5 @@
 return {
-    "0xayko/lf.nvim",
+    "0xB0F/lf.nvim",
     dependencies = {
         "akinsho/toggleterm.nvim",
     },

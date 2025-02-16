@@ -32,7 +32,7 @@ lib.mkIf config.me.gui.enable {
         confirm_exit=false
         copy_clipboard=false
         copy_selection=false
-        disable_tray=true
+        disable_tray=false
         edit_ctrl_return=true
         editor=gedit --standalone -- %1
         expire_tab=0

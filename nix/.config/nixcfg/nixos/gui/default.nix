@@ -1,8 +1,10 @@
 {
   pkgs,
   myLib,
+  system,
   config,
   lib,
+  inputs,
   ...
 }:
 
@@ -10,13 +12,24 @@
   imports = [ ] ++ (myLib.filesIn ./default) ++ (myLib.filesIn ./bundles);
 
   config = lib.mkIf config.me.gui.enable {
-    environment.systemPackages = with pkgs; [
-      auto.localsend
-      via
-      gnome-themes-extra
-    ];
+    environment.systemPackages =
+      with pkgs;
+      [
+        auto.localsend
+        via
+        gnome-themes-extra
+        wireshark
+      ]
+      ++ [
+        inputs.gns3.legacyPackages.${system}.gns3-gui
+      ];
     networking.firewall.allowedTCPPorts = [ 53317 ];
     networking.firewall.allowedUDPPorts = [ 53317 ];
+
+    services.gns3-server = {
+      enable = true;
+      package = inputs.gns3.legacyPackages.${system}.gns3-server;
+    };
 
     hardware.keyboard.qmk.enable = true;
     services.udev.packages = [ pkgs.via ];

@@ -29,7 +29,7 @@ lib.mkIf config.me.gui.enable {
 
         playing = palette.green;
         playing_bg = palette.bg0;
-        playing_selected = palette.bg2;
+        playing_selected = palette.green;
 
         highlight = palette.fg0;
         highlight_bg = palette.bg2;

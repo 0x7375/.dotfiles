@@ -2,11 +2,11 @@
   "nodes": {
     "auto-update": {
       "locked": {
-        "lastModified": 1738410390,
-        "narHash": "sha256-xvTo0Aw0+veek7hvEVLzErmJyQkEcRk6PSR4zsRQFEc=",
+        "lastModified": 1738546358,
+        "narHash": "sha256-nLivjIygCiqLp5QcL7l56Tca/elVqM9FG1hGd9ZSsrg=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "3a228057f5b619feb3186e986dbe76278d707b6e",
+        "rev": "c6e957d81b96751a3d5967a0fd73694f303cc914",
         "type": "github"
       },
       "original": {
@@ -84,6 +84,22 @@
       "original": {
         "owner": "numtide",
         "repo": "flake-utils",
+        "type": "github"
+      }
+    },
+    "gns3": {
+      "locked": {
+        "lastModified": 1705204527,
+        "narHash": "sha256-WVz9WdaFBhAwO/7A+HlW8HPJ4VQ8QnpCD1WZAcAPneo=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "dd5621df6dcb90122b50da5ec31c411a0de3e538",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "ref": "dd5621df6dcb90122b50da5ec31c411a0de3e538a",
+        "repo": "nixpkgs",
         "type": "github"
       }
     },
@@ -185,6 +201,7 @@
       "inputs": {
         "auto-update": "auto-update",
         "disko": "disko",
+        "gns3": "gns3",
         "home-manager": "home-manager",
         "nix-index-database": "nix-index-database",
         "nixos-wsl": "nixos-wsl",

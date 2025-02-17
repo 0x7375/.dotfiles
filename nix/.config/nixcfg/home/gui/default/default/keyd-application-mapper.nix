@@ -52,9 +52,11 @@ lib.mkIf config.me.gui.enable {
         control.w = C-backspace
         control.d = C-w
 
-        [io.ente.auth]
+        [io-ente-auth]
         ${enter}
+        ${upDown}
         ${backspace}
+        control.e = macro(tab tab tab enter)
 
         [1password]
         ${enter}

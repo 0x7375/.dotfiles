@@ -99,7 +99,7 @@
 
       vpn () {
           if [ $# -lt 2 ]; then
-              echo "Usage: vpn <up|down|restart> <interface(s)>"
+              echo "Usage: vpn <start|stop|restart> <interface(s)>"
               return 1
           fi
 
@@ -107,13 +107,13 @@
           shift
 
           case "$action" in
-              up|down|restart)
+              start|stop|restart)
                   for interface in "$@"; do
                       sudo systemctl "$action" wg-quick-$interface.service
                   done
                   ;;
               *)
-                  echo "Invalid action. Use 'up', 'down', or 'restart'."
+                  echo "Invalid action. Use 'start', 'stop', or 'restart'."
                   return 1
                   ;;
           esac

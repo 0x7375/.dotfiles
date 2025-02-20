@@ -37,6 +37,7 @@ lib.mkIf config.me.secrets.enable {
         ];
         exclude = [
           ".*"
+          "node_modules"
         ];
         timerConfig = {
           OnCalendar = calendar;

@@ -73,6 +73,7 @@
     enable = true;
     config = {
       theme = "gruvbox-dark";
+      style = "header,grid";
     };
   };
 

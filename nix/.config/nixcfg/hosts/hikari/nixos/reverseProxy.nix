@@ -31,13 +31,13 @@ in
         };
       };
 
-      "jellyfin.${url}" = mkSubDomain "8096";
+      "media.${url}" = mkSubDomain "8096";
       "request.${url}" = mkSubDomain "5055";
       "sync.${url}" = mkSubDomain "8384";
       "torrent.${url}" = mkSubDomain "8080";
-      "prowlarr.${url}" = mkSubDomain "9696";
-      "radarr.${url}" = mkSubDomain "7878";
-      "sonarr.${url}" = mkSubDomain "8989";
+      "indexer.${url}" = mkSubDomain "9696";
+      "movies.${url}" = mkSubDomain "7878";
+      "series.${url}" = mkSubDomain "8989";
 
       "router.${url}" = {
         forceSSL = true;

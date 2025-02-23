@@ -56,10 +56,10 @@ return {
             },
             border = "single",
         },
-        global_git_icons = false,
         defaults = {
             header = false,
-            formatter = "path.filename_first"
+            formatter = "path.filename_first",
+            git_icons = false,
         },
         lsp = {
             code_actions = {

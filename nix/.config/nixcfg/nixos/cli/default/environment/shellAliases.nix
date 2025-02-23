@@ -43,7 +43,6 @@
         '';
       du = "${pkgs.git}/bin/git -C ${dotfiles} pull --rebase";
       df = "${pkgs.git}/bin/git -C ${dotfiles} diff";
-      cat = "${pkgs.bat}/bin/bat";
 
       s = "${pkgs.systemd}/bin/systemctl";
 
@@ -56,7 +55,7 @@
       mv = "mv -v";
       free = "${pkgs.procps}/bin/free -m";
       grep = "${pkgs.gnugrep}/bin/grep --color=always";
-      ls = "${pkgs.coreutils}/bin/ls --color --group-directories-first";
+      ls = "ls --color --group-directories-first";
       ll = "${pkgs.coreutils}/bin/ls -lha --color --group-directories-first";
       lsblk = "${pkgs.util-linux}/bin/lsblk -o NAME,FSTYPE,SIZE,MOUNTPOINTS";
       tree = "${pkgs.tree}/bin/tree -L 4";

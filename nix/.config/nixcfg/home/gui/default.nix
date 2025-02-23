@@ -1,9 +1,16 @@
-{ myLib, ... }:
+{
+  myLib,
+  lib,
+  config,
+  ...
+}:
 
 {
   imports = [
     ./default
   ] ++ (myLib.filesIn ./x11);
 
-  xsession.numlock.enable = true;
+  config = lib.mkIf config.me.gui.enable {
+    xsession.numlock.enable = true;
+  };
 }

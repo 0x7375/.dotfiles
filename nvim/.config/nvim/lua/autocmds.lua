@@ -19,6 +19,12 @@ vim.filetype.add({
     },
 })
 
+vim.filetype.add({
+    extension = {
+        g4 = 'antlr4'
+    },
+})
+
 -- go to last loc when opening a buffer
 local function augroup(name)
     return vim.api.nvim_create_augroup("lazyvim_" .. name, { clear = true })

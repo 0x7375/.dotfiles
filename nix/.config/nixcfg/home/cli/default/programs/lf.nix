@@ -624,6 +624,11 @@ in
         *.opus  00;36
         *.spx   00;36
         *.xspf  00;36
+
+        # compilation files
+        *.class 00;37
+        *.o     00;37
+        *.pyc   00;37
       '';
   };
 }

@@ -64,25 +64,25 @@
           hideMiniPlayerButton
           hideFullScreenButton
         ];
-        theme = {
-          # https://github.com/Gerg-L/spicetify-nix/blob/master/pkgs/themes.nix
-          name = "text";
-          src = "${spicePkgs.sources.officialThemes}/text";
-          patches = {
-            "xpui.js_find_8008" = ",(\\w+=)56";
-            "xpui.js_repl_8008" = ",\${1}32";
-          };
-          additionalCss = # css
-            ''
-              .Root__top-container {
-                gap: var(--panel-gap) 0 !important;
-              }
-              #Desktop_LeftSidebar_Id {
-                display: none !important;
-              }
-            '';
-        };
-        colorScheme = "Gruvbox";
+        # theme = {
+        #   # https://github.com/Gerg-L/spicetify-nix/blob/master/pkgs/themes.nix
+        #   name = "text";
+        #   src = "${spicePkgs.sources.officialThemes}/text";
+        #   patches = {
+        #     "xpui.js_find_8008" = ",(\\w+=)56";
+        #     "xpui.js_repl_8008" = ",\${1}32";
+        #   };
+        #   additionalCss = # css
+        #     ''
+        #       .Root__top-container {
+        #         gap: var(--panel-gap) 0 !important;
+        #       }
+        #       #Desktop_LeftSidebar_Id {
+        #         display: none !important;
+        #       }
+        #     '';
+        # };
+        # colorScheme = "Gruvbox";
       };
   };
 }

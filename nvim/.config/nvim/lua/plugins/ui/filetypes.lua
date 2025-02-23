@@ -11,6 +11,10 @@ return {
         end,
     },
     {
+        "dylon/vim-antlr",
+        ft = "antlr4",
+    },
+    {
         "MTDL9/vim-log-highlighting",
         ft = "log",
     },

@@ -1,5 +1,6 @@
 {
   myLib,
+  pkgs,
   config,
   lib,
   ...
@@ -9,6 +10,15 @@ let
   palette = myLib.palette;
 in
 lib.mkIf config.me.gui.enable {
+  nixpkgs.overlays = [
+    (final: prev: {
+      ncspot = prev.ncspot.override {
+        ueberzug = pkgs.ueberzugpp;
+        withCover = true;
+      };
+    })
+  ];
+
   programs.ncspot = {
     enable = true;
     settings = {
@@ -16,10 +26,21 @@ lib.mkIf config.me.gui.enable {
       notify = true;
       repeat = "playlist";
       volnorm = true;
+      flip_status_indicators = true;
+      backend = "pulseaudio";
       keybindings = {
         playpause = "XF86AudioPlay";
         previous = "XF86AudioPrev";
         next = "XF86AudioNext";
+        "Ctrl+h" = "back";
+        Esc = "back";
+        Q = "focus queue";
+        L = "focus library";
+        S = "focus search";
+        C = "focus cover";
+        J = "next";
+        K = "previous";
+        q = "queue; move down 1; queue; move down 1; queue; move down 1;queue; move down 1; queue; move down 1;queue; move down 1; queue; move down 1;queue; move down 1; queue; move down 1;queue; move down 1; queue; move down 1;queue; move down 1; queue; move down 1;queue; move down 1; queue; move down 1;queue; move down 1; queue; move down 1;queue; move down 1; queue; move down 1;queue; move down 1; queue; move down 1;queue; move down 1; queue; move down 1";
       };
       theme = {
         background = palette.bg0;

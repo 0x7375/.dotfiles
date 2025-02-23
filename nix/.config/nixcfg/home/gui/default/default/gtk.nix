@@ -47,6 +47,8 @@ lib.mkIf config.me.gui.enable {
     theme = {
       package = (pkgs.gruvbox-gtk-theme.override { colorVariants = [ "dark" ]; });
       name = "Gruvbox-Dark";
+      # package = pkgs.yaru-theme;
+      # name = "Yaru-dark";
     };
     gtk3.extraConfig = {
       gtk-application-prefer-dark-theme = 1;

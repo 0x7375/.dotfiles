@@ -72,6 +72,7 @@ lib.mkIf config.me.gui.enable {
       d = "scroll half-down";
       D = "toggle_page_mode";
       r = "reload";
+      "<C-r>" = "rotate";
       R = "reload";
       K = "zoom in";
       J = "zoom out";

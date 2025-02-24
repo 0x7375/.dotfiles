@@ -10,7 +10,8 @@ pkgs.writeShellApplication {
   text = ''
     set -euo pipefail
 
-    declare -r EXPORT_DIR=''${HOME}/repos/dotfiles
+    declare EXPORT_DIR
+    EXPORT_DIR="$(mktemp -d)"
     declare -r HM_DIR=''${XDG_STATE_HOME}/nix/profiles/home-manager
     declare -r VARS_FILE=''${HM_DIR}/home-path/etc/profile.d/hm-session-vars.sh
 
@@ -38,5 +39,6 @@ pkgs.writeShellApplication {
     sed -i '/icon_path=/d' "''${EXPORT_DIR}"/.config/dunst/dunstrc
 
     sed -i '/@import/d' "''${EXPORT_DIR}"/.config/gtk-4.0/gtk.css
+    echo "Dotfiles exported to ''${EXPORT_DIR}"
   '';
 }

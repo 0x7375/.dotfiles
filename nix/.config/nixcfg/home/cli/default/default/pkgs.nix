@@ -29,5 +29,7 @@
     # copilot
     nodejs
     legcord
+
+    scripts.flake
   ];
 }

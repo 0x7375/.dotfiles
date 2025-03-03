@@ -143,6 +143,7 @@ lib.mkIf config.me.gui.enable {
             # delete all browsing data on shutdown
             "privacy.sanitize.sanitizeOnShutdown" = true;
             "privacy.clearOnShutdown.history" = false;
+            "privacy.clearOnShutdown_v2.historyFormDataAndDownloads" = false;
             "privacy.clearOnShutdown.downloads" = false;
             "privacy.clearOnShutdown.formdata" = true;
             "privacy.clearOnShutdown.sessions" = true;

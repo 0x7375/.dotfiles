@@ -12,6 +12,15 @@
   imports = [ ] ++ (myLib.filesIn ./default) ++ (myLib.filesIn ./bundles);
 
   config = lib.mkIf config.me.gui.enable {
+    environment.etc = {
+      "1password/custom_allowed_browsers" = {
+        text = ''
+          librewolf
+        '';
+        mode = "0755";
+      };
+    };
+
     environment.systemPackages =
       with pkgs;
       [

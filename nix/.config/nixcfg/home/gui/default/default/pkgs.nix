@@ -14,7 +14,7 @@ lib.mkIf config.me.gui.enable {
           owner = "~ayko";
           repo = "st";
           rev = "main";
-          hash = "sha256-DYgWO9FHX7z0gtdlDuxojzyT1ezGvUau7AzuFnHr5i4=";
+          hash = "sha256-qchyucQIHtei3CfyIqg86Mn1C7Ba0c4Ui8xoyAkyeM8=";
         };
       });
     in
@@ -55,12 +55,13 @@ lib.mkIf config.me.gui.enable {
       qbittorrent
       scrcpy
       vmware-horizon-client
-      ungoogled-chromium
+      auto.ungoogled-chromium
+      auto.mullvad-browser
       signal-desktop
       st
     ]
     ++ (lib.optionals config.me.devPkgs.enable [
-      nodePackages.eas-cli
+      # nodePackages.eas-cli
 
       # haskell
       ghc
@@ -83,13 +84,13 @@ lib.mkIf config.me.gui.enable {
       gnumake
       gcc
 
-      texliveMedium
+      texliveFull
       python3
       taplo
       jq
 
       android-studio
-      jetbrains.idea-community
+      stable.jetbrains.idea-community
 
       # codium
       (vscode-with-extensions.override {

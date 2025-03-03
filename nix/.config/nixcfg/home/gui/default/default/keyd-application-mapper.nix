@@ -38,7 +38,7 @@ lib.mkIf config.me.gui.enable {
       # toml
       ''
         # A-key and M-key (alt and meta) need to be swapped because I swap alt and windows key
-        [firefox]
+        [librewolf]
 
         f7 = M-right
         f8 = M-left

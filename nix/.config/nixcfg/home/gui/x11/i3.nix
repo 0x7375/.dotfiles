@@ -16,7 +16,7 @@ lib.mkIf config.me.gui.enable {
     extraConfig = ''
       set $tmux ${pkgs.alacritty}/bin/alacritty -e ${pkgs.tmux}/bin/tmux new-session
       set $term ${pkgs.alacritty}/bin/alacritty -e
-      set $browser ${pkgs.firefox}/bin/firefox
+      set $browser ${pkgs.librewolf}/bin/librewolf
       set $alt Mod1
       set $win Mod4
 

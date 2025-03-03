@@ -1,26 +1,18 @@
 {
   pkgs,
   lib,
+  myLib,
   config,
   ...
 }:
 
 lib.mkIf config.me.gui.enable {
 
-  # environment.etc = {
-  #   "1password/custom_allowed_browsers" = {
-  #     text = ''
-  #       .zen-wrapped
-  #     '';
-  #     mode = "0755";
-  #   };
-  # };
-  #
   # home.packages = with pkgs; [
   #   inputs.zen-browser.packages."${system}".specific
   # ];
 
-  programs.firefox = {
+  programs.librewolf = {
     enable = true;
     profiles.alt = {
       isDefault = false;
@@ -56,16 +48,87 @@ lib.mkIf config.me.gui.enable {
       {
         isDefault = true;
         settings =
+          let
+            inherit (myLib) palette;
+          in
           fastfox
           // securefox
           // peskyfox
           // smoothfox
           // {
             # ui state
-            "browser.uiCustomization.state" = "{\"placements\":{\"widget-overflow-fixed-list\":[],\"unified-extensions-area\":[\"dearrow_ajay_app-browser-action\",\"moz-addon-prod_7tv_app-browser-action\",\"_d7742d87-e61d-4b78-b8a1-b469842139fa_-browser-action\",\"sponsorblocker_ajay_app-browser-action\",\"ublock0_raymondhill_net-browser-action\",\"_7a7a4a92-a2a0-41d1-9fd7-1e92480d612d_-browser-action\",\"_25fc87fa-4d31-4fee-b5c1-c32a7844c063_-browser-action\",\"addon_darkreader_org-browser-action\",\"_762f9885-5a13-4abd-9c77-433dcd38b8fd_-browser-action\",\"myallychou_gmail_com-browser-action\",\"_4c421bb7-c1de-4dc6-80c7-ce8625e34d24_-browser-action\",\"_46abbc04-ce38-475f-9ef8-e0a4a59d0c9f_-browser-action\",\"addon_simplelogin-browser-action\",\"78272b6fa58f4a1abaac99321d503a20_proton_me-browser-action\",\"_446900e4-71c2-419f-a6a7-df9c091e268b_-browser-action\",\"_019b606a-6f61-4d01-af2a-cea528f606da_-browser-action\",\"_0981817c-71b3-4853-a801-481c90af2e8e_-browser-action\"],\"nav-bar\":[\"customizableui-special-spring1\",\"urlbar-container\",\"customizableui-special-spring2\",\"save-to-pocket-button\",\"downloads-button\",\"unified-extensions-button\",\"forward-button\",\"back-button\"],\"toolbar-menubar\":[\"menubar-items\"],\"TabsToolbar\":[\"firefox-view-button\",\"tabbrowser-tabs\",\"new-tab-button\",\"alltabs-button\"],\"PersonalToolbar\":[\"personal-bookmarks\"]},\"seen\":[\"ublock0_raymondhill_net-browser-action\",\"_7a7a4a92-a2a0-41d1-9fd7-1e92480d612d_-browser-action\",\"developer-button\",\"_25fc87fa-4d31-4fee-b5c1-c32a7844c063_-browser-action\",\"sponsorblocker_ajay_app-browser-action\",\"addon_darkreader_org-browser-action\",\"_d7742d87-e61d-4b78-b8a1-b469842139fa_-browser-action\",\"moz-addon-prod_7tv_app-browser-action\",\"_762f9885-5a13-4abd-9c77-433dcd38b8fd_-browser-action\",\"myallychou_gmail_com-browser-action\",\"_4c421bb7-c1de-4dc6-80c7-ce8625e34d24_-browser-action\",\"_46abbc04-ce38-475f-9ef8-e0a4a59d0c9f_-browser-action\",\"addon_simplelogin-browser-action\",\"dearrow_ajay_app-browser-action\",\"78272b6fa58f4a1abaac99321d503a20_proton_me-browser-action\",\"_446900e4-71c2-419f-a6a7-df9c091e268b_-browser-action\",\"_019b606a-6f61-4d01-af2a-cea528f606da_-browser-action\",\"_0981817c-71b3-4853-a801-481c90af2e8e_-browser-action\"],\"dirtyAreaCache\":[\"unified-extensions-area\",\"PersonalToolbar\",\"nav-bar\",\"toolbar-menubar\",\"TabsToolbar\"],\"currentVersion\":20,\"newElementCount\":9}";
+            "browser.uiCustomization.state" = # json
+              ''
+                {
+                  "placements": {
+                    "widget-overflow-fixed-list": [],
+                    "unified-extensions-area": [
+                      "dearrow_ajay_app-browser-action",
+                      "sponsorblocker_ajay_app-browser-action",
+                      "ublock0_raymondhill_net-browser-action",
+                      "moz-addon-prod_7tv_app-browser-action",
+                      "_d7742d87-e61d-4b78-b8a1-b469842139fa_-browser-action",
+                      "myallychou_gmail_com-browser-action",
+                      "_7a7a4a92-a2a0-41d1-9fd7-1e92480d612d_-browser-action",
+                      "addon_darkreader_org-browser-action",
+                      "_e58d3966-3d76-4cd9-8552-1582fbc800c1_-browser-action",
+                      "_aecec67f-0d10-4fa7-b7c7-609a2db280cf_-browser-action",
+                      "_d634138d-c276-4fc8-924b-40a0ea21d284_-browser-action"
+                    ],
+                    "nav-bar": [
+                      "customizableui-special-spring1",
+                      "urlbar-container",
+                      "customizableui-special-spring2",
+                      "save-to-pocket-button",
+                      "downloads-button",
+                      "unified-extensions-button",
+                      "forward-button",
+                      "back-button"
+                    ],
+                    "toolbar-menubar": [
+                      "menubar-items"
+                    ],
+                    "TabsToolbar": [
+                      "firefox-view-button",
+                      "tabbrowser-tabs",
+                      "new-tab-button",
+                      "alltabs-button"
+                    ],
+                    "vertical-tabs": [],
+                    "PersonalToolbar": [
+                      "import-button",
+                      "personal-bookmarks"
+                    ]
+                  },
+                  "seen": [
+                    "developer-button",
+                    "_d7742d87-e61d-4b78-b8a1-b469842139fa_-browser-action",
+                    "moz-addon-prod_7tv_app-browser-action",
+                    "myallychou_gmail_com-browser-action",
+                    "ublock0_raymondhill_net-browser-action",
+                    "_7a7a4a92-a2a0-41d1-9fd7-1e92480d612d_-browser-action",
+                    "sponsorblocker_ajay_app-browser-action",
+                    "dearrow_ajay_app-browser-action",
+                    "addon_darkreader_org-browser-action",
+                    "_e58d3966-3d76-4cd9-8552-1582fbc800c1_-browser-action",
+                    "_aecec67f-0d10-4fa7-b7c7-609a2db280cf_-browser-action",
+                    "_d634138d-c276-4fc8-924b-40a0ea21d284_-browser-action"
+                  ],
+                  "dirtyAreaCache": [
+                    "nav-bar",
+                    "vertical-tabs",
+                    "unified-extensions-area",
+                    "PersonalToolbar",
+                    "toolbar-menubar",
+                    "TabsToolbar"
+                  ],
+                  "currentVersion": 20,
+                  "newElementCount": 5
+                }
+              '';
 
             # disable fingerprinting protection
-            # "privacy.resistFingerprinting" = false;
+            "privacy.resistFingerprinting" = false;
 
             # enable Firefox Sync
             "identity.fxaccounts.enabled" = true;
@@ -128,7 +191,7 @@ lib.mkIf config.me.gui.enable {
             "network.http.max-persistent-connections-per-server" = 10;
 
             # change blank pages background color
-            "browser.display.background_color.dark" = "#1D2021";
+            "browser.display.background_color.dark" = "${palette.bg0}";
 
             # middlemouse paste
             "middlemouse.paste" = false;
@@ -160,6 +223,15 @@ lib.mkIf config.me.gui.enable {
 
             # no beep of search
             "accessibility.typeaheadfind.enablesound" = false;
+
+            # always request canvas permission
+            "privacy.resistFingerprinting.autoDeclineNoUserInputCanvasPrompts" = true;
+
+            # disable webgl
+            "webgl.disabled" = true;
+
+            # disable autoplay
+            "media.autoplay.blocking_policy" = 2;
           };
         userChrome = builtins.readFile ./userChrome.css;
         search = {

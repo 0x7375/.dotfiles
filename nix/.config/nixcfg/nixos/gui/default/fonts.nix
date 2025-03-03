@@ -19,13 +19,10 @@ lib.mkIf config.me.gui.enable {
       fonts.CartographCF
       fonts.InconsolataNF
       font-awesome
-      (nerdfonts.override {
-        fonts = [
-          "Mononoki"
-          "Ubuntu"
-          "FiraCode"
-        ];
-      })
+      nerd-fonts.mononoki
+      nerd-fonts._0xproto
+      nerd-fonts.ubuntu
+      nerd-fonts.fira-code
       noto-fonts
       noto-fonts-cjk-sans
       noto-fonts-emoji

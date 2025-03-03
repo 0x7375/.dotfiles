@@ -17,10 +17,10 @@
         system = final.system;
         config.allowUnfree = true;
       };
-      # stable = import inputs.nixpkgs-stable {
-      #   system = final.system;
-      #   config.allowUnfree = true;
-      # };
+      stable = import inputs.nixpkgs-stable {
+        system = final.system;
+        config.allowUnfree = true;
+      };
       auto = import inputs.auto-update {
         system = final.system;
         config.allowUnfree = true;
@@ -84,7 +84,7 @@
         InconsolataNF = prev.callPackage ../derivations/fonts/InconsolataNF.nix { };
       };
 
-      firefox = inputs.auto-update.legacyPackages.${system}.firefox.override {
+      librewolf = inputs.auto-update.legacyPackages.${system}.librewolf.override {
         extraPolicies = {
           Cookies = {
             Allow = [
@@ -92,10 +92,10 @@
               "https://reddit.com"
               "https://twitch.tv"
               "https://monkeytype.com"
-              "https://openai.com"
-              "https://chatgpt.com"
               "https://youtube.com"
               "https://google.com"
+              "https://openai.com"
+              "https://chatgpt.com"
               "https://claude.ai"
               "https://deepseek.com"
             ];
@@ -113,7 +113,23 @@
             in
             listToAttrs [
               (extension "ublock-origin" "uBlock0@raymondhill.net")
-            ];
+              (extension "darkreader" "addon@darkreader.org")
+              (extension "violentmonkey" "{aecec67f-0d10-4fa7-b7c7-609a2db280cf}")
+              (extension "vimium-ff" "{d7742d87-e61d-4b78-b8a1-b469842139fa}")
+              (extension "1password-x-password-manager" "{d634138d-c276-4fc8-924b-40a0ea21d284}")
+              (extension "buster-captcha-solver" "{e58d3966-3d76-4cd9-8552-1582fbc800c1}")
+              (extension "detach-tab" "claymont@mail.com_detach-tab")
+              (extension "sponsorblock" "sponsorBlocker@ajay.app")
+              (extension "youtube-recommended-videos" "myallychou@gmail.com")
+              (extension "dearrow" "deArrow@ajay.app")
+              (extension "styl-us" "{7a7a4a92-a2a0-41d1-9fd7-1e92480d612d}")
+            ]
+            // {
+              "moz-addon-prod@7tv.app" = {
+                install_url = "https://extension.7tv.gg/v3.0.9/ext.xpi";
+                installation_mode = "normal_installed";
+              };
+            };
           "3rdparty".Extensions = {
             "uBlock0@raymondhill.net".adminSettings = {
               userSettings = {

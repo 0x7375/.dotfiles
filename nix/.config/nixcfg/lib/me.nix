@@ -34,7 +34,7 @@
     refreshRate = lib.mkOption {
       type = lib.types.int;
       default = 60;
-      description = "Refresh rate used for smoothfox firefox config";
+      description = "Refresh rate used for smoothfox browser config";
     };
 
     boot.enable = lib.mkOption {

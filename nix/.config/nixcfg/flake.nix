@@ -3,7 +3,7 @@
 
   inputs = {
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
-    # nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-23.11";
+    nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-23.11";
     nixpkgs-master.url = "github:nixos/nixpkgs/master";
 
     nixpkgs.follows = "nixpkgs-unstable";
@@ -35,7 +35,7 @@
 
     spicetify-nix = {
       url = "github:Gerg-L/spicetify-nix";
-      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.nixpkgs.follows = "nixpkgs-stable";
     };
 
     nix-index-database = {

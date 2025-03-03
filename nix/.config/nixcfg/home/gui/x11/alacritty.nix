@@ -64,10 +64,12 @@ lib.mkIf config.me.gui.enable {
       font = {
         builtin_box_drawing = true;
         normal = {
-          family = "Inconsolata Nerd Font";
+          family = "0xproto Nerd Font";
+          # family = "Inconsolata Nerd Font";
           style = "Bold";
         };
-        size = 19;
+        size = 16;
+        # size = 19;
         offset.y = 0;
       };
       colors = {

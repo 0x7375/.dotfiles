@@ -32,13 +32,13 @@ lib.mkIf config.me.gui.enable {
     enable = true;
     font = {
       name = "Ubuntu Nerd Font";
-      package = pkgs.nerdfonts.override { fonts = [ "Ubuntu" ]; };
+      package = pkgs.nerd-fonts.ubuntu;
       size = 11;
     };
-    iconTheme = {
-      package = pkgs.gruvbox-plus-icons;
-      name = "Gruvbox-Plus-Dark";
-    };
+    # iconTheme = {
+    #   package = pkgs.gruvbox-plus-icons;
+    #   name = "Gruvbox-Plus-Dark";
+    # };
     cursorTheme = {
       name = "Bibata-Modern-Ice";
       package = pkgs.bibata-cursors;

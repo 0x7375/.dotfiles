@@ -50,11 +50,12 @@ return {
                 "rnix",                            -- archived on Jan 25, 2024
                 "scry",                            -- archived on Jun 1, 2023
                 "tailwindcss",                     -- associates with too many filetypes
+                "pylyzer",                         -- throws many irrelevant errors
                 -- "intelephense",
             },
             preferred_servers = {
                 markdown = {},
-                python = { "pyright", "ruff_lsp" },
+                -- python = { "pyright", "ruff server" },
                 php = { "phpactor", "emmet_language_server" },
                 -- python = { "pylsp" },
                 sh = { "efm", "bashls" },

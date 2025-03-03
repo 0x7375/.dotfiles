@@ -6,7 +6,7 @@ lib.mkIf config.me.gui.enable {
       editor = "nvim.desktop";
       video = "io.github.celluloid_player.Celluloid.desktop";
       image = "feh.desktop";
-      browser = "firefox.desktop";
+      browser = "librewolf.desktop";
       file-manager = "lf.desktop";
       archive-manager = "file-roller.desktop";
     in

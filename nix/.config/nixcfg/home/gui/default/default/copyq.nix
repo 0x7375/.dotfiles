@@ -1,5 +1,6 @@
 {
   lib,
+  myLib,
   config,
   ...
 }:
@@ -10,6 +11,9 @@ lib.mkIf config.me.gui.enable {
   xdg.configFile."copyq/copyq.conf" = {
     enable = true;
     text = # ini
+      let
+        p = myLib.palette;
+      in
       ''
         [General]
         plugin_priority=itemimage, itemencrypted, itemfakevim, itemnotes, itempinned, itemsync, itemtags, itemtext
@@ -182,21 +186,21 @@ lib.mkIf config.me.gui.enable {
         size=1
 
         [Theme]
-        alt_bg=#282828
+        alt_bg=${p.bg0_light}
         alt_item_css=
-        bg=#1d2021
+        bg=${p.bg0}
         css=
         css_template_items=items
         css_template_main_window=main_window
         css_template_menu=menu
         css_template_notification=notification
         cur_item_css="\n    ;border: 0.1em solid ''${sel_bg}"
-        edit_bg=#1d2021
-        edit_fg=#ebdbb2
+        edit_bg=${p.bg0}
+        edit_fg=${p.fg0}
         edit_font="Sans,12,-1,5,50,0,0,0,0,0"
-        fg=#ebdbb2
-        find_bg=#d65d0e
-        find_fg=#1d2021
+        fg=${p.fg0}
+        find_bg=${p.orange}
+        find_fg=${p.bg0}
         find_font="Sans,12,-1,5,50,0,0,0,0,0"
         font="Sans,12,-1,5,50,0,0,0,0,0"
         font_antialiasing=true
@@ -220,8 +224,8 @@ lib.mkIf config.me.gui.enable {
         num_margin=2
         search_bar="\n    ;background: ''${edit_bg}\n    ;color: ''${edit_fg}\n    ;border: 1px solid ''${alt_bg}\n    ;margin: 2px"
         search_bar_focused="\n    ;border: 1px solid ''${sel_bg}"
-        sel_bg=#3c3836
-        sel_fg=#ebdbb2
+        sel_bg=${p.bg1}
+        sel_fg=${p.fg0}
         sel_item_css=
         show_number=false
         show_scrollbars=false

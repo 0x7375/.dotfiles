@@ -33,6 +33,9 @@ lib.mkIf config.me.secrets.enable {
         "ryusei" = {
           id = "VQTBWUL-XN5DIYJ-2FVH2L5-METP43G-QGVR6HG-4E5TGBC-3G6MUN4-EEUHGQB";
         };
+        "tsuno" = {
+          id = "XAFE3W3-FG4XVNB-GCPR4CU-XAYED7H-AISJHBI-JREWBFT-CLUTRPZ-EVYV5AH";
+        };
       };
       folders = with myLib; {
         documents = syncthingDirConfig {
@@ -105,6 +108,14 @@ lib.mkIf config.me.secrets.enable {
           path = "documents/pdf/universite";
           devices = [
             "neiro"
+          ];
+        };
+        windows = syncthingDirConfig {
+          path = "windows";
+          devices = [
+            "tsuno"
+            "ryusei"
+            "yugen"
           ];
         };
       };

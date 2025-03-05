@@ -72,6 +72,12 @@ lib.mkIf (config.me.syncthing-client.enable && config.me.secrets.enable) {
             ];
           };
         };
+        windows = syncthingDirConfig {
+          path = "windows";
+          devices = [
+            "server"
+          ];
+        };
       };
     };
   };

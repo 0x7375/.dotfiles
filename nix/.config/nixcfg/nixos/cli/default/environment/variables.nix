@@ -3,6 +3,7 @@
 {
   systemd.tmpfiles.rules = [
     "d /home/${config.me.user}/.local/share/gnupg 0700 ${config.me.user} users -"
+    "d /home/${config.me.user}/.local/share/android 0770 ${config.me.user} users -"
   ];
 
   environment.variables = rec {

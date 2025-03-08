@@ -57,6 +57,8 @@
 
           history: Path = state_home / 'python_history'
 
+          if not history.exists():
+              history.touch()
           readline.read_history_file(str(history))
           atexit.register(readline.write_history_file, str(history))
 

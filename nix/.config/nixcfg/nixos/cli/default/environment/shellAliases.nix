@@ -61,6 +61,7 @@
       tree = "${pkgs.tree}/bin/tree -L 4";
       diff = "${pkgs.diffutils}/bin/diff --color";
       pk = "${pkgs.procps}/bin/pkill";
+      bc = "${pkgs.bc}/bin/bc -l";
 
       so = "${pkgs.ncurses}/bin/clear; exec $SHELL";
 
@@ -82,7 +83,7 @@
 
       clip = "${pkgs.xclip}/bin/xclip -sel clip";
 
-      py = "${pkgs.python3}/bin/python";
+      py = "python";
       dev = "${pkgs.nix}/bin/nix develop -c ${pkgs.zsh}/bin/zsh";
 
       ".." = "cd ..";

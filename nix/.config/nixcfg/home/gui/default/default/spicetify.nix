@@ -12,6 +12,10 @@
   ];
 
   config = lib.mkIf config.me.gui.enable {
+    home.packages = with pkgs; [
+      spotify
+    ];
+
     programs.spicetify =
       let
         spicePkgs = inputs.spicetify-nix.legacyPackages.${pkgs.system};

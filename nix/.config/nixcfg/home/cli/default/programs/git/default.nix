@@ -29,6 +29,12 @@
             email = "github.gimmick175@slmails.com";
           };
         };
+        codeberg = {
+          user = {
+            name = "0xB0F";
+            email = "codeberg.whooping751@simplelogin.com";
+          };
+        };
       in
       [
         {
@@ -46,6 +52,14 @@
         {
           condition = "hasconfig:remote.*.url:sh:*/**";
           contents = sourcehut;
+        }
+        {
+          condition = "hasconfig:remote.*.url:codeberg:*/**";
+          contents = codeberg;
+        }
+        {
+          condition = "hasconfig:remote.*.url:cb:*/**";
+          contents = codeberg;
         }
       ];
     ignores = [ ];
@@ -73,6 +87,16 @@
         "git@git.sr.ht:" = {
           insteadOf = [
             "sourcehut:"
+          ];
+        };
+        "https://codeberg.org/" = {
+          insteadOf = [
+            "cb:"
+          ];
+        };
+        "git@codeberg.org:" = {
+          insteadOf = [
+            "codeberg:"
           ];
         };
         "https://redmine-etu.unicaen.fr/git/" = {

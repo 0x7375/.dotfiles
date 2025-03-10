@@ -138,7 +138,7 @@ return {
                 efm = {
                     on_attach = lspformat.on_attach,
                     init_options = { documentFormatting = true, documentRangeFormatting = true },
-                    filetypes = { "sh", "nix", "php" },
+                    filetypes = { "sh", "nix", "php", "markdown" },
                     settings = {
                         languages = {
                             nix = {
@@ -162,6 +162,12 @@ return {
                                     rootMarkers = { "phpcs.xml", "composer.json" },
                                 },
                             },
+                            markdown = {
+                                {
+                                    formatCommand = "prettier --parser markdown",
+                                    formatStdin = true,
+                                },
+                            },
                         },
                     },
                     on_new_config = function(new_config)
@@ -170,6 +176,7 @@ return {
                             "shellcheck",
                             "nixfmt-rfc-style",
                             "php81Packages.php-codesniffer",
+                            "nodePackages.prettier",
                         }, new_config.cmd)
                     end,
                 },

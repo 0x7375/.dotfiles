@@ -103,7 +103,10 @@ in
 
         bind | split-window -h -c "#{pane_current_path}"
         bind - split-window -v -c "#{pane_current_path}"
-        bind % select-pane -t :.+ # cycle between panes
+        bind B break-pane -d
+        bind J join-pane -h -s :+1
+        bind K join-pane -h -s :-1
+        bind I select-pane -t :.+ # cycle between panes
 
         bind i set status
 
@@ -115,8 +118,8 @@ in
 
         bind k run-shell "tmux popup -E ${pkgs.scripts.tmux-sessionizer}/bin/tmux-sessionizer || true"
 
-        bind H run-shell "${pkgs.scripts.tmux-sessionizer}/bin/tmux-sessionizer ${config.me.flakeDir}"
-        bind J run-shell "${pkgs.scripts.tmux-sessionizer}/bin/tmux-sessionizer ~/.dotfiles"
+        # bind H run-shell "${pkgs.scripts.tmux-sessionizer}/bin/tmux-sessionizer ${config.me.flakeDir}"
+        # bind J run-shell "${pkgs.scripts.tmux-sessionizer}/bin/tmux-sessionizer ~/.dotfiles"
 
         bind -n 'C-\' run-shell -b "${pkgs.scripts.tmux-toggle-term}/bin/tmux-toggle-term"
 

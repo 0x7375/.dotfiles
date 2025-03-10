@@ -28,8 +28,7 @@ return {
             mode = { "x", "n" },
             "<leader>ccp",
             function()
-                local actions = require("CopilotChat.actions")
-                require("CopilotChat.integrations.fzflua").pick(actions.prompt_actions())
+                require("CopilotChat").select_prompt()
             end,
             desc = "Copilot chat picker",
         }
@@ -53,7 +52,7 @@ return {
         error_header = ' ~ Error ',
         show_folds = false,
 
-        model = 'claude-3.5-sonnet',
+        model = 'claude-3.7-sonnet-thought',
         show_help = false,
         auto_follow_cursor = false,
         log_level = "warn",
@@ -66,7 +65,6 @@ return {
         },
         mappings = {
             close = {
-                normal = "q",
                 insert = "",
             },
             complete = {
@@ -125,9 +123,9 @@ return {
             vim.g.copilot_chat_has_history = false
             local chat = require("CopilotChat")
             local prev_reset = chat.reset
-            chat.reset = function(...)
+            chat.reset = function()
                 vim.g.copilot_chat_has_history = false
-                return prev_reset(...)
+                return prev_reset()
             end
 
             local prev_toggle = chat.toggle

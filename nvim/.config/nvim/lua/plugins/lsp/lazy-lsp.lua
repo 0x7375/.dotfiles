@@ -41,6 +41,7 @@ return {
         require("neodev").setup()
         require("lazy-lsp").setup({
             excluded_servers = {
+                "jedi_language_server",            -- exec not found
                 "ccls",                            -- prefer clangd
                 "denols",                          -- prefer eslint and tsserver
                 "docker_compose_language_service", -- yamlls should be enough?

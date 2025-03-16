@@ -56,9 +56,8 @@ return {
             },
             preferred_servers = {
                 markdown = {},
-                -- python = { "pyright", "ruff server" },
                 php = { "phpactor", "emmet_language_server" },
-                -- python = { "pylsp" },
+                python = { "pylsp", "ruff" },
                 sh = { "efm", "bashls" },
                 nix = { "efm", "nixd" }
             },

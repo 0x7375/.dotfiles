@@ -51,7 +51,8 @@ pkgs.writeShellApplication {
 
     function monitor() {
         if [[ $XDG_SESSION_TYPE == "x11" ]]; then
-            maim -g 1920x1080+0+0 -u "$folder$file" && copy_image
+            primary_geometry=$(xrandr --query | grep primary | grep -oP '\d+x\d+\+\d+\+\d+')
+            maim -g "$primary_geometry" -u "$folder$file" && copy_image
         else
             hyprshot -o "$folder" -f "$file" -m output -sc
         fi && send_notification

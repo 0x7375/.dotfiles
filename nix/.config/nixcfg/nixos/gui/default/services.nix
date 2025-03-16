@@ -14,6 +14,8 @@ lib.mkIf config.me.gui.enable {
     };
     gvfs.enable = true;
 
+    ddccontrol.enable = true;
+
     avahi = {
       enable = true;
       nssmdns4 = true;

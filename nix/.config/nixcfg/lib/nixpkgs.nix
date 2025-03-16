@@ -26,6 +26,24 @@
         config.allowUnfree = true;
       };
 
+      nix = prev.nix.overrideAttrs (old: {
+        postPatch = ''
+          for file in \
+            src/libfetchers/github.cc \
+            src/libflake/flake/url-name.cc \
+            src/libexpr/primops/fetchTree.cc \
+            tests/nixos/sourcehut-flakes.nix \
+            src/libfetchers-tests/access-tokens.cc \
+            src/libflake-tests/url-name.cc
+          do
+            if [ -f "$file" ]; then
+              substituteInPlace "$file" --replace-fail "sourcehut" "codeberg"
+            fi
+          done
+          substituteInPlace src/libfetchers/github.cc --replace-fail "git.sr.ht" "codeberg.org"
+        '';
+      });
+
       #   nil = prev.nil.override (old: {
       #     rustPlatform = old.rustPlatform // {
       #       buildRustPackage = args: old.rustPlatform.buildRustPackage (args // rec {

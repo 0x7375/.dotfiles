@@ -1,3 +1,5 @@
+# Dotfiles
+
 Dotfiles managed with gnu stow
 
 NixOS configuration for an nvidia desktop, thinkpad laptop, a raspberry pi and wsl.
@@ -10,7 +12,7 @@ $ cd nix/.config/nixcfg; git init; mv .git .nix-git
 $ export GIT_DIR=.nix-git; git add .; git commit -m "initial commit"
 ```
 
-# Using nixos-anywhere
+## Using nixos-anywhere
 add luks password to a file on the target
 ```
 $ ssh root@target
@@ -21,7 +23,7 @@ install
 $ nix run nixpkgs#nixos-anywhere -- --flake .#target root@target
 ```
 
-# Making a bootable USB drive
+## Making a bootable USB drive
 building the iso
 ```
 $ nix build .\#nixosConfigurations.isoImg.config.system.build.isoImage 
@@ -31,8 +33,8 @@ flashing the iso
 $ sudo dd if=result/iso/nixos.iso of=/dev/disk bs=4M status=progress conv=sync
 ```
 
-# Manual installation
-## partitioning
+## Manual installation
+### partitioning
 ```
 # cfdisk /dev/disk
 # cryptsetup luksFormat /dev/disk --label NIXLUKS
@@ -43,21 +45,21 @@ $ sudo dd if=result/iso/nixos.iso of=/dev/disk bs=4M status=progress conv=sync
 # lvcreate -l 100%FREE vg -n root
 ```
 
-## formatting
+### formatting
 ```
 # mkswap /dev/disk -L NIXLABEL
 # mkfs.fat -F 32 /dev/disk -n NIXLABEL
 # mkfs.ext4 /dev/disk -L NIXLABEL
 ```
 
-## mount
+### mount
 ```
 # mount /dev/disk /mnt
 # mount --mkdir /dev/disk /mnt/root
 # swapon /dev/disk/by-label/NIXSWAP
 ```
 
-## install
+### install
 ```
 $ git clone https://git.sr.ht/~ayko/.dotfiles ~/.dotfiles
 $ cd ~/.dotfiles; stow nix

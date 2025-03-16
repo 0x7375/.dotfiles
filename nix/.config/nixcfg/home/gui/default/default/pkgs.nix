@@ -31,6 +31,7 @@ lib.mkIf config.me.gui.enable {
       imagemagick
       obs-studio
       gimp
+      kdePackages.kdenlive
       krita
       gthumb
       vlc

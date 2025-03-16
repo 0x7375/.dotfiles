@@ -26,7 +26,11 @@
   boot.kernelModules = [ "kvm-intel" ];
   boot.extraModulePackages = [ ];
 
-  hardware.nvidia.open = false;
+  hardware.nvidia = {
+    open = false;
+    modesetting.enable = false;
+  };
+  boot.kernelParams = [ "nvidia-drm.modeset=0" ];
 
   fileSystems."/" = {
     device = "/dev/disk/by-label/NIXROOT";

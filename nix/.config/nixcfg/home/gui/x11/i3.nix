@@ -54,20 +54,24 @@ lib.mkIf config.me.gui.enable {
             };
           in
           {
-            "${modifier}+t" = "exec --no-startup-id $term ${pkgs.scripts.tmux-sessionizer}/bin/tmux-sessionizer ~/";
+            "${modifier}+t" =
+              "exec --no-startup-id $term ${pkgs.scripts.tmux-sessionizer}/bin/tmux-sessionizer ~/";
             "${modifier}+Shift+t" = "exec --no-startup-id $tmux";
             "${modifier}+q" = "kill";
             "${modifier}+e" = "exec --no-startup-id $term ${pkgs.lf}/bin/lf";
             "${modifier}+Shift+e" = "exec --no-startup-id $term sudo ${pkgs.lf}/bin/lf";
-            "${modifier}+n" = "exec --no-startup-id $term ${pkgs.zsh}/bin/zsh -c '${pkgs.networkmanager}/bin/nmcli device wifi rescan && unset COLORTERM && TERM=xterm-old ${pkgs.networkmanager}/bin/nmtui'";
+            "${modifier}+n" =
+              "exec --no-startup-id $term ${pkgs.zsh}/bin/zsh -c '${pkgs.networkmanager}/bin/nmcli device wifi rescan && unset COLORTERM && TERM=xterm-old ${pkgs.networkmanager}/bin/nmtui'";
             "${modifier}+b" = "exec --no-startup-id $term ${pkgs.bluetuith}/bin/bluetuith --no-warning";
-            "${modifier}+Shift+b" = "exec --no-startup-id echo -e \"connect ${airpods}\\nquit\" | ${pkgs.bluez}/bin/bluetoothctl";
+            "${modifier}+Shift+b" =
+              "exec --no-startup-id echo -e \"connect ${airpods}\\nquit\" | ${pkgs.bluez}/bin/bluetoothctl";
             "${modifier}+Shift+n" = "exec --no-startup-id ${pkgs.networkmanager}/bin/nmcli device wifi rescan";
 
             "${modifier}+w" = "exec --no-startup-id $browser";
             "${modifier}+Shift+p" = "exec --no-startup-id ${pkgs.copyq}/bin/copyq show";
             "${modifier}+s" = "exec --no-startup-id ${pkgs.scripts.dofus-travel}/bin/dofus-travel";
-            "${modifier}+d" = "exec --no-startup-id ${j4-dmenu-desktop}/bin/j4-dmenu-desktop --no-generic -d '${pkgs.bemenu}/bin/bemenu -p \"DESKTOP\"'";
+            "${modifier}+d" =
+              "exec --no-startup-id ${j4-dmenu-desktop}/bin/j4-dmenu-desktop --no-generic -d '${pkgs.bemenu}/bin/bemenu -p \"DESKTOP\"'";
             "${modifier}+i" = "exec --no-startup-id ${pkgs.polybar}/bin/polybar-msg cmd toggle";
             "${modifier}+space" = "exec --no-startup-id ${pkgs.dunst}/bin/dunstctl close-all";
             "${modifier}+r" = "exec --no-startup-id ${pkgs.dunst}/bin/dunstctl history-pop";
@@ -78,14 +82,16 @@ lib.mkIf config.me.gui.enable {
 
             "${modifier}+p" = "exec --no-startup-id ${pkgs.scripts.powermenu}/bin/powermenu";
             "--release ${modifier}+Shift+c" = "exec ${pkgs.scripts.color-picker}/bin/color-picker";
-            "--release ${modifier}+Shift+m" = "exec $tmux -s 'xprop' '${pkgs.xorg.xprop}/bin/xprop; exec $SHELL";
+            "--release ${modifier}+Shift+m" =
+              "exec $tmux -s 'xprop' '${pkgs.xorg.xprop}/bin/xprop; exec $SHELL";
 
             "Print" = "exec --no-startup-id ${pkgs.scripts.screenshot}/bin/screenshot region";
             "$alt+Sys_Req" = "exec --no-startup-id ${pkgs.scripts.screenshot}/bin/screenshot window";
             "Shift+Print" = "exec --no-startup-id ${pkgs.scripts.screenshot}/bin/screenshot monitor";
 
             "XF86AudioRaiseVolume" = "exec --no-startup-id ${pkgs.scripts.change-volume}/bin/change-volume up";
-            "XF86AudioLowerVolume" = "exec --no-startup-id ${pkgs.scripts.change-volume}/bin/change-volume down";
+            "XF86AudioLowerVolume" =
+              "exec --no-startup-id ${pkgs.scripts.change-volume}/bin/change-volume down";
             "XF86AudioMute" = "exec --no-startup-id ${pkgs.scripts.change-volume}/bin/change-volume mute";
 
             "XF86AudioNext" = "exec --no-startup-id ${pkgs.playerctl}/bin/playerctl next";
@@ -136,6 +142,11 @@ lib.mkIf config.me.gui.enable {
             "${modifier}+Shift+j" = "resize grow height 10 px or 10 ppt";
             "${modifier}+Shift+k" = "resize shrink height 10 px or 10 ppt";
             "${modifier}+Shift+l" = "resize grow width 10 px or 10 ppt";
+
+            "XF86MonBrightnessDown" =
+              "exec --no-startup-id ${pkgs.scripts.change-brightness}/bin/change-brightness down";
+            "XF86MonBrightnessUp" =
+              "exec --no-startup-id ${pkgs.scripts.change-brightness}/bin/change-brightness up";
           };
         floating = {
           inherit modifier;

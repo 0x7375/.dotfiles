@@ -9,6 +9,7 @@
       enable = true;
       bundles = {
         postgresql.enable = true;
+        neo4j.enable = false;
         gaming.enable = true;
       };
     };

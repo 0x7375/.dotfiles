@@ -33,10 +33,6 @@
 
   xsession.windowManager.i3 = {
     config = {
-      keybindings = {
-        "XF86MonBrightnessDown" = "exec --no-startup-id ${pkgs.scripts.change-brightness}/bin/change-brightness down";
-        "XF86MonBrightnessUp" = "exec --no-startup-id ${pkgs.scripts.change-brightness}/bin/change-brightness up";
-      };
       workspaceOutputAssign = [
         {
           output = "HDMI-1";

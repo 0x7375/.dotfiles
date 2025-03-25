@@ -16,7 +16,7 @@
         ''
           if [ ! -L /root/.config ] && [ -e /home/${config.me.user}/.config ]; then
             ln -s /home/${config.me.user}/.config /root/.config
-              fi
+          fi
         '';
     };
     copyBashrcToRoot = {
@@ -28,6 +28,18 @@
         '';
     };
   };
+
+  virtualisation.docker = {
+    enable = true;
+    rootless = {
+      enable = true;
+      setSocketVariable = true;
+    };
+  };
+
+  environment.systemPackages = with pkgs; [
+    docker-compose
+  ];
 
   console = {
     packages = with pkgs; [ terminus_font ];

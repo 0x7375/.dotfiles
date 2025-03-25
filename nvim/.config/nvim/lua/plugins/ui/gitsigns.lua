@@ -31,8 +31,9 @@ return {
             end, { buffer = bufnr })
 
             vim.keymap.set('n', 'gb', gitsigns.toggle_current_line_blame, { buffer = bufnr })
-            vim.keymap.set('n', 'gh', gitsigns.preview_hunk_inline, { buffer = bufnr })
-            vim.keymap.set('n', 'gH', gitsigns.reset_hunk, { buffer = bufnr })
+            vim.keymap.set('n', 'gh', gitsigns.preview_hunk, { buffer = bufnr })
+            vim.keymap.set('n', 'gH', gitsigns.preview_hunk_inline, { buffer = bufnr })
+            vim.keymap.set('n', 'gX', gitsigns.reset_hunk, { buffer = bufnr })
         end,
     },
 }

@@ -7,6 +7,7 @@ Flake uses [home-manager](https://github.com/nix-community/home-manager), and [a
 
 `nd` script to show changes and commit after every successfull rebuild to a local git repo inside nixcfg
 
+## Local rebuild repo setup
 ```
 $ cd nix/.config/nixcfg; git init; mv .git .nix-git
 $ export GIT_DIR=.nix-git; git add .; git commit -m "initial commit"

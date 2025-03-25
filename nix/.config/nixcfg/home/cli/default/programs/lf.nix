@@ -74,7 +74,7 @@ in
         ifs = "\\n";
         filesep = "\\n";
         info = true;
-        sortby = "natural";
+        sortby = "ext";
         hidden = true;
         ignorecase = true;
         icons = false;
@@ -626,6 +626,9 @@ in
         *.xspf  00;36
 
         # compilation files
+        *.aux   00;37
+        *.log   00;37
+        *.out   00;37
         *.class 00;37
         *.o     00;37
         *.pyc   00;37

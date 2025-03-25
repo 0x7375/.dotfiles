@@ -70,6 +70,6 @@ return {
         oldfiles = {
             include_current_session = true,
         },
-        file_ignore_patterns = { "%.class$", "node_modules", ".expo", ".env$", "doc" },
+        file_ignore_patterns = { "%.class$", "%.out$", "%.log$", "%.aux$", "node_modules", ".expo", ".env$", "doc" },
     }
 }

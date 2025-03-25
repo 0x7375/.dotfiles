@@ -26,13 +26,5 @@
     MaxRetentionSec=2week
   '';
 
-  virtualisation.docker = {
-    enable = true;
-    rootless = {
-      enable = true;
-      setSocketVariable = true;
-    };
-  };
-
   system.stateVersion = "24.11";
 }

@@ -96,12 +96,17 @@ lib.mkIf config.me.secrets.enable {
             "ryusei"
           ];
           extraConfig = {
-            maxConflicts = 0;
             ignoreDelete = true;
             ignore = [
               "*"
               "!history"
             ];
+            versioning = {
+              type = "external";
+              params = {
+                command = "${pkgs.scripts.merge-zsh}/bin/merge-zsh %FOLDER_PATH% %FILE_PATH%";
+              };
+            };
           };
         };
         universite = syncthingDirConfig {

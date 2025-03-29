@@ -1,4 +1,5 @@
 {
+  pkgs,
   myLib,
   config,
   lib,
@@ -70,6 +71,12 @@ lib.mkIf (config.me.syncthing-client.enable && config.me.secrets.enable) {
               "*"
               "!history"
             ];
+            versioning = {
+              type = "external";
+              params = {
+                command = "${pkgs.scripts.merge-zsh}/bin/merge-zsh %FOLDER_PATH% %FILE_PATH%";
+              };
+            };
           };
         };
         windows = syncthingDirConfig {

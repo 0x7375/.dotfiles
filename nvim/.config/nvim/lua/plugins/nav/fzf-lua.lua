@@ -7,6 +7,7 @@ return {
         { "<leader>pd",     function() vim.cmd.FzfLua("lsp_document_diagnostics") end,  desc = "Search file diagnostics" },
         { "<leader>pf",     function() vim.cmd.FzfLua("files") end,                     desc = "Search for file" },
         { "<leader>pg",     function() vim.cmd.FzfLua("live_grep_glob") end,            desc = "Search for string" },
+        { "<leader>pG",     function() vim.cmd.FzfLua("grep_cword") end,                desc = "Search for word under cursor" },
         { "<leader>ph",     function() vim.cmd.FzfLua("help_tags") end,                 desc = "Search for help documentation" },
         { "<leader>pH",     function() vim.cmd.FzfLua("highlights") end,                desc = "Search for highlight groups" },
         { "<leader>pk",     function() vim.cmd.FzfLua("keymaps") end,                   desc = "Search for keymaps" },
@@ -70,6 +71,6 @@ return {
         oldfiles = {
             include_current_session = true,
         },
-        file_ignore_patterns = { "%.class$", "%.out$", "%.log$", "%.aux$", "node_modules", ".expo", ".env$", "doc" },
+        file_ignore_patterns = { "%.class$", "%.out$", "%.log$", "%.aux$", "%.toc$", "node_modules", ".expo", ".env$", "doc" },
     }
 }

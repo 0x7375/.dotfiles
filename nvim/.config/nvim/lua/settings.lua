@@ -3,6 +3,8 @@ vim.opt.cindent = true
 vim.opt.cinkeys:remove("0#")
 vim.opt.indentkeys:remove("0#")
 
+vim.opt.modeline = false
+
 -- hide search hit bottom
 vim.opt.shortmess:append("Is")
 

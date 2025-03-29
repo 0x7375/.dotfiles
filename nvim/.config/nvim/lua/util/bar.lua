@@ -28,7 +28,7 @@ M.build_bar = function()
     end
 
     local align_right = "%="
-    local percentage = " %p%%"
+    local position = " %l,%c"
 
     return table.concat({
         set_normal,
@@ -38,7 +38,7 @@ M.build_bar = function()
         set_green,
         branch,
         set_normal,
-        percentage
+        position,
     }, "")
 end
 

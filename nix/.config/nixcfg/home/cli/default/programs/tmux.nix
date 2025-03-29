@@ -106,7 +106,7 @@ in
         bind B break-pane -d
         bind J join-pane -h -s :+1
         bind K join-pane -h -s :-1
-        bind I select-pane -t :.+ # cycle between panes
+        bind L select-pane -t :.+ # cycle between panes
 
         bind i set status
 

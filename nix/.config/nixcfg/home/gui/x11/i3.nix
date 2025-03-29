@@ -170,6 +170,7 @@ lib.mkIf config.me.gui.enable {
             { class = "1Password"; }
             { class = "Org.gnome.NautilusPreviewer"; }
             { class = "Main"; }
+            { class = "Matplotlib"; }
             { class = "gnome-calculator"; }
           ];
         };

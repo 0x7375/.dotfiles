@@ -1,4 +1,5 @@
 {
+  options,
   config,
   pkgs,
   myLib,
@@ -9,6 +10,8 @@
   imports = [
     ./default
   ] ++ (myLib.filesIn ./bundles);
+
+  i18n.supportedLocales = options.i18n.supportedLocales.default ++ [ "fr_FR.UTF-8/UTF-8" ];
 
   system.activationScripts = {
     symlinkRootConfig = {

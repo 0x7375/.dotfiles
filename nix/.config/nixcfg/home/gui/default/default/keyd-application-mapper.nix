@@ -8,7 +8,8 @@
 lib.mkIf config.me.gui.enable {
   xsession.windowManager.i3.config.startup = [
     {
-      command = "${pkgs.systemd}/bin/systemctl --user start keyd-application-mapper";
+      command = "${pkgs.systemd}/bin/systemctl --user restart keyd-application-mapper";
+      always = true;
       notification = false;
     }
   ];

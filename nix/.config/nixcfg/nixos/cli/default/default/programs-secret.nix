@@ -38,12 +38,6 @@ lib.mkIf config.me.secrets.enable {
         in
         [
           {
-            user = {
-              name = "name";
-              email = "email";
-            };
-          }
-          {
             "includeIf \"hasconfig:remote.*.url:uni:*/**\"" = {
               inherit path;
             };

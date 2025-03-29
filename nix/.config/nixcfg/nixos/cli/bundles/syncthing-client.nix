@@ -65,18 +65,12 @@ lib.mkIf (config.me.syncthing-client.enable && config.me.secrets.enable) {
             "server"
           ];
           extraConfig = {
-            maxConflicts = 0;
+            maxConflicts = 2;
             ignoreDelete = true;
             ignore = [
               "*"
               "!history"
             ];
-            versioning = {
-              type = "external";
-              params = {
-                command = "${pkgs.scripts.merge-zsh}/bin/merge-zsh %FOLDER_PATH% %FILE_PATH%";
-              };
-            };
           };
         };
         windows = syncthingDirConfig {

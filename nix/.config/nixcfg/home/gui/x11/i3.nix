@@ -43,6 +43,7 @@ lib.mkIf config.me.gui.enable {
         bars = [ ];
         inherit modifier;
         focus = {
+          wrapping = "no";
           newWindow = "focus";
         };
         keybindings =

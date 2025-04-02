@@ -42,7 +42,14 @@
           ${pkgs.git}/bin/git -C ${dotfiles} push
         '';
       du = "${pkgs.git}/bin/git -C ${dotfiles} pull --rebase";
-      df = "${pkgs.git}/bin/git -C ${dotfiles} diff";
+      df = # bash
+        ''
+          {
+            ${pkgs.git}/bin/git -C ${dotfiles} diff --color=always
+            ${pkgs.git}/bin/git -C ${dotfiles} ls-files --others --exclude-standard \
+            | xargs -I{} git -C ${dotfiles} diff --color=always --no-index /dev/null {}
+          } | less -R
+        '';
 
       s = "${pkgs.systemd}/bin/systemctl";
 

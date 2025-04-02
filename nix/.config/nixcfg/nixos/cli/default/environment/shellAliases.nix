@@ -124,11 +124,11 @@
       }
 
       nhv() {
-        ${pkgs.nix}/bin/nix eval --json $FLAKE#homeConfigurations."$USER@''${2:-$HOST}".config.$1 | jq
+        ${pkgs.nix}/bin/nix eval --json $FLAKE#homeConfigurations."$USER@''${2:-$HOST}".config.$1 | jq -r
       }
 
       nv() {
-        ${pkgs.nix}/bin/nix eval --json $FLAKE#nixosConfigurations.''${2:-$HOST}.config.$1 | jq
+        ${pkgs.nix}/bin/nix eval --json $FLAKE#nixosConfigurations.''${2:-$HOST}.config.$1 | jq -r
       }
 
       d() {

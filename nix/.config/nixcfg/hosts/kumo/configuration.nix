@@ -20,6 +20,8 @@
     inputs.nixos-wsl.nixosModules.wsl
   ];
 
+  networking.hostName = config.me.hostname;
+
   environment.systemPackages = with pkgs; [
     xsel
   ];

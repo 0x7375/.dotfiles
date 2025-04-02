@@ -9,6 +9,7 @@
 
   home.packages = with pkgs; [
     tree-sitter
+    gnumake
 
     # copilot chat
     lua54Packages.tiktoken_core

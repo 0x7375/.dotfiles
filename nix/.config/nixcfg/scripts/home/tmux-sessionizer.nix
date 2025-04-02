@@ -9,10 +9,14 @@ pkgs.writeShellApplication {
     gnused
   ];
   text = ''
+    dirs=(~/ ~/.config ~/uni ~/perso ~/repos)
+
+    mkdir -p "''${dirs[@]}"
+
     if [[ $# -eq 1 ]]; then
       selected="$1"
     else
-      selected=$(find -L ~/ ~/.config ~/uni ~/perso ~/repos \
+      selected=$(find -L "''${dirs[@]}" \
         -maxdepth 1 -mindepth 1 -type d ! -name '.stfolder' ! -name '.stversions' \
         | sed "s|^$HOME|~|" \
         | fzf --reverse)

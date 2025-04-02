@@ -55,6 +55,12 @@
       description = "Use secrets";
     };
 
+    remap.enable = lib.mkOption {
+      type = lib.types.bool;
+      default = true;
+      description = "Remap keys using keyd";
+    };
+
     devPkgs.enable = lib.mkEnableOption "Install development packages";
     minecraft.enable = lib.mkEnableOption "Create minecraft server";
 

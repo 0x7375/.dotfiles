@@ -64,17 +64,15 @@ pkgs.writeShellApplication {
             eval "$cmd"
           fi
         else
-          local cmd1="nix-env -p /nix/var/nix/profiles/system --set $result"
-          local cmd2="$result/bin/switch-to-configuration switch"
+          local cmd1=(nix-env -p /nix/var/nix/profiles/system --set "$result")
+          local cmd2=("$result"/bin/switch-to-configuration switch)
 
           if [[ -n $remote ]]; then
-            ssh_run "$root" "$cmd1" 1
-            ssh_run "$root" "$cmd2" 1
+            ssh_run "$root" "''${cmd1[*]}" 1
+            ssh_run "$root" "''${cmd2[*]}" 1
           else
-            # shellcheck disable=SC2086
-            sudo $cmd1
-            # shellcheck disable=SC2086
-            sudo $cmd2
+            sudo "''${cmd1[@]}"
+            sudo "''${cmd2[@]}"
           fi
         fi
       }
@@ -100,18 +98,7 @@ pkgs.writeShellApplication {
         git log --oneline | grep "$mode:" | head -n 1 | cut -d\  -f 3
       }
 
-      get_exclude() {
-        if [[ $mode == "home" ]]; then
-          echo ":^nixos/* :^*/nixos/* :^configuration.nix :^*/configuration.nix :^hardware.nix :^*/hardware.nix"
-        elif [[ $mode == "os" ]]; then
-          echo ":^home/* :^*/home/* :^*/home.nix :^home.nix"
-        else
-          echo ""
-        fi
-      }
-
       show_git_diff() {
-        # shellcheck disable=SC2046
         PAGER=''' git diff \
         --ignore-blank-lines \
         --staged \
@@ -121,7 +108,7 @@ pkgs.writeShellApplication {
         --minimal \
         -- \
         '*.nix' \
-        $(get_exclude) \
+        "''${exclude_patterns[@]}" \
         | { grep -v -E "index [0-9a-f]{7}\.\.[0-9a-f]{7}" --color=never || true; }
       }
 
@@ -209,6 +196,7 @@ pkgs.writeShellApplication {
 
         trap cleanup INT ERR
 
+        exclude_patterns=()
         green=$(tput setaf 2)
         reset=$(tput sgr0)
         green_arrow="''${green}>''${reset}"
@@ -229,8 +217,13 @@ pkgs.writeShellApplication {
           remote=""
         fi
 
-        # shellcheck disable=SC2046
-        git add . -- $(get_exclude)
+        if [[ $mode == "home" ]]; then
+          exclude_patterns=(":^nixos/*" ":^*/nixos/*" ":^configuration.nix" ":^*/configuration.nix" ":^hardware.nix" ":^*/hardware.nix")
+        elif [[ $mode == "os" ]]; then
+          exclude_patterns=(":^home/*" ":^*/home/*" ":^*/home.nix" ":^home.nix")
+        fi
+
+        git add . -- "''${exclude_patterns[@]}"
         show_git_diff
 
         echo "$green_arrow Building configuration";

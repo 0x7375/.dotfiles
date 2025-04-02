@@ -82,7 +82,6 @@ lib.mkIf config.me.gui.enable {
 
       # c
       clang-tools
-      gnumake
       gcc
 
       texliveFull

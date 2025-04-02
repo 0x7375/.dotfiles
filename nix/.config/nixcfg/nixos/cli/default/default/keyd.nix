@@ -5,7 +5,7 @@
   ...
 }:
 
-{
+lib.mkIf config.me.remap.enable {
   services.keyd = {
     enable = true;
     keyboards = {

@@ -9,6 +9,7 @@
   config,
   inputs,
   lib,
+  pkgs,
   ...
 }:
 
@@ -19,9 +20,14 @@
     inputs.nixos-wsl.nixosModules.wsl
   ];
 
+  environment.systemPackages = with pkgs; [
+    xsel
+  ];
+
   wsl.enable = true;
   wsl.defaultUser = config.me.user;
   wsl.wslConf.network.hostname = "kumo";
+  wsl.interop.register = true;
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
 

@@ -1,13 +1,9 @@
-{
-  lib,
-  config,
-  ...
-}:
+{ config, ... }:
 
 let
   pk = config.me.publicKey;
 in
-lib.mkIf config.me.gui.enable {
+{
   programs.git = {
     extraConfig = {
       user.signingkey = pk;

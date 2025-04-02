@@ -10,7 +10,9 @@ Flake uses [home-manager](https://github.com/nix-community/home-manager), and [a
 ## Local rebuild repo setup
 ```
 $ cd nix/.config/nixcfg; git init; mv .git .nix-git
-$ export GIT_DIR=.nix-git; git add .; git commit -m "initial commit"
+$ export GIT_DIR=.nix-git
+$ git config user.name name; git config user.email email
+$ git add .; git commit -m "initial commit"
 ```
 
 ## Using nixos-anywhere

@@ -35,7 +35,7 @@ lib.mkIf config.me.gui.enable {
             export DISPLAY=:0
             export DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/1000/bus"
 
-            notify-send "Look away" "Look away for 20 seconds." -i "eye"
+            notify-send "Look away" "Look away for 20 seconds." -i "eye" -t 20000
           '';
         }
       }/bin/eyes-notify

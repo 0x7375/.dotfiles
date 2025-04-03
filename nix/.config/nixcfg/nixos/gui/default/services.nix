@@ -8,19 +8,9 @@
 lib.mkIf config.me.gui.enable {
   services = {
     dbus.enable = true;
-    printing = {
-      enable = true;
-      drivers = [ pkgs.hplipWithPlugin ];
-    };
-    gvfs.enable = true;
+    gvfs.enable = true; # trash bin support
 
-    ddccontrol.enable = true;
-
-    avahi = {
-      enable = true;
-      nssmdns4 = true;
-      openFirewall = true;
-    };
+    ddccontrol.enable = true; # external monitor brightness control
 
     picom = {
       enable = true;
@@ -30,7 +20,7 @@ lib.mkIf config.me.gui.enable {
       backend = "glx";
     };
 
-    xbanish.enable = true;
+    xbanish.enable = true; # hide mouse cursor when typing
 
     xserver = {
       enable = true;

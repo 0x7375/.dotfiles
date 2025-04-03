@@ -1,5 +1,4 @@
 {
-  pkgs,
   myLib,
   config,
   lib,

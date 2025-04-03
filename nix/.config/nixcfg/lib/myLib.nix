@@ -77,18 +77,24 @@ rec {
     {
       path,
       devices,
+      type ? "sendreceive",
       extraConfig ? { },
     }:
     {
       path = "~/" + path;
-      versioning = {
-        type = "simple";
-        params = {
-          keep = "5";
-          cleanoutDays = "14";
-        };
-      };
+      inherit type;
       inherit devices;
+      versioning =
+        if type != "sendonly" then
+          {
+            type = "simple";
+            params = {
+              keep = "5";
+              cleanoutDays = "14";
+            };
+          }
+        else
+          null;
     }
     // extraConfig;
 

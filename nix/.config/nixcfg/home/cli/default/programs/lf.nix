@@ -335,6 +335,7 @@ in
                       break
                   fi
               done
+            }}
           '';
       };
       keybindings = {

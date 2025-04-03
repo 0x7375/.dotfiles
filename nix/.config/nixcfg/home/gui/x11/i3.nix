@@ -79,6 +79,8 @@ lib.mkIf config.me.gui.enable {
             "${modifier}+a" = "exec --no-startup-id ${pkgs.dunst}/bin/dunstctl action";
 
             "${modifier}+o" = "exec --no-startup-id ${pkgs.gromit-mpx}/bin/gromit-mpx --toggle";
+            "F9" = "exec --no-startup-id ${pkgs.gromit-mpx}/bin/gromit-mpx --toggle";
+
             "${modifier}+Shift+o" = "exec --no-startup-id ${pkgs.gromit-mpx}/bin/gromit-mpx --clear";
 
             "${modifier}+p" = "exec --no-startup-id ${pkgs.scripts.powermenu}/bin/powermenu";

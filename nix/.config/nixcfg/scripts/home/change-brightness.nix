@@ -20,6 +20,15 @@ pkgs.writeShellApplication {
       ddccontrol -r 0x10 -w "$value" "$device" >/dev/null 2>&1
     }
 
+    case $1 in
+    up)
+        brillo -u $fade -q -A 10
+        ;;
+    down)
+        brillo -u $fade -q -U 10
+        ;;
+    esac
+
     for device in "/dev/i2c-2" "/dev/i2c-4"; do
       current=$(get_brightness "$device")
       case $1 in
@@ -34,14 +43,5 @@ pkgs.writeShellApplication {
       esac
       set_brightness "$device" "$current" &
     done
-
-    case $1 in
-    up)
-        brillo -u $fade -q -A 10
-        ;;
-    down)
-        brillo -u $fade -q -U 10
-        ;;
-    esac
   '';
 }

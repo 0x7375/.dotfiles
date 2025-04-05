@@ -71,22 +71,27 @@ return {
                     on_init = function(client)
                         client.server_capabilities.documentFormattingProvider = false
                     end,
+                    cmd = { "nixd", "--semantic-tokens=true", "--inlay-hints=true" },
                     settings = {
-                        nixd = {
-                            nixpkgs = {
-                                expr = "import (builtins.getFlake \"/home/ayko/.config/nix\").inputs.nixpkgs { }",
-                            },
-                            options = {
-                                nixos = {
-                                    expr =
-                                    '(builtins.getFlake \"/home/ayko/.config/nix\").nixosConfigurations.yugen.options',
+                        nixd = (function()
+                            local flake = "(builtins.getFlake \"" .. os.getenv("FLAKE") .. "\")"
+                            local user = os.getenv("USER")
+                            local host = os.getenv("HOSTNAME")
+
+                            return {
+                                nixpkgs = {
+                                    expr = string.format("import %s.inputs.nixpkgs { }", flake),
                                 },
-                                home_manager = {
-                                    expr =
-                                    '(builtins.getFlake \"/home/ayko/.config/nix\").homeConfigurations.\"ayko@yugen\".options',
+                                options = {
+                                    nixos = {
+                                        expr = string.format('%s.nixosWithoutHomeConfigurations.%s.options', flake, host),
+                                    },
+                                    home_manager = {
+                                        expr = string.format('%s.homeConfigurations.\"%s@%s\".options', flake, user, host),
+                                    },
                                 },
-                            },
-                        },
+                            }
+                        end)(),
                     },
                 },
                 lua_ls = {

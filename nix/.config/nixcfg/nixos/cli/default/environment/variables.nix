@@ -17,6 +17,7 @@
       "${XDG_BIN_HOME}"
     ];
 
+    HOSTNAME = "${config.me.hostname}";
     EDITOR = "nvim";
     VISUAL = "nvim";
     PAGER = "less -R";

@@ -59,7 +59,7 @@ local opts = {
         },
     },
 }
-require("settings")
+require("opts")
 require("keymaps")
 if not InCodium then
     require("lazy").setup({

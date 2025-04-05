@@ -34,6 +34,8 @@ lib.mkIf config.me.secrets.enable {
           "pictures"
           "uni"
           "notes"
+          "windows"
+          ".local/state/zsh"
         ];
         exclude = [
           ".*"

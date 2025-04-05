@@ -6,11 +6,6 @@
     ./options.nix
   ] ++ myLib.filesIn ./home;
 
-  xsession.initExtra = # bash
-    ''
-      xset s off -dpms
-    '';
-
   services.xidlehook = {
     enable = true;
     not-when-audio = true;

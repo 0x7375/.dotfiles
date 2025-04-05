@@ -22,7 +22,6 @@ lib.mkIf config.me.gui.enable {
     serviceConfig = {
       Type = "oneshot";
     };
-    wantedBy = [ "multi-user.target" ];
   };
 
   systemd.services."eyes-notify" = {
@@ -32,8 +31,13 @@ lib.mkIf config.me.gui.enable {
           name = "eyes-notify";
           runtimeInputs = [ pkgs.libnotify ];
           text = ''
+            # ADDRESS=/run/user/1000/bus
+            # while [[ ! -e $ADDRESS ]]; do
+            #   sleep 1
+            # done
+
             export DISPLAY=:0
-            export DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/1000/bus"
+            export DBUS_SESSION_BUS_ADDRESS="unix:path=$ADDRESS"
 
             notify-send "Look away" "Look away for 20 seconds." -i "eye" -t 20000
           '';

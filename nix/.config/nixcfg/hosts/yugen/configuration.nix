@@ -23,10 +23,6 @@
 
   boot.supportedFilesystems = [ "ntfs" ];
 
-  services.xserver.displayManager.setupCommands = ''
-    ${pkgs.xorg.xset}/bin/xset s off -dpms
-  '';
-
   boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
 
   services.hardware.openrgb.enable = true;
@@ -46,7 +42,7 @@
     key = "${config.sops.secrets."yugen/syncthing/key".path}";
   };
 
-  # do not change   
+  # do not change
   # For more information, see `man configuration.nix` or https://nixos.org/manual/nixos/stable/options#opt-system.stateVersion .
   system.stateVersion = "23.11"; # Did you read the comment?
 }

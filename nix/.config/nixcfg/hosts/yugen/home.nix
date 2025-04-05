@@ -7,12 +7,6 @@
   ] ++ myLib.filesIn ./home;
 
   xsession.windowManager.i3.config = {
-    startup = [
-      {
-        command = "${pkgs.xorg.xset}/bin/xset s off -dpms";
-        notification = false;
-      }
-    ];
     workspaceOutputAssign = [
       {
         output = "HDMI-1";

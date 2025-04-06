@@ -31,7 +31,7 @@ lib.mkIf config.me.gui.enable {
           name = "eyes-notify";
           runtimeInputs = [ pkgs.libnotify ];
           text = ''
-            # ADDRESS=/run/user/1000/bus
+            ADDRESS=/run/user/1000/bus
             # while [[ ! -e $ADDRESS ]]; do
             #   sleep 1
             # done

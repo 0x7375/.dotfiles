@@ -16,6 +16,8 @@ lib.mkIf config.me.secrets.enable {
     owner = config.me.user;
   };
 
+  systemd.services = myLib.notifyOnServiceFailure "syncthing";
+
   services.syncthing = {
     guiAddress = "0.0.0.0:8384";
     openDefaultPorts = true;

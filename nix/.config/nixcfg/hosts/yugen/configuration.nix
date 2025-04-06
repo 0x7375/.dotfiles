@@ -1,8 +1,5 @@
 {
-  secrets,
-  myLib,
   config,
-  pkgs,
   ...
 }:
 

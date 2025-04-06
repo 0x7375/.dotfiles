@@ -26,5 +26,13 @@
     MaxRetentionSec=2week
   '';
 
+  systemd.services."service-failure-notify@" = {
+    description = "Send notification when a service fails";
+    serviceConfig = {
+      Type = "oneshot";
+      ExecStart = "${pkgs.curl}/bin/curl -d \"Service %i failed\" http://${myLib.network.lan.addr.server}:8719/status";
+    };
+  };
+
   system.stateVersion = "24.11";
 }

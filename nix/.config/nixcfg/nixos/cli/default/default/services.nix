@@ -1,5 +1,5 @@
 {
-  secrets,
+  myLib,
   lib,
   config,
   ...
@@ -27,7 +27,7 @@
         ];
       };
       extraConfig = ''
-        Match Address 192.168.1.120
+        Match Address ${myLib.network.lan.addr.desktop}
           AuthenticationMethods publickey
 
         Match All

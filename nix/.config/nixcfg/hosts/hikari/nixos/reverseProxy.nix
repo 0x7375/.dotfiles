@@ -1,16 +1,17 @@
 {
   lib,
+  myLib,
   config,
   ...
 }:
 
 let
   url = "shimu.duckdns.org";
-  ip = "192.168.1.95";
+  ip = myLib.network.lan.addr.server;
   mkSubDomain = port: {
     forceSSL = true;
     useACMEHost = url;
-    locations."/".proxyPass = "http://${ip}:${port}";
+    locations."/".proxyPass = "http://${ip}:${toString port}";
   };
 in
 {
@@ -31,21 +32,23 @@ in
         };
       };
 
-      "media.${url}" = mkSubDomain "8096";
-      "request.${url}" = mkSubDomain "5055";
-      "sync.${url}" = mkSubDomain "8384";
-      "torrent.${url}" = mkSubDomain "8080";
-      "indexer.${url}" = mkSubDomain "9696";
-      "movies.${url}" = mkSubDomain "7878";
-      "series.${url}" = mkSubDomain "8989";
+      "media.${url}" = mkSubDomain 8096;
+      "request.${url}" = mkSubDomain 5055;
+      "sync.${url}" = mkSubDomain 8384;
+      "torrent.${url}" = mkSubDomain 8080;
+      "indexer.${url}" = mkSubDomain 9696;
+      "movies.${url}" = mkSubDomain 7878;
+      "series.${url}" = mkSubDomain 8989;
 
       "router.${url}" = {
         forceSSL = true;
         useACMEHost = "${url}";
-        locations."/".proxyPass = "http://192.168.1.254";
+        locations."/".proxyPass = "http://${myLib.network.lan.gateway}";
       };
     };
   };
+
+  systemd.services = myLib.notifyOnServiceFailure "nginx";
 
   sops.secrets."hikari/duckdns_token" = { };
 

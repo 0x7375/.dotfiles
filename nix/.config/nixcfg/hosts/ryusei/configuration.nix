@@ -119,17 +119,21 @@
     owner = config.me.user;
   };
 
-  sops.templates."home-vpn-laptop.conf".content = ''
-    [Interface]
-    Address = 10.0.0.2/24
-    PrivateKey = ${config.sops.placeholder."ryusei/laptop_vpn_pk"}
+  sops.templates."home-vpn-laptop.conf".content =
+    let
+      inherit (myLib) network;
+    in
+    ''
+      [Interface]
+      Address = ${network.vpn.addr.laptop}/24
+      PrivateKey = ${config.sops.placeholder."ryusei/laptop_vpn_pk"}
 
-    [Peer]
-    PublicKey = PpCxUOTz7Heh3B29OnI3XNZAKJ8abUETMzFNj3gpTyo=
-    PresharedKey = ${config.sops.placeholder."laptop_vpn_psk"}
-    AllowedIPs = 10.0.0.0/24,192.168.1.0/24
-    Endpoint = ${config.sops.placeholder.server_vpn_endpoint}
-  '';
+      [Peer]
+      PublicKey = PpCxUOTz7Heh3B29OnI3XNZAKJ8abUETMzFNj3gpTyo=
+      PresharedKey = ${config.sops.placeholder."laptop_vpn_psk"}
+      AllowedIPs = ${network.vpn.subnet},${network.lan.subnet}
+      Endpoint = ${config.sops.placeholder.server_vpn_endpoint}
+    '';
 
   networking.wg-quick.interfaces.home = {
     autostart = false;

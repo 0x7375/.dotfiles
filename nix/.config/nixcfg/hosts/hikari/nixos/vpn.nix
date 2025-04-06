@@ -1,5 +1,6 @@
 {
   lib,
+  myLib,
   pkgs,
   config,
   ...
@@ -24,24 +25,28 @@ lib.mkIf config.me.secrets.enable {
       ip = "redacted";
     };
 
-    extraConfig = {
-      # route local traffic outside proton
-      postUp = ''
-        ip rule add from 10.0.0.0/24 lookup main priority 100
-        ip rule add to 10.0.0.0/24 lookup main priority 100
+    extraConfig =
+      let
+        inherit (myLib) network;
+      in
+      {
+        # route local traffic outside proton
+        postUp = ''
+          ip rule add from ${network.vpn.subnet} lookup main priority 100
+          ip rule add to ${network.vpn.subnet} lookup main priority 100
 
-        ip rule add from 192.168.1.0/24 lookup main priority 100
-        ip rule add to 192.168.1.0/24 lookup main priority 100
-      '';
+          ip rule add from ${network.lan.subnet} lookup main priority 100
+          ip rule add to ${network.lan.subnet} lookup main priority 100
+        '';
 
-      preDown = ''
-        ip rule del from 10.0.0.0/24 lookup main priority 100
-        ip rule del to 10.0.0.0/24 lookup main priority 100
+        preDown = ''
+          ip rule del from ${network.vpn.subnet} lookup main priority 100
+          ip rule del to ${network.vpn.subnet} lookup main priority 100
 
-        ip rule del from 192.168.1.0/24 lookup main priority 100
-        ip rule del to 192.168.1.0/24 lookup main priority 100
-      '';
-    };
+          ip rule del from ${network.lan.subnet} lookup main priority 100
+          ip rule del to ${network.lan.subnet} lookup main priority 100
+        '';
+      };
   };
 
   environment.systemPackages = with pkgs; [
@@ -68,24 +73,28 @@ lib.mkIf config.me.secrets.enable {
 
   networking.firewall.allowedUDPPorts = [ 51821 ];
 
-  networking.wg-quick.interfaces.${home} = {
-    address = [ "10.0.0.1/24" ];
-    listenPort = 51821;
-    privateKeyFile = config.sops.secrets."hikari/server_vpn_pk".path;
+  networking.wg-quick.interfaces.${home} =
+    let
+      inherit (myLib) network;
+    in
+    {
+      address = [ "${network.vpn.addr.server}/24" ];
+      listenPort = 51821;
+      privateKeyFile = config.sops.secrets."hikari/server_vpn_pk".path;
 
-    peers = [
-      # laptop
-      {
-        publicKey = "apB8TVyEJ7G/gLe5b3ckvUYJSSKv85rl1jWkZoiEQgE=";
-        presharedKeyFile = config.sops.secrets.laptop_vpn_psk.path;
-        allowedIPs = [ "10.0.0.2/32" ];
-      }
-      # phone
-      {
-        publicKey = "mEN17hfodGLbe58cS6r7qeegmeQlSebz2JCUIlsWdn0=";
-        presharedKeyFile = config.sops.secrets.phone_vpn_psk.path;
-        allowedIPs = [ "10.0.0.3/32" ];
-      }
-    ];
-  };
+      peers = [
+        # laptop
+        {
+          publicKey = "apB8TVyEJ7G/gLe5b3ckvUYJSSKv85rl1jWkZoiEQgE=";
+          presharedKeyFile = config.sops.secrets.laptop_vpn_psk.path;
+          allowedIPs = [ "${network.vpn.addr.laptop}/32" ];
+        }
+        # phone
+        {
+          publicKey = "mEN17hfodGLbe58cS6r7qeegmeQlSebz2JCUIlsWdn0=";
+          presharedKeyFile = config.sops.secrets.phone_vpn_psk.path;
+          allowedIPs = [ "${network.vpn.addr.phone}/32" ];
+        }
+      ];
+    };
 }

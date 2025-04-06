@@ -13,6 +13,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    media.url = "github:nixos/nixpkgs/nixos-unstable";
     auto-update.url = "github:nixos/nixpkgs/nixos-unstable";
     gns3.url = "github:nixos/nixpkgs/dd5621df6dcb90122b50da5ec31c411a0de3e538a";
     # zen-browser.url = "github:ch4og/zen-browser-flake";
@@ -47,7 +48,6 @@
       url = "github:nix-community/NixOS-WSL";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
   };
   outputs =
     { ... }@inputs:

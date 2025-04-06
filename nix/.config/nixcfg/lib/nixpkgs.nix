@@ -25,6 +25,10 @@
         system = final.system;
         config.allowUnfree = true;
       };
+      media = import inputs.media {
+        system = final.system;
+        config.allowUnfree = true;
+      };
 
       nix =
         if config.me.hostname != "hikari" then

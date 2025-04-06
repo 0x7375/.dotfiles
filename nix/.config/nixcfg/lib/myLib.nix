@@ -98,6 +98,12 @@ rec {
     }
     // extraConfig;
 
+  notifyOnServiceFailure = service: {
+    ${service} = {
+      unitConfig.OnFailure = "service-failure-notify@%N.service";
+    };
+  };
+
   bar.font-size = 13;
   hex = {
     bg0_dark = "131516";
@@ -138,5 +144,25 @@ rec {
     blue = "#458588";
     magenta = "#b16286";
     orange = "#d65d0e";
+  };
+
+  network = {
+    lan = {
+      subnet = "192.168.1.0/24";
+      gateway = "192.168.1.254";
+      addr = {
+        server = "192.168.1.95";
+        desktop = "192.168.1.120";
+        laptop = "192.168.1.198";
+      };
+    };
+    vpn = {
+      subnet = "10.0.0.0/24";
+      addr = {
+        server = "10.0.0.1";
+        laptop = "10.0.0.2";
+        phone = "10.0.0.3";
+      };
+    };
   };
 }

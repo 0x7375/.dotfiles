@@ -105,8 +105,8 @@
       export SUDO_PROMPT="''${blue}[sudo] password for %p:''${reset} "
 
       vpn () {
-          if [ $# -lt 2 ]; then
-              echo "Usage: vpn <start|stop|restart> <interface(s)>"
+          if [ $# -eq 0 ]; then
+              echo "Usage: vpn <start|stop|restart|show|list> [interface(s)]"
               return 1
           fi
 
@@ -115,12 +115,29 @@
 
           case "$action" in
               start|stop|restart)
+                  if [ $# -eq 0 ]; then
+                      echo "No interfaces specified. Please provide at least one interface."
+                      return 1
+                  fi
                   for interface in "$@"; do
                       sudo systemctl "$action" wg-quick-$interface.service
                   done
                   ;;
+              show)
+                  if [ $# -eq 0 ]; then
+                      sudo wg show
+                  else
+                      for interface in "$@"; do
+                          sudo wg show $interface
+                      done
+                  fi
+                  ;;
+              list)
+                  echo -n "Available WireGuard interfaces: "
+                  systemctl list-unit-files 'wg-quick-*.service' | grep -v "static\|alias" | grep "wg-quick-" | awk '{print $1}' | sed 's/wg-quick-\(.*\).service/\1/' | tr '\n' ' ' | sed 's/ $/\n/'
+                  ;;
               *)
-                  echo "Invalid action. Use 'start', 'stop', or 'restart'."
+                  echo "Invalid action. Use 'start', 'stop', 'restart', 'list' or 'show'."
                   return 1
                   ;;
           esac

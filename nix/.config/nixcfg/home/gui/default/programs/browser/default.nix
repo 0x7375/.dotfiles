@@ -400,6 +400,23 @@ lib.mkIf config.me.gui.enable {
                 metaData.alias = "!p";
                 # icon = "${pkgs.nixos-icons}/share/icons/hicolor/scalable/apps/nix-snowflake.svg";
               };
+              "Nix functions" = {
+                urls = [
+                  {
+                    template = "https://noogle.dev/q";
+                    params = [
+                      {
+                        name = "term";
+                        value = "{searchTerms}";
+                      }
+                    ];
+                  }
+                ];
+
+                iconUpdateURL = "https://icons.duckduckgo.com/ip3/noogle.dev.ico";
+                updateInterval = day;
+                metaData.alias = "!n";
+              };
               "Nixhub" = {
                 urls = [
                   {

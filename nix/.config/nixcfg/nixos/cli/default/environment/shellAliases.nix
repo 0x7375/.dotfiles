@@ -50,6 +50,17 @@
             | xargs -I{} git -C ${dotfiles} diff --color=always --no-index /dev/null {}
           } | less -R
         '';
+      dr = # bash
+        ''
+          echo "$CLR_GREEN>$CLR_RESET Discard dotfiles changes?"
+          echo -n "[y/N]$CLR_HIDE"
+          read -s -r -n 1 answer
+
+          [[ $answer == "y" ]] && {
+            ${pkgs.git}/bin/git -C ${dotfiles} restore .
+          }
+          echo "$CLR_SHOW"
+        '';
 
       s = "${pkgs.systemd}/bin/systemctl";
 
@@ -100,9 +111,7 @@
 
   environment.shellInit = # bash
     ''
-      blue=$(${pkgs.ncurses}/bin/tput setaf 4)
-      reset=$(${pkgs.ncurses}/bin/tput sgr0)
-      export SUDO_PROMPT="''${blue}[sudo] password for %p:''${reset} "
+      export SUDO_PROMPT="''$CLR_BLUE[sudo] password for %p:''$CLR_RESET "
 
       vpn () {
           if [ $# -eq 0 ]; then

@@ -1,4 +1,9 @@
-{ config, lib, ... }:
+{
+  myLib,
+  config,
+  lib,
+  ...
+}:
 
 {
   options.me = {
@@ -21,7 +26,7 @@
 
     publicKey = lib.mkOption {
       type = lib.types.str;
-      default = "ssh-ed25519 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+      default = myLib.ssh-keys.${config.me.hostname};
       description = "Public key used for commit signing";
     };
 

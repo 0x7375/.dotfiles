@@ -173,7 +173,7 @@ pkgs.writeShellApplication {
       }
 
       cleanup() {
-        echo -n "$show_cursor"
+        echo -n "$CLR_SHOW"
         silent popd; exit
       }
 
@@ -193,14 +193,15 @@ pkgs.writeShellApplication {
 
         silent pushd ${config.me.flakeDir}
 
+        CLR_RESET="\\e[0m";
+        CLR_GREEN="\\e[32m";
+        CLR_HIDE="\\e[?25l";
+        CLR_SHOW="\\e[?25h";
+        GREEN_ARROW="$CLR_GREEN>$CLR_RESET"
+
         trap cleanup INT ERR
 
         exclude_patterns=()
-        green=$(tput setaf 2)
-        reset=$(tput sgr0)
-        green_arrow="''${green}>''${reset}"
-        hide_cursor=$(tput civis)
-        show_cursor=$(tput cnorm)
         mode="$1"
         root="root"
 
@@ -225,7 +226,7 @@ pkgs.writeShellApplication {
         git add . -- "''${exclude_patterns[@]}"
         show_git_diff
 
-        echo "$green_arrow Building configuration";
+        echo "$GREEN_ARROW Building configuration";
         result=$(build_config)
         add_gc_root "$result"
 
@@ -233,17 +234,17 @@ pkgs.writeShellApplication {
           silent env "NIX_SSHOPTS=-q" nix-copy-closure --to "$user"@"$host" "$result"
         fi
         
-        echo "$green_arrow Comparing changes"
+        echo "$GREEN_ARROW Comparing changes"
         show_generation_diff
 
-        echo "$green_arrow Apply the config?"
-        echo -n "[y/N]$hide_cursor"
+        echo "$GREEN_ARROW Apply the config?"
+        echo -n "[y/N]$CLR_HIDE"
         read -s -r -n 1 answer
-        echo "$show_cursor"
+        echo "$CLR_SHOW"
 
         if [[ $answer == "y" ]]; then
           echo "yes"
-          echo "$green_arrow Activating configuration"
+          echo "$GREEN_ARROW Activating configuration"
           activate_config
 
           if [[ $(get_current_gen) != $(get_last_commited_gen) && -n $(show_git_diff) && -z $remote ]]; then

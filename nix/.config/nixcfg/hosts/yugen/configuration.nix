@@ -1,5 +1,6 @@
 {
   config,
+  myLib,
   ...
 }:
 
@@ -14,7 +15,7 @@
 
   users.users.${config.me.user} = {
     openssh.authorizedKeys.keys = [
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIH9wtfhfEPZ6GVA4FWRUk5KXtTttn6Q4qjxO1apMc7RK ryusei"
+      myLib.ssh-keys.ryusei
     ];
   };
 

@@ -1,11 +1,12 @@
-{ stdenv, fetchFromSourcehut, ... }:
+{ stdenv, fetchFromGitea, ... }:
 
 stdenv.mkDerivation rec {
   pname = "InconsolataNF";
   version = "main";
 
-  src = fetchFromSourcehut {
-    owner = "~ayko";
+  src = fetchFromGitea {
+    domain = "codeberg.org";
+    owner = "0xB0F";
     repo = "fonts";
     rev = version;
     hash = "sha256-j6UudLRVAVZJUon/0AUjZEuFRmj9oA7cCMhD27ooOYI=";
@@ -19,6 +20,6 @@ stdenv.mkDerivation rec {
 
   meta = {
     description = "InconsolataNF";
-    homepage = "https://git.sr.ht/~ayko/fonts";
+    homepage = "https://codeberg.org/0xB0F/fonts";
   };
 }

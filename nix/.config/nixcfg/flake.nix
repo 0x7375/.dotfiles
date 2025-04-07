@@ -30,7 +30,7 @@
     };
 
     secrets = {
-      url = "git+ssh://git@git.sr.ht/~ayko/nix-secrets";
+      url = "git+ssh://git@codeberg.org/0xB0F/nix-secrets";
       flake = false;
     };
 

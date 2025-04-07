@@ -1,10 +1,12 @@
 { myLib, pkgs, ... }:
 
 {
-  imports = [
-    ../../home
-    ./options.nix
-  ] ++ myLib.filesIn ./home;
+  imports =
+    [
+      ./options.nix
+    ]
+    ++ (myLib.filesIn ./home)
+    ++ (myLib.filesIn ../../home);
 
   services.xidlehook = {
     enable = true;

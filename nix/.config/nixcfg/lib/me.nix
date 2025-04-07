@@ -12,6 +12,11 @@
       default = "/home/${config.me.user}/.dotfiles/nix/.config/nixcfg";
     };
 
+    dotfilesDir = lib.mkOption {
+      type = lib.types.str;
+      default = "~/.dotfiles";
+    };
+
     user = lib.mkOption {
       type = lib.types.str;
       default = "ayko";
@@ -60,7 +65,13 @@
       description = "Use secrets";
     };
 
-    remap.enable = lib.mkOption {
+    capsLockRemap.enable = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      description = "Remap caps lock to control/esc using interception-tools";
+    };
+
+    keyd.enable = lib.mkOption {
       type = lib.types.bool;
       default = true;
       description = "Remap keys using keyd";
@@ -85,6 +96,7 @@
         postgresql.enable = lib.mkEnableOption "Create a postgresql server";
         virtualBox.enable = lib.mkEnableOption "Enable virtual box";
         neo4j.enable = lib.mkEnableOption "Create a neo4j server";
+        gns3.enable = lib.mkEnableOption "Start gns3 server";
       };
     };
   };

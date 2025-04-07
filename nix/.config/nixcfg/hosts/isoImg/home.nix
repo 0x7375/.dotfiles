@@ -1,10 +1,9 @@
-{ osConfig, ... }:
+{ myLib, osConfig, ... }:
 
 {
   imports = [
     ./options.nix
-    ../../home
-  ];
+  ] ++ (myLib.filesIn ../../home);
 
   nixpkgs.overlays = osConfig.nixpkgs.overlays;
 }

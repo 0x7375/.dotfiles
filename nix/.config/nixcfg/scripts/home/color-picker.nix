@@ -1,4 +1,9 @@
-{ config, pkgs, ... }:
+{
+  myLib,
+  config,
+  pkgs,
+  ...
+}:
 
 pkgs.writeShellApplication {
   name = "color-picker";
@@ -7,7 +12,7 @@ pkgs.writeShellApplication {
     let
       xcolor = pkgs.xcolor.overrideAttrs (old: {
         patches = (old.patches or [ ]) ++ [
-          ../../assets/patches/xcolor_cancel_with_right_click.patch
+          (myLib.fromRoot "assets/patches/xcolor_cancel_with_right_click.patch")
         ];
       });
     in

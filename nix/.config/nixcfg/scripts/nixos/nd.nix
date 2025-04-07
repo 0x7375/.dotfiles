@@ -17,7 +17,7 @@ pkgs.writeShellApplication {
 
       doc() {
           echo "Usage:
-            nd <COMMAND>
+            nd <COMMAND> [HOST] [-- <NIX_BUILD_FLAGS>...]
 
           Commands:
             os     Rebuild nixos configuration
@@ -26,6 +26,7 @@ pkgs.writeShellApplication {
 
           Arguments:
             HOST   Optional remote hostname to build and deploy to"
+            NIX_BUILD_FLAGS  Optional flags to pass to nix build
           exit 1
       }
 
@@ -77,12 +78,13 @@ pkgs.writeShellApplication {
       }
 
       build_config() {
+        local extra_args=("$@")
         if [[ $mode = "all" ]]; then
-          nom build --no-link --json path:.#nixosConfigurations."$host".config.system.build.toplevel | jq -r '.[].outputs.out'
+          nom build --no-link --json "''${extra_args[@]}" path:.#nixosConfigurations."$host".config.system.build.toplevel | jq -r '.[].outputs.out'
         elif [[ $mode = "home" ]]; then
-          nom build --no-link --json path:.#homeConfigurations."$user"@"$host".activationPackage | jq -r '.[].outputs.out'
+          nom build --no-link --json "''${extra_args[@]}" path:.#homeConfigurations."$user"@"$host".activationPackage | jq -r '.[].outputs.out'
         else
-          nom build --no-link --json path:.#nixosWithoutHomeConfigurations."$host".config.system.build.toplevel | jq -r '.[].outputs.out'
+          nom build --no-link --json "''${extra_args[@]}" path:.#nixosWithoutHomeConfigurations."$host".config.system.build.toplevel | jq -r '.[].outputs.out'
         fi
       }
 
@@ -184,7 +186,21 @@ pkgs.writeShellApplication {
       main() {
         [[ $# -eq 0 ]] && set -- "all"
 
-        case $1 in 
+        local nd_args=()
+        local nix_build_flags=()
+        local found_separator=0
+        
+        for arg in "$@"; do
+          if [[ $found_separator -eq 1 ]]; then
+            nix_build_flags+=("$arg")
+          elif [[ $arg == "--" ]]; then
+            found_separator=1
+          else
+            nd_args+=("$arg")
+          fi
+        done
+
+        case ''${nd_args[0]} in
           os|home|all) ;;
           *) doc ;;
         esac
@@ -193,23 +209,23 @@ pkgs.writeShellApplication {
 
         silent pushd ${config.me.flakeDir}
 
-        CLR_RESET="\\e[0m";
-        CLR_GREEN="\\e[32m";
-        CLR_HIDE="\\e[?25l";
-        CLR_SHOW="\\e[?25h";
-        GREEN_ARROW="$CLR_GREEN>$CLR_RESET"
+        CLR_RESET=$'\e[0m'
+        CLR_GREEN=$'\e[32m'
+        CLR_HIDE=$'\e[?25l'
+        CLR_SHOW=$'\e[?25h'
+        GREEN_ARROW="''${CLR_GREEN}>''${CLR_RESET}"
 
         trap cleanup INT ERR
 
         exclude_patterns=()
-        mode="$1"
+        mode="''${nd_args[0]}"
         root="root"
 
         user=$(whoami)
 
-        if [[ $# -eq 2 ]]; then
-          host=$2
-          remote=$2
+        if [[ ''${#nd_args[@]} -eq 2 ]]; then
+          host=''${nd_args[1]}
+          remote=''${nd_args[1]}
 
           try_ssh
         else
@@ -227,7 +243,7 @@ pkgs.writeShellApplication {
         show_git_diff
 
         echo "$GREEN_ARROW Building configuration";
-        result=$(build_config)
+        result=$(build_config "''${nix_build_flags[@]}")
         add_gc_root "$result"
 
         if [[ -n $remote ]]; then

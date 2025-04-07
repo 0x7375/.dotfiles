@@ -12,9 +12,8 @@
   imports = [
     "${modulesPath}/installer/cd-dvd/installation-cd-minimal.nix"
     inputs.home-manager.nixosModules.home-manager
-    ../../nixos
     ./options.nix
-  ];
+  ] ++ (myLib.filesIn ../../nixos);
 
   systemd.services.sshd.wantedBy = pkgs.lib.mkForce [ "multi-user.target" ];
 

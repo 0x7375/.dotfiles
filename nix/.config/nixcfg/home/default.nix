@@ -1,9 +1,7 @@
 {
-  system,
-  inputs,
   config,
-  myLib,
   lib,
+  myLib,
   pkgs,
   ...
 }:
@@ -11,19 +9,14 @@
 {
   imports = [
     ../lib
-    ./cli
-    ./gui
-  ] ++ myLib.filesIn ./modules;
+  ] ++ (myLib.filesIn ../modules/home);
 
-  systemd.user.tmpfiles.rules =
-    let
-      inherit (config.me) user;
-    in
-    [
-      "d /home/${user}/.local/share 0700 ${user} users -"
-      "d /home/${user}/.local/share/steam 0770 ${user} users -"
-      "d /home/${user}/.local/state 0700 ${user} users -"
-    ];
+  xdg.configFile."nixpkgs/config.nix".text = # nix
+    ''
+      {
+        allowUnfree = true;
+      }
+    '';
 
   nix.package = lib.mkDefault pkgs.nix;
   nix.settings.use-xdg-base-directories = true;

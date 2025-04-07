@@ -9,16 +9,16 @@
   config,
   inputs,
   lib,
+  myLib,
   pkgs,
   ...
 }:
 
 {
   imports = [
-    ../../nixos
     ./options.nix
     inputs.nixos-wsl.nixosModules.wsl
-  ];
+  ] ++ (myLib.filesIn ../../nixos);
 
   networking.hostName = config.me.hostname;
 

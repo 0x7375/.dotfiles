@@ -1,19 +1,7 @@
-{
-  pkgs,
-  myLib,
-  inputs,
-  ...
-}:
+{ myLib, ... }:
 
 {
-  disabledModules = [ "services/networking/syncthing.nix" ];
-
   imports = [
-    ./cli
-    ./gui
     ../lib
-    inputs.sops-nix.nixosModules.sops
-  ] ++ (myLib.filesIn ./modules);
-
-  environment.systemPackages = with pkgs; [ sops ];
+  ] ++ myLib.filesIn ../modules/nixos;
 }

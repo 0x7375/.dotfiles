@@ -2,7 +2,6 @@
 # and may be overwritten by future invocations.  Please make changes
 # to /etc/nixos/configuration.nix instead.
 {
-  config,
   lib,
   pkgs,
   modulesPath,
@@ -33,7 +32,7 @@
   boot.extraModulePackages = [ ];
   boot.kernelPackages = pkgs.linuxKernel.packages.linux_rpi4;
 
-  # allow watching more files for syncthing 
+  # allow watching more files for syncthing
   boot.kernel.sysctl = {
     "fs.inotify.max_user_watches" = 204800;
   };

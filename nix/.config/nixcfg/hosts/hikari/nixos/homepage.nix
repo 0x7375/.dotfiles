@@ -24,4 +24,6 @@
     "d /var/lib/homarr/icons 0770 root root -"
     "d /var/lib/homarr/data 0770 root root -"
   ];
+
+  systemd.services = "podman-homarr";
 }

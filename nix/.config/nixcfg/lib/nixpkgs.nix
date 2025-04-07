@@ -205,7 +205,7 @@
               hiddenSettings = {
                 userResourcesLocation = "https://github.com/pixeltris/TwitchAdSolutions/raw/master/vaft/vaft-ublock-origin.js";
               };
-              "userFilters" = (builtins.readFile ../assets/uBlockFilters.txt);
+              "userFilters" = (builtins.readFile ../assets/browser/uBlockFilters.txt);
             };
           };
           DontCheckDefaultBrowser = true;

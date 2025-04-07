@@ -1,10 +1,12 @@
-{ myLib, pkgs, ... }:
+{ myLib, ... }:
 
 {
-  imports = [
-    ../../home
-    ./options.nix
-  ] ++ myLib.filesIn ./home;
+  imports =
+    [
+      ./options.nix
+    ]
+    ++ (myLib.filesIn ./home)
+    ++ (myLib.filesIn ../../home);
 
   xsession.windowManager.i3.config = {
     workspaceOutputAssign = [

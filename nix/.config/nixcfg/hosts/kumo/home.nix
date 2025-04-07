@@ -1,6 +1,7 @@
+{ myLib, ... }:
+
 {
   imports = [
-    ../../home
     ./options.nix
-  ];
+  ] ++ (myLib.filesIn ../../home);
 }

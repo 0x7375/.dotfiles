@@ -5,28 +5,20 @@ let
     inherit inputs myLib;
     inherit (inputs) secrets;
   };
+  lib = inputs.nixpkgs.lib;
 in
 rec {
   pkgsFor = system: inputs.nixpkgs.legacyPackages.${system};
 
-  filesIn = dir: (map (fname: dir + "/${fname}") (builtins.attrNames (builtins.readDir dir)));
+  filesIn =
+    dir: lib.fileset.toList (lib.fileset.fileFilter (file: lib.hasSuffix ".nix" file.name) dir);
 
-  # recursiveFilesIn =
-  #   dir:
-  #   let
-  #     dirContents = builtins.readDir dir;
-  #     dirAttrs = builtins.attrNames dirContents;
-  #     files =
-  #       dirAttrs
-  #       |> builtins.filter (name: dirContents.${name} == "regular")
-  #       |> map (name: dir + "/${name}");
-  #     subDirs =
-  #       dirAttrs
-  #       |> builtins.filter (name: dirContents.${name} == "directory")
-  #       |> map (name: dir + "/${name}");
-  #     subFiles = subDirs |> builtins.concatMap recursiveFilesIn;
-  #   in
-  #   files ++ subFiles;
+  fromRoot =
+    path:
+    builtins.path {
+      path = "${inputs.self}/${path}";
+      name = baseNameOf path;
+    };
 
   mkSystem =
     config: system:
@@ -165,6 +157,8 @@ rec {
       };
     };
   };
+
+  media-group = "media";
 
   ssh-keys = {
     yugen = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJahc82zjVv6+UDKi3eN9oZRfGRE7zhBivo5TYtDLe53 yugen";

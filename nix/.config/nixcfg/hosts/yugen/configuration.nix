@@ -7,9 +7,8 @@
 {
   imports = [
     ./hardware.nix
-    ../../nixos
     ./options.nix
-  ];
+  ] ++ (myLib.filesIn ../../nixos);
 
   networking.hostName = config.me.hostname;
 

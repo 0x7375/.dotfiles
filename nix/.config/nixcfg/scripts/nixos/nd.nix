@@ -10,6 +10,7 @@ pkgs.writeShellApplication {
     nvd
     nix-output-monitor
     jq
+    ncurses
   ];
   text = # bash
     ''
@@ -175,7 +176,7 @@ pkgs.writeShellApplication {
       }
 
       cleanup() {
-        echo -n "$CLR_SHOW"
+        echo -n "$SHOW"
         silent popd; exit
       }
 
@@ -209,11 +210,11 @@ pkgs.writeShellApplication {
 
         silent pushd ${config.me.flakeDir}
 
-        CLR_RESET=$'\e[0m'
-        CLR_GREEN=$'\e[32m'
-        CLR_HIDE=$'\e[?25l'
-        CLR_SHOW=$'\e[?25h'
-        GREEN_ARROW="''${CLR_GREEN}>''${CLR_RESET}"
+        GREEN=$(tput setaf 2)
+        RESET=$(tput sgr0)
+        HIDE=$(tput civis)
+        SHOW=$(tput cnorm)
+        GREEN_ARROW="''${GREEN}>''${RESET}"
 
         trap cleanup INT ERR
 
@@ -254,9 +255,9 @@ pkgs.writeShellApplication {
         show_generation_diff
 
         echo "$GREEN_ARROW Apply the config?"
-        echo -n "[y/N]$CLR_HIDE"
+        echo -n "[y/N]$HIDE"
         read -s -r -n 1 answer
-        echo "$CLR_SHOW"
+        echo "$SHOW"
 
         if [[ $answer == "y" ]]; then
           echo "yes"

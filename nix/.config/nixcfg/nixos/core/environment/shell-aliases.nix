@@ -1,5 +1,8 @@
 { config, pkgs, ... }:
 
+let
+  tput = "${pkgs.ncurses}/bin/tput";
+in
 {
   environment.shellAliases =
     let
@@ -52,14 +55,19 @@
         '';
       dr = # bash
         ''
-          echo "$CLR_GREEN>$CLR_RESET Discard dotfiles changes?"
-          echo -n "[y/N]$CLR_HIDE"
+          green=$(${tput} setaf 2)
+          reset=$(${tput} sgr0)
+          hide=$(${tput} civis)
+          show=$(${tput} cnorm)
+
+          echo "''${green}>''${reset}Discard dotfiles changes?"
+          echo -n "[y/N]''${hide}"
           read -s -r -n 1 answer
 
           [[ $answer == "y" ]] && {
             ${pkgs.git}/bin/git -C ${dotfiles} restore .
           }
-          echo "$CLR_SHOW"
+          echo "$show"
         '';
 
       s = "${pkgs.systemd}/bin/systemctl";
@@ -111,7 +119,9 @@
 
   environment.shellInit = # bash
     ''
-      export SUDO_PROMPT="''$CLR_BLUE[sudo] password for %p:''$CLR_RESET "
+      blue=$(${tput} setaf 4)
+      reset=$(${tput} sgr0)
+      export SUDO_PROMPT="''${blue}[sudo] password for %p:''${reset} "
 
       vpn () {
           if [ $# -eq 0 ]; then

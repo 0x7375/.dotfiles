@@ -1,5 +1,6 @@
 return {
     "toppair/peek.nvim",
+    cond = vim.fn.has("unix") == 1,
     build = "deno task --quiet build:fast",
     opts = {
         app = 'browser', -- 'webview', 'browser', string or a table of strings

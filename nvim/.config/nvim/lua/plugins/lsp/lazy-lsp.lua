@@ -1,4 +1,8 @@
 local function is_nixos()
+    if vim.fn.has('unix') ~= 1 then
+        return false
+    end
+
     local handle = io.popen("grep '^ID=' /etc/os-release | cut -d'=' -f2")
     local result
     if handle ~= nil then

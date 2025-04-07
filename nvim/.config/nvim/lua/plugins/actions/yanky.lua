@@ -15,17 +15,19 @@ return {
     },
     init = function()
         -- https://github.com/gbprod/yanky.nvim/issues/37#issuecomment-1193671730
-        vim.g.clipboard = {
-            name = "xsel_override",
-            copy = {
-                ["+"] = "xsel --input --clipboard",
-                ["*"] = "xsel --input --primary",
-            },
-            paste = {
-                ["+"] = "xsel --output --clipboard",
-                ["*"] = "xsel --output --primary",
-            },
-            cache_enabled = 1,
-        }
+
+        -- remove if there are no errors for a month, 08/04
+        -- vim.g.clipboard = {
+        --     name = "xsel_override",
+        --     copy = {
+        --         ["+"] = "xsel --input --clipboard",
+        --         ["*"] = "xsel --input --primary",
+        --     },
+        --     paste = {
+        --         ["+"] = "xsel --output --clipboard",
+        --         ["*"] = "xsel --output --primary",
+        --     },
+        --     cache_enabled = 1,
+        -- }
     end,
 }

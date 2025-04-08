@@ -2,15 +2,18 @@
   pkgs,
   config,
   myLib,
+  lib,
   ...
 }:
 
 {
-  imports = [
-    ../../nixos
-    ./hardware.nix
-    ./options.nix
-  ] ++ (myLib.filesIn ./nixos);
+  imports =
+    [
+      ./hardware.nix
+      ./options.nix
+    ]
+    ++ (myLib.filesIn ./nixos)
+    ++ (myLib.filesIn ../../nixos);
 
   networking.hostName = config.me.hostname;
 
@@ -37,6 +40,8 @@
       ExecStart = "${pkgs.curl}/bin/curl -d \"Service %i failed\" http://${myLib.network.lan.addr.server}:8719/status";
     };
   };
+
+  programs.nh.clean.extraArgs = lib.mkForce "--keep 2 --keep-since 7d";
 
   system.stateVersion = "24.11";
 }

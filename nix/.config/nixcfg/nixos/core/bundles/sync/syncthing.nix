@@ -8,8 +8,6 @@ let
   user = config.me.user;
 in
 {
-  disabledModules = [ "services/networking/syncthing.nix" ];
-
   config = lib.mkIf (config.me.syncthing.enable && config.me.secrets.enable) {
     systemd.services.syncthing.environment.STNODEFAULTFOLDER = "true"; # Don't create default ~/Sync folder
 

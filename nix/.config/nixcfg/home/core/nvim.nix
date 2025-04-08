@@ -18,7 +18,6 @@
     deno
     # copilot
     nodejs
-    legcord
 
     lua5_1
     luarocks

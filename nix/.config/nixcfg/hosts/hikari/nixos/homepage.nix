@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ myLib, pkgs, ... }:
 
 {
   virtualisation.oci-containers.containers.homarr = {
@@ -25,5 +25,5 @@
     "d /var/lib/homarr/data 0770 root root -"
   ];
 
-  systemd.services = "podman-homarr";
+  systemd.services = (myLib.notifyOnServiceFailure "podman-homarr");
 }

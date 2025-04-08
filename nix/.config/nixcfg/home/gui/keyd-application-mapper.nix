@@ -68,7 +68,7 @@ lib.mkIf (config.me.gui.enable && config.me.keyd.enable) {
         ${upDown}
         ${backspace}
 
-        [legcord]
+        [discord]
         ${enter}
         ${backspace}
 

@@ -5,8 +5,6 @@
 }:
 
 {
-  disabledModules = [ "services/x11/redshift.nix" ];
-
   config = lib.mkIf (config.me.gui.enable && config.me.secrets.enable) {
     location.provider = "manual";
 

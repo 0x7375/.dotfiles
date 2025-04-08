@@ -23,6 +23,7 @@
         "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
         "ayko.cachix.org-1:pglseKMD4PGHDRvF4LzDJKXOo0gSj3yWZU6QXI6YkBs="
       ];
+      auto-optimise-store = true;
     };
     registry = {
       nixpkgs.flake = inputs.nixpkgs;

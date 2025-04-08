@@ -15,6 +15,7 @@ let
 
 in
 {
+  disabledModules = [ "services/x11/redshift.nix" ];
 
   imports = [
     (mkChangedOptionModule

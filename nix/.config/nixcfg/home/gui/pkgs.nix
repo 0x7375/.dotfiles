@@ -21,6 +21,11 @@ lib.mkIf config.me.gui.enable {
     [
       auto.ente-auth
 
+      (discord.override {
+        withOpenASAR = true;
+        withVencord = true;
+      })
+
       scripts.update-icons-color
 
       # audio
@@ -32,7 +37,6 @@ lib.mkIf config.me.gui.enable {
       obs-studio
       gimp
       kdePackages.kdenlive
-      krita
       gthumb
       vlc
       celluloid
@@ -89,8 +93,8 @@ lib.mkIf config.me.gui.enable {
       taplo
       jq
 
-      android-studio
-      stable.jetbrains.idea-community
+      # android-studio
+      # stable.jetbrains.idea-community
 
       # codium
       (vscode-with-extensions.override {

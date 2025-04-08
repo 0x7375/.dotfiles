@@ -28,7 +28,6 @@
     deno
     # copilot
     nodejs
-    legcord
 
     scripts.flake
   ];

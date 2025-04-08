@@ -185,6 +185,8 @@ let
   );
 in
 {
+  disabledModules = [ "services/networking/syncthing.nix" ];
+
   ###### interface
   options = {
     services.syncthing = {

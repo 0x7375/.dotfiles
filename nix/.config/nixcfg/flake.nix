@@ -55,6 +55,7 @@
       myLib = import ./lib/myLib.nix { inherit inputs; };
       aarch = "aarch64-linux";
       x86 = "x86_64-linux";
+      pkgs = inputs.nixpkgs.legacyPackages.${x86};
       inherit (myLib) mkSystem mkHome mkSystemWithHome;
       hosts = {
         yugen = {
@@ -105,5 +106,11 @@
           "${user}@kumo" = mkHome hosts.kumo.home x86;
           "${user}@hikari" = mkHome hosts.hikari.home aarch;
         };
+
+      devShells.${x86}.default = pkgs.mkShell {
+        shellHook = ''
+          export GIT_DIR=.nix-git
+        '';
+      };
     };
 }

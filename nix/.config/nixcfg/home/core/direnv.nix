@@ -1,8 +1,5 @@
 { lib, ... }:
 
-let
-  evalDirenv = shell: "command -v direnv >/dev/null 2>&1 && eval \"$(direnv hook ${shell})\"";
-in
 {
   programs.direnv = {
     enable = true;
@@ -29,6 +26,6 @@ in
     DIRENV_WARN_TIMEOUT = 0;
   };
 
-  programs.bash.bashrcExtra = lib.mkAfter (evalDirenv "bash");
-  home.file.".config/zsh/.zshrc".text = lib.mkAfter (evalDirenv "zsh");
+  home.file.".config/zsh/.zshrc".text =
+    lib.mkAfter "command -v direnv >/dev/null 2>&1 && eval \"$(direnv hook zsh)\"";
 }

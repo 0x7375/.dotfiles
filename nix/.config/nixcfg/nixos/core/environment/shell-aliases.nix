@@ -23,15 +23,14 @@ in
       lu = "${config.services.locate.package}/bin/updatedb --output=/home/${config.me.user}/.cache/locate.db";
 
       t = "history -D | ${pkgs.coreutils}/bin/tail -n 1 | ${pkgs.gawk}/bin/awk '{ print $2 }'";
-      lf = "lfcd";
       v = "$EDITOR";
       please = "sudo $(fc -ln -1)";
-      dot = "${pkgs.git}/bin/git -C ${dotfiles}";
+      dot = "GIT_DIR= ${pkgs.git}/bin/git -C ${dotfiles}";
       ngit = "GIT_DIR=.nix-git ${pkgs.git}/bin/git -C ${config.me.flakeDir}";
       da = # bash
         ''
-          ${pkgs.git}/bin/git -C ${dotfiles} add .;
-          changes=$(${pkgs.git}/bin/git -C ${dotfiles} diff --cached --name-status | awk '{
+          GIT_DIR= ${pkgs.git}/bin/git -C ${dotfiles} add .;
+          changes=$(GIT_DIR= ${pkgs.git}/bin/git -C ${dotfiles} diff --cached --name-status | awk '{
             if ($1 ~ /^R[0-9]*/) {
               # For renames, print both old and new filenames
               print "Rename " $2 " -> " $3
@@ -39,17 +38,17 @@ in
               print $1 " " $2
             }
           }' | sed 's/^A /Add /; s/^M /Update /; s/^D /Delete /');
-          ${pkgs.git}/bin/git -C ${dotfiles} commit -m "$(printf "%s\n" "$changes")";
-          ${pkgs.git}/bin/git -C ${dotfiles} pull --rebase;
-          ${pkgs.git}/bin/git -C ${dotfiles} push
+          GIT_DIR= ${pkgs.git}/bin/git -C ${dotfiles} commit -m "$(printf "%s\n" "$changes")";
+          GIT_DIR= ${pkgs.git}/bin/git -C ${dotfiles} pull --rebase;
+          GIT_DIR= ${pkgs.git}/bin/git -C ${dotfiles} push
         '';
-      du = "${pkgs.git}/bin/git -C ${dotfiles} pull --rebase";
+      du = "GIT_DIR= ${pkgs.git}/bin/git -C ${dotfiles} pull --rebase";
       df = # bash
         ''
           {
-            ${pkgs.git}/bin/git -C ${dotfiles} diff --color=always
-            ${pkgs.git}/bin/git -C ${dotfiles} ls-files --others --exclude-standard \
-            | xargs -I{} git -C ${dotfiles} diff --color=always --no-index /dev/null {}
+            GIT_DIR= ${pkgs.git}/bin/git -C ${dotfiles} diff --color=always
+            GIT_DIR= ${pkgs.git}/bin/git -C ${dotfiles} ls-files --others --exclude-standard \
+            | xargs -I{} GIT_DIR= git -C ${dotfiles} diff --color=always --no-index /dev/null {}
           } | less -R
         '';
       dr = # bash
@@ -64,7 +63,7 @@ in
           read -s -r -n 1 answer
 
           [[ $answer == "y" ]] && {
-            ${pkgs.git}/bin/git -C ${dotfiles} restore .
+            GIT_DIR= ${pkgs.git}/bin/git -C ${dotfiles} restore .
           }
           echo "$show"
         '';

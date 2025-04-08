@@ -6,13 +6,13 @@
     mutable = true;
     text = # bash
       ''
-        function lfcd() {
+        function lf() {
             export LF_CD_FILE=/var/tmp/.lfcd-$$
 
             command ${pkgs.lf}/bin/lf "$@"
 
             # remove mounted archives
-           ${pkgs.gawk}/bin/awk '$1 == "archivemount" { print $2 }' /etc/mtab | while read -r mntdir
+            ${pkgs.gawk}/bin/awk '$1 == "archivemount" { print $2 }' /etc/mtab | while read -r mntdir
             do
               umount "$mntdir"
               rmdir "$mntdir"

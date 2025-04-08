@@ -16,7 +16,7 @@
 
         bindkey '^V' _fzf-file-widget
 
-        bindkey -s '^O' "lfcd^M"
+        bindkey -s '^O' "lf^M"
 
         bindkey '^J' tmux-sessionizer-widget
 

@@ -1,4 +1,4 @@
-InCodium = vim.g.vscode ~= nil
+vim.g.windows = vim.fn.has("unix") ~= 1
 
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
@@ -62,7 +62,17 @@ local opts = {
 }
 require("opts")
 require("keymaps")
-if not InCodium then
+if vim.g.vscode then
+    require("lazy").setup('plugins.actions', opts)
+    require("codium")
+elseif vim.g.windows then
+    require("lazy").setup({
+        { import = 'plugins.nav' },
+        { import = 'plugins.actions' },
+        { import = 'plugins.ui' },
+    }, opts)
+    require("autocmds")
+else
     require("lazy").setup({
         { import = 'plugins.nav' },
         { import = 'plugins.lsp' },
@@ -71,7 +81,4 @@ if not InCodium then
         { import = 'plugins.ui' },
     }, opts)
     require("autocmds")
-else
-    require("lazy").setup('plugins.actions', opts)
-    require("codium")
 end

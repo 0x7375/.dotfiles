@@ -8,7 +8,7 @@ return {
         "nvim-lua/plenary.nvim",
         "debugloop/telescope-undo.nvim",
         "tsakirist/telescope-lazy.nvim",
-        { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' }
+        { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make', cond = not vim.g.windows }
     },
     opts = {
         defaults = {
@@ -75,7 +75,9 @@ return {
             },
         }
         require("telescope").setup(opts)
-        require("telescope").load_extension("fzf")
+        if not vim.g.windows then
+            require("telescope").load_extension("fzf")
+        end
         require("telescope").load_extension("undo")
         require("telescope").load_extension("lazy")
     end,

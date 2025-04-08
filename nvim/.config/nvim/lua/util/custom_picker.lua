@@ -13,7 +13,7 @@ function M.toggle_fullscreen(prompt_bufnr)
     picker:full_layout_update()
 end
 
-local ok, Layout = pcall(require, "telescope.pickers.layout")
+ok, Layout = pcall(require, "telescope.pickers.layout")
 if not ok then
     return
 end

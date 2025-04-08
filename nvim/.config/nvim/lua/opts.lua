@@ -18,9 +18,6 @@ vim.opt.showmode = false
 vim.opt.ignorecase = true -- ignore case in search patterns
 vim.opt.smartcase = true  -- smart case
 
--- disable mouse right click
-vim.opt.mousemodel = ""
-
 vim.opt.conceallevel = 0
 
 vim.opt.shiftwidth = 4

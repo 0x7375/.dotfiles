@@ -24,7 +24,6 @@ in
 
       t = "history -D | ${pkgs.coreutils}/bin/tail -n 1 | ${pkgs.gawk}/bin/awk '{ print $2 }'";
       lf = "lfcd";
-      connect-monitor = "while true; do sleep 0.5; ${pkgs.autorandr}/bin/autorandr --change > /dev/null; done";
       v = "$EDITOR";
       please = "sudo $(fc -ln -1)";
       dot = "${pkgs.git}/bin/git -C ${dotfiles}";
@@ -167,11 +166,11 @@ in
       }
 
       nhv() {
-        ${pkgs.nix}/bin/nix eval --json $FLAKE#homeConfigurations."$USER@''${2:-$HOST}".config.$1 | jq -r
+        ${pkgs.nix}/bin/nix eval --json path:$FLAKE#homeConfigurations."$USER@''${2:-$HOST}".config.$1 | jq -r
       }
 
       nv() {
-        ${pkgs.nix}/bin/nix eval --json $FLAKE#nixosConfigurations.''${2:-$HOST}.config.$1 | jq -r
+        ${pkgs.nix}/bin/nix eval --json path:$FLAKE#nixosConfigurations.''${2:-$HOST}.config.$1 | jq -r
       }
 
       d() {

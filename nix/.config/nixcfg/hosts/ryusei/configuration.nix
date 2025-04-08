@@ -67,8 +67,6 @@
         passwordTextColor = myLib.palette.fg0;
       };
     })
-    wine
-    winetricks
   ];
 
   services.displayManager = {
@@ -144,18 +142,6 @@
     autostart = false;
     configFile = config.sops.templates."home-vpn-laptop.conf".path;
   };
-
-  # until systemd is updated in nixpkgs: https://github.com/systemd/systemd/issues/34304#issuecomment-2550498883
-  # https://github.com/systemd/systemd/commits/6013dee98d6543ac290a2938c4ec8494e26531ab/
-  # https://www.nixhub.io/packages/systemd
-  systemd.package = pkgs.systemd.overrideAttrs (old: {
-    patches = old.patches ++ [
-      (pkgs.fetchurl {
-        url = "https://github.com/wrvsrx/systemd/compare/tag_fix-hibernate-resume%5E...tag_fix-hibernate-resume.patch";
-        hash = "sha256-Z784xysVUOYXCoTYJDRb3ppGiR8CgwY5CNV8jJSLOXU=";
-      })
-    ];
-  });
 
   # do not change
   # For more information, see `man configuration.nix` or https://nixos.org/manual/nixos/stable/options#opt-system.stateVersion .

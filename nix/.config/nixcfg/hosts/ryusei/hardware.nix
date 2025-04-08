@@ -28,24 +28,6 @@
   boot.kernelModules = [ "kvm-amd" ];
   boot.extraModulePackages = [ ];
 
-  boot.plymouth = {
-    enable = true;
-    theme = "spinner_alt";
-    themePackages = [
-      (pkgs.adi1090x-plymouth-themes.override {
-        selected_themes = [ "spinner_alt" ];
-      })
-    ];
-  };
-
-  # debug
-  # boot.kernelParams = [
-  #   "debug"
-  #   "systemd.log_level=debug"
-  #   "systemd.log_target=kmsg"
-  #   "log_buf_len=1M"
-  # ];
-
   # non-declarative config
 
   # boot.resumeDevice = "/dev/disk/by-label/NIXSWAP";

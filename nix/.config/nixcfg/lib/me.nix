@@ -47,10 +47,18 @@
       description = "Refresh rate used for smoothfox browser config";
     };
 
-    boot.enable = lib.mkOption {
-      type = lib.types.bool;
-      default = true;
-      description = "Use systemd with silent boot config";
+    boot = {
+      enable = lib.mkOption {
+        type = lib.types.bool;
+        default = true;
+        description = "Setup systemd boot with plymouth";
+      };
+      silent.enable = lib.mkOption {
+        type = lib.types.bool;
+        default = (!config.me.boot.debug.enable && config.me.boot.enable);
+        description = "Enable silent boot";
+      };
+      debug.enable = lib.mkEnableOption "Make boot verbose";
     };
 
     network.enable = lib.mkOption {

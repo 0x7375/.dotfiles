@@ -16,6 +16,7 @@ return {
             palette_overrides = {
                 -- dark1 = palette.dark0_hard,
             },
+            dim_inactive = false,
             overrides = {
                 PmenuSel = { fg = palette.dark0_hard, bg = palette.neutral_aqua },
                 CmpItemAbbrMatch = { link = "GruvboxAqua" },
@@ -69,8 +70,11 @@ return {
 
                 -- cleaner window separator
                 WinSeparator = { link = "NonText" },
+
                 StatusLine = { link = "WinSeparator" },
                 StatusLineNC = { link = "WinSeparator" },
+                WinBar = { link = "WinSeparator" },
+                WinBarNC = { link = "WinSeparator" },
 
                 ["@variable.php"] = { fg = palette.bright_blue },
             },

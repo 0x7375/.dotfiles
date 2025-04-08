@@ -183,10 +183,6 @@ lib.mkIf config.me.gui.enable {
             notification = false;
           }
           {
-            command = "${pkgs.autorandr}/bin/autorandr -c && ${pkgs.i3}/bin/i3-msg restart";
-            notification = false;
-          }
-          {
             command = "${pkgs.feh}/bin/feh --no-fehbg --bg-fill ${config.me.flakeDir}/assets/wallpaper.png";
             always = true;
             notification = false;

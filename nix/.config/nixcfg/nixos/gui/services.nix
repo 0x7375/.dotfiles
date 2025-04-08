@@ -35,10 +35,6 @@ lib.mkIf config.me.gui.enable {
           xdotool
         ];
       };
-
-      displayManager.sessionCommands = ''
-        ${pkgs.autorandr}/bin/autorandr --change
-      '';
     };
 
     libinput = {
@@ -50,23 +46,19 @@ lib.mkIf config.me.gui.enable {
     };
 
     udev.extraRules = # bash
+      let
+        removeRule = subsystem: ''
+          ACTION=="remove", \
+          SUBSYSTEM=="${subsystem}", \
+          ENV{DISPLAY}=":0", \
+          ENV{XAUTHORITY}="/home/${config.me.user}/.Xauthority", \
+          RUN+="${pkgs.su}/bin/su ${config.me.user} -c '${pkgs.playerctl}/bin/playerctl pause --all-players'"
+        '';
+      in
       ''
-        ACTION=="remove", \
-        SUBSYSTEM=="sound", \
-        ENV{DISPLAY}=":0", \
-        ENV{XAUTHORITY}="/home/${config.me.user}/.Xauthority", \
-        RUN+="${pkgs.su}/bin/su ${config.me.user} -c '${pkgs.playerctl}/bin/playerctl pause --all-players'"
+        ${removeRule "bluetooth"}
 
-        ACTION=="remove", \
-        SUBSYSTEM=="bluetooth", \
-        ENV{DISPLAY}=":0", \
-        ENV{XAUTHORITY}="/home/${config.me.user}/.Xauthority", \
-        RUN+="${pkgs.su}/bin/su ${config.me.user} -c '${pkgs.playerctl}/bin/playerctl pause --all-players'"
-
-        ACTION=="change", \
-        SUBSYSTEM=="drm", \
-        HOTPLUG=="1", \
-        RUN+="${pkgs.autorandr}/bin/autorandr -c && ${pkgs.i3}/bin/i3-msg restart"
+        ${removeRule "sound"}
       '';
 
     displayManager = {

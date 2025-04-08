@@ -2,9 +2,9 @@ return {
     "neovim/nvim-lspconfig",
     event = { "BufReadPost", "BufWritePost", "BufNewFile" },
     keys = {
-        { "gl", vim.diagnostic.open_float, desc = "Open diagnostic float" },
-        { "[d", vim.diagnostic.goto_prev,  desc = "Go to previous diagnostic" },
-        { "]d", vim.diagnostic.goto_next,  desc = "Go to next diagnostic" },
+        { "gl", vim.diagnostic.open_float,                                        desc = "Open diagnostic float" },
+        { "[d", function() vim.diagnostic.jump({ count = -1, float = true }) end, desc = "Go to previous diagnostic" },
+        { "]d", function() vim.diagnostic.jump({ count = 1, float = true }) end,  desc = "Go to next diagnostic" },
     },
     init = function()
         require('lspconfig.ui.windows').default_options.border = 'single'
@@ -25,7 +25,7 @@ return {
         end
 
         local virtual_text_on = {
-            virtual_text = { prefix = "●" },
+            virtual_text = true,
             signs = true,
             underline = true,
             update_in_insert = false,

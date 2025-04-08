@@ -21,13 +21,13 @@ return {
             local gitsigns = require("gitsigns");
 
             vim.keymap.set('n', '[h', function()
-                gitsigns.prev_hunk({ buffer = bufnr })
-                gitsigns.preview_hunk({ buffer = bufnr })
+                gitsigns.nav_hunk('prev')
+                gitsigns.preview_hunk()
             end, { buffer = bufnr })
 
             vim.keymap.set('n', ']h', function()
-                gitsigns.next_hunk({ buffer = bufnr })
-                gitsigns.preview_hunk({ buffer = bufnr })
+                gitsigns.nav_hunk('next')
+                gitsigns.preview_hunk()
             end, { buffer = bufnr })
 
             vim.keymap.set('n', 'gb', gitsigns.toggle_current_line_blame, { buffer = bufnr })

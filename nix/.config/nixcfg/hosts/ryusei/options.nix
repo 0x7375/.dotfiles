@@ -3,6 +3,7 @@
     secrets.enable = true;
     hostname = "ryusei";
     syncthing-client.enable = true;
+    boot.debug.enable = false;
     gui = {
       enable = true;
       bundles = {

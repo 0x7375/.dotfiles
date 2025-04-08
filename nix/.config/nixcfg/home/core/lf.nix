@@ -12,6 +12,7 @@ let
       bat = pkgs.bat;
     }
   );
+  gui = config.me.gui.enable;
 in
 {
   nixpkgs.overlays = [
@@ -26,21 +27,25 @@ in
   ];
 
   home.packages =
-    with pkgs;
     [
-      ueberzugpp
-      # pistol
-      poppler_utils
-      atool
-      libreoffice
+      pkgs.atool
     ]
-    ++ [ ctpv ];
+    ++ lib.optionals gui [
+      ctpv
+      pkgs.ueberzugpp
+      # pkgs.pistol
+      pkgs.poppler_utils
+      pkgs.libreoffice
+    ];
 
-  xdg.configFile."ctpv/config".text = ''
-    preview null .env .git-credentials {{
-        echo "preview disabled"
-    }}
-  '';
+  xdg.configFile."ctpv/config" = {
+    enable = gui;
+    text = ''
+      preview null .env .git-credentials {{
+          echo "preview disabled"
+      }}
+    '';
+  };
 
   programs.lf =
     let
@@ -49,18 +54,21 @@ in
     {
       enable = true;
 
-      extraConfig = ''
-        &${ctpv}/bin/ctpv -s $id
-        cmd on-quit %${ctpv}/bin/ctpv -e $id
-        set cleaner ${ctpv}/bin/ctpvclear
-        setlocal ~/pictures/ info time
-        setlocal ~/pictures/ sortby time
-        setlocal ~/pictures/ reverse
+      extraConfig =
+        lib.optionalString gui ''
+          &${ctpv}/bin/ctpv -s $id
+          cmd on-quit %${ctpv}/bin/ctpv -e $id
+          set cleaner ${ctpv}/bin/ctpvclear
+        ''
+        + ''
+          setlocal ~/pictures/ info time
+          setlocal ~/pictures/ sortby time
+          setlocal ~/pictures/ reverse
 
-        on-focus-gained
-      '';
-      previewer = {
-        keybinding = "<c-p";
+          on-focus-gained
+        '';
+      previewer = lib.mkIf gui {
+        keybinding = "<c-p>";
         source = "${ctpv}/bin/ctpv";
       };
       settings = {
@@ -323,7 +331,7 @@ in
             }}
           '';
         open-sushi = # bash
-          ''
+          lib.optionalString gui ''
             &{{
               ${pkgs.sushi}/bin/sushi $f
 
@@ -417,7 +425,7 @@ in
         ze = "extract";
         zc = "compress";
 
-        O = "&${pkgs.xdragon}/bin/dragon $fx";
+        O = lib.optionalString gui "&${pkgs.xdragon}/bin/dragon $fx";
         md = "mkdir";
         mf = "touch";
         me = "edit-new";

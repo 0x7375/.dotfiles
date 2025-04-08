@@ -57,6 +57,7 @@ lib.mkIf config.me.gui.enable {
           {
             "${modifier}+t" =
               "exec --no-startup-id $term ${pkgs.scripts.tmux-sessionizer}/bin/tmux-sessionizer ~/";
+            "${modifier}+s" = "exec --no-startup-id $term ${pkgs.scripts.tmux-sshizer}/bin/tmux-sshizer";
             "${modifier}+Shift+t" = "exec --no-startup-id $tmux";
             "${modifier}+q" = "kill";
             "${modifier}+e" = "exec --no-startup-id $term ${pkgs.lf}/bin/lf";
@@ -70,7 +71,7 @@ lib.mkIf config.me.gui.enable {
 
             "${modifier}+w" = "exec --no-startup-id $browser";
             "${modifier}+Shift+p" = "exec --no-startup-id ${pkgs.copyq}/bin/copyq show";
-            "${modifier}+s" = "exec --no-startup-id ${pkgs.scripts.dofus-travel}/bin/dofus-travel";
+            # "${modifier}+s" = "exec --no-startup-id ${pkgs.scripts.dofus-travel}/bin/dofus-travel";
             "${modifier}+d" =
               "exec --no-startup-id ${j4-dmenu-desktop}/bin/j4-dmenu-desktop --no-generic -d '${pkgs.bemenu}/bin/bemenu -p \"DESKTOP\"'";
             "${modifier}+i" = "exec --no-startup-id ${pkgs.polybar}/bin/polybar-msg cmd toggle";

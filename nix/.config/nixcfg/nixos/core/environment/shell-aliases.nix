@@ -28,7 +28,7 @@ in
       v = "$EDITOR";
       please = "sudo $(fc -ln -1)";
       dot = "${pkgs.git}/bin/git -C ${dotfiles}";
-      ngit = "GIT_DIR=.nix-git ${pkgs.git}/bin/git";
+      ngit = "GIT_DIR=.nix-git ${pkgs.git}/bin/git -C ${config.me.flakeDir}";
       da = # bash
         ''
           ${pkgs.git}/bin/git -C ${dotfiles} add .;

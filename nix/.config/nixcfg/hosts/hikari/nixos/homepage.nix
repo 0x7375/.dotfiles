@@ -26,4 +26,46 @@
   ];
 
   systemd.services = (myLib.notifyOnServiceFailure "podman-homarr");
+
+  # virtualisation.oci-containers.containers.mafl = {
+  #   image = "ghcr.io/hywax/mafl:latest";
+  #
+  #   imageFile = pkgs.dockerTools.pullImage {
+  #     imageName = "ghcr.io/hywax/mafl";
+  #     imageDigest = "sha256:2c89020be334b341da41a6b95830b1b52b1b9f43c9f16d09c0ab4e9dad3ea4ad";
+  #     sha256 = "sha256-vxJcUe367aFlTpSGN0TjBpZi9xTEC9KH1uNvbMg2BQw=";
+  #   };
+  #
+  #   volumes = [
+  #     "/var/lib/mafl:/app/data"
+  #   ];
+  #
+  #   ports = [ "7575:3000" ];
+  # };
+  #
+  # systemd.tmpfiles.rules =
+  #   let
+  #     content =
+  #       builtins.replaceStrings [ "\n" ] [ "\\n" ]
+  #         # yaml
+  #         ''
+  #           title: Homepage
+  #           services:
+  #             Torrent:
+  #               - title: qBittorrent
+  #                 description: Torrent client
+  #                 link: https://torrent.shimu.duckdns.org
+  #                 icon:
+  #                   url: https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/New_qBittorrent_Logo.svg/1024px-New_qBittorrent_Logo.svg.png
+  #                   wrap: true
+  #                 status:
+  #                   enabled: true
+  #         '';
+  #   in
+  #   [
+  #     "d /var/lib/mafl 0770 root root -"
+  #     "f+ /var/lib/mafl/config.yml 0660 root root - ${content}"
+  #   ];
+  #
+  # systemd.services = (myLib.notifyOnServiceFailure "podman-mafl");
 }

@@ -6,7 +6,15 @@ in
 {
   environment.shellAliases =
     let
-      dotfiles = config.me.dotfilesDir;
+      cdDotfiles =
+        string:
+        # bash
+        ''
+          pushd ${config.me.dotfilesDir} >/dev/null
+          ${string}
+          popd >/dev/null
+        '';
+      git = "${pkgs.git}/bin/git";
     in
     {
       nr = "${pkgs.nix}/bin/nix run";
@@ -25,48 +33,6 @@ in
       t = "history -D | ${pkgs.coreutils}/bin/tail -n 1 | ${pkgs.gawk}/bin/awk '{ print $2 }'";
       v = "$EDITOR";
       please = "sudo $(fc -ln -1)";
-      dot = "GIT_DIR= ${pkgs.git}/bin/git -C ${dotfiles}";
-      ngit = "GIT_DIR=.nix-git ${pkgs.git}/bin/git -C ${config.me.flakeDir}";
-      da = # bash
-        ''
-          GIT_DIR= ${pkgs.git}/bin/git -C ${dotfiles} add .;
-          changes=$(GIT_DIR= ${pkgs.git}/bin/git -C ${dotfiles} diff --cached --name-status | awk '{
-            if ($1 ~ /^R[0-9]*/) {
-              # For renames, print both old and new filenames
-              print "Rename " $2 " -> " $3
-            } else {
-              print $1 " " $2
-            }
-          }' | sed 's/^A /Add /; s/^M /Update /; s/^D /Delete /');
-          GIT_DIR= ${pkgs.git}/bin/git -C ${dotfiles} commit -m "$(printf "%s\n" "$changes")";
-          GIT_DIR= ${pkgs.git}/bin/git -C ${dotfiles} pull --rebase;
-          GIT_DIR= ${pkgs.git}/bin/git -C ${dotfiles} push
-        '';
-      du = "GIT_DIR= ${pkgs.git}/bin/git -C ${dotfiles} pull --rebase";
-      df = # bash
-        ''
-          {
-            GIT_DIR= ${pkgs.git}/bin/git -C ${dotfiles} diff --color=always
-            GIT_DIR= ${pkgs.git}/bin/git -C ${dotfiles} ls-files --others --exclude-standard \
-            | xargs -I{} GIT_DIR= git -C ${dotfiles} diff --color=always --no-index /dev/null {}
-          } | less -R
-        '';
-      dr = # bash
-        ''
-          green=$(${tput} setaf 2)
-          reset=$(${tput} sgr0)
-          hide=$(${tput} civis)
-          show=$(${tput} cnorm)
-
-          echo "''${green}>''${reset}Discard dotfiles changes?"
-          echo -n "[y/N]''${hide}"
-          read -s -r -n 1 answer
-
-          [[ $answer == "y" ]] && {
-            GIT_DIR= ${pkgs.git}/bin/git -C ${dotfiles} restore .
-          }
-          echo "$show"
-        '';
 
       s = "${pkgs.systemd}/bin/systemctl";
 
@@ -77,7 +43,11 @@ in
       rm = "rm -v";
       cp = "cp -v";
       mv = "mv -v";
-      free = "${pkgs.procps}/bin/free -m";
+
+      free = "${pkgs.procps}/bin/free -h";
+      df = "${pkgs.coreutils}/bin/df -h";
+      du = "${pkgs.coreutils}/bin/du -h";
+
       grep = "${pkgs.gnugrep}/bin/grep --color=always";
       ls = "ls --color --group-directories-first";
       ll = "${pkgs.coreutils}/bin/ls -lha --color --group-directories-first";
@@ -94,21 +64,67 @@ in
 
       sudo = "sudo ";
 
-      gd = "${pkgs.git}/bin/git diff";
-      gds = "${pkgs.git}/bin/git diff --staged";
-      gs = "${pkgs.git}/bin/git status --short";
-      gss = "${pkgs.git}/bin/git status";
-      ga = "${pkgs.git}/bin/git add";
-      gc = "${pkgs.git}/bin/git commit";
-      gca = "${pkgs.git}/bin/git commit --amend";
-      gcm = "${pkgs.git}/bin/git commit -m";
-      gk = "${pkgs.git}/bin/git checkout";
-      gh = "${pkgs.git}/bin/git stash";
+      dota =
+        cdDotfiles
+          # bash
+          ''
+            ${git} add .;
+            changes=$(${git} diff --cached --name-status | awk '{
+              if ($1 ~ /^R[0-9]*/) {
+                # For renames, print both old and new filenames
+                print "Rename " $2 " -> " $3
+              } else {
+                print $1 " " $2
+              }
+            }' | sed 's/^A /Add /; s/^M /Update /; s/^D /Delete /');
+            ${git} commit -m "$(printf "%s\n" "$changes")";
+            ${git} pull --rebase;
+            ${git} push
+          '';
+      dotu = cdDotfiles "${git} pull --rebase";
+      dotf =
+        cdDotfiles
+          # bash
+          ''
+            {
+              ${git} diff --color=always
+              ${git} ls-files --others --exclude-standard \
+              | xargs -I{} ${git} diff --color=always --no-index /dev/null {}
+            } | less -R
+          '';
+      dotr =
+        cdDotfiles
+          # bash
+          ''
+            green=$(${tput} setaf 2)
+            reset=$(${tput} sgr0)
+            hide=$(${tput} civis)
+            show=$(${tput} cnorm)
+
+            echo "''${green}>''${reset}Discard dotfiles changes?"
+            echo -n "[y/N]''${hide}"
+            read -s -r -n 1 answer
+
+            [[ $answer == "y" ]] && {
+              ${git} restore .
+            }
+            echo "$show"
+          '';
+
+      gd = "${git} diff";
+      gds = "${git} diff --staged";
+      gs = "${git} status --short";
+      gss = "${git} status";
+      ga = "${git} add";
+      gc = "${git} commit";
+      gca = "${git} commit --amend";
+      gcm = "${git} commit -m";
+      gk = "${git} checkout";
+      gh = "${git} stash";
 
       clip = "${pkgs.xclip}/bin/xclip -sel clip";
 
       py = "python";
-      dev = "${pkgs.nix}/bin/nix develop -c ${pkgs.zsh}/bin/zsh";
 
       ".." = "cd ..";
       "..." = "cd ../..";

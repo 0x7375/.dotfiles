@@ -146,7 +146,7 @@
               (extension "buster-captcha-solver" "{e58d3966-3d76-4cd9-8552-1582fbc800c1}")
               (extension "detach-tab" "claymont@mail.com_detach-tab")
               (extension "sponsorblock" "sponsorBlocker@ajay.app")
-              (extension "youtube-recommended-videos" "myallychou@gmail.com")
+              (extension "remove-youtube-s-suggestions" "{21f1ba12-47e1-4a9b-ad4e-3a0260bbeb26}")
               (extension "dearrow" "deArrow@ajay.app")
               (extension "styl-us" "{7a7a4a92-a2a0-41d1-9fd7-1e92480d612d}")
             ]

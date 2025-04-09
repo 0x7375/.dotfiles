@@ -1,6 +1,6 @@
 { pkgs, ... }:
 pkgs.writeShellApplication {
-  name = "tmux-sshizer";
+  name = "tmux-sshr";
   runtimeInputs = with pkgs; [
     openssh
     fzf
@@ -23,7 +23,7 @@ pkgs.writeShellApplication {
         if tmux has-session 2>/dev/null; then
           exec tmux attach-session
         else
-          exec tmux new-session -s \"$(whoami)-$(hostname)\"
+          exec tmux new-session -s \"ssh-$selected\"
         fi
       else
         exec \$SHELL

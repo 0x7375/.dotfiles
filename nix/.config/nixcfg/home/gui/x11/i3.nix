@@ -57,7 +57,7 @@ lib.mkIf config.me.gui.enable {
           {
             "${modifier}+t" =
               "exec --no-startup-id $term ${pkgs.scripts.tmux-sessionizer}/bin/tmux-sessionizer ~/";
-            "${modifier}+s" = "exec --no-startup-id $term ${pkgs.scripts.tmux-sshizer}/bin/tmux-sshizer";
+            "${modifier}+s" = "exec --no-startup-id $term ${pkgs.scripts.tmux-sshr}/bin/tmux-sshr";
             "${modifier}+Shift+t" = "exec --no-startup-id $tmux";
             "${modifier}+q" = "kill";
             "${modifier}+e" = "exec --no-startup-id $term ${pkgs.lf}/bin/lf";

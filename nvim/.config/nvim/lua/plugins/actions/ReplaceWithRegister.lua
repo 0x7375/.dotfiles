@@ -3,4 +3,11 @@ return {
     keys = {
         { mode = { "x", "n" }, "gr", desc = "Replace with register" }
     },
+    init = function()
+        -- remove default lsp mappings
+        vim.keymap.del({ 'n', 'x' }, 'gra')
+        vim.keymap.del('n', 'gri')
+        vim.keymap.del('n', 'grn')
+        vim.keymap.del('n', 'grr')
+    end,
 }

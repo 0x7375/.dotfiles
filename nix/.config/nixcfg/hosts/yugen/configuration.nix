@@ -12,11 +12,13 @@
 
   networking.hostName = config.me.hostname;
 
-  users.users.${config.me.user} = {
-    openssh.authorizedKeys.keys = [
-      myLib.ssh-keys.ryusei
-    ];
-  };
+  users.users.${config.me.user}.openssh.authorizedKeys.keys = [
+    myLib.ssh-keys.ryusei
+  ];
+
+  users.users.root.openssh.authorizedKeys.keys = [
+    myLib.ssh-keys.ryusei
+  ];
 
   boot.supportedFilesystems = [ "ntfs" ];
 

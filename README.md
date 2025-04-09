@@ -7,14 +7,6 @@ Flake uses [home-manager](https://github.com/nix-community/home-manager), and [a
 
 `nd` script to show changes and commit after every successfull rebuild to a local git repo inside nixcfg
 
-## Local rebuild repo setup
-```
-$ cd nix/.config/nixcfg; git init; mv .git .nix-git
-$ export GIT_DIR=.nix-git
-$ git config user.name name; git config user.email email
-$ git add .; git commit -m "initial commit"
-```
-
 ## Using nixos-anywhere
 add luks password to a file on the target
 ```
@@ -69,3 +61,12 @@ $ cd ~/.dotfiles; stow nix
 $ sed -i 's/\(secrets.enable = \)true/\1false/' ~/.config/nixcfg/hosts/hostname/options.nix # temporarily disable secrets
 # nixos-install --root /mnt --flake ~/.config/nixcfg#hostname
 ```
+
+## Local rebuild repo setup
+```
+$ cd nix/.config/nixcfg; git init; mv .git .nix-git
+$ export GIT_DIR=.nix-git
+$ git config user.name name; git config user.email email
+$ git add .; git commit -m "initial commit"
+```
+

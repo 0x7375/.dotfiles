@@ -25,7 +25,7 @@
         ];
       };
       extraConfig = ''
-        Match Address ${myLib.network.lan.addr.desktop}
+        Match Address ${config.me.allowedIPsRootLogin}
           AuthenticationMethods publickey
 
         Match All

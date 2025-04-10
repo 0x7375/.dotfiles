@@ -29,6 +29,12 @@
       description = "System hostname";
     };
 
+    allowedIPsRootLogin = lib.mkOption {
+      type = lib.types.str;
+      default = "${myLib.network.lan.addr.desktop}";
+      description = "IP address(es) allowed to login as root";
+    };
+
     publicKey = lib.mkOption {
       type = lib.types.str;
       default = myLib.ssh-keys.${config.me.hostname} or "";

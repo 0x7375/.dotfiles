@@ -11,6 +11,7 @@ in
 {
   home.packages = with pkgs; [
     scripts.tmux-sessionizer
+    scripts.tmux-sshr
   ];
 
   programs.tmux = {
@@ -70,6 +71,7 @@ in
         set -ga terminal-overrides ",alacritty:RGB" # support for undercurl
 
         set -g focus-events on
+        set -g detach-on-destroy off
 
         set -g set-titles on
         set -g set-titles-string "#W"

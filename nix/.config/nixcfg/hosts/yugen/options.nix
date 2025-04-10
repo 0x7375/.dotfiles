@@ -1,3 +1,5 @@
+{ myLib, ... }:
+
 {
   me = {
     hostname = "yugen";
@@ -5,6 +7,7 @@
     secrets.enable = true;
     syncthing-client.enable = true;
     # boot.debug.enable = false;
+    allowedIPsRootLogin = "${myLib.network.lan.addr.laptop}";
     gui = {
       enable = true;
       bundles = {

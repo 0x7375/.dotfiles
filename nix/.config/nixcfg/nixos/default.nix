@@ -10,4 +10,6 @@
     "d /home/${config.me.user}/.local 0755 ${config.me.user} users - -"
     "d /home/${config.me.user}/.local/share 0755 ${config.me.user} users - -"
   ];
+
+  boot.tmp.cleanOnBoot = true;
 }

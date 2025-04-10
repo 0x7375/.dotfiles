@@ -10,5 +10,4 @@ lib.mkIf config.me.gui.enable {
   services.udev.packages = [ pkgs.via ];
 
   hardware.keyboard.qmk.enable = true;
-  hardware.i2c.enable = true;
 }

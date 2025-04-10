@@ -27,8 +27,6 @@
 
   boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
 
-  services.hardware.openrgb.enable = true;
-
   services.xserver.videoDrivers = [ "nvidia" ];
 
   # do not change

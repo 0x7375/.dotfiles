@@ -25,7 +25,7 @@
         ];
       };
       extraConfig = ''
-        Match Address ${myLib.network.lan.addr.laptop}
+        Match Address ${myLib.network.lan.addr.desktop}
           AuthenticationMethods publickey
 
         Match All

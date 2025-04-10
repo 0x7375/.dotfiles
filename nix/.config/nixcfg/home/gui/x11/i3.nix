@@ -72,6 +72,9 @@ lib.mkIf config.me.gui.enable {
             "${modifier}+w" = "exec --no-startup-id $browser";
             "${modifier}+Shift+p" = "exec --no-startup-id ${pkgs.copyq}/bin/copyq show";
             # "${modifier}+s" = "exec --no-startup-id ${pkgs.scripts.dofus-travel}/bin/dofus-travel";
+
+            "${modifier}+u" = "exec --no-startup-id ${pkgs._1password-gui}/bin/1password --quick-access";
+
             "${modifier}+d" =
               "exec --no-startup-id ${j4-dmenu-desktop}/bin/j4-dmenu-desktop --no-generic -d '${pkgs.bemenu}/bin/bemenu -p \"DESKTOP\"'";
             "${modifier}+i" = "exec --no-startup-id ${pkgs.polybar}/bin/polybar-msg cmd toggle";

@@ -8,6 +8,8 @@
 {
   i18n.supportedLocales = options.i18n.supportedLocales.default ++ [ "fr_FR.UTF-8/UTF-8" ];
 
+  hardware.i2c.enable = true;
+
   console = {
     packages = with pkgs; [ terminus_font ];
     font = "${pkgs.terminus_font}/share/consolefonts/ter-132b.psf.gz";

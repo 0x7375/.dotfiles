@@ -14,7 +14,6 @@
 
   config = lib.mkIf config.me.secrets.enable {
     environment.systemPackages = [ pkgs.sops ];
-
     sops.secrets.server_vpn_endpoint = {
       owner = config.me.user;
     };

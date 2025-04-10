@@ -14,7 +14,7 @@
 
     dotfilesDir = lib.mkOption {
       type = lib.types.str;
-      default = "~/.dotfiles";
+      default = "/home/${config.me.user}/.dotfiles";
     };
 
     user = lib.mkOption {
@@ -31,7 +31,7 @@
 
     publicKey = lib.mkOption {
       type = lib.types.str;
-      default = myLib.ssh-keys.${config.me.hostname};
+      default = myLib.ssh-keys.${config.me.hostname} or "";
       description = "Public key used for commit signing";
     };
 

@@ -1,4 +1,9 @@
-{ pkgs, config, ... }:
+{
+  lib,
+  pkgs,
+  config,
+  ...
+}:
 
 let
   pk = config.me.publicKey;
@@ -16,7 +21,7 @@ in
   home.file.".ssh/allowed_signers".text = "* ${pk}";
 
   services.ssh-agent.enable = true;
-  systemd.user.services.ssh-add = {
+  systemd.user.services.ssh-add = lib.mkIf config.me.secrets.enable {
     Unit = {
       Description = "Add keys to SSH agent";
       After = [ "ssh-agent.service" ];

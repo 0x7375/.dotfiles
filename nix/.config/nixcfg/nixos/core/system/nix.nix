@@ -35,7 +35,7 @@
 
   system.activationScripts.cleanup-channels.text = # bash
     ''
-      [[ -e /root/.nix-defexpr/channels ]] && rm /root/.nix-defexpr/channels
-      [[ -e /nix/var/nix/profiles/per-user/root/channels ]] && rm /nix/var/nix/profiles/per-user/root/channels
+      [[ -e /root/.nix-defexpr/channels ]] && rm -f /root/.nix-defexpr/channels
+      [[ -e /nix/var/nix/profiles/per-user/root/channels ]] && rm -f /nix/var/nix/profiles/per-user/root/channels
     '';
 }

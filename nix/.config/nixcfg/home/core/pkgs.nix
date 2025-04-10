@@ -30,5 +30,6 @@
     nodejs
 
     scripts.flake
+    scripts.setup-dotfiles
   ];
 }

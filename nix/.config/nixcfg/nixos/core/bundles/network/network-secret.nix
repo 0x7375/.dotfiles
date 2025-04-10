@@ -41,6 +41,19 @@ lib.mkIf (config.me.secrets.enable && config.me.network.enable) {
   networking.networkmanager.ensureProfiles = {
     environmentFiles = [ config.sops.secrets.networkingEnvironment.path ];
     profiles = {
+      Home = {
+        connection = {
+          id = "home";
+          type = "wifi";
+        };
+        wifi = {
+          ssid = "$SSID_HOME";
+        };
+        wifi-security = {
+          key-mgmt = "wpa-psk";
+          psk = "$PSK_HOME";
+        };
+      };
       Sekai = {
         connection = {
           id = "sekai";

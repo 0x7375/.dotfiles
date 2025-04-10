@@ -41,7 +41,6 @@ lib.mkIf config.me.keyd.enable {
       ACTION=="add", \
       ATTR{name}!="keyd virtual*", \
       RUN+="${pkgs.systemd}/bin/systemctl try-restart keyd.service", \
-      RUN+="${pkgs.systemd}/bin/systemctl --user try-restart keyd-application-mapper.service"
     '';
 
   systemd.services.keyd.serviceConfig = {

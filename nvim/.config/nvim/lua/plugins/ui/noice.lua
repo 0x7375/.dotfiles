@@ -1,6 +1,6 @@
 return {
     "folke/noice.nvim",
-    cond = true,
+    cond = false,
     tag = "v4.4.7", -- cmdline flickr on search otherwise
     event = "VeryLazy",
     opts = {
@@ -63,7 +63,8 @@ return {
             },
             override = {
                 ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
-                ["vim.lsp.util.stylize_markdown"] = true,
+                -- https://github.com/folke/noice.nvim/issues/962
+                -- ["vim.lsp.util.stylize_markdown"] = true,
                 ["cmp.entry.get_documentation"] = true,
             },
         },

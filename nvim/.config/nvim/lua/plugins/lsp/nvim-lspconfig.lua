@@ -25,7 +25,7 @@ return {
         end
 
         local virtual_text_on = {
-            virtual_text = true,
+            virtual_text = { current_line = true },
             signs = true,
             underline = true,
             update_in_insert = false,

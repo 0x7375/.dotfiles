@@ -5,10 +5,13 @@
 }:
 
 {
-  imports = [
-    ./hardware.nix
-    ./options.nix
-  ] ++ (myLib.filesIn ../../nixos);
+  imports =
+    [
+      ./hardware.nix
+      ./options.nix
+    ]
+    ++ (myLib.filesIn ../../nixos)
+    ++ (myLib.filesIn ./nixos);
 
   networking.hostName = config.me.hostname;
 
@@ -27,19 +30,6 @@
   services.hardware.openrgb.enable = true;
 
   services.xserver.videoDrivers = [ "nvidia" ];
-
-  sops.secrets."yugen/syncthing/cert" = {
-    owner = config.me.user;
-  };
-
-  sops.secrets."yugen/syncthing/key" = {
-    owner = config.me.user;
-  };
-
-  services.syncthing = {
-    cert = "${config.sops.secrets."yugen/syncthing/cert".path}";
-    key = "${config.sops.secrets."yugen/syncthing/key".path}";
-  };
 
   # do not change
   # For more information, see `man configuration.nix` or https://nixos.org/manual/nixos/stable/options#opt-system.stateVersion .

@@ -13,5 +13,4 @@ lib.mkIf config.me.secrets.enable {
     cert = "${config.sops.secrets."yugen/syncthing/cert".path}";
     key = "${config.sops.secrets."yugen/syncthing/key".path}";
   };
-
 }

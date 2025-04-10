@@ -28,9 +28,6 @@ lib.mkIf config.me.gui.enable {
     script = ''
       ${pkgs.writeShellScriptBin "look-away-notify" ''
         ADDRESS=/run/user/1000/bus
-        # while [[ ! -e $ADDRESS ]]; do
-        #   sleep 1
-        # done
 
         export DISPLAY=:0
         export DBUS_SESSION_BUS_ADDRESS="unix:path=$ADDRESS"

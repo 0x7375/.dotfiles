@@ -8,11 +8,9 @@
 lib.mkIf config.me.gui.enable {
   security.polkit.enable = true;
   services.gnome.gnome-keyring.enable = true;
-  security.pam.services.login.enableGnomeKeyring = true;
   programs.seahorse.enable = true;
 
   environment.systemPackages = with pkgs; [
-    gnome-keyring
     polkit_gnome
     libsecret
     libgnome-keyring

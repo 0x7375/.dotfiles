@@ -27,7 +27,7 @@
     };
     registry = {
       nixpkgs.flake = inputs.nixpkgs;
-      # stable.flake = inputs.nixpkgs-stable;
+      stable.flake = inputs.nixpkgs-stable;
       master.flake = inputs.nixpkgs-master;
       n.flake = inputs.nixpkgs;
     };

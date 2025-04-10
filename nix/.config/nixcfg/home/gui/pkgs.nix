@@ -19,7 +19,7 @@ lib.mkIf config.me.gui.enable {
       });
     in
     [
-      auto.ente-auth
+      stable.ente-auth
 
       (discord.override {
         withOpenASAR = true;
@@ -36,7 +36,7 @@ lib.mkIf config.me.gui.enable {
       imagemagick
       obs-studio
       gimp
-      kdePackages.kdenlive
+      # kdePackages.kdenlive
       gthumb
       vlc
       celluloid

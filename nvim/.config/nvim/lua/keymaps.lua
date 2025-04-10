@@ -146,6 +146,7 @@ vim.keymap.set("n", "<M-k>", function() change_width("up") end, { desc = "Resize
 vim.keymap.set("n", "<M-j>", function() change_width("down") end, { desc = "Resize window down" })
 
 vim.keymap.set({ "x", "n" }, "+", "\"+", { desc = "+ for system clipboard register" })
+vim.keymap.set({ "x", "n" }, "_", "\"_", { desc = "_ for void register" })
 vim.keymap.set("x", "P", "pgv=", { desc = "Paste and indent in visual mode" })
 vim.keymap.set("n", "gp", "`[v`]", { desc = "Select last pasted text" })
 

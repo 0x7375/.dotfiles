@@ -57,6 +57,7 @@ return {
                 "tailwindcss",                     -- associates with too many filetypes
                 "pylyzer",                         -- throws many irrelevant errors
                 "sourcekit",                       -- keeps crashing
+                "gdscript",                        -- doesn't exist?
                 -- "intelephense",
             },
             preferred_servers = {

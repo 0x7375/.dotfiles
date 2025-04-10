@@ -1,5 +1,6 @@
 {
   config,
+  myLib,
   lib,
   pkgs,
   ...
@@ -60,16 +61,5 @@ lib.mkIf config.me.gui.enable {
 
         ${removeRule "sound"}
       '';
-
-    displayManager = {
-      ly = {
-        enable = true;
-        settings = {
-          hide_key_hints = true;
-          clear_password = true;
-        };
-      };
-      defaultSession = "none+i3";
-    };
   };
 }

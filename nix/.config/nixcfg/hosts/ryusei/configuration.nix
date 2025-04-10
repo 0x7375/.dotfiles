@@ -59,36 +59,7 @@
 
   environment.systemPackages = with pkgs; [
     acpi
-    (where-is-my-sddm-theme.override {
-      variants = [ "qt5" ];
-      themeConfig.General = {
-        hideCursor = true;
-        passwordCursorColor = myLib.palette.fg0;
-        passwordTextColor = myLib.palette.fg0;
-      };
-    })
   ];
-
-  services.displayManager = {
-    ly.enable = lib.mkForce false;
-    sddm = {
-      enable = true;
-      theme = "where_is_my_sddm_theme_qt5";
-      extraPackages = with pkgs; [
-        libsForQt5.qt5.qtgraphicaleffects
-      ];
-      settings = {
-        Autologin = {
-          Session = "none+i3";
-          User = config.me.user;
-        };
-      };
-    };
-    autoLogin = {
-      enable = true;
-      user = config.me.user;
-    };
-  };
 
   environment.variables = {
     WINIT_X11_SCALE_FACTOR = "1.20"; # giga zoom on alacritty otherwise

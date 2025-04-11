@@ -12,8 +12,12 @@
   ];
 
   config = lib.mkIf config.me.gui.enable {
-    home.packages = with pkgs; [
-      spotify
+    # home.packages = with pkgs; [
+    #   spotify
+    # ];
+
+    systemd.user.tmpfiles.rules = [
+      "d /home/${config.me.user}/.local/state/spicetify/backup 0755 ${config.me.user} users - -"
     ];
 
     programs.spicetify =
@@ -21,7 +25,7 @@
         spicePkgs = inputs.spicetify-nix.legacyPackages.${pkgs.system};
       in
       {
-        enable = false;
+        enable = true;
         enabledExtensions =
           with spicePkgs.extensions;
           [

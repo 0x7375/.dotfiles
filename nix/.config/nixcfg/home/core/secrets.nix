@@ -13,6 +13,7 @@
 
   config = lib.mkIf config.me.secrets.enable {
     sops.age.sshKeyPaths = [ "/home/${config.me.user}/.ssh/id_ed25519" ];
+    sops.defaultSecretsMountPoint = "/run/user/${toString config.me.uid}/secrets.d";
 
     home.activation.generateSopsKey =
       lib.hm.dag.entryAfter [ "writeBoundary" ]

@@ -23,6 +23,12 @@
       description = "User name";
     };
 
+    uid = lib.mkOption {
+      type = lib.types.int;
+      default = 1000;
+      description = "User id";
+    };
+
     hostname = lib.mkOption {
       type = lib.types.str;
       default = "hostname";

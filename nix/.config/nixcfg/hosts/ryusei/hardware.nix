@@ -1,4 +1,5 @@
 {
+  inputs,
   config,
   lib,
   modulesPath,
@@ -9,6 +10,7 @@
   imports = [
     (modulesPath + "/installer/scan/not-detected.nix")
     ./disko.nix
+    inputs.lanzaboote.nixosModules.lanzaboote
   ];
 
   boot.blacklistedKernelModules = [ "pcspkr" ];
@@ -24,37 +26,12 @@
   boot.kernelModules = [ "kvm-amd" ];
   boot.extraModulePackages = [ ];
 
-  # non-declarative config
+  boot.loader.systemd-boot.enable = lib.mkForce false;
 
-  # boot.resumeDevice = "/dev/disk/by-label/NIXSWAP";
-
-  # boot.initrd.luks.devices."cryptlvm" = {
-  #   device = "/dev/disk/by-label/NIXLUKS";
-  #   allowDiscards = true;
-  #   preLVM = true;
-  # };
-
-  # fileSystems."/" = {
-  #   device = "/dev/disk/by-label/NIXROOT";
-  #   fsType = "ext4";
-  #   options = [
-  #     "noatime"
-  #     "nodiratime"
-  #     "discard"
-  #
-  #     # prevents decryption pw prompt to timeout: https://github.com/NixOS/nixpkgs/issues/250003
-  #     "x-systemd.device-timeout=0"
-  #   ];
-  # };
-
-  # fileSystems."/boot" = {
-  #   device = "/dev/disk/by-label/NIXBOOT";
-  #   fsType = "vfat";
-  # };
-
-  # swapDevices = [
-  #   { device = "/dev/disk/by-label/NIXSWAP"; }
-  # ];
+  boot.lanzaboote = {
+    enable = true;
+    pkiBundle = "/var/lib/sbctl";
+  };
 
   # Enables DHCP on each ethernet and wireless interface. In case of scripted networking
   # (the default) this is the recommended approach. When using systemd-networkd it's

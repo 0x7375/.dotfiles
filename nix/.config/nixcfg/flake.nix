@@ -34,10 +34,7 @@
       flake = false;
     };
 
-    spicetify-nix = {
-      url = "github:Gerg-L/spicetify-nix";
-      inputs.nixpkgs.follows = "nixpkgs-stable";
-    };
+    spicetify-nix.url = "github:Gerg-L/spicetify-nix";
 
     nix-index-database = {
       url = "github:nix-community/nix-index-database";
@@ -46,6 +43,11 @@
 
     nixos-wsl = {
       url = "github:nix-community/NixOS-WSL";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    lanzaboote = {
+      url = "github:nix-community/lanzaboote/v0.4.2";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };

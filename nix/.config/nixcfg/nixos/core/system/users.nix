@@ -12,6 +12,7 @@
     home = "/home/${config.me.user}";
     initialPassword = "pw123";
     initialHashedPassword = lib.mkForce null;
+    uid = config.me.uid;
     shell = pkgs.zsh;
     extraGroups = [
       "wheel"

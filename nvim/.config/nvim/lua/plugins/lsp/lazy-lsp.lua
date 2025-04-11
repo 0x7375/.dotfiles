@@ -175,7 +175,7 @@ return {
                             },
                             markdown = {
                                 {
-                                    formatCommand = "prettier --parser markdown",
+                                    formatCommand = "deno fmt - --ext md",
                                     formatStdin = true,
                                 },
                             },
@@ -187,7 +187,7 @@ return {
                             "shellcheck",
                             "nixfmt-rfc-style",
                             "php81Packages.php-codesniffer",
-                            "nodePackages.prettier",
+                            "deno",
                         }, new_config.cmd)
                     end,
                 },

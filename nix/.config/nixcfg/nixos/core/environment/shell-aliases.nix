@@ -118,7 +118,6 @@ in
       ga = "${git} add";
       gc = "${git} commit";
       gca = "${git} commit --amend";
-      gcm = "${git} commit -m";
       gk = "${git} checkout";
       gh = "${git} stash";
 

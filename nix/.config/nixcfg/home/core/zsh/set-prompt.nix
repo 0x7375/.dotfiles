@@ -11,7 +11,7 @@
         }
 
         function get_git_info() {
-            local ref=$(${pkgs.git}/bin/git rev-parse --abbrev-ref HEAD 2>/dev/null)
+            local -r ref=$(${pkgs.git}/bin/git rev-parse --abbrev-ref HEAD 2>/dev/null)
 
             if [[ "$ref" == "HEAD" ]]; then
               branch=$(${pkgs.git}/bin/git rev-parse --short HEAD 2>/dev/null)
@@ -19,7 +19,7 @@
               branch=$ref
             fi
 
-            dirty_status="$(is_dirty)"
+            local -r dirty_status="$(is_dirty)"
 
             if [[ $branch != "" ]]; then
                 ${pkgs.coreutils-full}/bin/echo " $branch$dirty_status"
@@ -28,7 +28,7 @@
 
         function get_prompt_symbol() {
             if [[ $SHLVL -gt 1 || -n $DIRENV_LOADED ]]; then
-                echo " ~"
+                echo " !"
             else
                 echo " $"
             fi

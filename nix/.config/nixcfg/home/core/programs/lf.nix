@@ -152,8 +152,8 @@ in
           ''
             ''${{
               # absolute paths are needed since we can be in a mount point
-              local LF_CD_FILE=''${LF_CD_FILE:-/dev/null}
-              local path=$(pwd)
+              LF_CD_FILE=''${LF_CD_FILE:-/dev/null}
+              path=$(pwd)
               
               # make sure we are not in a mount point
               while [[ "$path" == *".mnt"* ]]; do

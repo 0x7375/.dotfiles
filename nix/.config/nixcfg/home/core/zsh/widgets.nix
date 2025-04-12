@@ -21,7 +21,7 @@
             # handle cd to last directory
             if [ -s "$LF_CD_FILE" ]; then
                 cd "$(< "$LF_CD_FILE")"
-                rm "$LF_CD_FILE"
+                \rm "$LF_CD_FILE"
             fi
             unset LF_CD_FILE
         }

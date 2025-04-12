@@ -61,7 +61,7 @@ pkgs.writeShellApplication {
 
       ssh_run() {
         local -r CMD=$1
-        local -r INTERACTIVE=$2
+        local -ir INTERACTIVE=$2
 
         ssh -q "$user@$host" ''${INTERACTIVE:+-t TERM=$TERM} "$CMD"
       }
@@ -101,7 +101,7 @@ pkgs.writeShellApplication {
       }
 
       build_config() {
-        local extra_args=("$@")
+        local -a extra_args=("$@")
         if [[ $MODE = "os" ]]; then
           nom build --no-link --json "''${extra_args[@]}" path:.#nixosConfigurations."$host".config.system.build.toplevel | jq -r '.[].outputs.out'
         else
@@ -157,7 +157,7 @@ pkgs.writeShellApplication {
           version=$(eval "$cmd")
         fi
 
-        local -r current_generation=$(get_current_gen)
+        local -ir current_generation=$(get_current_gen)
         local -r current_date=$(date "+%Y-%m-%d %H:%m:%S")
 
         echo "$MODE: $current_generation $current_date $version"
@@ -179,8 +179,8 @@ pkgs.writeShellApplication {
       }
 
       cleanup() {
-        GIT_DIR="$OLD_GIT_DIR"
         git restore --staged .
+        GIT_DIR="$OLD_GIT_DIR"
         echo -n "$SHOW_CURSOR"
         silent popd; exit
       }
@@ -244,7 +244,7 @@ pkgs.writeShellApplication {
           host=$(</etc/hostname)
         fi
 
-        local exclude_patterns
+        local -a exclude_patterns
         if [[ $MODE == "home" ]]; then
           exclude_patterns=(":^nixos/*" ":^*/nixos/*" ":^configuration.nix" ":^*/configuration.nix" ":^hardware.nix" ":^*/hardware.nix" ":^disko.nix" ":^*/disko.nix")
           local exclude_patterns -r

@@ -17,6 +17,7 @@
         source $ZDOTDIR/widgets.zsh
         source $ZDOTDIR/bindings.zsh
         source $ZDOTDIR/set-prompt.sh
+        source $ZDOTDIR/longcmd-notify.zsh
 
         mkdir -p "$XDG_STATE_HOME"/zsh > /dev/null
         export HISTFILE="$XDG_STATE_HOME"/zsh/history 

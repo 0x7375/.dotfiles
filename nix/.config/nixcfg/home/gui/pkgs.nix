@@ -66,6 +66,9 @@ lib.mkIf config.me.gui.enable {
       st
     ]
     ++ (lib.optionals config.me.devPkgs.enable [
+      gnumake
+      deno
+
       # nodePackages.eas-cli
 
       # haskell

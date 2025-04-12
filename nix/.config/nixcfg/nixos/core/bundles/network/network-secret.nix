@@ -19,6 +19,7 @@ lib.mkIf (config.me.secrets.enable && config.me.network.enable) {
 
   sops.secrets.nextdns_id = {
     owner = config.me.user;
+    neededForUsers = true;
   };
 
   system.activationScripts."resolved-secret-substitution" = ''

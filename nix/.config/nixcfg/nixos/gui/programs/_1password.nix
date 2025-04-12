@@ -1,0 +1,57 @@
+{
+  pkgs,
+  lib,
+  config,
+  ...
+}:
+
+lib.mkIf config.me.gui.enable {
+  programs = {
+    _1password.enable = true;
+    _1password-gui = {
+      package = pkgs._1password-gui;
+      enable = true;
+      polkitPolicyOwners = [ config.me.user ];
+    };
+  };
+
+  systemd.tmpfiles.rules =
+    let
+      content =
+        builtins.replaceStrings [ "\n" ] [ "\\n" ]
+          # json
+          ''
+            {
+              "version": 1,
+              "sshAgent.sshAuthorizatonModel": "application",
+              "ui.routes.lastUsedRoute": "{\\\"type\\\":\\\"ItemDetail\\\",\\\"content\\\":{\\\"itemListRoute\\\":{\\\"unlockedRoute\\\":{\\\"collectionUuid\\\":\\\"everything\\\"},\\\"itemListType\\\":{\\\"type\\\":\\\"AllItems\\\"},\\\"category\\\":null,\\\"sortBehavior\\\":null},\\\"itemId\\\":\\\"DC\\\"}}",
+              "security.authenticatedUnlock.enabled": true,
+              "browsers.extension.enabled": true,
+              "keybinds.lock": "",
+              "keybinds.autoFill": "CommandOrControl+Shift+[l]L",
+              "keybinds.quickAccess": "",
+              "sidebar.showCategories": true,
+              "sidebar.showTags": false,
+              "privacy.checkHibp": true,
+              "authTags": {
+                "browsers.extension.enabled": "",
+                "keybinds.autoFill": "",
+                "keybinds.lock": "",
+                "keybinds.quickAccess": "",
+                "privacy.checkHibp": "",
+                "security.authenticatedUnlock.enabled": "",
+                "sidebar.showCategories": "",
+                "sidebar.showTags": "",
+                "sshAgent.sshAuthorizatonModel": "",
+                "ui.routes.lastUsedRoute": ""
+              }
+            }
+          '';
+    in
+    [
+      "d /home/${config.me.user}/.config 0755 ${config.me.user} users - -"
+      "d /home/${config.me.user}/.config/1Password 0700 ${config.me.user} users - -"
+      "d /home/${config.me.user}/.config/1Password/settings 0700 ${config.me.user} users - -"
+      "f /home/${config.me.user}/.config/1Password/settings/settings.json 0600 ${config.me.user} users - ${content}"
+    ];
+}

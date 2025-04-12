@@ -75,12 +75,6 @@
       debug.enable = lib.mkEnableOption "Make boot verbose";
     };
 
-    btrfs.enable = lib.mkOption {
-      type = lib.types.bool;
-      default = true;
-      description = "Enable autoscrub and automatic home snapshots";
-    };
-
     network.enable = lib.mkOption {
       type = lib.types.bool;
       default = true;
@@ -93,28 +87,23 @@
       description = "Deploy secrets using sops-nix";
     };
 
-    capsLockRemap.enable = lib.mkOption {
-      type = lib.types.bool;
-      default = false;
-      description = "Remap caps lock to control/esc using interception-tools";
-    };
-
     keyd.enable = lib.mkOption {
       type = lib.types.bool;
       default = true;
       description = "Remap keys using keyd and keyd-application-mapper";
     };
 
-    devPkgs.enable = lib.mkEnableOption "Install development packages";
-    minecraft.enable = lib.mkEnableOption "Create minecraft server";
-
     syncthing.enable = lib.mkOption {
       type = lib.types.bool;
       default = config.me.syncthing-client.enable;
       description = "Setup syncthing";
     };
-
     syncthing-client.enable = lib.mkEnableOption "Enable syncthing client and setup directories";
+
+    devPkgs.enable = lib.mkEnableOption "Install development packages";
+    minecraft.enable = lib.mkEnableOption "Create minecraft server";
+    capsLockRemap.enable = lib.mkEnableOption "Remap caps lock to control/esc using interception-tools";
+    btrfs.enable = lib.mkEnableOption "Enable autoscrub and automatic home snapshots";
 
     gui = {
       enable = lib.mkEnableOption "Enable graphical config";

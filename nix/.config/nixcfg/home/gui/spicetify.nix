@@ -16,10 +16,6 @@
     #   spotify
     # ];
 
-    systemd.user.tmpfiles.rules = [
-      "d /home/${config.me.user}/.local/state/spicetify/backup 0755 ${config.me.user} users - -"
-    ];
-
     programs.spicetify =
       let
         spicePkgs = inputs.spicetify-nix.legacyPackages.${pkgs.system};

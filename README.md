@@ -27,18 +27,19 @@ nixos-anywhere
 
 ```
 # sbctl create-keys
-$ keys=$(mktemp -d)
-# sudo cp -r /var/lib/sbctl $keys/var/lib/sbctl
-# sudo chown -R user:users $keys/var/lib/sbctl
+$ mkdir -p $root/var/lib
+# sudo cp -r /var/lib/sbctl $root/var/lib
+# sudo chown -R ayko:users $root/var/lib/sbctl
 ```
 
 ### Install
+
+Note: SSHPASS and --env-password are only needed if public key auth is not set up
 
 ```
 $ SSHPASS=remote-pw nix run nixpkgs#nixos-anywhere -- --env-password \
 --disk-encryption-keys /tmp/secret.key /tmp/secret.key \
 --extra-files "$root" --chown /home/ayko 1000:100 \
---extra-files "$keys" \
 --flake path:.#remote root@remote
 ```
 

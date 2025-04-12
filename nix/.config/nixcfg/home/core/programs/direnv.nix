@@ -26,6 +26,6 @@
     DIRENV_WARN_TIMEOUT = 0;
   };
 
-  home.file.".config/zsh/.zshrc".text =
+  xdg.configFile."zsh/.zshrc".text =
     lib.mkAfter "command -v direnv >/dev/null 2>&1 && eval \"$(direnv hook zsh)\"";
 }

@@ -3,23 +3,29 @@
 {
   programs.neovim = {
     enable = true;
-    extraLuaPackages = ps: [ ps.magick ];
-    extraPackages = [ pkgs.imagemagick ];
+    # extraLuaPackages = ps: [ ps.magick ];
+    plugins = with pkgs.vimPlugins; [
+      nvim-treesitter.withAllGrammars
+    ];
+    extraPackages = with pkgs; [
+      # image.nvim
+      # imagemagick
+      # lua5_1
+      # luarocks
+
+      gnumake
+
+      # tree-sitter
+
+      # copilot chat
+      lua54Packages.tiktoken_core
+      lynx
+
+      # copilot
+      nodejs
+
+      # peek.nvim
+      deno
+    ];
   };
-
-  home.packages = with pkgs; [
-    tree-sitter
-    gnumake
-
-    # copilot chat
-    lua54Packages.tiktoken_core
-    lynx
-    # peek.nvim
-    deno
-    # copilot
-    nodejs
-
-    lua5_1
-    luarocks
-  ];
 }

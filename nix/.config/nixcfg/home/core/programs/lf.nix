@@ -42,7 +42,7 @@ in
   xdg.configFile."ctpv/config" = {
     enable = gui;
     text = ''
-      preview null .env .git-credentials {{
+      preview null .env .git-credentials .wakatime.cfg .keyring {{
           echo "preview disabled"
       }}
     '';

@@ -31,7 +31,19 @@ return {
         }
     },
     opts = {
-        auto_install = true,
+        ensure_installed = {
+            "c", "go", "java", "python", "sql", "nix", "bash",
+
+            "vim", "vimdoc", "query", "regex", "markdown", "markdown_inline",
+            "gitignore", "gitcommit", "cmake", "make", "diff", "comment",
+            "tmux",
+
+            "json", "jsonc", "yaml", "xml", "ini", "toml",
+
+            "html", "css", "javascript", "tsx", "typescript", "php", "graphql",
+            "latex",
+        },
+        auto_install = false,
         highlight = {
             enable = true,
             disable = function(lang, buf)

@@ -23,26 +23,7 @@
   boot.kernelModules = [ "kvm-intel" ];
   boot.extraModulePackages = [ ];
 
-  hardware.nvidia = {
-    open = false;
-  };
-
-  # fileSystems."/" = {
-  #   device = "/dev/disk/by-label/NIXROOT";
-  #   fsType = "ext4";
-  # };
-  #
-  # fileSystems."/boot" = {
-  #   device = "/dev/disk/by-label/NIXBOOT";
-  #   fsType = "vfat";
-  # };
-  #
-  # swapDevices = [
-  #   {
-  #     device = "/var/lib/swapfile";
-  #     size = 16 * 1024;
-  #   }
-  # ];
+  hardware.nvidia.open = false;
 
   # Enables DHCP on each ethernet and wireless interface. In case of scripted networking
   # (the default) this is the recommended approach. When using systemd-networkd it's

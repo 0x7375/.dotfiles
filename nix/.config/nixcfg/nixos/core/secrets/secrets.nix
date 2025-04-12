@@ -25,6 +25,7 @@
 
     sops.defaultSopsFile = "${secrets}/default.yaml";
     sops.age.sshKeyPaths = [ "/home/${config.me.user}/.ssh/id_ed25519" ];
+    sops.gnupg.sshKeyPaths = [ ];
 
     sops.secrets.cachix = { };
   };

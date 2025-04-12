@@ -8,6 +8,7 @@
     syncthing-client.enable = true;
     # boot.debug.enable = false;
     allowedIPsRootLogin = "${myLib.network.lan.addr.laptop}";
+    btrfs.enable = true;
     gui = {
       enable = true;
       bundles = {

@@ -10,11 +10,13 @@
     flakeDir = lib.mkOption {
       type = lib.types.str;
       default = "/home/${config.me.user}/.dotfiles/nix/.config/nixcfg";
+      description = "Path to the nixos flake directory";
     };
 
     dotfilesDir = lib.mkOption {
       type = lib.types.str;
       default = "/home/${config.me.user}/.dotfiles";
+      description = "Path to the dotfiles directory";
     };
 
     user = lib.mkOption {
@@ -56,7 +58,7 @@
     refreshRate = lib.mkOption {
       type = lib.types.int;
       default = 60;
-      description = "Refresh rate used for smoothfox browser config";
+      description = "Refresh rate (used to choose the right config for firefox)";
     };
 
     boot = {
@@ -73,6 +75,12 @@
       debug.enable = lib.mkEnableOption "Make boot verbose";
     };
 
+    btrfs.enable = lib.mkOption {
+      type = lib.types.bool;
+      default = true;
+      description = "Enable autoscrub and automatic home snapshots";
+    };
+
     network.enable = lib.mkOption {
       type = lib.types.bool;
       default = true;
@@ -82,7 +90,7 @@
     secrets.enable = lib.mkOption {
       type = lib.types.bool;
       default = true;
-      description = "Use secrets";
+      description = "Deploy secrets using sops-nix";
     };
 
     capsLockRemap.enable = lib.mkOption {
@@ -94,7 +102,7 @@
     keyd.enable = lib.mkOption {
       type = lib.types.bool;
       default = true;
-      description = "Remap keys using keyd";
+      description = "Remap keys using keyd and keyd-application-mapper";
     };
 
     devPkgs.enable = lib.mkEnableOption "Install development packages";
@@ -106,17 +114,17 @@
       description = "Setup syncthing";
     };
 
-    syncthing-client.enable = lib.mkEnableOption "Setup syncthing client";
+    syncthing-client.enable = lib.mkEnableOption "Enable syncthing client and setup directories";
 
     gui = {
       enable = lib.mkEnableOption "Enable graphical config";
 
       bundles = {
         gaming.enable = lib.mkEnableOption "Install steam and other game launchers";
-        postgresql.enable = lib.mkEnableOption "Create a postgresql server";
+        postgresql.enable = lib.mkEnableOption "Run a postgresql server";
         virtualBox.enable = lib.mkEnableOption "Enable virtual box";
-        neo4j.enable = lib.mkEnableOption "Create a neo4j server";
-        gns3.enable = lib.mkEnableOption "Start gns3 server";
+        neo4j.enable = lib.mkEnableOption "Run a neo4j server";
+        gns3.enable = lib.mkEnableOption "Run gns3 server";
       };
     };
   };

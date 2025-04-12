@@ -89,7 +89,7 @@ return {
                                 },
                                 options = {
                                     nixos = {
-                                        expr = string.format('%s.nixosWithoutHomeConfigurations.%s.options', flake, host),
+                                        expr = string.format('%s.nixosConfigurations.%s.options', flake, host),
                                     },
                                     home_manager = {
                                         expr = string.format('%s.homeConfigurations.\"%s@%s\".options', flake, user, host),
@@ -147,7 +147,12 @@ return {
                     end,
                 },
                 efm = {
-                    on_attach = lspformat.on_attach,
+                    on_attach = function(client, bufnr)
+                        -- don't auto format markdown
+                        if vim.bo[bufnr].filetype ~= "markdown" then
+                            lspformat.on_attach(client, bufnr)
+                        end
+                    end,
                     init_options = { documentFormatting = true, documentRangeFormatting = true },
                     filetypes = { "sh", "nix", "php", "markdown" },
                     settings = {

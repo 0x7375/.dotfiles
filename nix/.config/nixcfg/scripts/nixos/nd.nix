@@ -55,6 +55,12 @@ pkgs.writeShellApplication {
           echo "''${RED}Error:''${RESET} $1"
       }
 
+      request_sudo() {
+        if [[ -z $remote_build ]]; then
+          sudo -v
+        fi
+      }
+
       silent() {
           "$@" >/dev/null 2>&1
       }
@@ -262,6 +268,8 @@ pkgs.writeShellApplication {
 
         [[ -f "$HASH_FILE" ]] && last_rebuild_hash=$(< "$HASH_FILE")
         tar -cf - --exclude=''${GIT_DIR} . | sha256sum | cut -d\  -f 1 > "$HASH_FILE"
+
+        request_sudo
 
         if [[ $force_rebuild -eq 1 || $last_rebuild_hash != $(< "$HASH_FILE") || -z $result ]]; then
           git add . -- "''${exclude_patterns[@]}"

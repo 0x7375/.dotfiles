@@ -2,36 +2,100 @@
 
 Dotfiles managed with gnu stow
 
-NixOS configuration for an nvidia desktop, thinkpad laptop, a raspberry pi and wsl.
-Flake uses [home-manager](https://github.com/nix-community/home-manager), and [agenix](https://github.com/ryantm/agenix) for secrets.
+NixOS configuration for an nvidia desktop, thinkpad laptop, a raspberry pi and
+wsl. Flake uses [home-manager](https://github.com/nix-community/home-manager),
+and [agenix](https://github.com/ryantm/agenix) for secrets.
 
-`nd` script to show changes and commit after every successfull rebuild to a local git repo inside nixcfg
+`nd` script to show changes and commit after every successfull rebuild to a
+local git repo inside nixcfg
 
-## Using nixos-anywhere
-connect to wifi if needed (nmtui)
-add luks password to a file on the target
+## Nixos-anywhere installation
+
+### Pre-requisites
+
+Store password for disk encryption in a file, and create the structure for the
+ssh key to be passed to nixos-anywhere
+
 ```
 $  echo -n "luksPassword" > /tmp/secret.key
-```
-install
-```
 $ root=$(mktemp -d)
 $ install -Dm 600 ~/remote_pkey $root/home/ayko/.ssh/id_ed25519
-$ SSHPASS=remote-pw nix run nixpkgs#nixos-anywhere -- --disk-encryption-keys /tmp/secret.key /tmp/secret.key --env-password --extra-files "$root" --chown /home/ayko 1000:100 --flake path:.#remote root@remote
+```
+
+Secure boot keys can optionally be generated with sbctl to be passed to
+nixos-anywhere
+
+```
+# sbctl create-keys
+$ keys=$(mktemp -d)
+# sudo cp -r /var/lib/sbctl $keys/var/lib/sbctl
+# sudo chown -R user:users $keys/var/lib/sbctl
+```
+
+### Install
+
+```
+$ SSHPASS=remote-pw nix run nixpkgs#nixos-anywhere -- --env-password \
+--disk-encryption-keys /tmp/secret.key /tmp/secret.key \
+--extra-files "$root" --chown /home/ayko 1000:100 \
+--extra-files "$keys" \
+--flake path:.#remote root@remote
+```
+
+### Optional: enable secure boot
+
+Verify entries are signed
+
+```
+# sbctl verify
+```
+
+Inside the bios: security -> secure boot -> enable secure boot, select reset to
+setup and delete every key except the dbx
+([guide](https://github.com/nix-community/lanzaboote/blob/master/docs/QUICK_START.md#part-2-enabling-secure-boot))
+
+Enroll keys
+
+```
+# sbctl enroll-keys --microsoft
+$ bootctl status
+```
+
+Secure boot should now work and we can reboot
+
+## Local rebuild repo setup
+
+Commands to set up a local git repo for the nixcfg directory, this is used by
+the `nd` script to have a commit per successful rebuild. `setup-dotfiles` runs
+these commands.
+
+```
+$ git clone codeberg.org:0xB0F/.dotfiles ~/.dotfiles
+$ cd ~/.dotfiles; stow nix nvim; cd ./nix/.config/nixcfg
+$ git init; mv .git .nix-git
+$ export GIT_DIR=.nix-git
+$ git config user.name name; git config user.email email
+$ git add .; git commit -m "initial commit"
 ```
 
 ## Making a bootable USB drive
-building the iso
+
+Building the iso
+
 ```
-$ nix build .\#nixosConfigurations.isoImg.config.system.build.isoImage 
+$ nix build .#nixosConfigurations.isoImg.config.system.build.isoImage
 ```
-flashing the iso
+
+Flashing the iso
+
 ```
 $ sudo dd if=result/iso/nixos.iso of=/dev/disk bs=4M status=progress conv=sync
 ```
 
-## Manual installation
-### partitioning
+## Manual installation (not used, for reference)
+
+### Partitioning
+
 ```
 # cfdisk /dev/disk
 # cryptsetup luksFormat /dev/disk --label NIXLUKS
@@ -42,41 +106,43 @@ $ sudo dd if=result/iso/nixos.iso of=/dev/disk bs=4M status=progress conv=sync
 # lvcreate -l 100%FREE vg -n root
 ```
 
-### formatting
+### Formatting
+
 ```
 # mkswap /dev/disk -L NIXSWAP
 # mkfs.fat -F 32 /dev/disk -n NIXBOOT
 # mkfs.ext4 /dev/disk -L NIXROOT
 ```
 
-### mount
+### Mount
+
 ```
 # mount /dev/disk /mnt
 # mount --mkdir /dev/disk /mnt/root
 # swapon /dev/disk/by-label/NIXSWAP
 ```
 
-### install
+### Install
+
+Connect to wifi if needed, `nmtui`
+
 ```
 $ git clone https://codeberg.org/0xB0F/.dotfiles ~/.dotfiles
 $ cd ~/.dotfiles; stow nix
 ```
-from another machine
+
+Copy ssh key over from another machine (or just disable secrets in options
+temporarily)
+
 ```
 $ scp /path/to/ssh-key remote:~/.ssh/id_ed25519
 ```
-back to the target machine
+
+Put ssh key in the right place and install nixos
+
 ```
 $ chmod 600 ~/.ssh/id_ed25519
 # install -Dm 600 -o ayko -g users ~/.ssh/id_ed25519 /mnt/home/ayko/.ssh/
 # nixos-install --root /mnt --flake ~/.dotfiles/nix/.config/nixcfg#hostname
-```
-
-## Local rebuild repo setup
-```
-$ cd nix/.config/nixcfg; git init; mv .git .nix-git
-$ export GIT_DIR=.nix-git
-$ git config user.name name; git config user.email email
-$ git add .; git commit -m "initial commit"
 ```
 

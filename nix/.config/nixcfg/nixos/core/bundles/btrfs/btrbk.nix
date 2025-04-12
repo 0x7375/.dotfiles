@@ -1,4 +1,6 @@
-{
+{ lib, config, ... }:
+
+lib.mkIf config.me.enable.btrfs {
   services.btrbk.instances."home" = {
     onCalendar = "hourly";
     settings = {

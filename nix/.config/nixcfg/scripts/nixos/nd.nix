@@ -285,7 +285,7 @@ pkgs.writeShellApplication {
 
           if [[ -n $remote_build ]]; then
             # prevent garbage collection of the closure
-            silent sudo nix-store --realise "$result" --add-root "/nix/var/nix/gcroot/$remote_build-$MODE"
+            silent sudo nix-store --realise "$result" --add-root "/nix/var/nix/gcroot/$host-$MODE"
 
             log "Copying closure to $host"
             env "NIX_SSHOPTS=-q" nix-copy-closure --to "$user"@"$host" "$result"

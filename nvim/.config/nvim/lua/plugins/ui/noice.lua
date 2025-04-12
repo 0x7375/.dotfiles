@@ -1,6 +1,6 @@
 return {
     "folke/noice.nvim",
-    cond = false,
+    cond = true,
     tag = "v4.4.7", -- cmdline flickr on search otherwise
     event = "VeryLazy",
     opts = {

@@ -44,6 +44,10 @@ lib.mkIf config.me.secrets.enable {
         "/var/lib/homarr"
       ];
 
+      gitRepos = [
+        "/home/${config.me.user}/git"
+      ];
+
       backupConfig =
         let
           remotes = {
@@ -66,6 +70,7 @@ lib.mkIf config.me.secrets.enable {
           day,
           paths,
           name,
+          exclude,
         }:
         {
           initialize = true;
@@ -73,9 +78,10 @@ lib.mkIf config.me.secrets.enable {
           rcloneConfigFile = config.sops.secrets.rclone_config.path;
           repository = remotes.${remote}.path + name;
           inherit paths;
-          exclude = [
-            ".*"
-            "node_modules"
+          inherit exclude;
+          pruneOpts = [
+            "--keep-weekly 4"
+            "--keep-monthly 6"
           ];
           timerConfig = {
             OnCalendar = day + " *-*-* " + remotes.${remote}.time;
@@ -85,7 +91,14 @@ lib.mkIf config.me.secrets.enable {
 
       createBackups =
         name:
-        { paths, day }:
+        {
+          paths,
+          day,
+          exclude ? [
+            ".*"
+            "node_modules"
+          ],
+        }:
         builtins.listToAttrs (
           map
             (remote: {
@@ -96,6 +109,7 @@ lib.mkIf config.me.secrets.enable {
                   day
                   paths
                   name
+                  exclude
                   ;
               };
             })
@@ -113,6 +127,13 @@ lib.mkIf config.me.secrets.enable {
     // (createBackups "media" {
       paths = mediaDirs;
       day = "Sun";
+    })
+    // (createBackups "git" {
+      paths = gitRepos;
+      day = "Mon";
+      exclude = [
+        "node_modules"
+      ];
     });
 
   systemd.services = lib.mkMerge (

@@ -1,6 +1,6 @@
 # restore btrfs snapshot
 
-```
+```bash
 ~/documents $ lsblk
 NAME        FSTYPE        SIZE MOUNTPOINTS
 sda         iso9660      28.7G
@@ -22,37 +22,37 @@ nvme0n1                 931.5G
 
 ## open and mount btrfs root
 
-```
+```bash
 cryptsetup open /dev/nvme1n1p2 crypted
 
-# mkdir -p /mnt/btrfs-root
-# mount -o subvol=/ /dev/mapper/crypted /mnt/btrfs-root
+mkdir -p /mnt/btrfs-root
+mount -o subvol=/ /dev/mapper/crypted /mnt/btrfs-root
 ```
 
 ## list snapshots
 
-```
-# ls -la /mnt/btrfs-root/snapshots
+```bash
+ls -la /mnt/btrfs-root/snapshots
 ```
 
 ## restore snapshot
 
-```
-# btrfs subvolume delete /mnt/btrfs-root/home
-# btrfs subvolume snapshot /mnt/btrfs-root/snapshots/snapshot_to_restore /mnt/btrfs-root/home
+```bash
+btrfs subvolume delete /mnt/btrfs-root/home
+btrfs subvolume snapshot /mnt/btrfs-root/snapshots/snapshot_to_restore /mnt/btrfs-root/home
 ```
 
 ## cleanup
 
-```
-# umount /mnt/btrfs-root
-# cryptsetup close crypted
+```bash
+umount /mnt/btrfs-root
+cryptsetup close crypted
 ```
 
 # send snapshot to another machine
 
-```
-# btrfs subvolume snapshot -r /home /snapshots/home-ssh
-# btrfs send /snapshots/home-ssh | ssh user@remote-server "btrfs receive /snapshots/home-received-ssh"
-# btrfs subvolume delete /snapshots/home-ssh
+```bash
+btrfs subvolume snapshot -r /home /snapshots/home-ssh
+btrfs send /snapshots/home-ssh | ssh user@remote-server "btrfs receive /snapshots/home-received-ssh"
+btrfs subvolume delete /snapshots/home-ssh
 ```

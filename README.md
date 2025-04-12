@@ -16,28 +16,28 @@ local git repo inside nixcfg
 Store password for disk encryption in a file, and create the structure for the
 ssh key to be passed to nixos-anywhere
 
-```
-$  echo -n "luksPassword" > /tmp/secret.key
-$ root=$(mktemp -d)
-$ install -Dm 600 ~/remote_pkey $root/home/ayko/.ssh/id_ed25519
+```bash
+ echo -n "luksPassword" > /tmp/secret.key
+root=$(mktemp -d)
+install -Dm 600 ~/remote_pkey $root/home/ayko/.ssh/id_ed25519
 ```
 
 Secure boot keys can optionally be generated with sbctl to be passed to
 nixos-anywhere
 
-```
-# sbctl create-keys
-$ mkdir -p $root/var/lib
-# sudo cp -r /var/lib/sbctl $root/var/lib
-# sudo chown -R ayko:users $root/var/lib/sbctl
+```bash
+sbctl create-keys
+mkdir -p $root/var/lib
+sudo cp -r /var/lib/sbctl $root/var/lib
+sudo chown -R ayko:users $root/var/lib/sbctl
 ```
 
 ### Install
 
 Note: SSHPASS and --env-password are only needed if public key auth is not set up
 
-```
-$ SSHPASS=remote-pw nix run nixpkgs#nixos-anywhere -- --env-password \
+```bash
+SSHPASS=remote-pw nix run nixpkgs#nixos-anywhere -- --env-password \
 --disk-encryption-keys /tmp/secret.key /tmp/secret.key \
 --extra-files "$root" --chown /home/ayko 1000:100 \
 --flake path:.#remote root@remote
@@ -47,8 +47,8 @@ $ SSHPASS=remote-pw nix run nixpkgs#nixos-anywhere -- --env-password \
 
 Verify entries are signed
 
-```
-# sbctl verify
+```bash
+sbctl verify
 ```
 
 Inside the bios: security -> secure boot -> enable secure boot and select reset to setup mode
@@ -56,9 +56,9 @@ Inside the bios: security -> secure boot -> enable secure boot and select reset 
 
 Enroll keys
 
-```
-# sbctl enroll-keys --microsoft
-$ bootctl status
+```bash
+sbctl enroll-keys --microsoft
+bootctl status
 ```
 
 Secure boot should now work and we can reboot
@@ -69,80 +69,79 @@ Commands to set up a local git repo for the nixcfg directory, this is used by
 the `nd` script to have a commit per successful rebuild. `setup-dotfiles` runs
 these commands.
 
-```
-$ git clone codeberg.org:0xB0F/.dotfiles ~/.dotfiles
-$ cd ~/.dotfiles; stow nix nvim; cd ./nix/.config/nixcfg
-$ git init; mv .git .nix-git
-$ export GIT_DIR=.nix-git
-$ git config user.name name; git config user.email email
-$ git add .; git commit -m "initial commit"
+```bash
+git clone codeberg.org:0xB0F/.dotfiles ~/.dotfiles
+cd ~/.dotfiles; stow nix nvim; cd ./nix/.config/nixcfg
+git init; mv .git .nix-git
+export GIT_DIR=.nix-git
+git config user.name name; git config user.email email
+git add .; git commit -m "initial commit"
 ```
 
 ## Making a bootable USB drive
 
 Building the iso
 
-```
-$ nix build .#nixosConfigurations.isoImg.config.system.build.isoImage
+```bash
+nix build .#nixosConfigurations.isoImg.config.system.build.isoImage
 ```
 
 Flashing the iso
 
-```
-$ sudo dd if=result/iso/nixos.iso of=/dev/disk bs=4M status=progress conv=sync
+```bash
+sudo dd if=result/iso/nixos.iso of=/dev/disk bs=4M status=progress conv=sync
 ```
 
 ## Manual installation (not used, for reference)
 
 ### Partitioning
 
-```
-# cfdisk /dev/disk
-# cryptsetup luksFormat /dev/disk --label NIXLUKS
-# cryptsetup open /dev/disk cryptlvm
-# pvcreate /dev/mapper/cryptlvm
-# vgcreate vg /dev/mapper/cryptlvm
-# lvcreate -L 16G vg -n swap
-# lvcreate -l 100%FREE vg -n root
+```bash
+cfdisk /dev/disk
+cryptsetup luksFormat /dev/disk --label NIXLUKS
+cryptsetup open /dev/disk cryptlvm
+pvcreate /dev/mapper/cryptlvm
+vgcreate vg /dev/mapper/cryptlvm
+lvcreate -L 16G vg -n swap
+lvcreate -l 100%FREE vg -n root
 ```
 
 ### Formatting
 
-```
-# mkswap /dev/disk -L NIXSWAP
-# mkfs.fat -F 32 /dev/disk -n NIXBOOT
-# mkfs.ext4 /dev/disk -L NIXROOT
+```bash
+mkswap /dev/disk -L NIXSWAP
+mkfs.fat -F 32 /dev/disk -n NIXBOOT
+mkfs.ext4 /dev/disk -L NIXROOT
 ```
 
 ### Mount
 
-```
-# mount /dev/disk /mnt
-# mount --mkdir /dev/disk /mnt/root
-# swapon /dev/disk/by-label/NIXSWAP
+```bash
+mount /dev/disk /mnt
+mount --mkdir /dev/disk /mnt/root
+swapon /dev/disk/by-label/NIXSWAP
 ```
 
 ### Install
 
 Connect to wifi if needed, `nmtui`
 
-```
-$ git clone https://codeberg.org/0xB0F/.dotfiles ~/.dotfiles
-$ cd ~/.dotfiles; stow nix
+```bash
+git clone https://codeberg.org/0xB0F/.dotfiles ~/.dotfiles
+cd ~/.dotfiles; stow nix
 ```
 
 Copy ssh key over from another machine (or just disable secrets in options
 temporarily)
 
-```
-$ scp /path/to/ssh-key remote:~/.ssh/id_ed25519
+```bash
+scp /path/to/ssh-key remote:~/.ssh/id_ed25519
 ```
 
 Put ssh key in the right place and install nixos
 
+```bash
+chmod 600 ~/.ssh/id_ed25519
+install -Dm 600 -o ayko -g users ~/.ssh/id_ed25519 /mnt/home/ayko/.ssh/
+nixos-install --root /mnt --flake ~/.dotfiles/nix/.config/nixcfg#hostname
 ```
-$ chmod 600 ~/.ssh/id_ed25519
-# install -Dm 600 -o ayko -g users ~/.ssh/id_ed25519 /mnt/home/ayko/.ssh/
-# nixos-install --root /mnt --flake ~/.dotfiles/nix/.config/nixcfg#hostname
-```
-

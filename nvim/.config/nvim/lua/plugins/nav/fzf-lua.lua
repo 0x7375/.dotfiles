@@ -58,6 +58,7 @@ return {
                 scrollbar = false,
                 layout = 'vertical',
                 vertical = 'up:60%',
+                border = "single",
             },
             border = "single",
         },

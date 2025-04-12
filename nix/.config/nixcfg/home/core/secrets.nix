@@ -15,6 +15,11 @@
     sops.age.sshKeyPaths = [ "/home/${config.me.user}/.ssh/id_ed25519" ];
     sops.defaultSecretsMountPoint = "/run/user/${toString config.me.uid}/secrets.d";
 
+    # owner was root for some reason
+    systemd.user.tmpfiles.rules = [
+      "d /home/${config.me.user}/.config/sops-nix 0755 ${config.me.user} users - -"
+    ];
+
     home.activation.generateSopsKey =
       lib.hm.dag.entryAfter [ "writeBoundary" ]
         # bash

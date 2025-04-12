@@ -38,7 +38,7 @@ lib.mkIf (config.me.secrets.enable && config.me.network.enable) {
     '';
   };
 
-  networking.networkmanager.ensureProfiles = {
+  networking.networkmanager.ensureProfiles = lib.mkIf (config.me.hostname != "hikari") {
     environmentFiles = [ config.sops.secrets.networkingEnvironment.path ];
     profiles = {
       Home = {

@@ -35,6 +35,7 @@ in
       please = "sudo $(fc -ln -1)";
 
       s = "${pkgs.systemd}/bin/systemctl";
+      j = "${pkgs.systemd}/bin/journalctl";
 
       e = "${pkgs.atool}/bin/aunpack";
       c = "${pkgs.atool}/bin/apack";

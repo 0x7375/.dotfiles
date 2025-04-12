@@ -58,7 +58,7 @@
       aarch = "aarch64-linux";
       x86 = "x86_64-linux";
       pkgs = inputs.nixpkgs.legacyPackages.${x86};
-      inherit (myLib) mkSystem mkHome mkSystemWithHome;
+      inherit (myLib) mkSystem mkHome;
       hosts = {
         yugen = {
           nixos = ./hosts/yugen/configuration.nix;
@@ -83,19 +83,12 @@
       };
     in
     {
-      nixosWithoutHomeConfigurations = {
-        yugen = mkSystem hosts.yugen.nixos x86;
-        ryusei = mkSystem hosts.ryusei.nixos x86;
-        hikari = mkSystem hosts.hikari.nixos aarch;
-        kumo = mkSystem hosts.kumo.nixos x86;
-      };
-
       nixosConfigurations = {
-        yugen = mkSystemWithHome hosts.yugen.nixos hosts.yugen.home x86;
-        ryusei = mkSystemWithHome hosts.ryusei.nixos hosts.ryusei.home x86;
-        hikari = mkSystemWithHome hosts.hikari.nixos hosts.hikari.home aarch;
-        kumo = mkSystemWithHome hosts.kumo.nixos hosts.kumo.home x86;
-        isoImg = mkSystemWithHome hosts.isoImg.nixos hosts.isoImg.home x86;
+        yugen = mkSystem hosts.yugen.nixos hosts.yugen.home x86;
+        ryusei = mkSystem hosts.ryusei.nixos hosts.ryusei.home x86;
+        hikari = mkSystem hosts.hikari.nixos hosts.hikari.home aarch;
+        kumo = mkSystem hosts.kumo.nixos hosts.kumo.home x86;
+        isoImg = mkSystem hosts.isoImg.nixos hosts.isoImg.home x86;
       };
 
       homeConfigurations =

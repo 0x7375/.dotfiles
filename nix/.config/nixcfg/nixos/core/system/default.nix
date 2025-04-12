@@ -10,6 +10,8 @@
 
   hardware.i2c.enable = true;
 
+  boot.tmp.cleanOnBoot = true;
+
   console = {
     packages = with pkgs; [ terminus_font ];
     font = "${pkgs.terminus_font}/share/consolefonts/ter-132b.psf.gz";

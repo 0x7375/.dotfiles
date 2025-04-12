@@ -214,25 +214,20 @@
         };
       };
 
-      scripts =
-        let
-          scriptFiles = builtins.filter (f: builtins.match ".*\\.nix$" (toString f) != null) (
-            myLib.filesIn ../scripts/home ++ myLib.filesIn ../scripts/nixos
-          );
-        in
-        builtins.listToAttrs (
-          map (path: {
-            name = builtins.elemAt (builtins.match "([^.]+).*" (builtins.baseNameOf path)) 0;
-            value = import path {
-              inherit
-                myLib
-                config
-                pkgs
-                inputs
-                ;
-            };
-          }) scriptFiles
-        );
+      # namespace for scripts: e.g. "scripts.tmux-sessionizer"
+      scripts = builtins.listToAttrs (
+        map (path: {
+          name = (lib.removeSuffix ".nix" (baseNameOf path));
+          value = import path {
+            inherit
+              myLib
+              config
+              pkgs
+              inputs
+              ;
+          };
+        }) (myLib.filesIn ../scripts)
+      );
     })
   ];
 }

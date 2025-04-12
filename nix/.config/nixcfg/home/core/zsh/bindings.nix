@@ -7,14 +7,8 @@
         bindkey -e
 
         bindkey '\ev' edit-command-line
-        bindkey '\es' prepend-sudo
 
-        bindkey '\ec' _fzf-cd-current
-        bindkey '^R' _fzf-history-widget
-        bindkey '^T' _fzf-cd-config
-        # bindkey '^J' _fzf-cd-projects
-
-        bindkey '^V' _fzf-file-widget
+        bindkey '^R' fzf-history-widget
 
         bindkey -s '^O' "lf^M"
 

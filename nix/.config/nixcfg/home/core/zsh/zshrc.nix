@@ -12,7 +12,6 @@
 
         source ~/.profile
 
-        source $ZDOTDIR/fzf.zsh
         source $ZDOTDIR/completion.zsh
         source $ZDOTDIR/opts.zsh
         source $ZDOTDIR/widgets.zsh
@@ -24,8 +23,12 @@
         HISTSIZE=50000
         SAVEHIST=50000
 
+        # only add command that did not fail
         zshaddhistory() { whence ''${''${(z)1}[1]} >| /dev/null || return 1 }
+
         zle_highlight=('paste:none')
+
+        # allow any character resume terminal after ctrl+s
         stty ixany
 
         set_prompt

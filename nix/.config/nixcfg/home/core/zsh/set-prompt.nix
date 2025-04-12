@@ -36,13 +36,14 @@
 
         function get_ssh_info() {
             if [[ -n $SSH_CONNECTION ]]; then
-                echo "%F{yellow}%n%F{green}@%F{cyan}%m:"
+                [[ -n $ZSH_VERSION ]] && echo "%F{yellow}%n%F{green}@%F{cyan}%m:"
             fi
         }
 
         function set_prompt {
             # Last character is U+202F to navigate previous/next prompt in tmux (check with ga in vim)
-            PS1='$(get_ssh_info)%F{blue}%~%F{green}$(get_git_info)%f$(get_prompt_symbol) '
+            [[ -n $ZSH_VERSION ]] && PS1='$(get_ssh_info)%F{blue}%~%F{green}$(get_git_info)%F{reset}$(get_prompt_symbol) '
+            [[ -n $BASH_VERSION ]] && PS1='$(get_ssh_info)\[\033[34m\]\w\[\033[32m\]$(get_git_info)\[\033[0m\]$(get_prompt_symbol) '
         }
       '';
   };

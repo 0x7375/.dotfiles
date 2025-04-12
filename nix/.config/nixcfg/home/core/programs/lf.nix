@@ -29,6 +29,7 @@ in
   home.packages =
     [
       pkgs.atool
+      pkgs.zip
     ]
     ++ lib.optionals gui [
       ctpv
@@ -147,49 +148,20 @@ in
               lf -remote "send $id unselect"
               lf -remote "send $id select \"$newa\""
                     }}'';
-        trash = # bash
-          ''
-            %{{
-              printf "trash? [y/N] "
-              read ans
-              if [[ -z "$ans" || "$ans" != "y" ]]; then
-                lf -remote "send $id reload"
-                return;
-              fi
-
-              files=$(printf "$fx" | tr '\n' ';')
-              while [ "$files" ]; do
-                file=''${files%%;*}
-
-                ${pkgs.trash-cli}/bin/trash-put "$(basename "$file")"
-                if [ "$files" = "$file" ]; then
-                  files=""
-                else
-                  files="''${files#*;}"
-                fi
-              done
-              lf -remote "send $id reload"
-            }}
-          '';
-        fzf-restore = # bash
-          ''
-            ''${{
-              ids="$(echo -ne '\n'              | \
-                ${pkgs.trash-cli}/bin/trash-restore                   | \
-                awk '$1 ~ /^[0-9]+/ {print $0}' | \
-                ${pkgs.fzf}/bin/fzf --multi --tac               | \
-                awk '{print $1}'                | \
-                sed -z 's/\n/,/g;s/,$/\n/')"
-              echo $ids | trash-restore
-              clear
-            }}
-          '';
         quit-and-cd = # bash
           ''
             ''${{
-              LF_CD_FILE=''${LF_CD_FILE:-/dev/null}
-              pwd > $LF_CD_FILE
-              lf -remote "send $id quit"
+              # absolute paths are needed since we can be in a mount point
+              local LF_CD_FILE=''${LF_CD_FILE:-/dev/null}
+              local path=$(pwd)
+              
+              # make sure we are not in a mount point
+              while [[ "$path" == *".mnt"* ]]; do
+                path=$(${pkgs.coreutils}/bin/dirname "$path")
+              done
+              
+              echo "$path" > "$LF_CD_FILE"
+              ${pkgs.lf}/bin/lf -remote "send $id quit"
             }}
           '';
         mount-archive = # bash
@@ -210,7 +182,7 @@ in
               sudo lf
             }}
           '';
-        newfold = # bash
+        move-to-new-dir = # bash
           ''
             %{{
               printf "Directory name: "
@@ -220,7 +192,7 @@ in
                 return;
               fi
 
-              mkdir -- "$newd"
+              mkdir -p -- "$newd"
               mv -- $fx "$newd"
             }}
           '';
@@ -409,8 +381,8 @@ in
         I = ":rename; cmd-home";
         a = ":rename";
         b = "bulkrename";
-        d = "trash";
-        r = "fzf-restore";
+        d = "";
+        r = "";
         "<c-l>" = "mount-archive";
         p = ":paste; clear";
         P = "paste-overwrite";
@@ -429,7 +401,7 @@ in
         md = "mkdir";
         mf = "touch";
         me = "edit-new";
-        "<c-n>" = "newfold";
+        "<c-n>" = "move-to-new-dir";
         "=" = "toggle-executable";
         gL = "follow_link";
         "<c-z>" = "$kill -STOP $PPID";

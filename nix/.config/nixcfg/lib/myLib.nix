@@ -20,17 +20,6 @@ rec {
       name = baseNameOf path;
     };
 
-  mkSystem =
-    config: system:
-    inputs.nixpkgs.lib.nixosSystem {
-      specialArgs = specialArgs // {
-        inherit system;
-      };
-      modules = [
-        config
-      ];
-    };
-
   mkHome =
     config: system:
     inputs.home-manager.lib.homeManagerConfiguration {
@@ -43,7 +32,7 @@ rec {
       ];
     };
 
-  mkSystemWithHome =
+  mkSystem =
     nixosConfig: hmConfig: system:
     inputs.nixpkgs.lib.nixosSystem {
       specialArgs = specialArgs // {
@@ -55,7 +44,6 @@ rec {
         (
           { config, ... }:
           {
-            environment.systemPackages = [ inputs.home-manager.packages.${system}.default ];
             home-manager.users.${config.me.user} = import hmConfig;
             home-manager.extraSpecialArgs = specialArgs // {
               inherit system;

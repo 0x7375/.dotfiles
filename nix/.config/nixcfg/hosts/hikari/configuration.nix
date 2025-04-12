@@ -30,7 +30,7 @@
   };
 
   services.journald.extraConfig = ''
-    MaxRetentionSec=2week
+    MaxRetentionSec=5d
   '';
 
   systemd.services."service-failure-notify@" = {

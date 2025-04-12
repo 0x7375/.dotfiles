@@ -33,9 +33,7 @@ return {
 
         local virtual_text_off = {
             virtual_text = false,
-            signs = false,
             underline = false,
-            update_in_insert = false,
         }
 
         vim.diagnostic.config(virtual_text_on)

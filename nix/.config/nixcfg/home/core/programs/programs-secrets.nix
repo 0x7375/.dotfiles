@@ -12,5 +12,11 @@ lib.mkIf config.me.secrets.enable {
     key = "";
     path = "/home/${config.me.user}/.wakatime.cfg";
   };
-}
 
+  sops.secrets.copilot = {
+    sopsFile = "${secrets}/copilot.json";
+    format = "json";
+    key = "";
+    path = "/home/${config.me.user}/.config/github-copilot/apps.json";
+  };
+}

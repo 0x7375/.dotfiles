@@ -15,26 +15,34 @@ return {
         -- })
 
         -- highlight line number with diagnostic color
-        for _, diag in ipairs({ "Error", "Warn", "Info", "Hint" }) do
-            vim.fn.sign_define("DiagnosticSign" .. diag, {
-                text = "",
-                texthl = "DiagnosticSign" .. diag,
-                linehl = "",
-                numhl = "DiagnosticSign" .. diag,
-            })
-        end
-
-        local virtual_text_on = {
-            virtual_text = { current_line = true },
-            signs = true,
-            underline = true,
+        local base_config = {
+            signs = {
+                text = {
+                    [vim.diagnostic.severity.ERROR] = "",
+                    [vim.diagnostic.severity.WARN] = "",
+                    [vim.diagnostic.severity.INFO] = "",
+                    [vim.diagnostic.severity.HINT] = "",
+                },
+                numhl = {
+                    [vim.diagnostic.severity.ERROR] = "DiagnosticSignError",
+                    [vim.diagnostic.severity.WARN] = "DiagnosticSignWarn",
+                    [vim.diagnostic.severity.HINT] = "DiagnosticSignHint",
+                    [vim.diagnostic.severity.INFO] = "DiagnosticSignInfo",
+                },
+            },
             update_in_insert = false,
         }
 
-        local virtual_text_off = {
+        local virtual_text_on = vim.tbl_extend("keep", base_config, {
+            virtual_text = { current_line = true },
+            signs = true,
+            underline = true,
+        })
+
+        local virtual_text_off = vim.tbl_extend("keep", base_config, {
             virtual_text = false,
             underline = false,
-        }
+        })
 
         vim.diagnostic.config(virtual_text_on)
 

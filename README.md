@@ -51,8 +51,7 @@ Verify entries are signed
 # sbctl verify
 ```
 
-Inside the bios: security -> secure boot -> enable secure boot, select reset to
-setup and delete every key except the dbx
+Inside the bios: security -> secure boot -> enable secure boot and select reset to setup mode
 ([guide](https://github.com/nix-community/lanzaboote/blob/master/docs/QUICK_START.md#part-2-enabling-secure-boot))
 
 Enroll keys

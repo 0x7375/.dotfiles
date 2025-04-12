@@ -27,7 +27,7 @@ return {
             vim.fn.jobstart({ "xdg-open", url })
         end,
         ui = {
-            enable = true,
+            enable = false,
             hl_groups = {
                 ObsidianTodo = { link = "GruvboxOrange" },
                 ObsidianRightArrow = { link = "GruvboxOrange" },

@@ -5,13 +5,6 @@
     inputs.disko.nixosModules.disko
   ];
 
-  # sops key is inside home partition and needed
-  # during boot: https://github.com/nix-community/disko/issues/192#issuecomment-2567944604
-  fileSystems."/home".neededForBoot = true;
-  virtualisation.vmVariantWithDisko = {
-    virtualisation.fileSystems."/home".neededForBoot = true;
-  };
-
   disko.devices = {
     disk.main = {
       type = "disk";

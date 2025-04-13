@@ -5,12 +5,12 @@
     scripts.nd
     scripts.dump-dotfiles
     nix-output-monitor
+    wireguard-tools
     keyd
     nixd
     stow
     fzf
     gcc
-    ncdu
     unzip
     wget
     age

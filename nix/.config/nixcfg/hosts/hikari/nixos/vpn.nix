@@ -53,25 +53,18 @@ lib.mkIf config.me.secrets.enable {
     wireguard-tools
   ];
 
-  sops.secrets."hikari/server_vpn_pk" = {
-    owner = config.me.user;
-  };
+  sops.secrets."hikari/server_vpn_pk".owner = config.me.user;
+  sops.secrets.laptop_vpn_psk.owner = config.me.user;
+  sops.secrets.phone_vpn_psk.owner = config.me.user;
 
-  sops.secrets.laptop_vpn_psk = {
-    owner = config.me.user;
-  };
-
-  sops.secrets.phone_vpn_psk = {
-    owner = config.me.user;
-  };
-
+  # redirect clients network traffic to the VPN
   # networking.nat = {
   #   enable = true;
   #   internalInterfaces = [ home ];
   #   externalInterface = "end0";
   # };
 
-  networking.firewall.allowedUDPPorts = [ 51821 ];
+  networking.firewall.allowedUDPPorts = [ 51820 ];
 
   networking.wg-quick.interfaces.${home} =
     let
@@ -79,7 +72,7 @@ lib.mkIf config.me.secrets.enable {
     in
     {
       address = [ "${network.vpn.addr.server}/24" ];
-      listenPort = 51821;
+      listenPort = 51820;
       privateKeyFile = config.sops.secrets."hikari/server_vpn_pk".path;
 
       peers = [

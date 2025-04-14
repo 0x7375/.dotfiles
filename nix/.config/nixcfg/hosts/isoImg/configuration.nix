@@ -32,6 +32,5 @@
   hardware.enableAllFirmware = true;
   networking.hostName = config.me.hostname;
 
-  networking.networkmanager.enable = true;
   networking.wireless.enable = false;
 }

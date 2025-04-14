@@ -34,7 +34,7 @@
       zle -N edit-command-line
 
       fzf-history-widget() {
-        local selected=$(fc -rl 1 | fzf --height 40% --reverse --query="$LBUFFER")
+        local -r selected=$(fc -rl 1 | fzf --height 40% --reverse --query="$LBUFFER")
         
         if [ -n "$selected" ]; then
           local num=$(echo "$selected" | awk '{print $1}')

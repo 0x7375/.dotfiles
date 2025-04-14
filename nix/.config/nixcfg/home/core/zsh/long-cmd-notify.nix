@@ -5,6 +5,10 @@
     enable = config.me.gui.enable;
     text = # bash
       ''
+        if [[ -z "$DISPLAY" ]]; then
+          return 0
+        fi
+
         time_threshold=10
         time_taken=0
         cmd=""

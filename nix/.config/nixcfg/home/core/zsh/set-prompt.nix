@@ -10,6 +10,7 @@
       function get_git_info() {
           local -r ref=$(${pkgs.git}/bin/git rev-parse --abbrev-ref HEAD 2>/dev/null)
 
+          local branch
           if [[ "$ref" == "HEAD" ]]; then
             branch=$(${pkgs.git}/bin/git rev-parse --short HEAD 2>/dev/null)
           else

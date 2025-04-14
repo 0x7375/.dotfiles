@@ -18,5 +18,12 @@ lib.mkIf config.me.gui.enable {
   };
   programs.virt-manager.enable = true;
 
+  virtualisation.vmVariant = {
+    virtualisation = {
+      memorySize = 4096;
+      cores = 3;
+    };
+  };
+
   users.users.${config.me.user}.extraGroups = [ "libvirtd" ];
 }

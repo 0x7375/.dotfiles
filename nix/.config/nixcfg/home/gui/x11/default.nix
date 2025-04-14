@@ -12,4 +12,7 @@ lib.mkIf config.me.gui.enable {
     ''
       ${pkgs.xset}/bin/xset s off -dpms
     '';
+
+  xdg.configFile."zsh/.zshrc".text =
+    lib.mkBefore ''[[ $(tty) == "/dev/tty1" ]] && exec startx &> /dev/null'';
 }

@@ -1,48 +1,55 @@
 {
   lib,
-  myLib,
   config,
-  pkgs,
   ...
 }:
 
 lib.mkIf config.me.gui.enable {
-  environment.systemPackages = [
-    (pkgs.where-is-my-sddm-theme.override {
-      variants = [ "qt5" ];
-      themeConfig.General = {
-        hideCursor = true;
-        passwordCursorColor = myLib.palette.fg0;
-        passwordTextColor = myLib.palette.fg0;
-      };
-    })
-  ];
+  services.getty = {
+    autologinOnce = true;
+    autologinUser = config.me.user;
+  };
 
-  services.displayManager = {
-    sddm = {
-      enable = true;
-      theme = "where_is_my_sddm_theme_qt5";
-      extraPackages = with pkgs; [
-        libsForQt5.qt5.qtgraphicaleffects
-      ];
-      settings = {
-        Autologin = {
-          Session = "none+i3";
-          User = config.me.user;
-        };
-      };
-    };
-    autoLogin = {
-      enable = true;
-      user = config.me.user;
-    };
-    defaultSession = "none+i3";
-    # ly = {
-    #   enable = true;
-    #   settings = {
-    #     hide_key_hints = true;
-    #     clear_password = true;
-    #   };
-    # };
+  environment.etc.issue.text = ''
+              ▗▄▄▄       ▗▄▄▄▄    ▄▄▄▖         
+              ▜███▙       ▜███▙  ▟███▛         
+               ▜███▙       ▜███▙▟███▛          
+                ▜███▙       ▜██████▛           
+         ▟█████████████████▙ ▜████▛     ▟▙     
+        ▟███████████████████▙ ▜███▙    ▟██▙    
+               ▄▄▄▄▖           ▜███▙  ▟███▛    
+              ▟███▛             ▜██▛ ▟███▛     
+             ▟███▛               ▜▛ ▟███▛      
+    ▟███████████▛                  ▟██████████▙
+    ▜██████████▛                  ▟███████████▛
+          ▟███▛ ▟▙               ▟███▛         
+         ▟███▛ ▟██▙             ▟███▛          
+        ▟███▛  ▜███▙           ▝▀▀▀▀           
+        ▜██▛    ▜███▙ ▜██████████████████▛     
+         ▜▛     ▟████▙ ▜████████████████▛      
+               ▟██████▙       ▜███▙            
+              ▟███▛▜███▙       ▜███▙           
+             ▟███▛  ▜███▙       ▜███▙          
+             ▝▀▀▀    ▀▀▀▀▘       ▀▀▀▘          
+  '';
+
+  services.xserver.displayManager.startx = {
+    enable = true;
+    generateScript = true;
+    extraCommands =
+      # bash
+      ''
+        if test -z "$DBUS_SESSION_BUS_ADDRESS"; then
+        	eval $(dbus-launch --exit-with-session --sh-syntax)
+        fi
+        systemctl --user import-environment DISPLAY XAUTHORITY
+
+        if command -v dbus-update-activation-environment &> /dev/null; then
+          dbus-update-activation-environment DISPLAY XAUTHORITY
+        fi
+
+        source ~/.profile
+        export SHLVL=1
+      '';
   };
 }

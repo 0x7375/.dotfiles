@@ -206,10 +206,10 @@ lib.mkIf config.me.gui.enable {
             notification = false;
           }
           # hide polybar at startup
-          {
-            command = "(xdo id -m -N Polybar && polybar-msg cmd hide)&";
-            notification = false;
-          }
+          # {
+          #   command = "(xdo id -m -N Polybar && polybar-msg cmd hide)&";
+          #   notification = false;
+          # }
 
           {
             command = "${pkgs.i3}/bin/i3-msg workspace 1";

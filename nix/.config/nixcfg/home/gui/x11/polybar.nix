@@ -100,6 +100,7 @@ lib.mkIf config.me.gui.enable {
         };
       "module/network" = {
         type = "internal/network";
+        interface = "wlan0";
         label.connected = {
           text = "%essid%";
           maxlen = 8;

@@ -9,6 +9,7 @@ pkgs.writeShellApplication {
     i3
   ];
   text = ''
+    options=()
     if [[ -d /sys/class/power_supply/BAT0 ]]; then
       options=(lock logout suspend hibernate shutdown reboot setup)
     else

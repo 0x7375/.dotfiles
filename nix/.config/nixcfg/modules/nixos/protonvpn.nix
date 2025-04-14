@@ -39,8 +39,8 @@ in
         };
 
         port = mkOption {
-          default = 51820;
-          example = 51820;
+          default = 0;
+          example = 0;
           type = types.port;
           description = "The port number of the interface.";
         };

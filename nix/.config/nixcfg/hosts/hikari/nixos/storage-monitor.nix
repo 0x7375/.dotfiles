@@ -13,27 +13,27 @@
       gawk
     ];
     script = ''
-      THRESHOLD_WARNING=90
-      THRESHOLD_CRITICAL=95
-      MESSAGE=""
-      LOCK_DIR="/tmp/storage-monitor-locks"
+      threshold_warning=90
+      threshold_critical=95
+      message=""
+      lock_dir="/tmp/storage-monitor-locks"
 
-      ROOT_USAGE=$(df -h / | grep -v Filesystem | awk '{print $5}' | tr -d '%')
-      LOCKFILE="$LOCK_DIR/root_$THRESHOLD_WARNING"
+      root_usage=$(df -h / | grep -v Filesystem | awk '{print $5}' | tr -d '%')
+      lockfile="$lock_dir/root_$threshold_warning"
 
-      if [ "$ROOT_USAGE" -ge "$THRESHOLD_CRITICAL" ]; then
-        MESSAGE="ROOT filesystem at $ROOT_USAGE% (CRITICAL)\\n"
-        LOCKFILE="$LOCK_DIR/root_$THRESHOLD_CRITICAL"
-      elif [ "$ROOT_USAGE" -ge "$THRESHOLD_WARNING" ]; then
-        MESSAGE="ROOT filesystem at $ROOT_USAGE% (WARNING)\\n"
+      if [ "$root_usage" -ge "$threshold_critical" ]; then
+        message="ROOT filesystem at $root_usage% (CRITICAL)\\n"
+        lockfile="$lock_dir/root_$threshold_critical"
+      elif [ "$root_usage" -ge "$threshold_warning" ]; then
+        message="ROOT filesystem at $root_usage% (WARNING)\\n"
       else
-        rm -f "$LOCK_DIR/root_$THRESHOLD_WARNING" "$LOCK_DIR/root_$THRESHOLD_CRITICAL"
+        rm -f "$lock_dir/root_$threshold_warning" "$lock_dir/root_$threshold_critical"
       fi
 
-      if [ -n "$MESSAGE" ]; then
-        if [ ! -f "$LOCKFILE" ]; then
-          curl -d "$MESSAGE" http://${myLib.network.lan.addr.server}:8719/status
-          touch "$LOCKFILE"
+      if [ -n "$message" ]; then
+        if [ ! -f "$lockfile" ]; then
+          curl -d "$message" http://${myLib.network.lan.addr.server}:8719/status
+          touch "$lockfile"
         fi
       fi
     '';

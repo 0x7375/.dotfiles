@@ -10,10 +10,9 @@ pkgs.writeShellApplication {
   ];
   text = ''
     # ignore standby and suspend when connected to a monitor
+    external_monitor_connected=$(xrandr --query | grep -w "connected" | grep -v "eDP")
 
-    EXTERNAL_MONITOR_CONNECTED=$(xrandr --query | grep -w "connected" | grep -v "eDP")
-
-    if [ -n "$EXTERNAL_MONITOR_CONNECTED" ]; then
+    if [ -n "$external_monitor_connected" ]; then
       case $1 in
         "lock") lock ;;
       esac

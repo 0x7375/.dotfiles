@@ -19,7 +19,6 @@ return {
         end
         local alpha = require("alpha")
         local dashboard = require("alpha.themes.dashboard")
-        -- from https://github.com/geryzhydrox/Dotfiles
         dashboard.section.header.val = {
             "          ▗▄▄▄       ▗▄▄▄▄    ▄▄▄▖          ",
             "          ▜███▙       ▜███▙  ▟███▛          ",

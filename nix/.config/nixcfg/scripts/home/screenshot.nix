@@ -27,7 +27,7 @@ pkgs.writeShellApplication {
     }
 
     function send_notification() {
-        action=$(notify-send --icon "$folder$file" "Screenshot saved" "You can paste the image from the clipboard" -A open=open)
+        local -r action=$(notify-send --icon "$folder$file" "Screenshot saved" "You can paste the image from the clipboard" -A open=open)
         if [[ $action == *"open"* ]]; then
             alacritty -e lf "$(xdg-user-dir SCREENSHOTS)"
         fi
@@ -51,7 +51,7 @@ pkgs.writeShellApplication {
 
     function monitor() {
         if [[ $XDG_SESSION_TYPE == "x11" ]]; then
-            primary_geometry=$(xrandr --query | grep primary | grep -oP '\d+x\d+\+\d+\+\d+')
+            local -r primary_geometry=$(xrandr --query | grep primary | grep -oP '\d+x\d+\+\d+\+\d+')
             maim -g "$primary_geometry" -u "$folder$file" && copy_image
         else
             hyprshot -o "$folder" -f "$file" -m output -sc

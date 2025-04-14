@@ -28,7 +28,7 @@ return {
             },
         },
         suggestion = {
-            enabled = true,
+            enabled = false,
             auto_trigger = false,
             keymap = {
                 accept = "<M-l>",

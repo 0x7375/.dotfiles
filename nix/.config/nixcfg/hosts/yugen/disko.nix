@@ -1,10 +1,4 @@
-{ inputs, ... }:
-
 {
-  imports = [
-    inputs.disko.nixosModules.disko
-  ];
-
   disko.devices = {
     disk.main = {
       type = "disk";
@@ -44,7 +38,7 @@
                   "NIXROOT"
                 ];
                 subvolumes = {
-                  "/root" = {
+                  "@root" = {
                     mountpoint = "/";
                     mountOptions = [
                       "compress=zstd"
@@ -54,21 +48,21 @@
                       "x-systemd.device-timeout=0"
                     ];
                   };
-                  "/home" = {
+                  "@home" = {
                     mountpoint = "/home";
                     mountOptions = [
                       "compress=zstd"
                       "noatime"
                     ];
                   };
-                  "/nix" = {
+                  "@nix" = {
                     mountpoint = "/nix";
                     mountOptions = [
                       "compress=zstd"
                       "noatime"
                     ];
                   };
-                  "/swap" = {
+                  "@swap" = {
                     mountpoint = "/swap";
                     swap.swapfile.size = "16G";
                   };

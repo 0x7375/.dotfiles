@@ -27,5 +27,5 @@
   };
 
   xdg.configFile."zsh/.zshrc".text =
-    lib.mkAfter "command -v direnv >/dev/null 2>&1 && eval \"$(direnv hook zsh)\"";
+    lib.mkAfter "command -v direnv &> /dev/null && eval \"$(direnv hook zsh)\"";
 }

@@ -8,8 +8,9 @@ pkgs.writeShellApplication {
   ];
   text = ''
     send_notification() {
-        volume=$(pamixer --get-volume)
+        local -ri volume=$(pamixer --get-volume)
 
+        local icon
         if [[ $volume -gt 70 ]]; then
             icon="high"
         elif [[ $volume -gt 40 ]]; then

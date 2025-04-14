@@ -10,20 +10,19 @@ pkgs.writeShellApplication {
   text = ''
     set -euo pipefail
 
-    declare EXPORT_DIR
-    EXPORT_DIR="$(mktemp -d)"
-    declare -r HM_DIR=''${XDG_STATE_HOME}/nix/profiles/home-manager
-    declare -r VARS_FILE=''${HM_DIR}/home-path/etc/profile.d/hm-session-vars.sh
+    export_dir="$(mktemp -d)"
+    hm_dir=''${XDG_STATE_HOME}/nix/profiles/home-manager
+    vars_file=''${hm_dir}/home-path/etc/profile.d/hm-session-vars.sh
 
-    [[ ! -d ''${HM_DIR} ]] && echo "Home Manager directory not found" && exit 1
-    [[ ! -d ''${EXPORT_DIR} ]] && echo "Export directory not found" && exit 1
+    [[ ! -d ''${hm_dir} ]] && echo "Home Manager directory not found" && exit 1
+    [[ ! -d ''${export_dir} ]] && echo "Export directory not found" && exit 1
 
-    chmod -R u+rw "''${EXPORT_DIR}"
-    cp -rLf "''${HM_DIR}"/home-files/. "''${EXPORT_DIR}"
-    chmod -R u+rw "''${EXPORT_DIR}"
+    chmod -R u+rw "''${export_dir}"
+    cp -rLf "''${hm_dir}"/home-files/. "''${export_dir}"
+    chmod -R u+rw "''${export_dir}"
 
-    cp -f "''${VARS_FILE}" "''${EXPORT_DIR}"/.profile
-    sed -i '/LOCALE_ARCHIVE/d' "''${EXPORT_DIR}"/.profile
+    cp -f "''${vars_file}" "''${export_dir}"/.profile
+    sed -i '/LOCALE_ARCHIVE/d' "''${export_dir}"/.profile
 
     ignore=(
         ".config/direnv"
@@ -31,14 +30,14 @@ pkgs.writeShellApplication {
     )
 
     for i in "''${ignore[@]}"; do
-        rm -rf "''${EXPORT_DIR:?}"/"''${i}"
+        rm -rf "''${export_dir:?}"/"''${i}"
     done
 
-    find "''${EXPORT_DIR}" -type f -exec sed -i 's|/nix/store/[a-z0-9]*-[^/]*/bin/||g' {} +
+    find "''${export_dir}" -type f -exec sed -i 's|/nix/store/[a-z0-9]*-[^/]*/bin/||g' {} +
 
-    sed -i '/icon_path=/d' "''${EXPORT_DIR}"/.config/dunst/dunstrc
+    sed -i '/icon_path=/d' "''${export_dir}"/.config/dunst/dunstrc
 
-    sed -i '/@import/d' "''${EXPORT_DIR}"/.config/gtk-4.0/gtk.css
-    echo "Dotfiles exported to ''${EXPORT_DIR}"
+    sed -i '/@import/d' "''${export_dir}"/.config/gtk-4.0/gtk.css
+    echo "Dotfiles exported to ''${export_dir}"
   '';
 }

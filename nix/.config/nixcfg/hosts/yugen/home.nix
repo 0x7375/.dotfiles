@@ -52,6 +52,4 @@
       }
     ];
   };
-
-  services.polybar.settings."module/network".interface = "wlp4s0";
 }

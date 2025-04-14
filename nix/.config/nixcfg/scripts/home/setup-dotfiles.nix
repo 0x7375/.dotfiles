@@ -12,9 +12,9 @@ pkgs.writeShellApplication {
     in
     # bash
     ''
-      GREEN=$(tput setaf 2)
-      RESET=$(tput sgr0)
-      DOTS="''${GREEN}::''${RESET}"
+      green=$(tput setaf 2)
+      reset=$(tput sgr0)
+      dots="''${green}::''${reset}"
 
       if [[ ! -e "${dot}" ]]; then
         git clone codeberg:0xB0F/.dotfiles ${dot}
@@ -28,7 +28,7 @@ pkgs.writeShellApplication {
         stow nix nvim
 
         # install config in the background
-        echo "''${DOTS} Installing neovim plugins"
+        echo "''${dots} Installing neovim plugins"
         nvim --headless "+Lazy! sync" +qa > /dev/null
 
         popd > /dev/null; popd > /dev/null

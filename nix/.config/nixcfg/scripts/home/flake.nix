@@ -6,29 +6,29 @@ pkgs.writeShellApplication {
     curl
   ];
   text = ''
-    OWNER="0xB0F"
-    REPO="templates"
-    REPO_URL="https://codeberg.org/''${OWNER}/''${REPO}"
+    owner="0xB0F"
+    repo="templates"
+    repo_url="https://codeberg.org/''${owner}/''${repo}"
 
     if [ $# -eq 0 ]; then
       echo "Usage: flake <flake-subdirectory>"
       echo "Available templates:"
-      API_URL="https://codeberg.org/api/v1/repos/''${OWNER}/''${REPO}/contents"
+      api_url="https://codeberg.org/api/v1/repos/''${owner}/''${repo}/contents"
 
-      DIRS=$(curl -fsSL "$API_URL" | jq -r '.[] | select(.type == "dir") | .name')
+      dirs=$(curl -fsSL "$api_url" | jq -r '.[] | select(.type == "dir") | .name')
 
-      if [ -z "$DIRS" ]; then
+      if [ -z "$dirs" ]; then
         echo "Error: No templates found"
         exit 1
       fi
 
-      echo "$DIRS" | while read -r dir; do
+      echo "$dirs" | while read -r dir; do
         echo "  • $dir"
       done
       exit 1
     fi
 
-    flake_url="''${REPO_URL}/raw/branch/main/$1/flake.nix"
+    flake_url="''${repo_url}/raw/branch/main/$1/flake.nix"
 
     [ ! -f .envrc ] && {
       echo "use_flake" > .envrc

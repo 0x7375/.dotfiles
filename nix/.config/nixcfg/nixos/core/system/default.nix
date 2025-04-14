@@ -1,4 +1,5 @@
 {
+  lib,
   options,
   pkgs,
   myLib,
@@ -10,9 +11,20 @@
 
   hardware.i2c.enable = true;
 
-  boot.tmp.cleanOnBoot = true;
+  boot.tmp.useTmpfs = true;
+  systemd.services.nix-daemon = {
+    environment.TMPDIR = "/var/tmp";
+  };
+
+  zramSwap = {
+    enable = true;
+    memoryPercent = lib.mkDefault 25;
+  };
+
+  services.fstrim.enable = true;
 
   console = {
+    earlySetup = true;
     packages = with pkgs; [ terminus_font ];
     font = "${pkgs.terminus_font}/share/consolefonts/ter-132b.psf.gz";
     useXkbConfig = true;

@@ -7,12 +7,12 @@ pkgs.writeShellApplication {
     wmctrl
   ];
   text = ''
-    WINDOW_ID=$(wmctrl -l | grep " Dofus$" | cut -d' ' -f1)
+    window_id=$(wmctrl -l | grep " Dofus$" | cut -d' ' -f1)
 
     sleep 0.4
 
     # focus dofus window
-    wmctrl -i -a "$WINDOW_ID"
+    wmctrl -i -a "$window_id"
 
     sleep 0.2
 
@@ -30,10 +30,10 @@ pkgs.writeShellApplication {
 
     sleep 0.3
 
-    eval "$(xdotool getwindowgeometry --shell "$WINDOW_ID")"
+    eval "$(xdotool getwindowgeometry --shell "$window_id")"
 
     # move mouse to bottom right corner to lose chat focus
-    xdotool mousemove --window "$WINDOW_ID" $(("$WIDTH" - 2)) $((2)) click 1
+    xdotool mousemove --window "$window_id" $(("$WIDTH" - 2)) $((2)) click 1
 
     sleep 0.3
 
@@ -44,6 +44,6 @@ pkgs.writeShellApplication {
     # *                 *
     # *                 *
     # *******************
-    xdotool mousemove --window "$WINDOW_ID" $(("$WIDTH" / 6)) $(("$HEIGHT" / 3))
+    xdotool mousemove --window "$window_id" $(("$WIDTH" / 6)) $(("$HEIGHT" / 3))
   '';
 }

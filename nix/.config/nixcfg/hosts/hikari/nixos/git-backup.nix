@@ -12,24 +12,24 @@
     script =
       # bash
       ''
-        declare -r REMOTE_URL="https://codeberg.org"
-        declare -r USER="0xB0F"
-        declare -r REMOTE="''${REMOTE_URL}/''${USER}"
-        declare -r BACKUP_DIR="/home/${config.me.user}/git"
-        mkdir -p "$BACKUP_DIR"
+        remote_url="https://codeberg.org"
+        user="0xB0F"
+        remote="''${remote_url}/''${user}"
+        backup_dir="/home/${config.me.user}/git"
+        mkdir -p "$backup_dir"
 
-        declare -a REPOS=$(curl -s "''${REMOTE_URL}/api/v1/users/$USER/repos" | jq -r '.[].clone_url')
-        REPOS+=("''${REMOTE}/nix-secrets.git")
+        repos=$(curl -s "''${remote_url}/api/v1/users/$user/repos" | jq -r '.[].clone_url')
+        repos+=("''${remote}/nix-secrets.git")
 
-        for REPO in $REPOS; do
-          declare -r REPO_NAME=$(basename "$REPO" .git)
-          declare -r REPO_DIR="$BACKUP_DIR/$REPO_NAME"
+        for repo in $repos; do
+          repo_name=$(basename "$repo" .git)
+          repo_dir="$backup_dir/$repo_name"
           
-          if [ -d "$REPO_DIR" ]; then
-            cd "$REPO_DIR"
+          if [ -d "$repo_dir" ]; then
+            cd "$repo_dir"
             git fetch --all --prune
           else
-            git clone --bare "$REPO" "$REPO_DIR"
+            git clone --bare "$repo" "$repo_dir"
           fi
         done
       '';

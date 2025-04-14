@@ -10,14 +10,14 @@ pkgs.writeShellApplication {
     fade=150000
 
     get_brightness() {
-      local device="dev:$1"
+      local -r device="dev:$1"
       ddccontrol -r 0x10 "$device" 2>/dev/null | grep "Control 0x10:" | cut -d'/' -f2
     }
 
     set_brightness() {
-      local device="dev:$1"
-      local value=$2
-      ddccontrol -r 0x10 -w "$value" "$device" >/dev/null 2>&1
+      local -r device="dev:$1"
+      local -ri value=$2
+      ddccontrol -r 0x10 -w "$value" "$device" &> /dev/null
     }
 
     case $1 in

@@ -12,30 +12,27 @@ pkgs.writeShellApplication {
     export DISPLAY=:0
     export DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/1000/bus"
 
-    WARNING_LEVEL=15
-    FULL_LEVEL=90
+    warning_level=15
+    full_level=90
 
-    EMPTY_FILE=/tmp/batteryempty
-    FULL_FILE=/tmp/batteryfull
+    empty_file=/tmp/batteryempty
+    full_file=/tmp/batteryfull
 
-    BATTERY_DISCHARGING=$(acpi -b | grep -E "remaining|charged|zero" | { grep -c "Discharging" || true; })
-    BATTERY_LEVEL=$(acpi -b | grep -E "remaining|charged|zero" | grep -P -o '[0-9]+(?=%)')
+    battery_discharging=$(acpi -b | grep -E "remaining|charged|zero" | { grep -c "Discharging" || true; })
+    battery_level=$(acpi -b | grep -E "remaining|charged|zero" | grep -P -o '[0-9]+(?=%)')
 
-    # Reset notifications if the computer is charging/discharging
-    if [ "$BATTERY_DISCHARGING" -eq 1 ] && [ -f $FULL_FILE ]; then
-        rm $FULL_FILE
-    elif [ "$BATTERY_DISCHARGING" -eq 0 ] && [ -f $EMPTY_FILE ]; then
-        rm $EMPTY_FILE
+    if [ "$battery_discharging" -eq 1 ] && [ -f $full_file ]; then
+        rm $full_file
+    elif [ "$battery_discharging" -eq 0 ] && [ -f $empty_file ]; then
+        rm $empty_file
     fi
 
-    # If the battery is charging and is full (and has not shown notification yet)
-    if [ "$BATTERY_LEVEL" -ge $FULL_LEVEL ] && [ "$BATTERY_DISCHARGING" -eq 0 ] && [ ! -f $FULL_FILE ]; then
+    if [ "$battery_level" -ge $full_level ] && [ "$battery_discharging" -eq 0 ] && [ ! -f $full_file ]; then
         notify-send "Battery Charged" "Battery is fully charged." -i "battery-full" -a "charged" -r 9991
-        touch $FULL_FILE
-    # If the battery is low and is not charging (and has not shown notification yet)
-    elif [ "$BATTERY_LEVEL" -le $WARNING_LEVEL ] && [ "$BATTERY_DISCHARGING" -eq 1 ] && [ ! -f $EMPTY_FILE ]; then
-        notify-send "Low Battery" "$BATTERY_LEVEL% of battery remaining." -u critical -i "battery-low" -a "alert" -r 9991
-        touch $EMPTY_FILE
+        touch $full_file
+    elif [ "$battery_level" -le $warning_level ] && [ "$battery_discharging" -eq 1 ] && [ ! -f $empty_file ]; then
+        notify-send "Low Battery" "$battery_level% of battery remaining." -u critical -i "battery-low" -a "alert" -r 9991
+        touch $empty_file
     fi
   '';
 }

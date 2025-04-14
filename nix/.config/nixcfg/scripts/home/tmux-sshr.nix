@@ -23,8 +23,8 @@ pkgs.writeShellApplication {
     username=''${username:-$USER}
 
     ssh -t "$username@$selected" "
-      if command -v tmux >/dev/null 2>&1; then
-        if tmux has-session 2>/dev/null; then
+      if command -v tmux &> /dev/null; then
+        if tmux has-session &> /dev/null; then
           exec tmux attach-session
         else
           exec tmux new-session -s \"ssh-$username@$selected\"

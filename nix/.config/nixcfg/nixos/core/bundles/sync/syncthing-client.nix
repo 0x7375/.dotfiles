@@ -58,20 +58,6 @@ lib.mkIf (config.me.syncthing-client.enable && config.me.secrets.enable) {
             "server"
           ];
         };
-        zsh_history = syncthingDirConfig {
-          path = ".local/state/zsh";
-          devices = [
-            "server"
-          ];
-          extraConfig = {
-            maxConflicts = 2;
-            ignoreDelete = true;
-            ignore = [
-              "*"
-              "!history"
-            ];
-          };
-        };
         windows = syncthingDirConfig {
           path = "windows";
           devices = [

@@ -75,21 +75,6 @@ lib.mkIf config.me.secrets.enable {
                 "ryusei"
               ];
             };
-            zsh_history = syncthingDirConfig {
-              path = ".local/state/zsh";
-              devices = [
-                "yugen"
-                "ryusei"
-              ];
-              extraConfig = {
-                maxConflicts = 2;
-                ignoreDelete = true;
-                ignore = [
-                  "*"
-                  "!history"
-                ];
-              };
-            };
             universite = syncthingDirConfig {
               path = "documents/pdf/universite";
               devices = [

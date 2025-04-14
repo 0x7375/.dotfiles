@@ -13,6 +13,7 @@ lib.mkIf config.me.secrets.enable {
     daemon.enable = true;
     settings = {
       auto_sync = true;
+      store_failed = false;
       sync_frequency = "5m";
       flags = [
         "--disable-up-arrow"
@@ -53,5 +54,15 @@ lib.mkIf config.me.secrets.enable {
             return $ret
         }
         zle -N fzf-atuin-history-widget
+
+        alias t='atuin search --limit 1 --format "{duration}"'
       '';
+
+  xdg.configFile."zsh/bindings.zsh".text =
+    lib.mkAfter
+      # bash
+      ''
+        bindkey '^R' fzf-atuin-history-widget
+      '';
+
 }

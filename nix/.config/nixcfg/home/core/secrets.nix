@@ -1,4 +1,5 @@
 {
+  secrets,
   pkgs,
   config,
   lib,
@@ -14,6 +15,7 @@
   config = lib.mkIf config.me.secrets.enable {
     sops.age.sshKeyPaths = [ "/home/${config.me.user}/.ssh/id_ed25519" ];
     sops.defaultSecretsMountPoint = "/run/user/${toString config.me.uid}/secrets.d";
+    sops.defaultSopsFile = "${secrets}/default.yaml";
 
     # owner can be root for some reason
     systemd.user.tmpfiles.rules = [

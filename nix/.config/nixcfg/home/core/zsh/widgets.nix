@@ -43,5 +43,6 @@
         zle reset-prompt
       }
       zle -N fzf-history-widget
+
     '';
 }

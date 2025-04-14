@@ -29,6 +29,7 @@ lib.mkIf config.me.gui.enable {
 
         source ~/.profile
         export SHLVL=1
+        export XDG_SESSION_TYPE=x11
       '';
   };
 }

@@ -1,5 +1,6 @@
 return {
     'lewis6991/gitsigns.nvim',
+    cond = not vim.g.pi,
     event = "User InGitRepo",
     keys = {
         { '[h', desc = "Goto previous hunk" },

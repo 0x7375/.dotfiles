@@ -23,6 +23,16 @@ lib.mkIf config.me.network.enable {
     enable = true;
     wifi.backend = "iwd";
   };
+
+  networking.wireless.iwd = {
+    enable = true;
+    settings = {
+      General = {
+        EnableNetworkConfiguration = false;
+      };
+    };
+  };
+
   users.users.${config.me.user}.extraGroups = [ "networkmanager" ];
 
   networking.firewall.enable = true;

@@ -1,7 +1,6 @@
 {
   lib,
   myLib,
-  pkgs,
   config,
   ...
 }:
@@ -10,49 +9,6 @@ let
   home = "home";
 in
 lib.mkIf config.me.secrets.enable {
-  sops.secrets."hikari/protonvpn_pk" = { };
-
-  services.protonvpn = {
-    enable = true;
-
-    interface = {
-      name = "proton";
-      privateKeyFile = config.sops.secrets."hikari/protonvpn_pk".path;
-    };
-
-    endpoint = {
-      publicKey = "wYsaKyJteQ1gYoJZAZT0FettXDOidPhQZwl0DhaabF0=";
-      ip = "redacted";
-    };
-
-    extraConfig =
-      let
-        inherit (myLib) network;
-      in
-      {
-        # route local traffic outside proton
-        postUp = ''
-          ip rule add from ${network.vpn.subnet} lookup main priority 100
-          ip rule add to ${network.vpn.subnet} lookup main priority 100
-
-          ip rule add from ${network.lan.subnet} lookup main priority 100
-          ip rule add to ${network.lan.subnet} lookup main priority 100
-        '';
-
-        preDown = ''
-          ip rule del from ${network.vpn.subnet} lookup main priority 100
-          ip rule del to ${network.vpn.subnet} lookup main priority 100
-
-          ip rule del from ${network.lan.subnet} lookup main priority 100
-          ip rule del to ${network.lan.subnet} lookup main priority 100
-        '';
-      };
-  };
-
-  environment.systemPackages = with pkgs; [
-    wireguard-tools
-  ];
-
   sops.secrets."hikari/server_vpn_pk".owner = config.me.user;
   sops.secrets.laptop_vpn_psk.owner = config.me.user;
   sops.secrets.phone_vpn_psk.owner = config.me.user;

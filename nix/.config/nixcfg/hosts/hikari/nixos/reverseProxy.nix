@@ -20,6 +20,14 @@ in
     443
   ];
 
+  systemd.tmpfiles.rules =
+    let
+      content = builtins.replaceStrings [ "\n" ] [ "\\n" ] (builtins.readFile ../../../assets/index.html);
+    in
+    [
+      "f+ /var/www/index.html 0644 root root - ${content}"
+    ];
+
   services.nginx = {
     enable = true;
     virtualHosts = {
@@ -28,8 +36,19 @@ in
         enableACME = true;
         locations."/" = {
           root = "/var/www";
-          proxyPass = "http://${ip}:7575";
+          index = "index.html";
         };
+      };
+
+      "~^(?<subdomain>.+)\\.${lib.escapeRegex url}$" = {
+        forceSSL = true;
+        useACMEHost = url;
+        locations."/" = {
+          return = "404";
+        };
+        extraConfig = ''
+          default_type text/plain;
+        '';
       };
 
       "media.${url}" = mkSubDomain 8096;

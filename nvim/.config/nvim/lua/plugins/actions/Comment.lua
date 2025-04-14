@@ -1,6 +1,7 @@
 return {
     {
         'numToStr/Comment.nvim',
+        cond = not vim.g.pi,
         keys = {
             { mode = { "x", "n" }, "gc", desc = "Comment/Uncomment" }
         },

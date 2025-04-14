@@ -21,7 +21,11 @@ lib.mkIf config.me.gui.enable {
         type = "internal/memory";
         interval = 3;
         format = "ram: <label>";
-        # format = "󰍛 <label>";
+      };
+      "module/cpu" = {
+        type = "internal/cpu";
+        interval = 3;
+        format = "cpu: <label>";
       };
       "bar/main" = {
         width = "100%";
@@ -42,7 +46,7 @@ lib.mkIf config.me.gui.enable {
 
         modules.left = "nix";
         modules.center = "i3";
-        modules.right = "memory battery network datetime";
+        modules.right = "cpu memory battery network datetime";
 
         separator = "|";
         separator-padding = 1;

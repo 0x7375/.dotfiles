@@ -172,7 +172,7 @@ pkgs.writeShellApplication {
       }
 
       cleanup() {
-        git restore --staged .
+        git restore --staged . || true
         GIT_DIR="$old_git_dir"
         echo -n "$show_cursor"
         silent popd

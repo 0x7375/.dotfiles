@@ -31,7 +31,6 @@ lib.mkIf config.me.secrets.enable {
         "uni"
         "notes"
         "windows"
-        ".local/state/zsh"
       ];
 
       mediaDirs = [
@@ -61,6 +60,10 @@ lib.mkIf config.me.secrets.enable {
             google = {
               time = "22:00:00";
               path = "rclone:google:";
+            };
+            proton = {
+              time = "00:00:00";
+              path = "rclone:proton:";
             };
           };
         in
@@ -129,6 +132,7 @@ lib.mkIf config.me.secrets.enable {
               "local"
               "koofr"
               "google"
+              "proton"
             ]
         );
     in

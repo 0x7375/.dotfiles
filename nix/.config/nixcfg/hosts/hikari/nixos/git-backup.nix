@@ -8,6 +8,7 @@
       coreutils
       curl
       jq
+      openssh
     ];
     script =
       # bash
@@ -19,7 +20,7 @@
         mkdir -p "$backup_dir"
 
         repos=$(curl -s "''${remote_url}/api/v1/users/$user/repos" | jq -r '.[].clone_url')
-        repos+=("''${remote}/nix-secrets.git")
+        repos+=$'\n'"''${remote}/nix-secrets.git"
 
         for repo in $repos; do
           repo_name=$(basename "$repo" .git)
@@ -29,7 +30,7 @@
             cd "$repo_dir"
             git fetch --all --prune
           else
-            git clone --bare "$repo" "$repo_dir"
+            git clone --bare "codeberg:$user/$repo_name" "$repo_dir"
           fi
         done
       '';

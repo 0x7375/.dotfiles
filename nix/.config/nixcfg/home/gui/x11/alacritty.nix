@@ -12,6 +12,7 @@ lib.mkIf config.me.gui.enable {
   programs.alacritty = {
     enable = true;
     settings = {
+      cursor.style.blinking = "Never";
       mouse.bindings = [
         {
           mouse = "Middle";

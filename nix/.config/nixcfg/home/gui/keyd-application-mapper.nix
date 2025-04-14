@@ -62,6 +62,7 @@ lib.mkIf (config.me.gui.enable && config.me.keyd.enable) {
         [1password]
         ${enter}
         ${upDown}
+        ${backspace}
 
         [copyq]
         control.m = macro(enter 20ms A-q)

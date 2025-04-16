@@ -24,5 +24,12 @@ lib.mkIf config.me.gui.enable {
       enable = true;
       package = pkgs.auto.localsend;
     };
+
+    nautilus-open-any-terminal = {
+      enable = true;
+      terminal = "alacritty";
+    };
+
+    gnome-disks.enable = true;
   };
 }

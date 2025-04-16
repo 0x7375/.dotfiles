@@ -47,7 +47,7 @@ pkgs.writeShellApplication {
           local -r dots="''${green}::''${reset}"
           local nonewline=""
           
-          if [[ "$1" == "-n" ]]; then
+          if [[ $1 == "-n" ]]; then
               nonewline="-n"
               shift
           fi
@@ -110,9 +110,9 @@ pkgs.writeShellApplication {
         local build_attr="toplevel"
         local -a build_args=()
 
-        [[ "$action" == "iso" ]] && build_attr="isoImage" && host="isoImg"
-        [[ "$action" == "iso-vm" ]] && build_attr="vm" && host="isoImg"
-        [[ "$changing_generation" -eq 1 ]] && build_args+=(--no-link)
+        [[ $action == "iso" ]] && build_attr="isoImage" && host="isoImg"
+        [[ $action == "iso-vm" ]] && build_attr="vm" && host="isoImg"
+        [[ $changing_generation -eq 1 ]] && build_args+=(--no-link)
 
         nom build "''${build_args[@]}" --json "''${extra_args[@]}" path:.#nixosConfigurations."$host".config.system.build."$build_attr" | jq -r '.[].outputs.out'
       }
@@ -172,11 +172,15 @@ pkgs.writeShellApplication {
       }
 
       cleanup() {
-        git restore --staged . || true
+        local -r err_code=$?
+
+        git restore --staged .
         GIT_DIR="$old_git_dir"
         echo -n "$show_cursor"
         silent popd
-        exit
+
+        trap - EXIT
+        exit $err_code
       }
 
       main() {
@@ -247,19 +251,20 @@ pkgs.writeShellApplication {
         mkdir -p "$state_dir"
 
         local cache_action=$action
-        [[ $action != "iso" && $action != "iso-vm" ]] && cache_action=nixos
+        [[ $action != iso && $action != iso-vm ]] && cache_action=nixos
 
         local -r hash_file="''${state_dir}/''${host}-''${cache_action}-hash"
         local -r result_file="''${state_dir}/''${host}-''${cache_action}-result"
 
         local last_rebuild_hash=""
         local result=""
-        [[ -f "$result_file" ]] && result=$(< "$result_file")
 
-        [[ -f "$hash_file" ]] && last_rebuild_hash=$(< "$hash_file")
-        tar -cf - --exclude=''${GIT_DIR} . | sha256sum | cut -d\  -f 1 > "$hash_file"
+        [[ -f $result_file ]] && result=$(< "$result_file")
+        [[ -f $hash_file ]] && last_rebuild_hash=$(< "$hash_file")
 
-        if [[ $force_rebuild -eq 1 || $last_rebuild_hash != $(< "$hash_file") || -z $result ]]; then
+        local -r current_hash=$(tar -cf - --exclude=''${GIT_DIR} --exclude=result --exclude=*.qcow2 . | sha256sum | cut -d\  -f 1)
+
+        if [[ $force_rebuild -eq 1 || $last_rebuild_hash != "$current_hash" || -z $result ]]; then
           [[ $changing_generation -eq 1 && -z $remote_build ]] && {
             git add .
             log "Showing changes since last commit"
@@ -270,6 +275,7 @@ pkgs.writeShellApplication {
           result=$(build_config "$host" "$action" "''${nix_build_flags[@]}")
 
           echo "$result" > "$result_file"
+          echo "$current_hash" > "$hash_file"
 
           if [[ -n $remote_build ]]; then
             # prevent garbage collection of the closure

@@ -273,7 +273,7 @@
               # disable autoplay
               "media.autoplay.blocking_policy" = 2;
             };
-          userChrome = builtins.readFile (fromRoot "assets/browser/userChrome.css");
+          userChrome = fromRoot "assets/browser/userChrome.css";
           search = {
             force = true;
             default = "_Google";
@@ -286,7 +286,7 @@
               "Nix Options"
               "Youtube"
               "Github"
-              "Wikipedia (en)"
+              "wikipedia"
             ];
             engines =
               let
@@ -298,7 +298,7 @@
                 # "eBay".metaData.hidden = true;
                 # "DuckDuckGo".metaData.hidden = true;
                 # "Qwant".metaData.hidden = true;
-                "Wikipedia (en)".metaData.alias = "!w";
+                wikipedia.metaData.alias = "!w";
 
                 "_Google" = {
                   urls = [
@@ -313,7 +313,7 @@
                     }
                   ];
 
-                  iconUpdateURL = "https://icons.duckduckgo.com/ip3/google.com.ico";
+                  icon = "https://icons.duckduckgo.com/ip3/google.com.ico";
                   updateInterval = day;
                   metaData.alias = "!g";
                 };
@@ -334,7 +334,7 @@
                     }
                   ];
 
-                  iconUpdateURL = "https://icons.duckduckgo.com/ip3/google.com.ico";
+                  icon = "https://icons.duckduckgo.com/ip3/google.com.ico";
                   updateInterval = day;
                   metaData.alias = "!gi";
                 };
@@ -351,7 +351,7 @@
                     }
                   ];
 
-                  iconUpdateURL = "https://icons.duckduckgo.com/ip3/dofuspourlesnoobs.com.ico";
+                  icon = "https://icons.duckduckgo.com/ip3/dofuspourlesnoobs.com.ico";
                   updateInterval = day;
                   metaData.alias = "!d";
                 };
@@ -368,7 +368,7 @@
                     }
                   ];
 
-                  iconUpdateURL = "https://icons.duckduckgo.com/ip3/brave.com.ico";
+                  icon = "https://icons.duckduckgo.com/ip3/brave.com.ico";
                   updateInterval = day;
                   metaData.alias = "!b";
                 };
@@ -385,7 +385,7 @@
                     }
                   ];
 
-                  iconUpdateURL = "https://icons.duckduckgo.com/ip3/brave.com.ico";
+                  icon = "https://icons.duckduckgo.com/ip3/brave.com.ico";
                   updateInterval = day;
                   metaData.alias = "!bi";
                 };
@@ -402,7 +402,7 @@
                     }
                   ];
 
-                  iconUpdateURL = "https://icons.duckduckgo.com/ip3/mynixos.com.ico";
+                  icon = "https://icons.duckduckgo.com/ip3/mynixos.com.ico";
                   updateInterval = day;
                   metaData.alias = "!o";
                 };
@@ -419,7 +419,7 @@
                     }
                   ];
 
-                  iconUpdateURL = "https://icons.duckduckgo.com/ip3/mynixos.com.ico";
+                  icon = "https://icons.duckduckgo.com/ip3/mynixos.com.ico";
                   updateInterval = day;
                   metaData.alias = "!p";
                   # icon = "${pkgs.nixos-icons}/share/icons/hicolor/scalable/apps/nix-snowflake.svg";
@@ -437,7 +437,7 @@
                     }
                   ];
 
-                  iconUpdateURL = "https://icons.duckduckgo.com/ip3/noogle.dev.ico";
+                  icon = "https://icons.duckduckgo.com/ip3/noogle.dev.ico";
                   updateInterval = day;
                   metaData.alias = "!n";
                 };
@@ -448,7 +448,7 @@
                     }
                   ];
 
-                  iconUpdateURL = "https://icons.duckduckgo.com/ip3/mynixos.com.ico";
+                  icon = "https://icons.duckduckgo.com/ip3/mynixos.com.ico";
                   updateInterval = day;
                   metaData.alias = "!u";
                 };
@@ -469,7 +469,7 @@
                     }
                   ];
 
-                  iconUpdateURL = "https://icons.duckduckgo.com/ip3/github.com.ico";
+                  icon = "https://icons.duckduckgo.com/ip3/github.com.ico";
                   updateInterval = day;
                   metaData.alias = "!h";
                 };
@@ -486,7 +486,7 @@
                     }
                   ];
 
-                  iconUpdateURL = "https://icons.duckduckgo.com/ip3/youtube.com.ico";
+                  icon = "https://icons.duckduckgo.com/ip3/youtube.com.ico";
                   updateInterval = day;
                   metaData.alias = "!y";
                 };
@@ -497,7 +497,7 @@
                     }
                   ];
 
-                  iconUpdateURL = "https://icons.duckduckgo.com/ip3/conjugaison.bescherelle.com.ico";
+                  icon = "https://icons.duckduckgo.com/ip3/conjugaison.bescherelle.com.ico";
                   updateInterval = day;
                   metaData.alias = "!c";
                 };

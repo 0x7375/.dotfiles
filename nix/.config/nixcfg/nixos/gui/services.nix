@@ -60,5 +60,10 @@ lib.mkIf config.me.gui.enable {
 
         ${removeRule "sound"}
       '';
+
+    gnome = {
+      sushi.enable = true;
+    };
+    udisks2.enable = true;
   };
 }

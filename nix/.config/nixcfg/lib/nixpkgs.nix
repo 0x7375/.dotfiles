@@ -33,9 +33,7 @@
                 src/libfetchers-tests/access-tokens.cc \
                 src/libflake-tests/url-name.cc
               do
-                if [ -f "$file" ]; then
-                  substituteInPlace "$file" --replace-fail "sourcehut" "codeberg"
-                fi
+                [[ -f $file ]] && substituteInPlace "$file" --replace-fail "sourcehut" "codeberg"
               done
               substituteInPlace src/libfetchers/github.cc --replace-fail "git.sr.ht" "codeberg.org"
             '';

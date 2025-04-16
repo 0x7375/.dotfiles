@@ -37,7 +37,7 @@ pkgs.writeShellApplication {
         ;;
     mute)
         pamixer -t
-        if [[ $(pamixer --get-mute) == "true" ]]; then
+        if [[ $(pamixer --get-mute) == true ]]; then
             send_muted
         else
             send_notification

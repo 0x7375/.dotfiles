@@ -17,7 +17,7 @@ pkgs.writeShellApplication {
 
       dirs=$(curl -fsSL "$api_url" | jq -r '.[] | select(.type == "dir") | .name')
 
-      if [ -z "$dirs" ]; then
+      if [[ -z $dirs ]]; then
         echo "Error: No templates found"
         exit 1
       fi

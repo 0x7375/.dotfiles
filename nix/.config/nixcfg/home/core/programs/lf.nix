@@ -128,7 +128,7 @@ in
             %{{
               printf "Archive name: "
               read newa
-              if [ -z "$newa" ]; then
+              if [[ -z $newa ]]; then
                 lf -remote "send $id reload"
                 return;
               fi
@@ -156,7 +156,7 @@ in
               path=$(pwd)
               
               # make sure we are not in a mount point
-              while [[ "$path" == *".mnt"* ]]; do
+              while [[ $path == *".mnt"* ]]; do
                 path=$(${pkgs.coreutils}/bin/dirname "$path")
               done
               
@@ -187,7 +187,7 @@ in
             %{{
               printf "Directory name: "
               read newd
-              if [[ -z "$newd" ]]; then
+              if [[ -z $newd ]]; then
                 lf -remote "send $id reload"
                 return;
               fi
@@ -209,7 +209,7 @@ in
             %{{
               printf "Directory name: "
               read newd
-              if [[ -z "$newd" ]]; then
+              if [[ -z $newd ]]; then
                 lf -remote "send $id reload"
                 return;
               fi
@@ -223,7 +223,7 @@ in
             %{{
               printf "File name: "
               read newf
-              if [[ -z "$newf" ]]; then
+              if [[ -z $newf ]]; then
                 lf -remote "send $id reload"
                 return;
               fi
@@ -237,7 +237,7 @@ in
             %{{
               printf "File name: "
               read newf
-              if [[ -z "$newf" ]]; then
+              if [[ -z $newf ]]; then
                 lf -remote "send $id reload"
                 return;
               fi
@@ -255,14 +255,14 @@ in
         toggle-executable = # bash
           ''
             ''${{
-              [[ -x "$f" ]] && chmod -x "$f" || chmod +x "$f"
+              [[ -x $f ]] && chmod -x "$f" || chmod +x "$f"
               lf -remote 'send reload'
             }}
           '';
         edit = # bash
           ''
             ''${{
-              if [ "''${NVIM:-}" ]; then
+              if [[ ''${NVIM:-} ]]; then
                 lf -remote "send $id open"
               else
                 $EDITOR $f
@@ -310,7 +310,7 @@ in
               # forces long loading previews to be centered
               while true; do
                   id=$(${pkgs.i3}/bin/i3-msg -t get_tree | jq -r '.. | select(.window_properties?.class? == "Org.gnome.NautilusPreviewer") | .window? | select(. != null)')
-                  if [ ! -z "$id" ]; then
+                  if [[ ! -z $id ]]; then
                       ${pkgs.i3}/bin/i3-msg "[id=$id] move position center" > /dev/null
                       break
                   fi

@@ -16,7 +16,7 @@ pkgs.writeShellApplication {
       selected=$(echo "$hosts" | fzf --reverse)
     fi
 
-    [[ -z "$selected" ]] && exit 0
+    [[ -z $selected ]] && exit 0
 
     printf "Enter username (default: %s): " "$USER"
     read -r username

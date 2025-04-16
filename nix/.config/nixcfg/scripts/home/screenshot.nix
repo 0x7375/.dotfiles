@@ -28,7 +28,7 @@ pkgs.writeShellApplication {
 
     function send_notification() {
         local -r action=$(notify-send --icon "$folder$file" "Screenshot saved" "You can paste the image from the clipboard" -A open=open)
-        if [[ $action == *"open"* ]]; then
+        if [[ $action == *open* ]]; then
             alacritty -e lf "$(xdg-user-dir SCREENSHOTS)"
         fi
     }

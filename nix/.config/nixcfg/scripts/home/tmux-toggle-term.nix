@@ -6,7 +6,7 @@ pkgs.writeShellApplication {
     set -uo pipefail
     current_session="$(tmux display-message -p -F "#{session_name}" 2>/dev/null || echo "")"
 
-    if [[ "$current_session" =~ -popup$ ]]; then
+    if [[ $current_session =~ -popup$ ]]; then
       tmux detach-client
     else
       popup_session="''${current_session}-popup"

@@ -35,5 +35,7 @@ lib.mkIf config.me.gui.enable {
       hotKey = null;
       undoKey = null;
     };
+
+    polkit-gnome.enable = true;
   };
 }

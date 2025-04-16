@@ -16,7 +16,7 @@ pkgs.writeShellApplication {
       reset=$(tput sgr0)
       dots="''${green}::''${reset}"
 
-      if [[ ! -e "${dot}" ]]; then
+      if [[ ! -e ${dot} ]]; then
         git clone codeberg:0xB0F/.dotfiles ${dot}
         pushd ${dot}/nix/.config/nixcfg; git init; mv .git .nix-git
         (

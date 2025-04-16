@@ -28,6 +28,9 @@ let
     '';
 in
 lib.mkIf config.me.gui.enable {
+  home.file.".local/share/icons/Gruvbox-Plus-Dark".source =
+    "${pkgs.gruvbox-plus-icons}/share/icons/Gruvbox-Plus-Dark";
+
   gtk = rec {
     enable = true;
     font = {
@@ -35,20 +38,22 @@ lib.mkIf config.me.gui.enable {
       package = pkgs.nerd-fonts.ubuntu;
       size = 11;
     };
-    # iconTheme = {
-    #   package = pkgs.gruvbox-plus-icons;
-    #   name = "Gruvbox-Plus-Dark";
-    # };
-    cursorTheme = {
-      name = "Bibata-Modern-Ice";
-      package = pkgs.bibata-cursors;
-      size = config.me.cursorSize;
+    iconTheme = {
+      package = (
+        pkgs.gruvbox-plus-icons.override {
+          folder-color = "grey";
+        }
+      );
+      name = "Gruvbox-Plus-Dark";
     };
     theme = {
       package = (pkgs.gruvbox-gtk-theme.override { colorVariants = [ "dark" ]; });
       name = "Gruvbox-Dark";
-      # package = pkgs.yaru-theme;
-      # name = "Yaru-dark";
+    };
+    cursorTheme = {
+      name = "Bibata-Modern-Ice";
+      package = pkgs.bibata-cursors;
+      size = config.me.cursorSize;
     };
     gtk3.extraConfig = {
       gtk-application-prefer-dark-theme = 1;

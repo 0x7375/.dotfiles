@@ -16,7 +16,7 @@
           done
 
           # handle cd to last directory
-          if [ -s "$LF_CD_FILE" ]; then
+          if [[ -s $LF_CD_FILE ]]; then
               cd "$(< "$LF_CD_FILE")"
               \rm "$LF_CD_FILE"
           fi
@@ -30,7 +30,7 @@
       fzf-history-widget() {
         local -r selected=$(fc -rl 1 | fzf --height 40% --reverse --query="$LBUFFER")
         
-        if [ -n "$selected" ]; then
+        if [[ -n $selected ]]; then
           local num=$(echo "$selected" | awk '{print $1}')
           zle vi-fetch-history -n $num
         fi

@@ -5,7 +5,7 @@
     enable = config.me.gui.enable;
     text = # bash
       ''
-        if [[ -z "$DISPLAY" ]]; then
+        if [[ -z $DISPLAY ]]; then
           return 0
         fi
 
@@ -51,7 +51,7 @@
 
         original_window_is_focused() {
           local current_window_id=$(${pkgs.xdotool}/bin/xdotool getactivewindow)
-          [[ "$current_window_id" == "$start_window_id" ]]
+          [[ $current_window_id == $start_window_id ]]
         }
 
         autoload -U add-zsh-hook

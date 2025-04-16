@@ -19,6 +19,11 @@ lib.mkIf config.me.gui.enable {
   xdg.portal = {
     enable = true;
     config.common.default = "*";
-    extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+    extraPortals = [
+      pkgs.xdg-desktop-portal-gtk
+      pkgs.xdg-desktop-portal-gnome
+    ];
   };
+
+  environment.systemPackages = [ pkgs.gparted ];
 }

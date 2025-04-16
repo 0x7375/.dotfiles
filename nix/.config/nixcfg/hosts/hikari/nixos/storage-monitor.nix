@@ -21,17 +21,17 @@
       root_usage=$(df -h / | grep -v Filesystem | awk '{print $5}' | tr -d '%')
       lockfile="$lock_dir/root_$threshold_warning"
 
-      if [ "$root_usage" -ge "$threshold_critical" ]; then
+      if [[ $root_usage -ge $threshold_critical ]]; then
         message="ROOT filesystem at $root_usage% (CRITICAL)\\n"
         lockfile="$lock_dir/root_$threshold_critical"
-      elif [ "$root_usage" -ge "$threshold_warning" ]; then
+      elif [[ $root_usage -ge $threshold_warning ]]; then
         message="ROOT filesystem at $root_usage% (WARNING)\\n"
       else
         rm -f "$lock_dir/root_$threshold_warning" "$lock_dir/root_$threshold_critical"
       fi
 
-      if [ -n "$message" ]; then
-        if [ ! -f "$lockfile" ]; then
+      if [[ -n $message ]]; then
+        if [[ ! -f $lockfile ]]; then
           curl -d "$message" http://${myLib.network.lan.addr.server}:8719/status
           touch "$lockfile"
         fi

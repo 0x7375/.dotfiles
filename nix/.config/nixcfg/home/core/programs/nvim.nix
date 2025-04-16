@@ -1,4 +1,9 @@
-{ pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 {
   programs.neovim = {
@@ -18,4 +23,6 @@
       deno
     ];
   };
+
+  # xdg.configFile.nvim = lib.file.mkOutOfStoreSymlink "/home/${config.me.user}/nvim";
 }

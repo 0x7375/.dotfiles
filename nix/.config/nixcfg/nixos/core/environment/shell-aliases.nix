@@ -48,6 +48,7 @@ in
       free = "${pkgs.procps}/bin/free -h";
       df = "${pkgs.coreutils}/bin/df -h";
       du = "${pkgs.coreutils}/bin/du -h";
+      btdu = "sudo mkdir /mnt/crypted; sudo mount -o subvol=/ /dev/mapper/crypted /mnt/crypted && sudo ${pkgs.btdu}/bin/btdu /mnt/crypted && sudo umount -l /mnt/crypted";
 
       grep = "${pkgs.gnugrep}/bin/grep --color=always";
       ls = "ls --color --group-directories-first";
@@ -198,7 +199,7 @@ in
       }
 
       suv() {
-        [[ -L "$1" ]] && {
+        [[ -L $1 ]] && {
           sudo cp "$1" "$1.bak"
           sudo rm "$1"
           sudo mv "$1.bak" "$1"
@@ -210,7 +211,7 @@ in
       }
 
       uv() {
-        [[ -L "$1" ]] && {
+        [[ -L $1 ]] && {
           cp "$1" "$1.bak"
           rm "$1"
           mv "$1.bak" "$1"

@@ -21,6 +21,7 @@ lib.mkIf config.me.gui.enable {
     in
     [
       stable.ente-auth
+      gnome-text-editor
 
       (discord.override {
         withOpenASAR = true;
@@ -38,17 +39,14 @@ lib.mkIf config.me.gui.enable {
       obs-studio
       gimp
       # kdePackages.kdenlive
-      gthumb
+      sly
       vlc
       celluloid
       jellyfin-media-player
-      sushi
-      ffmpeg
+      (ffmpeg.override { withFullDeps = true; })
 
       # files
-      gparted
       nautilus
-      gnome-disk-utility
       file-roller
       ntfs3g
 

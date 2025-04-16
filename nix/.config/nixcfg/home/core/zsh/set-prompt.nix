@@ -4,14 +4,14 @@
   xdg.configFile."zsh/set-prompt.sh".text = # bash
     ''
       function is_dirty {
-          [[ $(${pkgs.git}/bin/git diff --shortstat 2> /dev/null | ${pkgs.coreutils-full}/bin/tail -n1) != "" ]] && ${pkgs.coreutils-full}/bin/echo "*"
+          [[ -n $(${pkgs.git}/bin/git diff --shortstat 2> /dev/null | ${pkgs.coreutils-full}/bin/tail -n1) ]] && ${pkgs.coreutils-full}/bin/echo "*"
       }
 
       function get_git_info() {
           local -r ref=$(${pkgs.git}/bin/git rev-parse --abbrev-ref HEAD 2>/dev/null)
 
           local branch
-          if [[ "$ref" == "HEAD" ]]; then
+          if [[ $ref == "HEAD" ]]; then
             branch=$(${pkgs.git}/bin/git rev-parse --short HEAD 2>/dev/null)
           else
             branch=$ref
@@ -19,7 +19,7 @@
 
           local -r dirty_status="$(is_dirty)"
 
-          if [[ $branch != "" ]]; then
+          if [[ -n $branch ]]; then
               ${pkgs.coreutils-full}/bin/echo " $branch$dirty_status"
           fi
       }

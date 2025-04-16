@@ -22,7 +22,7 @@ lib.mkIf config.me.gui.enable {
             done
         }
 
-        if [ "$1" = period-changed ]; then
+        if [[ $1 == "period-changed" ]]; then
             case $3 in
                 night) set_brightness "$brightness_night" ;;
                 transition) set_brightness "$brightness_transition" ;;

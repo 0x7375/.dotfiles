@@ -26,7 +26,7 @@
           repo_name=$(basename "$repo" .git)
           repo_dir="$backup_dir/$repo_name"
           
-          if [ -d "$repo_dir" ]; then
+          if [[ -d $repo_dir ]]; then
             cd "$repo_dir"
             git fetch --all --prune
           else

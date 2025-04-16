@@ -29,7 +29,10 @@
       ];
   };
 
-  environment.systemPackages = [ pkgs.ncdu ];
+  environment.systemPackages = [
+    pkgs.ncdu
+    pkgs.xsel
+  ];
 
   services.journald.extraConfig = ''
     MaxRetentionSec=5d

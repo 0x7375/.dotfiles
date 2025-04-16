@@ -1,6 +1,5 @@
 {
   config,
-  myLib,
   lib,
   pkgs,
   ...
@@ -52,7 +51,7 @@ lib.mkIf config.me.gui.enable {
           ACTION=="remove", \
           SUBSYSTEM=="${subsystem}", \
           ENV{DISPLAY}=":0", \
-          ENV{XAUTHORITY}="/home/${config.me.user}/.Xauthority", \
+          ENV{XAUTHORITY}="/run/user/${toString config.me.uid}/Xauthority", \
           RUN+="${pkgs.su}/bin/su ${config.me.user} -c '${pkgs.playerctl}/bin/playerctl pause --all-players'"
         '';
       in

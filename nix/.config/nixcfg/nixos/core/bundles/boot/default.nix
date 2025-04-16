@@ -16,6 +16,8 @@ lib.mkIf config.me.boot.enable {
     ];
   };
 
+  boot.kernel.sysctl."kernel.sysrq" = 1;
+
   systemd.watchdog.rebootTime = "10s";
 
   boot.initrd.systemd.enable = true;

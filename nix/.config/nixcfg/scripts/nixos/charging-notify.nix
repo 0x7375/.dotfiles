@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ config, pkgs, ... }:
 
 pkgs.writeShellApplication {
   name = "charging-notify";
@@ -10,9 +10,9 @@ pkgs.writeShellApplication {
   text = ''
     [[ $# != 1 ]] && printf '0 or 1 must be passed as an argument.\nUsage: %s 0|1\n' "$0" && exit
 
-    export XAUTHORITY=$HOME/.Xauthority
+    export XAUTHORITY=/run/user/${toString config.me.uid}/Xauthority
     export DISPLAY=:0
-    export DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/1000/bus"
+    export DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/${toString config.me.uid}/bus"
 
     battery_charging=$1
     battery_level=$(acpi -b | grep -E "remaining|zero|until" | grep -P -o '[0-9]+(?=%)')

@@ -414,6 +414,7 @@ in
         gp = "cd /home/${user}/perso";
         gu = "cd /home/${user}/uni";
         gr = "cd /home/${user}/repos";
+        gR = "cd /run/user/${toString config.me.uid}";
         gP = "cd /home/${user}/pictures";
         gv = "cd /home/${user}/pictures/videos";
         gc = "cd /home/${user}/.config";
@@ -425,6 +426,7 @@ in
         ga = "cd /usr/share/applications";
         gm = "cd /run/media/ayko";
         gn = "cd /run/current-system/";
+        gN = "cd /nix/store";
       };
     };
 

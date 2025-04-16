@@ -3,11 +3,10 @@
 {
   xdg.configFile."zsh/.zshrc".text = # bash
     ''
-      source ${pkgs.zsh-syntax-highlighting}/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-      source ${pkgs.zsh-z}/share/zsh-z/zsh-z.plugin.zsh
-      source ${pkgs.zsh-history-substring-search}/share/zsh-history-substring-search/zsh-history-substring-search.zsh
-
+      source /etc/profile
       source ~/.profile
+
+      source ${pkgs.zsh-syntax-highlighting}/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
       source $ZDOTDIR/completion.zsh
       source $ZDOTDIR/opts.zsh
@@ -21,12 +20,12 @@
       HISTSIZE=50000
       SAVEHIST=50000
 
-      # only add command that did not fail
+      # only add valid commands to history
       zshaddhistory() { whence ''${''${(z)1}[1]} >| /dev/null || return 1 }
 
       zle_highlight=('paste:none')
 
-      # allow any character resume terminal after ctrl+s
+      # allow any character to resume terminal after ctrl+s
       stty ixany
 
       set_prompt

@@ -15,6 +15,7 @@
     XDG_CONFIG_HOME = "$HOME/.config";
     XDG_CACHE_HOME = "$HOME/.cache";
     XDG_RUNTIME_DIR = "/run/user/$UID";
+    XAUTHORITY = XDG_RUNTIME_DIR + "/Xauthority";
     PATH = [
       "${XDG_BIN_HOME}"
     ];

@@ -24,12 +24,6 @@
       }
       # don't use a widget because of https://github.com/gokcehan/lf/issues/585
 
-      function tmux-sessionizer-widget {
-          command ${pkgs.scripts.tmux-sessionizer}/bin/tmux-sessionizer
-          zle reset-prompt
-      }
-      zle -N tmux-sessionizer-widget
-
       autoload -U edit-command-line
       zle -N edit-command-line
 

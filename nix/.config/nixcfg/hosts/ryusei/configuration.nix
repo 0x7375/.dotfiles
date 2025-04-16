@@ -45,7 +45,7 @@
       ATTR{type}=="Mains", \
       ATTR{online}=="0", \
       ENV{DISPLAY}=":0", \
-      ENV{XAUTHORITY}="/home/${config.me.user}/.Xauthority" \
+      ENV{XAUTHORITY}="/run/user/${toString config.me.uid}/Xauthority", \
       RUN+="${pkgs.su}/bin/su ${config.me.user} -c '${pkgs.scripts.charging-notify}/bin/charging-notify 0'"
 
       ACTION=="change", \
@@ -53,7 +53,7 @@
       ATTR{type}=="Mains", \
       ATTR{online}=="1", \
       ENV{DISPLAY}=":0", \
-      ENV{XAUTHORITY}="/home/${config.me.user}/.Xauthority" \
+      ENV{XAUTHORITY}="/run/user/${toString config.me.uid}/Xauthority", \
       RUN+="${pkgs.su}/bin/su ${config.me.user} -c '${pkgs.scripts.charging-notify}/bin/charging-notify 1'"
     '';
 

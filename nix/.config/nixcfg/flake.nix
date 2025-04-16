@@ -4,7 +4,6 @@
   inputs = {
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
     nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-24.11";
-    nixpkgs-master.url = "github:nixos/nixpkgs/master";
 
     nixpkgs.follows = "nixpkgs-unstable";
 
@@ -13,11 +12,14 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    media.url = "github:nixos/nixpkgs/nixos-unstable";
     auto-update.url = "github:nixos/nixpkgs/nixos-unstable";
     gns3.url = "github:nixos/nixpkgs/dd5621df6dcb90122b50da5ec31c411a0de3e538a";
-    # zen-browser.url = "github:ch4og/zen-browser-flake";
-    # xremap.url = "github:xremap/nix-flake";
+
+    # zen-browser = {
+    #   url = "github:0xc000022070/zen-browser-flake";
+    #   inputs.nixpkgs.follows = "nixpkgs";
+    #   inputs.home-manager.follows = "home-manager";
+    # };
 
     disko = {
       url = "github:nix-community/disko/latest";

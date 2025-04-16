@@ -1,4 +1,5 @@
 {
+  inputs,
   lib,
   config,
   pkgs,
@@ -64,6 +65,8 @@ lib.mkIf config.me.gui.enable {
       auto.mullvad-browser
       signal-desktop
       st
+    ]
+    ++ [
     ]
     ++ (lib.optionals config.me.devPkgs.enable [
       gnumake

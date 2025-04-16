@@ -3,7 +3,7 @@
 {
   services.prowlarr = {
     enable = true;
-    package = pkgs.media.prowlarr;
+    package = pkgs.auto.prowlarr;
     openFirewall = true;
   };
 

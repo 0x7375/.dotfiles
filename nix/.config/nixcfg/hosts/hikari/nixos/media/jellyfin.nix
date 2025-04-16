@@ -3,13 +3,13 @@
 {
   services.jellyfin = {
     enable = true;
-    package = pkgs.media.jellyfin;
+    package = pkgs.auto.jellyfin;
     group = myLib.media-group;
     openFirewall = true;
   };
 
   environment.systemPackages = with pkgs; [
-    media.jellyfin-web
-    media.jellyfin-ffmpeg
+    auto.jellyfin-web
+    auto.jellyfin-ffmpeg
   ];
 }

@@ -10,17 +10,12 @@ let
   palette = myLib.palette;
 in
 lib.mkIf config.me.gui.enable {
-  nixpkgs.overlays = [
-    (final: prev: {
-      ncspot = prev.ncspot.override {
-        ueberzug = pkgs.ueberzugpp;
-        withCover = true;
-      };
-    })
-  ];
-
   programs.ncspot = {
     enable = true;
+    package = pkgs.ncspot.override {
+      ueberzug = pkgs.ueberzugpp;
+      withCover = true;
+    };
     settings = {
       shuffle = true;
       notify = true;

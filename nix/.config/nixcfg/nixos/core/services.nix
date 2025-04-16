@@ -7,6 +7,8 @@
 
 {
   services = {
+    earlyoom.enable = true;
+
     locate.enable = true;
 
     fail2ban = {

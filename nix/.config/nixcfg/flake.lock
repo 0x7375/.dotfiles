@@ -207,22 +207,6 @@
         "type": "github"
       }
     },
-    "media": {
-      "locked": {
-        "lastModified": 1743827369,
-        "narHash": "sha256-rpqepOZ8Eo1zg+KJeWoq1HAOgoMCDloqv5r2EAa9TSA=",
-        "owner": "nixos",
-        "repo": "nixpkgs",
-        "rev": "42a1c966be226125b48c384171c44c651c236c22",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nixos",
-        "ref": "nixos-unstable",
-        "repo": "nixpkgs",
-        "type": "github"
-      }
-    },
     "nix-index-database": {
       "inputs": {
         "nixpkgs": [
@@ -277,22 +261,6 @@
       "original": {
         "owner": "NixOS",
         "ref": "nixos-unstable",
-        "repo": "nixpkgs",
-        "type": "github"
-      }
-    },
-    "nixpkgs-master": {
-      "locked": {
-        "lastModified": 1735117058,
-        "narHash": "sha256-JiaTmNX4ox4vRyHI47WZRIs/+h6c99nnzazbIBK2VS0=",
-        "owner": "nixos",
-        "repo": "nixpkgs",
-        "rev": "06af86f6ce0cf2f2d575846ef394733a0d709684",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nixos",
-        "ref": "master",
         "repo": "nixpkgs",
         "type": "github"
       }
@@ -379,13 +347,11 @@
         "gns3": "gns3",
         "home-manager": "home-manager",
         "lanzaboote": "lanzaboote",
-        "media": "media",
         "nix-index-database": "nix-index-database",
         "nixos-wsl": "nixos-wsl",
         "nixpkgs": [
           "nixpkgs-unstable"
         ],
-        "nixpkgs-master": "nixpkgs-master",
         "nixpkgs-stable": "nixpkgs-stable_2",
         "nixpkgs-unstable": "nixpkgs-unstable",
         "secrets": "secrets",
@@ -417,11 +383,11 @@
     "secrets": {
       "flake": false,
       "locked": {
-        "lastModified": 1744669830,
-        "narHash": "sha256-D54YHkBVACeHPscwnF/YneA33zHDoEWFMeeAXK9pAUs=",
+        "lastModified": 1744785965,
+        "narHash": "sha256-NrrNbKRgHdOAwXBIa7M8uZm+1wjvCwxry53HXcq1SJA=",
         "ref": "refs/heads/main",
-        "rev": "667b58ad200a7b53972ea03ba6c67aecfdab0137",
-        "revCount": 49,
+        "rev": "d512105dc16c8688563ad8030cd1eb3edd8ed44e",
+        "revCount": 50,
         "type": "git",
         "url": "ssh://git@codeberg.org/0xB0F/nix-secrets"
       },

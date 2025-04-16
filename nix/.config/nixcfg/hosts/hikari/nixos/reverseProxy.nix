@@ -1,12 +1,13 @@
 {
   lib,
+  secrets,
   myLib,
   config,
   ...
 }:
 
 let
-  url = "shimu.duckdns.org";
+  url = "kaen.duckdns.org";
   ip = myLib.network.lan.addr.server;
   mkSubDomain = port: {
     forceSSL = true;
@@ -22,7 +23,9 @@ in
 
   systemd.tmpfiles.rules =
     let
-      content = builtins.replaceStrings [ "\n" ] [ "\\n" ] (builtins.readFile ../../../assets/index.html);
+      content = builtins.replaceStrings [ "\n" ] [ "\\n" ] (
+        builtins.readFile (myLib.fromRoot "assets/index.html")
+      );
     in
     [
       "f+ /var/www/index.html 0644 root root - ${content}"
@@ -38,17 +41,6 @@ in
           root = "/var/www";
           index = "index.html";
         };
-      };
-
-      "~^(?<subdomain>.+)\\.${lib.escapeRegex url}$" = {
-        forceSSL = true;
-        useACMEHost = url;
-        locations."/" = {
-          return = "404";
-        };
-        extraConfig = ''
-          default_type text/plain;
-        '';
       };
 
       "media.${url}" = mkSubDomain 8096;
@@ -67,9 +59,15 @@ in
     };
   };
 
-  systemd.services = myLib.notifyOnServiceFailure "nginx";
+  systemd.services =
+    myLib.notifyOnServiceFailure "nginx"
+    // myLib.notifyOnServiceFailure "acme-${url}";
 
-  sops.secrets."hikari/duckdns_token" = { };
+  sops.secrets.duckdns = {
+    sopsFile = "${secrets}/duckdns.env";
+    format = "dotenv";
+    key = "";
+  };
 
   security.acme = lib.mkIf config.me.secrets.enable {
     acceptTerms = true;
@@ -77,8 +75,15 @@ in
     certs."${url}" = {
       extraDomainNames = [ "*.${url}" ];
       dnsProvider = "duckdns";
-      environmentFile = config.sops.secrets."hikari/duckdns_token".path;
+      environmentFile = config.sops.secrets.duckdns.path;
       webroot = null;
+
+      # https://github.com/go-acme/lego/discussions/2244#discussioncomment-11008783
+      extraLegoFlags = [
+        "--dns.propagation-disable-ans"
+        "--dns.resolvers=1.1.1.1"
+        "--dns.resolvers=8.8.8.8"
+      ];
     };
   };
 }

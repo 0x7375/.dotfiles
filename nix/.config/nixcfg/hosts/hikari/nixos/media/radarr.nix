@@ -8,7 +8,7 @@
   services.radarr = {
     enable = true;
     group = myLib.media-group;
-    package = pkgs.media.radarr;
+    package = pkgs.auto.radarr;
     openFirewall = true;
   };
 }

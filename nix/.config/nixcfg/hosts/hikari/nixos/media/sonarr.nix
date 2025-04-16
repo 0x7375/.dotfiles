@@ -8,7 +8,7 @@
   services.sonarr = {
     enable = true;
     group = myLib.media-group;
-    package = pkgs.media.sonarr;
+    package = pkgs.auto.sonarr;
     openFirewall = true;
   };
 }

@@ -1,4 +1,9 @@
-{ config, lib, ... }:
+{
+  myLib,
+  config,
+  lib,
+  ...
+}:
 
 lib.mkIf config.me.secrets.enable {
   sops.secrets."atuin/key" = {
@@ -15,19 +20,29 @@ lib.mkIf config.me.secrets.enable {
       auto_sync = true;
       store_failed = false;
       sync_frequency = "5m";
-      flags = [
-        "--disable-up-arrow"
-        "--disable-ctrl-r"
+      history_filter = [
+        "^ .*"
       ];
     };
   };
+
+  xdg.configFile."zsh/.zshrc".text =
+    # bash
+    ''
+      source $ZDOTDIR/atuin-history-arrow.zsh
+
+      export ATUIN_NOBIND="true"
+      eval "$(atuin init zsh)"
+    '';
+
+  xdg.configFile."zsh/atuin-history-arrow.zsh".text = builtins.readFile (
+    myLib.fromRoot "assets/atuin-history-arrow.zsh"
+  );
 
   xdg.configFile."zsh/widgets.zsh".text =
     lib.mkAfter
       # bash
       ''
-        export ATUIN_NOBIND=1
-        eval "$(atuin init zsh)"
         fzf-atuin-history-widget() {
             local selected num
             setopt localoptions noglobsubst noposixbuiltins pipefail no_aliases 2>/dev/null
@@ -42,10 +57,7 @@ lib.mkIf config.me.secrets.enable {
                 --reverse
             )
 
-            selected=$(
-                eval "atuin search ''${atuin_opts}" |
-                    fzf "''${fzf_opts[@]}"
-            )
+            selected=$(eval "atuin search ''${atuin_opts}" | fzf "''${fzf_opts[@]}")
             local ret=$?
             if [ -n "$selected" ]; then
                 LBUFFER+="''${selected}"
@@ -63,6 +75,11 @@ lib.mkIf config.me.secrets.enable {
       # bash
       ''
         bindkey '^R' fzf-atuin-history-widget
+
+        bindkey '^[[A' atuin-history-up
+        bindkey '^[[B' atuin-history-down
+        bindkey '^P' atuin-history-up
+        bindkey '^N' atuin-history-down
       '';
 
 }

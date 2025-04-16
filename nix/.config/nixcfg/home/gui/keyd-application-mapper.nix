@@ -29,57 +29,48 @@ lib.mkIf (config.me.gui.enable && config.me.keyd.enable) {
   xdg.configFile."keyd/app.conf" = {
     text =
       let
-        backspace = "control.h = backspace";
-        enter = "control.m = enter";
-        upDown = ''
-          control.p = up
-          control.n = down
-        '';
+        default =
+          # toml
+          ''
+            control.h = backspace
+            control.p = up
+            control.n = down
+            # alt and meta need to be swapped because I swap alt and super key
+            f7 = M-right
+            f8 = M-left
+            control.j = C-tab
+            control.k = C-S-tab
+            control.w = C-backspace
+            control.d = C-w
+          '';
+
+        defaultWithEnter = default + "\ncontrol.m = enter";
+
+        apps = [
+          "1password"
+          "discord"
+          "ssh-askpass"
+          "polkit-gnome-authentication-agent-1"
+          "spotify"
+        ];
+
+        appConfigs = builtins.concatStringsSep "\n\n" (map (app: "[${app}]\n${defaultWithEnter}") apps);
       in
       # toml
       ''
-        # A-key and M-key (alt and meta) need to be swapped because I swap alt and windows key
         [librewolf]
-
-        f7 = M-right
-        f8 = M-left
-
-        ${backspace}
-        ${upDown}
-        ${enter}
+        ${defaultWithEnter}
         control.e = f6
-        control.j = C-tab
-        control.k = C-S-tab
-        control.w = C-backspace
-        control.d = C-w
 
         [io-ente-auth]
-        ${enter}
-        ${upDown}
-        ${backspace}
+        ${defaultWithEnter}
         control.e = macro(tab tab tab enter)
 
-        [1password]
-        ${enter}
-        ${upDown}
-        ${backspace}
-
         [copyq]
+        ${default}
         control.m = macro(enter 20ms A-q)
-        ${upDown}
-        ${backspace}
 
-        [discord]
-        ${enter}
-        ${backspace}
-
-        [ssh-askpass]
-        ${enter}
-        ${backspace}
-
-        [polkit-gnome-authentication-agent-1]
-        ${enter}
-        ${backspace}
+        ${appConfigs}
       '';
   };
 }

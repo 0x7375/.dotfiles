@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ config, pkgs, ... }:
 
 pkgs.writeShellApplication {
   name = "battery-notify";
@@ -10,7 +10,7 @@ pkgs.writeShellApplication {
   ];
   text = ''
     export DISPLAY=:0
-    export DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/1000/bus"
+    export DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/${toString config.me.uid}/bus"
 
     warning_level=15
     full_level=90

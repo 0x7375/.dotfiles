@@ -25,18 +25,17 @@
     ];
   };
 
-  # black magic
   # https://github.com/nix-community/home-manager/issues/676#issuecomment-1595795685
-  lib.meta = {
-    configPath = config.me.flakeDir;
-    mkMutableSymlink =
-      path:
-      config.lib.file.mkOutOfStoreSymlink (
-        config.lib.meta.configPath + lib.removePrefix (toString inputs.self) (toString path)
-      );
-  };
-
-  xdg.configFile."nvim" = {
-    source = config.lib.meta.mkMutableSymlink ../../../nvim;
-  };
+  # lib.meta = {
+  #   configPath = config.me.flakeDir;
+  #   mkMutableSymlink =
+  #     path:
+  #     config.lib.file.mkOutOfStoreSymlink (
+  #       config.lib.meta.configPath + lib.removePrefix (toString inputs.self) (toString path)
+  #     );
+  # };
+  #
+  # xdg.configFile."nvim" = {
+  #   source = config.lib.meta.mkMutableSymlink ../../../nvim;
+  # };
 }

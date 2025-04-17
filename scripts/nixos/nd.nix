@@ -139,7 +139,7 @@ pkgs.writeShellApplication {
       cleanup() {
         local -r err_code=$?
 
-        [[ -d .git ]] && silent git apply --cached "$staged_diff_file"
+        [[ -d .git && $err_code -ne 0 ]] && silent git reset && silent git apply --cached "$staged_diff_file"
         echo -n "$show_cursor"
         silent popd
 
@@ -222,13 +222,13 @@ pkgs.writeShellApplication {
         [[ -f $result_file ]] && result=$(< "$result_file")
         [[ -f $hash_file ]] && last_rebuild_hash=$(< "$hash_file")
 
-        local -ra exclusion_patterns=("result" "*.qcow2" "nvim")
+        local -ra exclusion_patterns=("result" "*.qcow2" "nvim" ".git")
         local -a excluded=()
         for pattern in "''${exclusion_patterns[@]}"; do
             excluded+=(--exclude "$pattern")
         done
 
-        local -r current_hash=$(tar -cf - "''${excluded[@]}" . | sha256sum | cut -d' ' -f1)
+        local -r current_hash=$(tar --sort=name --mtime='1970-01-01 00:00:00' --owner=0 --group=0 -cf - "''${excluded[@]}" . | sha256sum | cut -d' ' -f1)
 
         if [[ $force_rebuild -eq 1 || $last_rebuild_hash != "$current_hash" || -z $result ]]; then
           [[ $changing_generation -eq 1 && -z $remote_build && -d .git ]] && {
@@ -269,11 +269,12 @@ pkgs.writeShellApplication {
         esac
 
         case $action in
-          switch|test) log -n "Activate the configuration? [y/N]$hide_cursor" ;;
-          boot) log -n "Make this configuration the boot default? [y/N]$hide_cursor" ;;
+          switch|test) log -n "Activate the configuration?" ;;
+          boot) log -n "Make this configuration the boot default?" ;;
           *) ;;
         esac
 
+        echo -n " [y/N]$hide_cursor"
         read -s -r -n 1 answer
         echo "$show_cursor"
 

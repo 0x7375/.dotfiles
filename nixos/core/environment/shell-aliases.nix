@@ -84,9 +84,22 @@ in
             }' | sed 's/^A /Add /; s/^M /Update /; s/^D /Delete /');
             ${git} commit -m "$(printf "%s\n" "$changes")";
             ${git} pull --rebase;
-            ${git} push
+
+            green=$(${tput} setaf 2)
+            reset=$(${tput} sgr0)
+            hide=$(${tput} civis)
+            show=$(${tput} cnorm)
+            dots="''${green}::''${reset}"
+
+            echo -n "''${dots}Push changes? [y/N]''${hide}"
+            read -s -r -n 1 answer
+
+            [[ $answer == "y" ]] && {
+              ${git} push
+            }
+            echo "$show"
           '';
-      dotu = cdDotfiles "${git} pull --rebase";
+      dotu = cdDotfiles "${git} pull --rebase --autostash";
       dotf =
         cdDotfiles
           # bash
@@ -105,9 +118,9 @@ in
             reset=$(${tput} sgr0)
             hide=$(${tput} civis)
             show=$(${tput} cnorm)
+            dots="''${green}::''${reset}"
 
-            echo "''${green}>''${reset}Discard dotfiles changes?"
-            echo -n "[y/N]''${hide}"
+            echo -n "''${dots} Discard changes? [y/N]''${hide}"
             read -s -r -n 1 answer
 
             [[ $answer == "y" ]] && {

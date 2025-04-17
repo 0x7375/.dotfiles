@@ -26,7 +26,6 @@
           with spicePkgs.extensions;
           [
             shuffle
-            keyboardShortcut
             betterGenres
           ]
           ++ [
@@ -41,17 +40,9 @@
                 + "/startup-page/dist";
               name = "startup-page.js";
             }
-            {
-              src = pkgs.fetchFromGitHub {
-                owner = "kyrie25";
-                repo = "spicetify-utilities";
-                rev = "main";
-                sha256 = "sha256-LZcrmoA+SOpTeTiBeiOtneojzBhvbZfkawTyFRLhNk8=";
-              };
-              name = "utilities.js";
-            }
           ];
         enabledCustomApps = with spicePkgs.apps; [
+          marketplace
           betterLibrary
         ];
         enabledSnippets = with spicePkgs.snippets; [
@@ -65,9 +56,34 @@
           removeRecentlyPlayed
           hideNowPlayingViewButton
           hideMiniPlayerButton
-          hideFullScreenButton
         ];
-        theme = spicePkgs.themes.bloom;
+        theme = {
+          src = spicePkgs.sources.lucidSrc + "/src";
+          name = "lucid";
+          colorscheme = "dark";
+          overwriteAssets = true;
+
+          injectCss = true;
+          injectThemeJs = true;
+          replaceColors = true;
+
+          requiredExtensions = [
+            {
+              src = spicePkgs.sources.lucidSrc + "/src";
+              name = "theme.js";
+            }
+          ];
+          additionalCss = # css
+            ''
+              .Root__top-container {
+                gap: var(--panel-gap) 0 !important;
+              }
+              #Desktop_LeftSidebar_Id {
+                display: none !important;
+              }
+            '';
+
+        };
       };
   };
 }

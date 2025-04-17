@@ -24,13 +24,15 @@
   home.username = config.me.user;
   home.homeDirectory = "/home/${config.me.user}";
 
-  home.activation.pullDotfiles = lib.mkIf config.me.secrets.enable (
+  home.activation.initialSetup = lib.mkIf config.me.secrets.enable (
     lib.hm.dag.entryAfter [ "writeBoundary" ]
       # bash
       ''
-        [[ ! -e /home/${config.me.user}/.config/nixcfg ]] && {
-          run ${pkgs.git}/bin/git -c core.sshCommand="${pkgs.openssh}/bin/ssh" clone codeberg:0xB0F/.dotfiles /home/${config.me.user}/.config/nixcfg
+        [[ ! -e ${config.me.flakeDir} ]] && {
+          run ${pkgs.git}/bin/git -c core.sshCommand="${pkgs.openssh}/bin/ssh" clone codeberg:0xB0F/.dotfiles ${config.me.flakeDir}
         }
+
+        [[ ! -L /home/${config.me.user}/.config/nvim ]] && ln -s ${config.me.flakeDir}/nvim /home/${config.me.user}/.config/nvim
       ''
   );
 

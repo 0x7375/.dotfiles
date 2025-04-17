@@ -5,7 +5,7 @@
   ...
 }:
 
-lib.mkIf config.me.gui.enable {
+lib.mkIf (config.me.gui.enable && false) {
   systemd.timers."look-away" = {
     wantedBy = [ "timers.target" ];
     timerConfig = {
@@ -27,7 +27,7 @@ lib.mkIf config.me.gui.enable {
   systemd.services."look-away-notify" = {
     script = ''
       ${pkgs.writeShellScriptBin "look-away-notify" ''
-        ADDRESS=/run/user/1000/bus
+        ADDRESS=/run/user/${toString config.me.uid}/bus
 
         export DISPLAY=:0
         export DBUS_SESSION_BUS_ADDRESS="unix:path=$ADDRESS"

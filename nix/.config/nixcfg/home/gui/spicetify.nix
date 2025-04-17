@@ -68,6 +68,7 @@
           hideMiniPlayerButton
           hideFullScreenButton
         ];
+        # theme
         # theme = {
         #   # https://github.com/Gerg-L/spicetify-nix/blob/master/pkgs/themes.nix
         #   name = "text";

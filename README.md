@@ -1,13 +1,8 @@
 # Dotfiles
 
-Dotfiles managed with gnu stow
-
 NixOS configuration for an nvidia desktop, thinkpad laptop, a raspberry pi and
-wsl. Flake uses [home-manager](https://github.com/nix-community/home-manager),
-and [agenix](https://github.com/ryantm/agenix) for secrets.
-
-`nd` script to show changes and commit after every successfull rebuild to a
-local git repo inside nixcfg
+wsl. Flake uses [home-manager](https://github.com/nix-community/home-manager) as a nixos module,
+and [sops-nix](https://github.com/Mic92/sops-nix) for secrets.
 
 ## Nixos-anywhere installation
 
@@ -110,11 +105,6 @@ swapon /dev/disk/by-label/NIXSWAP
 ### Install
 
 Connect to wifi if needed, `nmtui`
-
-```bash
-git clone https://codeberg.org/0xB0F/.dotfiles ~/.dotfiles
-cd ~/.dotfiles; stow nix
-```
 
 Copy ssh key over from another machine (or just disable secrets in options
 temporarily)

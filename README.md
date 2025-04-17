@@ -63,21 +63,6 @@ bootctl status
 
 Secure boot should now work and we can reboot
 
-## Local rebuild repo setup
-
-Commands to set up a local git repo for the nixcfg directory, this is used by
-the `nd` script to have a commit per successful rebuild. `setup-dotfiles` runs
-these commands.
-
-```bash
-git clone codeberg.org:0xB0F/.dotfiles ~/.dotfiles
-cd ~/.dotfiles; stow nix nvim; cd ./nix/.config/nixcfg
-git init; mv .git .nix-git
-export GIT_DIR=.nix-git
-git config user.name name; git config user.email email
-git add .; git commit -m "initial commit"
-```
-
 ## Making a bootable USB drive
 
 Building the iso

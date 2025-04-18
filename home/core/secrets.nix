@@ -32,5 +32,25 @@
               -o /home/${config.me.user}/.config/sops/age/keys.txt
           }
         '';
+
+    systemd.user.services.dotfiles-setup = lib.mkIf config.me.secrets.enable {
+      Unit = {
+        Description = "Clone dotfiles repository";
+        After = [ "network-online.target" ];
+        Wants = [ "network-online.target" ];
+      };
+      Service = {
+        Type = "oneshot";
+        ExecStart = pkgs.writeShellScript "clone-dotfiles" ''
+          if [[ ! -e ${config.me.flakeDir} ]]; then
+            ${pkgs.git}/bin/git -c core.sshCommand="${pkgs.openssh}/bin/ssh -o StrictHostKeyChecking=accept-new" clone codeberg:0xB0F/.dotfiles ${config.me.flakeDir}
+          fi
+        '';
+        RemainAfterExit = true;
+      };
+      Install = {
+        WantedBy = [ "default.target" ];
+      };
+    };
   };
 }

@@ -12,9 +12,12 @@ Store password for disk encryption in a file, and create the structure for the
 ssh key to be passed to nixos-anywhere
 
 ```bash
+host=ryusei
+user=ayko
+
  echo -n "luksPassword" > /tmp/secret.key
 root=$(mktemp -d)
-install -Dm 600 ~/remote_pkey $root/home/ayko/.ssh/id_ed25519
+install -Dm 600 ~/$host $root/home/$user/.ssh/id_ed25519
 ```
 
 Secure boot keys can optionally be generated with sbctl to be passed to
@@ -24,7 +27,7 @@ nixos-anywhere
 sbctl create-keys
 mkdir -p $root/var/lib
 sudo cp -r /var/lib/sbctl $root/var/lib
-sudo chown -R ayko:users $root/var/lib/sbctl
+sudo chown -R ${user}:users $root/var/lib/sbctl
 ```
 
 ### Install
@@ -34,8 +37,8 @@ Note: SSHPASS and --env-password are only needed if public key auth is not set u
 ```bash
 SSHPASS=remote-pw nix run nixpkgs#nixos-anywhere -- --env-password \
 --disk-encryption-keys /tmp/secret.key /tmp/secret.key \
---extra-files "$root" --chown /home/ayko 1000:100 \
---flake path:.#remote root@remote
+--extra-files "$root" --chown /home/$user 1000:100 \
+--flake path:.#$host root@$host
 ```
 
 ### Optional: enable secure boot
@@ -121,6 +124,6 @@ Put ssh key in the right place and install nixos
 
 ```bash
 chmod 600 ~/.ssh/id_ed25519
-install -Dm 600 -o ayko -g users ~/.ssh/id_ed25519 /mnt/home/ayko/.ssh/
+install -Dm 600 -o $host -g users ~/.ssh/id_ed25519 /mnt/home/$user/.ssh/
 nixos-install --root /mnt --flake ~/.config/nixcfg#hostname
 ```

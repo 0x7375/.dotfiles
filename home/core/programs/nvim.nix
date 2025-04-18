@@ -1,8 +1,6 @@
 {
-  lib,
   config,
   pkgs,
-  inputs,
   ...
 }:
 
@@ -24,6 +22,10 @@
       deno
     ];
   };
+
+  systemd.user.tmpfiles.rules = [
+    "L /home/${config.me.user}/.config/nvim - - - - ${config.me.flakeDir}/nvim"
+  ];
 
   # https://github.com/nix-community/home-manager/issues/676#issuecomment-1595795685
   # lib.meta = {

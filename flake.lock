@@ -356,7 +356,8 @@
         "nixpkgs-unstable": "nixpkgs-unstable",
         "secrets": "secrets",
         "sops-nix": "sops-nix",
-        "spicetify-nix": "spicetify-nix"
+        "spicetify-nix": "spicetify-nix",
+        "zen-browser": "zen-browser"
       }
     },
     "rust-overlay": {
@@ -383,11 +384,11 @@
     "secrets": {
       "flake": false,
       "locked": {
-        "lastModified": 1744785965,
-        "narHash": "sha256-NrrNbKRgHdOAwXBIa7M8uZm+1wjvCwxry53HXcq1SJA=",
+        "lastModified": 1745007020,
+        "narHash": "sha256-FptCESSQhKB8JMDc/rDzJJV6PR2m6lxI5jA+oc63s+w=",
         "ref": "refs/heads/main",
-        "rev": "d512105dc16c8688563ad8030cd1eb3edd8ed44e",
-        "revCount": 50,
+        "rev": "e231f8047c93e22f209189e93ecd8cdf05880607",
+        "revCount": 51,
         "type": "git",
         "url": "ssh://git@codeberg.org/0xB0F/nix-secrets"
       },
@@ -462,6 +463,29 @@
       "original": {
         "owner": "nix-systems",
         "repo": "default",
+        "type": "github"
+      }
+    },
+    "zen-browser": {
+      "inputs": {
+        "home-manager": [
+          "home-manager"
+        ],
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1744992674,
+        "narHash": "sha256-6AEr+Ej/f4QmGw2OcpPsoj4Ru3oGmX3rv2tro8ev0ag=",
+        "owner": "0xc000022070",
+        "repo": "zen-browser-flake",
+        "rev": "805c8f56e8ebac1527176fc9d551f73c4cd886f6",
+        "type": "github"
+      },
+      "original": {
+        "owner": "0xc000022070",
+        "repo": "zen-browser-flake",
         "type": "github"
       }
     }

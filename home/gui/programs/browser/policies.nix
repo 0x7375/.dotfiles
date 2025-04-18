@@ -1,5 +1,6 @@
 {
   inputs,
+  config,
   system,
   myLib,
   lib,
@@ -109,9 +110,13 @@ let
     SearchSuggestEnabled = false;
   };
 in
-{
+lib.mkIf config.me.gui.enable {
   programs.librewolf.package = inputs.auto-update.legacyPackages.${system}.librewolf.override {
     extraPolicies = policies;
   };
-  # programs.zen-browser.policies = policies;
+  home.packages = [
+    (inputs.zen-browser.packages.${system}.beta-unwrapped.override {
+      inherit policies;
+    })
+  ];
 }

@@ -15,11 +15,11 @@
     auto-update.url = "github:nixos/nixpkgs/nixos-unstable";
     gns3.url = "github:nixos/nixpkgs/dd5621df6dcb90122b50da5ec31c411a0de3e538a";
 
-    # zen-browser = {
-    #   url = "github:0xc000022070/zen-browser-flake";
-    #   inputs.nixpkgs.follows = "nixpkgs";
-    #   inputs.home-manager.follows = "home-manager";
-    # };
+    zen-browser = {
+      url = "github:0xc000022070/zen-browser-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.home-manager.follows = "home-manager";
+    };
 
     disko = {
       url = "github:nix-community/disko/latest";

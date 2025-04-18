@@ -33,7 +33,7 @@
           }
         '';
 
-    systemd.user.services.dotfiles-setup = lib.mkIf config.me.secrets.enable {
+    systemd.user.services.dotfiles-setup = {
       Unit = {
         Description = "Clone dotfiles repository";
         After = [ "network-online.target" ];

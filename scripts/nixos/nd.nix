@@ -43,7 +43,6 @@ pkgs.writeShellApplication {
       }
 
       log() {
-          local -r red=$(tput setaf 1)
           local -r dots="''${green}::''${reset}"
           local nonewline=""
           
@@ -86,7 +85,9 @@ pkgs.writeShellApplication {
         local -r profile="/nix/var/nix/profiles/system"
         local -a commands=("$result/bin/switch-to-configuration $action")
 
-        [[ $action != "test" ]] && commands+=("nix build --no-link --profile $profile $result 2> /dev/null")
+        [[ $action != "test" ]] && {
+          commands+=("nix build --no-link --profile $profile $result 2> /dev/null && echo \"$(tput setaf 2)::$(tput sgr0) Configuration was set to boot default\"")
+        }
 
         if [[ -n $remote_build ]]; then
           for cmd in "''${commands[@]}"; do
@@ -232,7 +233,7 @@ pkgs.writeShellApplication {
 
         if [[ $force_rebuild -eq 1 || $last_rebuild_hash != "$current_hash" || -z $result ]]; then
           [[ $changing_generation -eq 1 && -z $remote_build && -d .git ]] && {
-            git add -N '*.nix'
+            git add -N .
             log "Showing changes"
             show_git_diff
             git diff --cached > "$staged_diff_file"

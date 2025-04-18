@@ -37,7 +37,6 @@ in
     free = "${pkgs.procps}/bin/free -h";
     df = "${pkgs.coreutils}/bin/df -h";
     du = "${pkgs.coreutils}/bin/du -h";
-    btdu = "sudo mkdir /mnt/crypted; sudo mount -o subvol=/ /dev/mapper/crypted /mnt/crypted && sudo ${pkgs.btdu}/bin/btdu /mnt/crypted && sudo umount -l /mnt/crypted";
 
     grep = "${pkgs.gnugrep}/bin/grep --color=always";
     ls = "ls --color --group-directories-first";

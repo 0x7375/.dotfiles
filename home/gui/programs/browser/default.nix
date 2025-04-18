@@ -1,6 +1,5 @@
 {
   lib,
-  pkgs,
   myLib,
   config,
   inputs,
@@ -8,13 +7,13 @@
 }:
 
 {
-  # imports = [
-  #   inputs.zen-browser.homeModules.beta
-  # ];
+  imports = [
+    inputs.zen-browser.homeModules.beta
+  ];
 
   config = lib.mkIf config.me.gui.enable {
-    # home.file.".zen/native-messaging-hosts/com.1password.1password.json".text =
-    #   config.home.file.".librewolf/native-messaging-hosts/com.1password.1password.json".text;
+    home.file.".zen/native-messaging-hosts/com.1password.1password.json".text =
+      config.home.file.".librewolf/native-messaging-hosts/com.1password.1password.json".text;
 
     home.file.".librewolf/native-messaging-hosts/com.1password.1password.json".text = # json
       ''
@@ -31,24 +30,24 @@
         }
       '';
 
-    # programs.zen-browser =
-    #   let
-    #     cfg = config.programs.librewolf;
-    #   in
-    #   {
-    #     enable = cfg.enable;
-    #     profiles.alt = cfg.profiles.alt;
-    #     profiles.default = {
-    #       isDefault = cfg.profiles.default.isDefault;
-    #       settings = cfg.profiles.default.settings;
-    #       search = {
-    #         force = cfg.profiles.default.search.force;
-    #         default = cfg.profiles.default.search.default;
-    #         order = cfg.profiles.default.search.order;
-    #         engines = cfg.profiles.default.search.engines;
-    #       };
-    #     };
-    #   };
+    programs.zen-browser =
+      let
+        cfg = config.programs.librewolf;
+      in
+      {
+        enable = cfg.enable;
+        profiles.alt = cfg.profiles.alt;
+        profiles.default = {
+          isDefault = cfg.profiles.default.isDefault;
+          settings = cfg.profiles.default.settings;
+          search = {
+            force = cfg.profiles.default.search.force;
+            default = cfg.profiles.default.search.default;
+            order = cfg.profiles.default.search.order;
+            engines = cfg.profiles.default.search.engines;
+          };
+        };
+      };
 
     programs.librewolf = {
       enable = true;

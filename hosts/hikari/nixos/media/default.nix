@@ -6,6 +6,7 @@
   systemd.services = lib.mkMerge (
     map (service: myLib.notifyOnServiceFailure service) [
       "podman-flaresolverr"
+      "podman-cleanuperr"
       "jellyfin"
       "jellyseerr"
       "prowlarr"

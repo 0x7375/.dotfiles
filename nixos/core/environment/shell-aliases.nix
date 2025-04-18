@@ -128,6 +128,9 @@ in
                 print $1 " " $2
               }
             }' | sed 's/^A /Add /; s/^M /Update /; s/^D /Delete /');
+
+            [[ -z "$changes" ]] && echo "''${dots} No changes to commit" && return
+
             ${git} commit -m "$(printf "%s\n" "$changes")";
             ${git} pull --rebase;
 

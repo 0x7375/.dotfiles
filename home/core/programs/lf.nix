@@ -418,7 +418,7 @@ in
         gP = "cd /home/${user}/pictures";
         gv = "cd /home/${user}/pictures/videos";
         gc = "cd /home/${user}/.config";
-        ge = config.me.flakeDir;
+        ge = "cd " + config.me.flakeDir;
         gl = "cd /home/${user}/.local";
         gb = "cd /home/${user}/.local/bin";
         gt = "cd /home/${user}/.local/share/Trash/files";

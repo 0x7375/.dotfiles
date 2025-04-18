@@ -129,9 +129,12 @@ in
               }
             }' | sed 's/^A /Add /; s/^M /Update /; s/^D /Delete /');
 
-            [[ -z "$changes" ]] && echo "''${dots} No changes to commit" && return
+            if [[ -z "$changes" ]]; then
+              echo "''${dots} No changes to commit"
+            else
+              ${git} commit -m "$(printf "%s\n" "$changes")";
+            fi
 
-            ${git} commit -m "$(printf "%s\n" "$changes")";
             ${git} pull --rebase;
 
             echo -n "''${dots} Push changes? [y/N]''${hide}"

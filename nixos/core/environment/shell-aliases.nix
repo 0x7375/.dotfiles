@@ -98,7 +98,7 @@ in
       show=$(${tput} cnorm)
       dots="''${green}::''${reset}"
 
-      export SUDO_PROMPT="''${dots} password for %p: "
+      export SUDO_PROMPT="''${dots} Password for %p: "
 
       dotr() {
         ${cdDotfiles
@@ -131,19 +131,13 @@ in
             ${git} commit -m "$(printf "%s\n" "$changes")";
             ${git} pull --rebase;
 
-            green=$(${tput} setaf 2)
-            reset=$(${tput} sgr0)
-            hide=$(${tput} civis)
-            show=$(${tput} cnorm)
-            dots="''${green}::''${reset}"
-
             echo -n "''${dots} Push changes? [y/N]''${hide}"
             read -s -r -n 1 answer
+            echo "$show"
 
             [[ $answer == "y" ]] && {
               ${git} push
             }
-            echo "$show"
           ''
         }
       }

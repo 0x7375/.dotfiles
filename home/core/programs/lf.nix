@@ -422,7 +422,6 @@ in
         gl = "cd /home/${user}/.local";
         gb = "cd /home/${user}/.local/bin";
         gt = "cd /home/${user}/.local/share/Trash/files";
-        "g." = "cd /home/${user}/.dotfiles";
         ga = "cd /usr/share/applications";
         gm = "cd /run/media/ayko";
         gn = "cd /run/current-system/";

@@ -104,7 +104,11 @@ swapon /dev/disk/by-label/NIXSWAP
 
 ### Install
 
-Connect to wifi if needed, `nmtui`
+Connect to wifi if needed, `nmtui`, and clone the repo
+
+```bash
+git clone https://codeberg.org/0xB0F/.dotfiles ~/.config/nixcfg
+```
 
 Copy ssh key over from another machine (or just disable secrets in options
 temporarily)
@@ -118,5 +122,5 @@ Put ssh key in the right place and install nixos
 ```bash
 chmod 600 ~/.ssh/id_ed25519
 install -Dm 600 -o ayko -g users ~/.ssh/id_ed25519 /mnt/home/ayko/.ssh/
-nixos-install --root /mnt --flake ~/.dotfiles/nix/.config/nixcfg#hostname
+nixos-install --root /mnt --flake ~/.config/nixcfg#hostname
 ```

@@ -2,9 +2,83 @@
 
 let
   tput = "${pkgs.ncurses}/bin/tput";
+  git = "${pkgs.git}/bin/git";
 in
 {
-  environment.shellAliases =
+  environment.shellAliases = {
+    nr = "${pkgs.nix}/bin/nix run";
+    np = "${pkgs.nix}/bin/nix profile";
+    nb = "${pkgs.nix}/bin/nix build";
+    ns = "${pkgs.nix}/bin/nix shell";
+    ne = "${pkgs.nix}/bin/nix eval";
+
+    svn = "${pkgs.subversion}/bin/svn --config-dir $XDG_CONFIG_HOME/subversion";
+    adb = "HOME=$XDG_DATA_HOME/android ${pkgs.android-tools}/bin/adb";
+    wget = "${pkgs.wget}/bin/wget --hsts-file=$XDG_DATA_HOME/wget-hsts";
+
+    l = "${config.services.locate.package}/bin/locate -d ~/.cache/locate.db";
+    lu = "${config.services.locate.package}/bin/updatedb --output=/home/${config.me.user}/.cache/locate.db";
+
+    t = "history -D | ${pkgs.coreutils}/bin/tail -n 1 | ${pkgs.gawk}/bin/awk '{ print $2 }'";
+    v = "$EDITOR";
+    please = "sudo $(fc -ln -1)";
+
+    s = "${pkgs.systemd}/bin/systemctl";
+    j = "${pkgs.systemd}/bin/journalctl";
+
+    e = "${pkgs.atool}/bin/aunpack";
+    c = "${pkgs.atool}/bin/apack";
+
+    mkdir = "mkdir -vp";
+    rm = "rm -v";
+    cp = "cp -v";
+    mv = "mv -v";
+
+    free = "${pkgs.procps}/bin/free -h";
+    df = "${pkgs.coreutils}/bin/df -h";
+    du = "${pkgs.coreutils}/bin/du -h";
+    btdu = "sudo mkdir /mnt/crypted; sudo mount -o subvol=/ /dev/mapper/crypted /mnt/crypted && sudo ${pkgs.btdu}/bin/btdu /mnt/crypted && sudo umount -l /mnt/crypted";
+
+    grep = "${pkgs.gnugrep}/bin/grep --color=always";
+    ls = "ls --color --group-directories-first";
+    ll = "${pkgs.coreutils}/bin/ls -lha --color --group-directories-first";
+    lsblk = "${pkgs.util-linux}/bin/lsblk -o NAME,FSTYPE,SIZE,MOUNTPOINTS";
+    tree = "${pkgs.tree}/bin/tree -L 4";
+    diff = "${pkgs.diffutils}/bin/diff --color";
+    pk = "${pkgs.procps}/bin/pkill";
+    bc = "${pkgs.bc}/bin/bc -l";
+
+    so = "${pkgs.ncurses}/bin/clear; exec $SHELL";
+
+    mount-web = "${pkgs.sshfs}/bin/sshfs -o gid=1000,uid=1000,noauto,_netdev,reconnect,auto_cache,ServerAliveInterval=5,ServerAliveCountMax=3 web:/www-dev/ ~/uni/web";
+    unmount-web = "${pkgs.fuse}/bin/fusermount -uz ~/uni/web";
+
+    # make sudo work with aliases
+    sudo = "sudo ";
+
+    open = "${pkgs.xdg-utils}/bin/xdg-open";
+
+    gd = "${git} diff";
+    gds = "${git} diff --staged";
+    gs = "${git} status --short";
+    gss = "${git} status";
+    ga = "${git} add";
+    gc = "${git} commit";
+    gca = "${git} commit --amend";
+    gk = "${git} checkout";
+    gh = "${git} stash";
+
+    clip = "${pkgs.xclip}/bin/xclip -sel clip";
+
+    py = "python";
+
+    temp = "cd $(mktemp -d)";
+    ".." = "cd ..";
+    "..." = "cd ../..";
+    "...." = "cd ../../..";
+  };
+
+  environment.shellInit =
     let
       cdDotfiles =
         string:
@@ -14,63 +88,35 @@ in
           ${string}
           popd >/dev/null
         '';
-      git = "${pkgs.git}/bin/git";
     in
-    {
-      nr = "${pkgs.nix}/bin/nix run";
-      np = "${pkgs.nix}/bin/nix profile";
-      nb = "${pkgs.nix}/bin/nix build";
-      ns = "${pkgs.nix}/bin/nix shell";
-      ne = "${pkgs.nix}/bin/nix eval";
+    # bash
+    ''
+      blue=$(${tput} setaf 4)
+      reset=$(${tput} sgr0)
+      green=$(${tput} setaf 2)
+      hide=$(${tput} civis)
+      show=$(${tput} cnorm)
+      dots="''${green}::''${reset}"
 
-      svn = "${pkgs.subversion}/bin/svn --config-dir $XDG_CONFIG_HOME/subversion";
-      adb = "HOME=$XDG_DATA_HOME/android ${pkgs.android-tools}/bin/adb";
-      wget = "${pkgs.wget}/bin/wget --hsts-file=$XDG_DATA_HOME/wget-hsts";
+      export SUDO_PROMPT="''${dots} password for %p: "
 
-      l = "${config.services.locate.package}/bin/locate -d ~/.cache/locate.db";
-      lu = "${config.services.locate.package}/bin/updatedb --output=/home/${config.me.user}/.cache/locate.db";
+      dotr() {
+        ${cdDotfiles
+          # bash
+          ''
+            echo -n "''${dots} Discard changes? [y/N]''${hide}"
+            read -s -r -n 1 answer
 
-      t = "history -D | ${pkgs.coreutils}/bin/tail -n 1 | ${pkgs.gawk}/bin/awk '{ print $2 }'";
-      v = "$EDITOR";
-      please = "sudo $(fc -ln -1)";
+            [[ $answer == "y" ]] && {
+              ${git} restore .
+            }
+            echo "$show"
+          ''
+        }
+      }
 
-      s = "${pkgs.systemd}/bin/systemctl";
-      j = "${pkgs.systemd}/bin/journalctl";
-
-      e = "${pkgs.atool}/bin/aunpack";
-      c = "${pkgs.atool}/bin/apack";
-
-      mkdir = "mkdir -vp";
-      rm = "rm -v";
-      cp = "cp -v";
-      mv = "mv -v";
-
-      free = "${pkgs.procps}/bin/free -h";
-      df = "${pkgs.coreutils}/bin/df -h";
-      du = "${pkgs.coreutils}/bin/du -h";
-      btdu = "sudo mkdir /mnt/crypted; sudo mount -o subvol=/ /dev/mapper/crypted /mnt/crypted && sudo ${pkgs.btdu}/bin/btdu /mnt/crypted && sudo umount -l /mnt/crypted";
-
-      grep = "${pkgs.gnugrep}/bin/grep --color=always";
-      ls = "ls --color --group-directories-first";
-      ll = "${pkgs.coreutils}/bin/ls -lha --color --group-directories-first";
-      lsblk = "${pkgs.util-linux}/bin/lsblk -o NAME,FSTYPE,SIZE,MOUNTPOINTS";
-      tree = "${pkgs.tree}/bin/tree -L 4";
-      diff = "${pkgs.diffutils}/bin/diff --color";
-      pk = "${pkgs.procps}/bin/pkill";
-      bc = "${pkgs.bc}/bin/bc -l";
-
-      so = "${pkgs.ncurses}/bin/clear; exec $SHELL";
-
-      mount-web = "${pkgs.sshfs}/bin/sshfs -o gid=1000,uid=1000,noauto,_netdev,reconnect,auto_cache,ServerAliveInterval=5,ServerAliveCountMax=3 web:/www-dev/ ~/uni/web";
-      unmount-web = "${pkgs.fuse}/bin/fusermount -uz ~/uni/web";
-
-      # make sudo work with aliases
-      sudo = "sudo ";
-
-      open = "${pkgs.xdg-utils}/bin/xdg-open";
-
-      dota =
-        cdDotfiles
+      dota() {
+        ${cdDotfiles
           # bash
           ''
             ${git} add .;
@@ -91,107 +137,71 @@ in
             show=$(${tput} cnorm)
             dots="''${green}::''${reset}"
 
-            echo -n "''${dots}Push changes? [y/N]''${hide}"
+            echo -n "''${dots} Push changes? [y/N]''${hide}"
             read -s -r -n 1 answer
 
             [[ $answer == "y" ]] && {
               ${git} push
             }
             echo "$show"
-          '';
-      dotu = cdDotfiles "${git} pull --rebase --autostash";
-      dotf =
-        cdDotfiles
+          ''
+        }
+      }
+
+      dotu() {
+        ${cdDotfiles "${git} pull --rebase --autostash"}
+      }
+
+      dotf() {
+        ${cdDotfiles
           # bash
           ''
+            ${git} add -N .
             {
               ${git} diff --color=always
-              ${git} ls-files --others --exclude-standard \
-              | xargs -I{} ${git} diff --color=always --no-index /dev/null {}
+              ${git} diff --cached --color=always
             } | less -R
-          '';
-      dotr =
-        cdDotfiles
-          # bash
           ''
-            green=$(${tput} setaf 2)
-            reset=$(${tput} sgr0)
-            hide=$(${tput} civis)
-            show=$(${tput} cnorm)
-            dots="''${green}::''${reset}"
-
-            echo -n "''${dots} Discard changes? [y/N]''${hide}"
-            read -s -r -n 1 answer
-
-            [[ $answer == "y" ]] && {
-              ${git} restore .
-            }
-            echo "$show"
-          '';
-
-      gd = "${git} diff";
-      gds = "${git} diff --staged";
-      gs = "${git} status --short";
-      gss = "${git} status";
-      ga = "${git} add";
-      gc = "${git} commit";
-      gca = "${git} commit --amend";
-      gk = "${git} checkout";
-      gh = "${git} stash";
-
-      clip = "${pkgs.xclip}/bin/xclip -sel clip";
-
-      py = "python";
-
-      temp = "cd $(mktemp -d)";
-      ".." = "cd ..";
-      "..." = "cd ../..";
-      "...." = "cd ../../..";
-    };
-
-  environment.shellInit = # bash
-    ''
-      blue=$(${tput} setaf 4)
-      reset=$(${tput} sgr0)
-      export SUDO_PROMPT="''${blue}[sudo] password for %p:''${reset} "
+        }
+        }
 
       vpn () {
-          if [ $# -eq 0 ]; then
-              echo "Usage: vpn <start|stop|restart|show|list> [interface(s)]"
+        if [ $# -eq 0 ]; then
+          echo "Usage: vpn <start|stop|restart|show|list> [interface(s)]"
+          return 1
+        fi
+
+        action="$1"
+        shift
+
+        case "$action" in
+          start|stop|restart)
+            if [ $# -eq 0 ]; then
+              echo "No interfaces specified. Please provide at least one interface."
               return 1
-          fi
-
-          action="$1"
-          shift
-
-          case "$action" in
-              start|stop|restart)
-                  if [ $# -eq 0 ]; then
-                      echo "No interfaces specified. Please provide at least one interface."
-                      return 1
-                  fi
-                  for interface in "$@"; do
-                      sudo systemctl "$action" wg-quick-$interface.service
-                  done
-                  ;;
-              show)
-                  if [ $# -eq 0 ]; then
-                      sudo wg show
-                  else
-                      for interface in "$@"; do
-                          sudo wg show $interface
-                      done
-                  fi
-                  ;;
-              list)
-                  echo -n "Available WireGuard interfaces: "
-                  systemctl list-unit-files 'wg-quick-*.service' | grep -v "static\|alias" | grep "wg-quick-" | awk '{print $1}' | sed 's/wg-quick-\(.*\).service/\1/' | tr '\n' ' ' | sed 's/ $/\n/'
-                  ;;
-              *)
-                  echo "Invalid action. Use 'start', 'stop', 'restart', 'list' or 'show'."
-                  return 1
-                  ;;
-          esac
+            fi
+            for interface in "$@"; do
+              sudo systemctl "$action" wg-quick-$interface.service
+            done
+            ;;
+          show)
+            if [ $# -eq 0 ]; then
+              sudo wg show
+            else
+              for interface in "$@"; do
+                sudo wg show $interface
+              done
+            fi
+            ;;
+          list)
+            echo -n "Available WireGuard interfaces: "
+            systemctl list-unit-files 'wg-quick-*.service' | grep -v "static\|alias" | grep "wg-quick-" | awk '{print $1}' | sed 's/wg-quick-\(.*\).service/\1/' | tr '\n' ' ' | sed 's/ $/\n/'
+            ;;
+          *)
+            echo "Invalid action. Use 'start', 'stop', 'restart', 'list' or 'show'."
+            return 1
+            ;;
+        esac
       }
 
       r() {

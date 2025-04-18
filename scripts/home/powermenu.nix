@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ config, pkgs, ... }:
 
 pkgs.writeShellApplication {
   name = "powermenu";
@@ -20,7 +20,7 @@ pkgs.writeShellApplication {
 
     case $chosen in
       "lock") lock ;;
-      "logout") i3-msg exit ;;
+      "logout") loginctl terminate-user ${toString config.me.uid} ;;
       "suspend") systemctl suspend && lock ;;
       "hibernate") pkill 1password; systemctl hibernate ;;
       "shutdown") systemctl poweroff ;;

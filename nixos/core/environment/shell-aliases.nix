@@ -105,12 +105,12 @@ in
           # bash
           ''
             echo -n "''${dots} Discard changes? [y/N]''${hide}"
-            read -s -r -n 1 answer
+            read -s -r -k 1 answer
+            echo "$show"
 
             [[ $answer == "y" ]] && {
               ${git} restore .
             }
-            echo "$show"
           ''
         }
       }
@@ -132,7 +132,7 @@ in
             ${git} pull --rebase;
 
             echo -n "''${dots} Push changes? [y/N]''${hide}"
-            read -s -r -n 1 answer
+            read -s -r -k 1 answer
             echo "$show"
 
             [[ $answer == "y" ]] && {

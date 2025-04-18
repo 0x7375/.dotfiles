@@ -276,9 +276,9 @@ in
             %{{
                 mode=$(head -1 ~/.local/share/lf/files)
                 list=$(${pkgs.gnused}/bin/sed 1d ~/.local/share/lf/files)
-                if [ $mode = 'copy' ]; then
+                if [[ $mode == "copy" ]]; then
                     cp -r $list .
-                elif [ $mode = 'move' ]; then
+                elif [[ $mode == "move" ]]; then
                     mv $list .
                 fi
                 lf -remote 'send load'

@@ -34,11 +34,11 @@ pkgs.writeShellApplication {
       case $1 in
       up)
           current=$(("$current" + 10))
-          [ $current -gt 100 ] && current=100
+          [[ $current -gt 100 ]] && current=100
           ;;
       down)
           current=$(("$current" - 10))
-          [ $current -lt 0 ] && current=0
+          [[ $current -lt 0 ]] && current=0
           ;;
       esac
       set_brightness "$device" "$current" &

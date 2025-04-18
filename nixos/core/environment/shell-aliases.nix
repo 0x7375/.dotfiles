@@ -163,7 +163,7 @@ in
         }
 
       vpn () {
-        if [ $# -eq 0 ]; then
+        if [[ $# -eq 0 ]]; then
           echo "Usage: vpn <start|stop|restart|show|list> [interface(s)]"
           return 1
         fi
@@ -173,7 +173,7 @@ in
 
         case "$action" in
           start|stop|restart)
-            if [ $# -eq 0 ]; then
+            if [[ $# -eq 0 ]]; then
               echo "No interfaces specified. Please provide at least one interface."
               return 1
             fi
@@ -182,7 +182,7 @@ in
             done
             ;;
           show)
-            if [ $# -eq 0 ]; then
+            if [[ $# -eq 0 ]]; then
               sudo wg show
             else
               for interface in "$@"; do

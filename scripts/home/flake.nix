@@ -10,7 +10,7 @@ pkgs.writeShellApplication {
     repo="templates"
     repo_url="https://codeberg.org/''${owner}/''${repo}"
 
-    if [ $# -eq 0 ]; then
+    if [[ $# -eq 0 ]]; then
       echo "Usage: flake <flake-subdirectory>"
       echo "Available templates:"
       api_url="https://codeberg.org/api/v1/repos/''${owner}/''${repo}/contents"
@@ -30,12 +30,12 @@ pkgs.writeShellApplication {
 
     flake_url="''${repo_url}/raw/branch/main/$1/flake.nix"
 
-    [ ! -f .envrc ] && {
+    [[ ! -f .envrc ]] && {
       echo "use_flake" > .envrc
       echo ".envrc created with 'use_flake'"
     }
 
-    if [ -f flake.nix ]; then
+    if [[ -f flake.nix ]]; then
       echo "flake.nix already exists"
       exit 1
     fi

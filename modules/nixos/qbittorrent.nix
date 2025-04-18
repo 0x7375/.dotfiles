@@ -33,7 +33,7 @@ let
 
     mkdir -p ${cfg.configDir}
 
-    if [ ! -f ${cfg.configDir}/qBittorrent.conf ]; then
+    if [[ ! -f ${cfg.configDir}/qBittorrent.conf ]]; then
     cat >${cfg.configDir}/qBittorrent.conf <<EOL
     [LegalNotice]
     Accepted=true

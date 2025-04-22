@@ -35,7 +35,7 @@ lib.mkIf config.me.secrets.enable {
     environment = {
       TZ = config.time.timeZone;
 
-      "QUEUECLEANER__IMPORT_FAILED_MAX_STRIKES" = "5";
+      "QUEUECLEANER__IMPORT_FAILED_MAX_STRIKES" = "0";
       "QUEUECLEANER__IMPORT_FAILED_IGNORE_PATTERNS__0" = "title mismatch";
       "QUEUECLEANER__IMPORT_FAILED_IGNORE_PATTERNS__1" = "manual import required";
 

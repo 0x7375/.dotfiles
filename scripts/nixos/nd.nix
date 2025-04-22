@@ -140,7 +140,7 @@ pkgs.writeShellApplication {
       cleanup() {
         local -r err_code=$?
 
-        [[ -d .git && $err_code -ne 0 ]] && silent git reset && silent git apply --cached "$staged_diff_file"
+        [[ -d .git && $err_code -ne 0 && $remote_build -ne 1 ]] && silent git reset && silent git apply --cached "$staged_diff_file"
         echo -n "$show_cursor"
         silent popd
 

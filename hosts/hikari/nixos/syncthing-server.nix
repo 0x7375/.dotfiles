@@ -26,16 +26,22 @@ lib.mkIf config.me.secrets.enable {
     settings =
       let
         inherit (myLib) syncthingDirConfig;
-        mkRo = name: config: {
-          "${name}" = syncthingDirConfig config;
-          "${name}-ro" = syncthingDirConfig (
-            config
-            // {
-              type = "sendonly";
-              devices = [ "tsuno" ];
-            }
-          );
-        };
+        mkRo =
+          {
+            name,
+            config,
+            ro-devices ? [ "tsuno" ],
+          }:
+          {
+            "${name}" = syncthingDirConfig config;
+            "${name}-ro" = syncthingDirConfig (
+              config
+              // {
+                type = "sendonly";
+                devices = ro-devices;
+              }
+            );
+          };
       in
       {
         devices = {
@@ -56,13 +62,6 @@ lib.mkIf config.me.secrets.enable {
           {
             ds = syncthingDirConfig {
               path = "games/ds";
-              devices = [
-                "yugen"
-                "ryusei"
-              ];
-            };
-            uni = syncthingDirConfig {
-              path = "uni";
               devices = [
                 "yugen"
                 "ryusei"
@@ -90,33 +89,60 @@ lib.mkIf config.me.secrets.enable {
               ];
             };
           }
-          // (mkRo "pictures" {
-            path = "pictures";
-            devices = [
-              "yugen"
-              "ryusei"
-            ];
+          // (mkRo {
+            name = "pictures";
+            config = {
+              path = "pictures";
+              devices = [
+                "yugen"
+                "ryusei"
+              ];
+            };
           })
-          // (mkRo "documents" {
-            path = "documents";
-            devices = [
-              "yugen"
-              "ryusei"
-            ];
+          // (mkRo {
+            name = "documents";
+            config = {
+              path = "documents";
+              devices = [
+                "yugen"
+                "ryusei"
+              ];
+            };
           })
-          // (mkRo "notes" {
-            path = "notes";
-            devices = [
-              "yugen"
-              "ryusei"
-              "neiro"
-            ];
+          // (mkRo {
+            name = "notes";
+            config = {
+              path = "notes";
+              devices = [
+                "yugen"
+                "ryusei"
+                "neiro"
+              ];
+            };
           })
-          // (mkRo "photos" {
-            path = "photos";
-            devices = [
-              "yugen"
-              "ryusei"
+          // (mkRo {
+            name = "photos";
+            config = {
+              path = "photos";
+              devices = [
+                "yugen"
+                "ryusei"
+                "neiro"
+              ];
+            };
+          })
+
+          // (mkRo {
+            name = "uni";
+            config = {
+              path = "uni";
+              devices = [
+                "yugen"
+                "ryusei"
+              ];
+            };
+            ro-devices = [
+              "tsuno"
               "neiro"
             ];
           });

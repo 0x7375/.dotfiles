@@ -1,4 +1,4 @@
-{ lib, ... }:
+{ pkgs, lib, ... }:
 
 {
   programs.direnv = {
@@ -28,4 +28,8 @@
 
   xdg.configFile."zsh/.zshrc".text =
     lib.mkAfter "command -v direnv &> /dev/null && eval \"$(direnv hook zsh)\"";
+
+  home.packages = [
+    pkgs.devenv
+  ];
 }

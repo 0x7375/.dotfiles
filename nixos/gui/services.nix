@@ -64,6 +64,5 @@ lib.mkIf config.me.gui.enable {
     gnome = {
       sushi.enable = true;
     };
-    udisks2.enable = true;
   };
 }

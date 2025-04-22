@@ -79,19 +79,19 @@ lib.mkIf config.me.secrets.enable {
           passwordFile = config.sops.secrets."hikari/restic_pw".path;
           rcloneConfigFile = config.sops.secrets.rclone_config.path;
           repository = remotes.${remote}.path + name;
-          backupPrepareCommand =
-            # bash
-            ''
-              systemctl is-active --quiet wg-quick
-              echo $? > /tmp/restore-proton-vpn
-              ${pkgs.systemd}/bin/systemctl stop wg-quick-proton
-            '';
-          backupCleanupCommand =
-            # bash
-            ''
-              [[ $(< /tmp/restore-proton-vpn) -eq 0 ]] && ${pkgs.systemd}/bin/systemctl start wg-quick-proton
-              rm -f /tmp/restore-proton-vpn
-            '';
+          # backupPrepareCommand =
+          #   # bash
+          #   ''
+          #     systemctl is-active --quiet wg-quick
+          #     echo $? > /tmp/restore-proton-vpn
+          #     ${pkgs.systemd}/bin/systemctl stop wg-quick-proton
+          #   '';
+          # backupCleanupCommand =
+          #   # bash
+          #   ''
+          #     [[ $(< /tmp/restore-proton-vpn) -eq 0 ]] && ${pkgs.systemd}/bin/systemctl start wg-quick-proton
+          #     rm -f /tmp/restore-proton-vpn
+          #   '';
           inherit paths;
           inherit exclude;
           pruneOpts = [

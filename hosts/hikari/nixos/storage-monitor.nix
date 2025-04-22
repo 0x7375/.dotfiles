@@ -17,15 +17,16 @@
       threshold_critical=95
       message=""
       lock_dir="/tmp/storage-monitor-locks"
+      mkdir -p "$lock_dir"
 
       root_usage=$(df -h / | grep -v Filesystem | awk '{print $5}' | tr -d '%')
       lockfile="$lock_dir/root_$threshold_warning"
 
       if [[ $root_usage -ge $threshold_critical ]]; then
-        message="ROOT filesystem at $root_usage% (CRITICAL)\\n"
+        message="Root filesystem at $root_usage% (CRITICAL)"
         lockfile="$lock_dir/root_$threshold_critical"
       elif [[ $root_usage -ge $threshold_warning ]]; then
-        message="ROOT filesystem at $root_usage% (WARNING)\\n"
+        message="Root filesystem at $root_usage% (WARNING)"
       else
         rm -f "$lock_dir/root_$threshold_warning" "$lock_dir/root_$threshold_critical"
       fi

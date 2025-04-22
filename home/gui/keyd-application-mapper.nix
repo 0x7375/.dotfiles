@@ -42,6 +42,8 @@ lib.mkIf (config.me.gui.enable && config.me.keyd.enable) {
             control.k = C-S-tab
             control.w = C-backspace
             control.d = C-w
+            meta.f = C-right
+            meta.b = C-left
           '';
 
         defaultWithEnter = default + "\ncontrol.m = enter";

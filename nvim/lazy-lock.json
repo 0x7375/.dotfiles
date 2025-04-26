@@ -4,6 +4,7 @@
   "LuaSnip": { "branch": "master", "commit": "c9b9a22904c97d0eb69ccb9bab76037838326817" },
   "ReplaceWithRegister": { "branch": "master", "commit": "832efc23111d19591d495dc72286de2fb0b09345" },
   "alpha-nvim": { "branch": "main", "commit": "de72250e054e5e691b9736ee30db72c65d560771" },
+  "auto-cmdheight.nvim": { "branch": "main", "commit": "bb1d938773cadcc7b5e11d7cc24f2cfef253f7db" },
   "auto-session": { "branch": "main", "commit": "095b0b54d40c8cc7fe37f2ae4d948ec3069bb1c2" },
   "chezmoi.vim": { "branch": "main", "commit": "abf37336437867cbd99ce2f8849b717415391cc3" },
   "cloak.nvim": { "branch": "main", "commit": "648aca6d33ec011dc3166e7af3b38820d01a71e4" },

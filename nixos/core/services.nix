@@ -27,7 +27,7 @@
         ];
       };
       extraConfig = ''
-        Match Address ${config.me.allowedIPsRootLogin}
+        Match Address ${myLib.network.lan.subnet}
           AuthenticationMethods publickey
 
         Match All

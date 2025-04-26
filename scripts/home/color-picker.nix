@@ -32,7 +32,7 @@ pkgs.writeShellApplication {
 
     if [[ $XDG_SESSION_TYPE == "x11" ]]; then
       color=$(xcolor | tr -d '\n')
-      [[ -n $color ]] || {
+      [[ -n $color ]] && {
         echo -n "$color" | xsel -ib
         convert -size "$size" xc:"$color" /tmp/color.png
         notify-send --icon "/tmp/color.png" "Copied $color to clipboard"

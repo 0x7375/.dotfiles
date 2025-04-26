@@ -42,7 +42,7 @@ return {
             "json", "jsonc", "yaml", "xml", "ini", "toml",
 
             "html", "css", "javascript", "tsx", "typescript", "php", "graphql",
-            "latex",
+            "latex", "typst",
         },
         auto_install = false,
         highlight = {

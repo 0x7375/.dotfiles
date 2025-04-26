@@ -93,6 +93,7 @@ lib.mkIf config.me.gui.enable {
       gcc
 
       texliveFull
+      typst
       python3
       taplo
       jq

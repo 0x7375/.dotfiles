@@ -1,4 +1,5 @@
 {
+  pkgs,
   lib,
   myLib,
   config,
@@ -6,6 +7,89 @@
   ...
 }:
 
+let
+  uiState =
+    inZen:
+    # json
+    ''
+      {
+        "placements": {
+          "widget-overflow-fixed-list": [],
+          "unified-extensions-area": [
+            "dearrow_ajay_app-browser-action",
+            "sponsorblocker_ajay_app-browser-action",
+            "ublock0_raymondhill_net-browser-action",
+            "moz-addon-prod_7tv_app-browser-action",
+            "_d7742d87-e61d-4b78-b8a1-b469842139fa_-browser-action",
+            "myallychou_gmail_com-browser-action",
+            "_7a7a4a92-a2a0-41d1-9fd7-1e92480d612d_-browser-action",
+            "addon_darkreader_org-browser-action",
+            "_e58d3966-3d76-4cd9-8552-1582fbc800c1_-browser-action",
+            "_aecec67f-0d10-4fa7-b7c7-609a2db280cf_-browser-action",
+            "_d634138d-c276-4fc8-924b-40a0ea21d284_-browser-action"
+          ],
+          "nav-bar": [
+            "customizableui-special-spring1",
+            "urlbar-container",
+            "customizableui-special-spring2",
+            "save-to-pocket-button",
+            "downloads-button",
+            "unified-extensions-button",
+            ${
+              if inZen then
+                ''
+                  "back-button",
+                  "forward-button"
+                ''
+              else
+                ''
+                  "forward-button",
+                  "back-button"
+                ''
+            }
+          ],
+          "toolbar-menubar": [
+            "menubar-items"
+          ],
+          "TabsToolbar": [
+            "firefox-view-button",
+            "tabbrowser-tabs",
+            "new-tab-button",
+            "alltabs-button"
+          ],
+          "vertical-tabs": [],
+          "PersonalToolbar": [
+            "import-button",
+            "personal-bookmarks"
+          ]
+        },
+        "seen": [
+          "developer-button",
+          "_d7742d87-e61d-4b78-b8a1-b469842139fa_-browser-action",
+          "moz-addon-prod_7tv_app-browser-action",
+          "myallychou_gmail_com-browser-action",
+          "ublock0_raymondhill_net-browser-action",
+          "_7a7a4a92-a2a0-41d1-9fd7-1e92480d612d_-browser-action",
+          "sponsorblocker_ajay_app-browser-action",
+          "dearrow_ajay_app-browser-action",
+          "addon_darkreader_org-browser-action",
+          "_e58d3966-3d76-4cd9-8552-1582fbc800c1_-browser-action",
+          "_aecec67f-0d10-4fa7-b7c7-609a2db280cf_-browser-action",
+          "_d634138d-c276-4fc8-924b-40a0ea21d284_-browser-action"
+        ],
+        "dirtyAreaCache": [
+          "nav-bar",
+          "vertical-tabs",
+          "unified-extensions-area",
+          "PersonalToolbar",
+          "toolbar-menubar",
+          "TabsToolbar"
+        ],
+        "currentVersion": 20,
+        "newElementCount": 5
+      }
+    '';
+in
 {
   imports = [
     inputs.zen-browser.homeModules.beta
@@ -39,7 +123,20 @@
         profiles.alt = cfg.profiles.alt;
         profiles.default = {
           isDefault = cfg.profiles.default.isDefault;
-          settings = cfg.profiles.default.settings;
+          userChrome =
+            # css
+            ''
+              /* change selected urlbar result font color */
+              .urlbarView-row[selected] .urlbarView-row-inner {
+                color: ${myLib.palette.fg0} !important;
+              }
+
+              * { animation: none !important; transition: none !important; }
+            '';
+          settings = cfg.profiles.default.settings // {
+            "zen.view.experimental-no-window-controls" = true;
+            "browser.uiCustomization.state" = uiState true;
+          };
           search = {
             force = cfg.profiles.default.search.force;
             default = cfg.profiles.default.search.default;
@@ -51,6 +148,7 @@
 
     programs.librewolf = {
       enable = true;
+      package = pkgs.auto.librewolf;
       profiles.alt = {
         isDefault = false;
         id = 1;
@@ -95,75 +193,7 @@
             // smoothfox
             // {
               # ui state
-              "browser.uiCustomization.state" = # json
-                ''
-                  {
-                    "placements": {
-                      "widget-overflow-fixed-list": [],
-                      "unified-extensions-area": [
-                        "dearrow_ajay_app-browser-action",
-                        "sponsorblocker_ajay_app-browser-action",
-                        "ublock0_raymondhill_net-browser-action",
-                        "moz-addon-prod_7tv_app-browser-action",
-                        "_d7742d87-e61d-4b78-b8a1-b469842139fa_-browser-action",
-                        "myallychou_gmail_com-browser-action",
-                        "_7a7a4a92-a2a0-41d1-9fd7-1e92480d612d_-browser-action",
-                        "addon_darkreader_org-browser-action",
-                        "_e58d3966-3d76-4cd9-8552-1582fbc800c1_-browser-action",
-                        "_aecec67f-0d10-4fa7-b7c7-609a2db280cf_-browser-action",
-                        "_d634138d-c276-4fc8-924b-40a0ea21d284_-browser-action"
-                      ],
-                      "nav-bar": [
-                        "customizableui-special-spring1",
-                        "urlbar-container",
-                        "customizableui-special-spring2",
-                        "save-to-pocket-button",
-                        "downloads-button",
-                        "unified-extensions-button",
-                        "forward-button",
-                        "back-button"
-                      ],
-                      "toolbar-menubar": [
-                        "menubar-items"
-                      ],
-                      "TabsToolbar": [
-                        "firefox-view-button",
-                        "tabbrowser-tabs",
-                        "new-tab-button",
-                        "alltabs-button"
-                      ],
-                      "vertical-tabs": [],
-                      "PersonalToolbar": [
-                        "import-button",
-                        "personal-bookmarks"
-                      ]
-                    },
-                    "seen": [
-                      "developer-button",
-                      "_d7742d87-e61d-4b78-b8a1-b469842139fa_-browser-action",
-                      "moz-addon-prod_7tv_app-browser-action",
-                      "myallychou_gmail_com-browser-action",
-                      "ublock0_raymondhill_net-browser-action",
-                      "_7a7a4a92-a2a0-41d1-9fd7-1e92480d612d_-browser-action",
-                      "sponsorblocker_ajay_app-browser-action",
-                      "dearrow_ajay_app-browser-action",
-                      "addon_darkreader_org-browser-action",
-                      "_e58d3966-3d76-4cd9-8552-1582fbc800c1_-browser-action",
-                      "_aecec67f-0d10-4fa7-b7c7-609a2db280cf_-browser-action",
-                      "_d634138d-c276-4fc8-924b-40a0ea21d284_-browser-action"
-                    ],
-                    "dirtyAreaCache": [
-                      "nav-bar",
-                      "vertical-tabs",
-                      "unified-extensions-area",
-                      "PersonalToolbar",
-                      "toolbar-menubar",
-                      "TabsToolbar"
-                    ],
-                    "currentVersion": 20,
-                    "newElementCount": 5
-                  }
-                '';
+              "browser.uiCustomization.state" = uiState false;
 
               # disable fingerprinting protection
               "privacy.resistFingerprinting" = false;
@@ -272,7 +302,7 @@
               # disable autoplay
               "media.autoplay.blocking_policy" = 2;
             };
-          userChrome = fromRoot "assets/browser/userChrome.css";
+          userChrome = builtins.readFile (fromRoot "assets/browser/userChrome.css");
           search = {
             force = true;
             default = "_Google";
@@ -492,7 +522,7 @@
                 "Conjugaison" = {
                   urls = [
                     {
-                      template = "https://conjugaison.bescherelle.com/verbe/{searchTerms}";
+                      template = "https://conjugaison.bescherelle.com/verbes/{searchTerms}";
                     }
                   ];
 

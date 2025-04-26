@@ -26,7 +26,7 @@
     PAGER = "less -R";
     SYSTEMD_LESS = "RM";
     MANPAGER = "nvim +Man!";
-    BROWSER = "librewolf";
+    BROWSER = config.me.browser;
     TERM = "alacritty";
     TERMINAL = "alacritty";
 

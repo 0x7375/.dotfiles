@@ -397,7 +397,7 @@ in
         ze = "extract";
         zc = "compress";
 
-        O = lib.optionalString gui "&${pkgs.xdragon}/bin/dragon $fx";
+        O = lib.optionalString gui "&${pkgs.xdragon}/bin/xdragon $fx";
         md = "mkdir";
         mf = "touch";
         me = "edit-new";

@@ -16,7 +16,7 @@ lib.mkIf config.me.gui.enable {
     extraConfig = ''
       set $tmux ${pkgs.alacritty}/bin/alacritty -e ${pkgs.tmux}/bin/tmux new-session
       set $term ${pkgs.alacritty}/bin/alacritty -e
-      set $browser librewolf
+      set $browser ${config.me.browser}
       set $alt Mod1
       set $win Mod4
 
@@ -65,8 +65,13 @@ lib.mkIf config.me.gui.enable {
             "${modifier}+n" =
               "exec --no-startup-id $term ${pkgs.zsh}/bin/zsh -c '${pkgs.networkmanager}/bin/nmcli device wifi rescan && unset COLORTERM && TERM=xterm-old ${pkgs.networkmanager}/bin/nmtui'";
             "${modifier}+b" = "exec --no-startup-id $term ${pkgs.bluetuith}/bin/bluetuith --no-warning";
-            "${modifier}+Shift+b" =
-              "exec --no-startup-id echo -e \"connect ${airpods}\\nquit\" | ${pkgs.bluez}/bin/bluetoothctl";
+            "${modifier}+Shift+b" = "exec --no-startup-id ${pkgs.writeShellScript "bluetooth-toogle" ''
+              if ${pkgs.bluez}/bin/bluetoothctl info ${airpods} | grep -q "Connected: yes"; then
+                echo -e "disconnect ${airpods}\nquit" | ${pkgs.bluez}/bin/bluetoothctl
+              else
+                echo -e "connect ${airpods}\nquit" | ${pkgs.bluez}/bin/bluetoothctl
+              fi
+            ''}";
             "${modifier}+Shift+n" = "exec --no-startup-id ${pkgs.networkmanager}/bin/nmcli device wifi rescan";
 
             "${modifier}+w" = "exec --no-startup-id $browser";

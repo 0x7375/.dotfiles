@@ -25,15 +25,13 @@ lib.mkIf (config.me.gui.enable && false) {
   };
 
   systemd.services."look-away-notify" = {
-    script = ''
-      ${pkgs.writeShellScriptBin "look-away-notify" ''
-        ADDRESS=/run/user/${toString config.me.uid}/bus
+    script = pkgs.writeShellScript "look-away-notify" ''
+      ADDRESS=/run/user/${toString config.me.uid}/bus
 
-        export DISPLAY=:0
-        export DBUS_SESSION_BUS_ADDRESS="unix:path=$ADDRESS"
+      export DISPLAY=:0
+      export DBUS_SESSION_BUS_ADDRESS="unix:path=$ADDRESS"
 
-        ${pkgs.libnotify}/bin/notify-send "Look away" "Look away for 20 seconds." -i "eye" -t 20000
-      ''}/bin/look-away-notify
+      ${pkgs.libnotify}/bin/notify-send "Look away" "Look away for 20 seconds." -i "eye" -t 20000
     '';
     serviceConfig = {
       Type = "oneshot";

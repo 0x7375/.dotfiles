@@ -21,6 +21,8 @@ let
         "https://chatgpt.com"
         "https://claude.ai"
         "https://deepseek.com"
+        "https://matrix.org"
+        "https://element.io"
       ];
     };
     ExtensionSettings =
@@ -108,15 +110,12 @@ let
     DontCheckDefaultBrowser = true;
     NoDefaultBookmarks = true;
     SearchSuggestEnabled = false;
+    DisableTelemetry = true;
   };
 in
 lib.mkIf config.me.gui.enable {
-  programs.librewolf.package = inputs.auto-update.legacyPackages.${system}.librewolf.override {
-    extraPolicies = policies;
+  programs.librewolf.policies = policies;
+  programs.zen-browser.policies = policies // {
+    DisableAppUpdate = false;
   };
-  home.packages = [
-    (inputs.zen-browser.packages.${system}.beta-unwrapped.override {
-      inherit policies;
-    })
-  ];
 }

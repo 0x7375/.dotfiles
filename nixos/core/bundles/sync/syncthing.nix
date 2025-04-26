@@ -25,6 +25,7 @@ in
       settings = {
         options = {
           urAccepted = -1;
+          relaysEnabled = false;
         };
         gui.user = "admin";
       };

@@ -64,6 +64,13 @@ lib.mkIf (config.me.gui.enable && config.me.keyd.enable) {
         ${defaultWithEnter}
         control.e = f6
 
+        [zen]
+        ${defaultWithEnter}
+        control.e = f6
+
+        # make fullscreen toggle compact mode aswell
+        alt.f = macro(M-c A-f)
+
         [io-ente-auth]
         ${defaultWithEnter}
         control.e = macro(tab tab tab enter)

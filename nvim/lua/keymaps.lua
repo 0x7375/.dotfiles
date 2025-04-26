@@ -2,9 +2,6 @@
 vim.keymap.set("x", "<", "<gv")
 vim.keymap.set("x", ">", ">gv")
 
-vim.keymap.set({ "x", "n" }, "L", "$")
-vim.keymap.set({ "x", "n" }, "H", "^")
-
 -- Remap U to redo
 vim.keymap.set("n", "<S-u>", "<C-r>")
 

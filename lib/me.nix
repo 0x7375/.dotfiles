@@ -19,6 +19,12 @@
       description = "User name";
     };
 
+    browser = lib.mkOption {
+      type = lib.types.str;
+      default = "zen-beta";
+      description = "Default browser";
+    };
+
     uid = lib.mkOption {
       type = lib.types.int;
       default = 1000;
@@ -29,12 +35,6 @@
       type = lib.types.str;
       default = "hostname";
       description = "System hostname";
-    };
-
-    allowedIPsRootLogin = lib.mkOption {
-      type = lib.types.str;
-      default = "${myLib.network.lan.addr.desktop}";
-      description = "IP address(es) allowed to login as root";
     };
 
     publicKey = lib.mkOption {

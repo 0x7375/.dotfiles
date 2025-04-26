@@ -83,21 +83,24 @@ pkgs.writeShellApplication {
         local -r action="$1"
         local -r result="$2"
         local -r profile="/nix/var/nix/profiles/system"
-        local -a commands=("$result/bin/switch-to-configuration $action")
+        local -a commands=()
 
-        [[ $action != "test" ]] && {
-          commands+=("nix build --no-link --profile $profile $result 2> /dev/null && echo \"$(tput setaf 2)::$(tput sgr0) Configuration was set to boot default\"")
+        [[ $action != "boot" ]] && {
+          commands+=("$result/bin/switch-to-configuration test")
         }
 
-        if [[ -n $remote_build ]]; then
-          for cmd in "''${commands[@]}"; do
+        [[ $action != "test" ]] && {
+          commands+=("nix build --no-link --profile $profile $result 2> /dev/null")
+          commands+=("$result/bin/switch-to-configuration boot")
+        }
+
+        for cmd in "''${commands[@]}"; do
+          if [[ -n $remote_build ]]; then
             ssh_run "$cmd"
-          done
-        else
-          for cmd in "''${commands[@]}"; do
+          else
             sudo bash -c "$cmd"
-          done
-        fi
+          fi
+        done
       }
 
       build_config() {
@@ -281,7 +284,7 @@ pkgs.writeShellApplication {
 
         if [[ $answer == "y" ]]; then
           echo "yes"
-          [[ $action != "boot" ]] && log "Switching configuration"
+          [[ $action != "boot" ]] && log "Switching to configuration"
           switch_configuration "$action" "$result"
         else
           echo "no"

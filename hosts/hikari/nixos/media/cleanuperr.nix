@@ -47,6 +47,11 @@ lib.mkIf config.me.secrets.enable {
       "DOWNLOADCLEANER__CATEGORIES__0__MAX_RATIO" = "2";
       "DOWNLOADCLEANER__CATEGORIES__1__NAME" = "radarr";
       "DOWNLOADCLEANER__CATEGORIES__1__MAX_RATIO" = "2";
+
+      "SONARR__ENABLED" = "true";
+      "SONARR__INSTANCES__0__URL" = "http://host.docker.internal:8989";
+      "RADARR__ENABLED" = "true";
+      "RADARR__INSTANCES__0__URL" = "http://host.docker.internal:7878";
     };
   };
 }

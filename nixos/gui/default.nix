@@ -10,6 +10,7 @@ lib.mkIf config.me.gui.enable {
     "1password/custom_allowed_browsers" = {
       text = ''
         librewolf
+        zen
       '';
       mode = "0755";
     };

@@ -35,15 +35,14 @@ lib.mkIf (config.me.gui.enable && config.me.keyd.enable) {
             control.h = backspace
             control.p = up
             control.n = down
-            # alt and meta need to be swapped because I swap alt and super key
-            f7 = M-right
-            f8 = M-left
+            f7 = A-right
+            f8 = A-left
             control.j = C-tab
             control.k = C-S-tab
             control.w = C-backspace
             control.d = C-w
-            meta.f = C-right
-            meta.b = C-left
+            alt.f = C-right
+            alt.b = C-left
           '';
 
         defaultWithEnter = default + "\ncontrol.m = enter";
@@ -69,7 +68,7 @@ lib.mkIf (config.me.gui.enable && config.me.keyd.enable) {
         control.e = f6
 
         # make fullscreen toggle compact mode aswell
-        alt.f = macro(M-c A-f)
+        meta.f = macro(A-c M-f)
 
         [io-ente-auth]
         ${defaultWithEnter}
@@ -77,7 +76,7 @@ lib.mkIf (config.me.gui.enable && config.me.keyd.enable) {
 
         [copyq]
         ${default}
-        control.m = macro(enter 20ms A-q)
+        control.m = macro(enter 20ms M-q)
 
         ${appConfigs}
       '';

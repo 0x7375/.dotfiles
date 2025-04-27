@@ -134,6 +134,11 @@ in
               * { animation: none !important; }
             '';
           settings = cfg.profiles.default.settings // {
+            "zen.theme.content-element-separation" = 1;
+            "zen.glance.activation-method" = "ctrl";
+            "zen.theme.color-prefs.use-workspace-colors" = false;
+            "zen.theme.accent-color" = myLib.palette.fg2;
+            "zen.welcome-screen.seen" = true;
             "zen.view.experimental-no-window-controls" = true;
             "browser.uiCustomization.state" = uiState true;
           };

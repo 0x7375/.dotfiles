@@ -61,10 +61,6 @@ lib.mkIf config.me.secrets.enable {
               time = "22:00:00";
               path = "rclone:google:";
             };
-            proton = {
-              time = "00:00:00";
-              path = "rclone:proton:";
-            };
           };
         in
         {
@@ -132,7 +128,6 @@ lib.mkIf config.me.secrets.enable {
               "local"
               "koofr"
               "google"
-              "proton"
             ]
         );
     in

@@ -70,6 +70,8 @@ lib.mkIf config.me.gui.enable {
       gnumake
       deno
 
+      go
+
       # nodePackages.eas-cli
 
       # haskell

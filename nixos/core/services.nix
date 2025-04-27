@@ -42,7 +42,7 @@
         layout = "pwerty";
         variant = "";
         model = "";
-        options = "compose:ralt,altwin:swap_lalt_lwin";
+        options = "compose:ralt";
         extraLayouts.pwerty = {
           description = "Modified qwerty for programming";
           languages = [ "eng" ];

@@ -117,9 +117,16 @@ lib.mkIf config.me.gui.enable {
             "${modifier}+k" = "focus up";
             "${modifier}+l" = "focus right";
 
+            # duplicate remaps for apps I remap using keyd-application-mapper
             "${modifier}+Ctrl+h" = "move left $window-move-amount";
+            "${modifier}+BackSpace" = "move left $window-move-amount";
+
             "${modifier}+Ctrl+j" = "move down $window-move-amount";
+            "${modifier}+Ctrl+Tab" = "move down $window-move-amount";
+
             "${modifier}+Ctrl+k" = "move up $window-move-amount";
+            "${modifier}+Ctrl+Shift+Tab" = "move up $window-move-amount";
+
             "${modifier}+Ctrl+l" = "move right $window-move-amount";
 
             "${modifier}+c" = "move position center";
@@ -150,10 +157,10 @@ lib.mkIf config.me.gui.enable {
             "${modifier}+Shift+parenright" = "move container to workspace $ws9";
             "${modifier}+Shift+percent" = "move container to workspace $ws10";
 
-            "${modifier}+Shift+h" = "resize shrink width 10 px or 10 ppt";
-            "${modifier}+Shift+j" = "resize grow height 10 px or 10 ppt";
-            "${modifier}+Shift+k" = "resize shrink height 10 px or 10 ppt";
-            "${modifier}+Shift+l" = "resize grow width 10 px or 10 ppt";
+            "${modifier}+Shift+h" = "resize shrink width 30 px or 30 ppt";
+            "${modifier}+Shift+j" = "resize grow height 30 px or 30 ppt";
+            "${modifier}+Shift+k" = "resize shrink height 30 px or 30 ppt";
+            "${modifier}+Shift+l" = "resize grow width 30 px or 30 ppt";
 
             "XF86MonBrightnessDown" =
               "exec --no-startup-id ${pkgs.scripts.change-brightness}/bin/change-brightness down";

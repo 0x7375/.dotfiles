@@ -131,7 +131,7 @@ in
                 color: ${myLib.palette.fg0} !important;
               }
 
-              * { animation: none !important; transition: none !important; }
+              * { animation: none !important; }
             '';
           settings = cfg.profiles.default.settings // {
             "zen.view.experimental-no-window-controls" = true;

@@ -27,13 +27,13 @@ lib.mkIf config.me.keyd.enable {
         ids = [ "*" ];
         settings = {
           main = {
-            # capslock = "overload(control, esc)";
-            capslock = "overloadt2(control, esc, 75)";
+            capslock = "overload(control, esc)";
             alt = "layer(meta)";
             meta = "layer(alt)";
           };
           global = {
-            overload_tap_timeout = 75;
+            # ignores tap behaviour if no key was pressed and time is over timeout
+            overload_tap_timeout = 250;
           };
         };
       };

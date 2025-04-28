@@ -3,64 +3,95 @@
 lib.mkIf config.me.gui.enable {
   xdg.mimeApps =
     let
-      editor = "nvim.desktop";
-      video = "io.github.celluloid_player.Celluloid.desktop";
-      image = "feh.desktop";
-      browser = "${config.me.browser}.desktop";
-      file-manager = "lf.desktop";
-      archive-manager = "file-roller.desktop";
+      mapEntries =
+        list: desktopEntry:
+        builtins.listToAttrs (
+          map (mimetype: {
+            name = mimetype;
+            value = desktopEntry + ".desktop";
+          }) list
+        );
     in
     {
       enable = true;
-      defaultApplications = {
-        "application/pdf" = "org.pwmt.zathura.desktop";
-        "application/x-ipynb+json" = "codium.desktop";
+      defaultApplications =
+        {
+          "application/pdf" = "org.pwmt.zathura.desktop";
+          "application/x-ipynb+json" = "codium.desktop";
+        }
+        // (mapEntries [
+          "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+          "application/vnd.openxmlformats-officedocument.presentationml.presentation"
+          "application/msword"
+          "application/vnd.ms-excel"
+          "application/vnd.ms-powerpoint"
+          "application/vnd.oasis.opendocument.text"
+          "application/vnd.oasis.opendocument.spreadsheet"
+          "application/vnd.oasis.opendocument.presentation"
+          "text/rtf"
+          "text/csv"
+        ] "zaread")
 
-        "image/apng" = image;
-        "image/vnd.microsoft.icon" = image;
-        "image/jpeg" = image;
-        "image/webp" = image;
+        // (mapEntries [
+          "image/apng"
+          "image/vnd.microsoft.icon"
+          "image/jpeg"
+          "image/webp"
+        ] "feh")
 
-        "video/mp4" = video;
-        "video/x-matroska" = video;
+        // (mapEntries [
+          "text/plain"
+          "text/markdown"
+          "text/x-java"
+          "text/x-haskell"
+          "text/x-chdr"
+          "text/x-csrc"
+          "text/x-makefile"
+          "text/x-python"
+          "text/x-log"
+          "text/x-readme"
+          "text/x-patch"
+          "text/css"
+          "application/x-php"
+          "application/x-desktop"
+          "application/json"
+          "application/xml"
+          "application/x-shellscript"
+        ] "nvim")
 
-        "inode/directory" = file-manager;
-        "application/x-directory" = file-manager;
+        // (mapEntries [
+          "inode/directory"
+          "application/x-directory"
+        ] "lf")
 
-        "text/plain" = editor;
-        "text/markdown" = editor;
-        "text/x-java" = editor;
-        "text/x-haskell" = editor;
-        "text/x-chdr" = editor;
-        "text/x-csrc" = editor;
-        "text/x-makefile" = editor;
-        "text/x-python" = editor;
-        "text/x-log" = editor;
-        "text/x-readme" = editor;
-        "text/x-patch" = editor;
-        "text/css" = editor;
-        "application/x-php" = editor;
-        "application/x-desktop" = editor;
-        "application/json" = editor;
-        "application/xml" = editor;
-        "application/x-shellscript" = editor;
+        // (mapEntries [
+          "x-scheme-handler/http"
+          "x-scheme-handler/https"
+          "x-scheme-handler/chrome"
+          "x-scheme-handler/mailto"
+        ] config.me.browser)
 
-        "x-scheme-handler/http" = browser;
-        "x-scheme-handler/https" = browser;
-        "x-scheme-handler/chrome" = browser;
-        "x-scheme-handler/mailto" = browser;
+        // (mapEntries [
+          "application/zip"
+          "application/x-rar-compressed"
+          "application/x-7z-compressed"
+          "application/x-tar"
+          "application/x-gzip"
+        ] "file-roller")
 
-        "application/zip" = archive-manager;
-        "application/x-rar-compressed" = archive-manager;
-        "application/x-7z-compressed" = archive-manager;
-        "application/x-tar" = archive-manager;
-        "application/x-gzip" = archive-manager;
-      };
-      associations.added = {
-        "x-scheme-handler/http" = browser;
-        "x-scheme-handler/https" = browser;
-        "x-scheme-handler/chrome" = browser;
-        "image/png" = "imv-dir.desktop";
-      };
+        // (mapEntries [
+          "video/mp4"
+          "video/x-matroska"
+        ] "io.github.celluloid_player.Celluloid");
+      associations.added =
+        {
+          "image/png" = "imv-dir.desktop";
+        }
+        // (mapEntries [
+          "x-scheme-handler/http"
+          "x-scheme-handler/https"
+          "x-scheme-handler/chrome"
+        ] config.me.browser);
     };
 }

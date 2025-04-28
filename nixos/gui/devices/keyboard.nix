@@ -6,8 +6,15 @@
 }:
 
 lib.mkIf config.me.gui.enable {
-  environment.systemPackages = [ pkgs.via ];
-  services.udev.packages = [ pkgs.via ];
+  environment.systemPackages = with pkgs; [
+    via
+    vial
+  ];
+
+  services.udev.packages = with pkgs; [
+    via
+    vial
+  ];
 
   hardware.keyboard.qmk.enable = true;
 }

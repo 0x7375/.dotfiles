@@ -302,7 +302,7 @@ in
               "privacy.resistFingerprinting.autoDeclineNoUserInputCanvasPrompts" = true;
 
               # disable webgl
-              "webgl.disabled" = true;
+              # "webgl.disabled" = true;
 
               # disable autoplay
               "media.autoplay.blocking_policy" = 2;

@@ -8,7 +8,8 @@
 lib.mkIf config.me.gui.enable {
   services = {
     dbus.enable = true;
-    gvfs.enable = true; # trash bin support
+    gvfs.enable = true;
+    devmon.enable = true;
 
     ddccontrol.enable = true; # external monitor brightness control
 

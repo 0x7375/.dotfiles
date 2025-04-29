@@ -218,7 +218,7 @@ in
       }
 
       d() {
-        ${pkgs.coreutils}/bin/nohup $1 > /dev/null &
+        ${pkgs.coreutils}/bin/nohup $1 > /dev/null 2>&1 &
       }
 
       tm() {

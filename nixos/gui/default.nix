@@ -16,11 +16,20 @@ lib.mkIf config.me.gui.enable {
     };
   };
 
-  # make dark theme work notably
-  xdg.portal = {
-    enable = true;
-    config.common.default = "*";
-    extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+  xdg = {
+    # make dark theme work notably
+    portal = {
+      enable = true;
+      config.common.default = "*";
+      extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+    };
+
+    terminal-exec = {
+      enable = true;
+      settings.default = [
+        "Alacritty.desktop"
+      ];
+    };
   };
 
   environment.systemPackages = [ pkgs.gparted ];

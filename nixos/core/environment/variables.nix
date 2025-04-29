@@ -28,7 +28,7 @@
     MANPAGER = "nvim +Man!";
     BROWSER = config.me.browser;
     TERM = "alacritty";
-    TERMINAL = "alacritty";
+    TERMINAL = "alacritty -e";
 
     GTK_CSD = "0";
     GHCUP_USE_XDG_DIRS = "true";

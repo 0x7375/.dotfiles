@@ -28,8 +28,7 @@ in
 
   home.packages =
     [
-      pkgs.atool
-      pkgs.zip
+      pkgs.ouch
     ]
     ++ lib.optionals gui [
       ctpv
@@ -56,18 +55,24 @@ in
       enable = true;
 
       extraConfig =
-        lib.optionalString gui ''
-          &${ctpv}/bin/ctpv -s $id
-          cmd on-quit %${ctpv}/bin/ctpv -e $id
-          set cleaner ${ctpv}/bin/ctpvclear
-        ''
-        + ''
-          setlocal ~/pictures/ info time
-          setlocal ~/pictures/ sortby time
-          setlocal ~/pictures/ reverse
+        lib.optionalString gui
+          # bash
+          ''
+            &${ctpv}/bin/ctpv -s $id
+            cmd on-quit %${ctpv}/bin/ctpv -e $id
+            set cleaner ${ctpv}/bin/ctpvclear
+          ''
+        +
+          # bash
+          ''
+            setlocal ~/pictures/ info time
+            setlocal ~/pictures/ sortby time
+            setlocal ~/pictures/ reverse
 
-          on-focus-gained
-        '';
+            on-focus-gained
+
+            &[ "$LF_LEVEL" -eq 1 ] || lf -remote "send $id echoerr \"Warning: You're in a nested lf instance!\""
+          '';
       previewer = lib.mkIf gui {
         keybinding = "<c-p>";
         source = "${ctpv}/bin/ctpv";
@@ -91,6 +96,17 @@ in
         tabstop = 4;
       };
       commands = {
+        on-cd = # bash
+          ''
+            &{{
+              if [ -d .git ] || [ -f .git ]; then
+                  branch="$(git branch --show-current 2>/dev/null)" || true
+                  fmt="\033[32;1m%u@%h\033[0m:\033[34;1m%w\033[0m\033[32;1m git:$branch\033[0m"
+              else
+                  fmt="\033[32;1m%u@%h\033[0m:\033[34;1m%d\033[0m\033[1m%f\033[0m"
+              fi
+              lf -remote "send $id set promptfmt \"$fmt\""
+            }}'';
         on-focus-gained = # bash
           ''
             :{{
@@ -119,35 +135,28 @@ in
         extract = # bash
           ''
             ''${{
-              ${pkgs.atool}/bin/aunpack $f
+              set -f
+              ${pkgs.ouch}/bin/ouch decompress $fx
               ${pkgs.trash-cli}/bin/trash $f
             }}
           '';
         compress = # bash
           ''
             %{{
-              printf "Archive name: "
-              read newa
-              if [[ -z $newa ]]; then
+              $default_name="$(basename $(echo "$fx" | awk '{print $1}')).zip"
+              
+              printf "Archive name ($default_name): "
+              read new_name
+              if [[ -z $new_name ]]; then
                 lf -remote "send $id reload"
                 return;
               fi
-              temp="/tmp/lf-$$"
 
-              echo $temp
-              mkdir $temp
-              cp -r $fx $temp
-
-              current_dir=$(pwd)
-              cd $temp
-              ${pkgs.atool}/bin/apack $newa *
-              mv $newa "$current_dir"
-              cd -
-              rm -rf $temp
+              ${pkgs.ouch}/bin/ouch compress $(realpath --relative-to="$(pwd)" $fx) $new_name 
 
               lf -remote "send $id unselect"
               lf -remote "send $id select \"$newa\""
-                    }}'';
+            }}'';
         quit-and-cd = # bash
           ''
             ''${{
@@ -167,7 +176,7 @@ in
         mount-archive = # bash
           ''
             ''${{
-              if ${pkgs.file}/bin/file --mime-type "$f" | grep -qE 'application/zip|application/x-tar|application/x-7z-compressed|application/gzip'; then
+              if ${pkgs.file}/bin/file --mime-type "$f" | grep -qE 'application/zip|application/x-tar|application/x-7z-compressed|application/octet-stream|application/gzip'; then
                 mntdir="''${f}.mnt"
                 mkdir -p "$mntdir"
                 ${pkgs.archivemount}/bin/archivemount "$f" "$mntdir"
@@ -269,7 +278,8 @@ in
               fi
             }}
           '';
-        open = "&mimeo \"$f\"";
+        open = "&mimeopen \"$f\" > /dev/null 2>&1";
+
         share = "$''${pkgs.curl}/bin/curl -F\"file=@$f\" https://0x0.st | ${pkgs.xsel}/bin/xsel -ib";
         paste-overwrite = # bash
           ''
@@ -300,21 +310,6 @@ in
               echo -en "$fx" | sed 's|^|file://|' | tr ' ' '\n' | ${pkgs.xclip}/bin/xclip -i -sel clip -t text/uri-list
               lf -remote 'send unselect'
               lf -remote 'send echo "Files copied to clipboard"'
-            }}
-          '';
-        open-sushi = # bash
-          lib.optionalString gui ''
-            &{{
-              ${pkgs.sushi}/bin/sushi $f
-
-              # forces long loading previews to be centered
-              while true; do
-                  id=$(${pkgs.i3}/bin/i3-msg -t get_tree | jq -r '.. | select(.window_properties?.class? == "Org.gnome.NautilusPreviewer") | .window? | select(. != null)')
-                  if [[ ! -z $id ]]; then
-                      ${pkgs.i3}/bin/i3-msg "[id=$id] move position center" > /dev/null
-                      break
-                  fi
-              done
             }}
           '';
       };
@@ -361,6 +356,8 @@ in
         K = ":updir; up; open";
         h = "updir";
         l = "open";
+        "<space>" = "$mimeopen --ask $f";
+
         "<c-u>" = "half-up";
         "<c-d>" = "half-down";
         "<tab>" = "jump-next";
@@ -387,8 +384,9 @@ in
         p = ":paste; clear";
         P = "paste-overwrite";
 
+        "<c-p>" = if gui then "$less -R $f" else "";
+
         "\\$" = "push :$";
-        "<space>" = "open-sushi";
         S = "su";
         R = ":source /home/${user}/.config/lf/lfrc; reload";
         "<c-r>" = "redraw";

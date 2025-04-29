@@ -12,6 +12,7 @@
     fzf
     gcc
     unzip
+    (openssl.override { withZlib = true; })
     wget
     age
     bc

@@ -34,6 +34,7 @@ lib.mkIf config.me.gui.enable {
         ] "zaread")
 
         // (mapEntries [
+          "image/png"
           "image/apng"
           "image/vnd.microsoft.icon"
           "image/jpeg"

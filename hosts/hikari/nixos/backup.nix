@@ -1,14 +1,19 @@
-{ config, pkgs, ... }:
-
 {
-  systemd.services.git-backup = {
-    description = "clone and update git repositories";
+  lib,
+  config,
+  pkgs,
+  ...
+}:
+
+lib.mkIf config.me.secrets.enable {
+  systemd.services.backup = {
     path = with pkgs; [
       git
       coreutils
       curl
       jq
       openssh
+      atuin
     ];
     script =
       # bash
@@ -33,6 +38,8 @@
             git clone --bare "codeberg:$user/$repo_name" "$repo_dir"
           fi
         done
+
+        atuin history list --format {command} | awk '!seen[$0]++' > ~/documents/backup/history
       '';
     serviceConfig = {
       Type = "oneshot";
@@ -40,7 +47,7 @@
     };
   };
 
-  systemd.timers.git-backup = {
+  systemd.timers.backup = {
     wantedBy = [ "timers.target" ];
     timerConfig = {
       OnCalendar = "weekly";

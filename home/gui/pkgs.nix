@@ -11,11 +11,12 @@ lib.mkIf config.me.gui.enable {
     with pkgs;
     let
       st = pkgs.st.overrideAttrs (old: {
-        src = pkgs.fetchFromSourcehut {
-          owner = "~ayko";
+        src = fetchFromGitea {
+          domain = "codeberg.org";
+          owner = "0xB0F";
           repo = "st";
           rev = "main";
-          hash = "sha256-qchyucQIHtei3CfyIqg86Mn1C7Ba0c4Ui8xoyAkyeM8=";
+          sha256 = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
         };
       });
     in
@@ -62,7 +63,7 @@ lib.mkIf config.me.gui.enable {
       auto.ungoogled-chromium
       auto.mullvad-browser
       signal-desktop
-      st
+      # st
     ]
     ++ [
     ]

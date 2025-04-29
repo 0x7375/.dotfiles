@@ -35,8 +35,6 @@
       '';
     };
 
-    udisks2.enable = true;
-
     xserver = {
       xkb = {
         layout = "pwerty";

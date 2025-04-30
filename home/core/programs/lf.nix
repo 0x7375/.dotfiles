@@ -143,19 +143,19 @@ in
         compress = # bash
           ''
             %{{
-              $default_name="$(basename $(echo "$fx" | awk '{print $1}')).zip"
+              default_name="$(basename $(echo "$fx" | awk '{print $1}'))"
+              default_name="''${default_name%%.*}.zip"
               
-              printf "Archive name ($default_name): "
+              printf "Archive name (default: $default_name): "
               read new_name
               if [[ -z $new_name ]]; then
-                lf -remote "send $id reload"
-                return;
+                new_name=$default_name
               fi
 
               ${pkgs.ouch}/bin/ouch compress $(realpath --relative-to="$(pwd)" $fx) $new_name 
 
               lf -remote "send $id unselect"
-              lf -remote "send $id select \"$newa\""
+              lf -remote "send $id select \"$new_name\""
             }}'';
         quit-and-cd = # bash
           ''

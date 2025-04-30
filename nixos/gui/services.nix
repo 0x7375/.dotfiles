@@ -6,6 +6,17 @@
 }:
 
 lib.mkIf config.me.gui.enable {
+  systemd.user.services.devmon = {
+    path = [ pkgs.libnotify ];
+    serviceConfig.ExecStart =
+      let
+        mount = "/run/media/ayko";
+      in
+      lib.mkForce ''
+        ${pkgs.udevil}/bin/devmon --exec-on-remove "notify-send 'Device %%f unmounted from ${mount}' -i disk -r 9998" --exec-on-drive "notify-send 'Device %%f mounted at ${mount}' -i disk -r 9999"
+      '';
+  };
+
   services = {
     dbus.enable = true;
     gvfs.enable = true;

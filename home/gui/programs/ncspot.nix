@@ -11,7 +11,7 @@ let
 in
 lib.mkIf config.me.gui.enable {
   programs.ncspot = {
-    enable = true;
+    enable = false;
     package = pkgs.ncspot.override {
       ueberzug = pkgs.ueberzugpp;
       withCover = true;

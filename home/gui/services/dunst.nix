@@ -86,14 +86,6 @@ lib.mkIf config.me.gui.enable {
         foreground = palette.red;
         timeout = 0;
       };
-      udiskie = {
-        summary = "*evice*";
-        new_icon = "disk";
-      };
-      udiskie_mounted = {
-        summary = "*mounted*";
-        skip_display = true;
-      };
       network = {
         body = "*network*";
         new_icon = "wifi";

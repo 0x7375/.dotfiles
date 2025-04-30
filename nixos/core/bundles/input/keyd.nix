@@ -23,8 +23,14 @@ lib.mkIf config.me.keyd.enable {
   services.keyd = {
     enable = true;
     keyboards = {
+      global = {
+        ids = [ "3434:0321" ];
+      };
       default = {
-        ids = [ "*" ];
+        ids = [
+          "*"
+          "-3434:0321"
+        ];
         settings = {
           main = {
             capslock = "overload(control, esc)";

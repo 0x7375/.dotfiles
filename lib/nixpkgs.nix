@@ -22,7 +22,7 @@
       };
 
       nix =
-        if config.me.hostname != "hikari" then
+        if config.me.gui.enable then
           prev.nix.overrideAttrs (old: {
             postPatch = ''
               for file in \

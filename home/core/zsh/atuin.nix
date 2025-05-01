@@ -35,9 +35,7 @@ lib.mkIf config.me.secrets.enable {
       eval "$(atuin init zsh)"
     '';
 
-  xdg.configFile."zsh/atuin-history-arrow.zsh".text = builtins.readFile (
-    myLib.fromRoot "assets/atuin-history-arrow.zsh"
-  );
+  xdg.configFile."zsh/atuin-history-arrow.zsh".text = builtins.readFile ./atuin-history-arrow.zsh;
 
   xdg.configFile."zsh/widgets.zsh".text =
     lib.mkAfter

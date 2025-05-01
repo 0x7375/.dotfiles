@@ -6,20 +6,6 @@
 }:
 
 lib.mkIf config.me.keyd.enable {
-  nixpkgs.overlays = [
-    (final: prev: {
-      keyd = prev.keyd.overrideAttrs (old: rec {
-        version = "0cbe717b63c73de7872013b0834d90d802047546";
-        src = pkgs.fetchFromGitHub {
-          owner = old.src.owner;
-          repo = old.src.repo;
-          rev = version;
-          sha256 = "NfdOjLgMU7CJup2MeBaK/uADVyfWPNLGPNm3ahwqrRY=";
-        };
-      });
-    })
-  ];
-
   services.keyd = {
     enable = true;
     keyboards = {
@@ -45,8 +31,6 @@ lib.mkIf config.me.keyd.enable {
       };
     };
   };
-
-  systemd.services.keyd.restartIfChanged = false;
 
   # Optional, but makes sure that when you type the make palm rejection work with keyd
   # https://github.com/rvaiya/keyd/issues/723

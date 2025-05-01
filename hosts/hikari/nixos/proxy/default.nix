@@ -23,9 +23,7 @@ in
 
   systemd.tmpfiles.rules =
     let
-      content = builtins.replaceStrings [ "\n" ] [ "\\n" ] (
-        builtins.readFile (myLib.fromRoot "assets/index.html")
-      );
+      content = builtins.replaceStrings [ "\n" ] [ "\\n" ] (builtins.readFile ./index.html);
     in
     [
       "f+ /var/www/index.html 0644 root root - ${content}"

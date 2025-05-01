@@ -185,6 +185,7 @@ lib.mkIf config.me.gui.enable {
             { window_type = "menu"; }
             { title = "Steam - Update News"; }
             { title = "^Friends List$"; }
+            { title = "^filechooser$"; }
             { class = "feh"; }
             { class = "1Password"; }
             { class = "Org.gnome.NautilusPreviewer"; }

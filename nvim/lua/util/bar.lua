@@ -30,6 +30,14 @@ M.build_bar = function()
     local align_right = "%="
     local position = " %l,%c"
 
+    local search_count = ""
+    if vim.v.hlsearch == 1 and vim.fn.getreg('/') ~= '' then
+        local s_count = vim.fn.searchcount({ recompute = 1, maxcount = 999 })
+        if s_count and s_count.total and s_count.total > 0 then
+            search_count = string.format(" [%d/%d]", s_count.current, s_count.total)
+        end
+    end
+
     return table.concat({
         set_normal,
         file_name,
@@ -38,6 +46,7 @@ M.build_bar = function()
         set_green,
         branch,
         set_normal,
+        search_count,
         position,
     }, "")
 end

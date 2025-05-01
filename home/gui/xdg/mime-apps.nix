@@ -74,11 +74,30 @@ lib.mkIf config.me.gui.enable {
         ] config.me.browser)
 
         // (mapEntries [
+          "application/bzip2"
+          "application/gzip"
           "application/zip"
+          "application/vnd.rar"
+          "application/x-7z-compressed-tar"
+          "application/x-bzip"
+          "application/x-bzip2"
+          "application/x-bzip2-compressed-tar"
+          "application/x-bzip-compressed-tar"
+          "application/x-compress"
+          "application/x-compressed-tar"
+          "application/x-cpio"
+          "application/x-lha"
+          "application/x-lzip"
+          "application/x-lzip-compressed-tar"
+          "application/x-lzma"
+          "application/x-lzma-compressed-tar"
           "application/x-rar-compressed"
-          "application/x-7z-compressed"
-          "application/x-tar"
-          "application/x-gzip"
+          "application/x-tarz"
+          "application/x-xar"
+          "application/x-xz"
+          "application/x-xz-compressed-tar"
+          "application/x-zstd-compressed-tar"
+          "application/zstd"
         ] "file-roller")
 
         // (mapEntries [

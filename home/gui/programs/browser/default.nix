@@ -306,8 +306,11 @@ in
 
               # disable autoplay
               "media.autoplay.blocking_policy" = 2;
+
+              # needed termfilechooser
+              "widget.use-xdg-desktop-portal.file-picker" = 1;
             };
-          userChrome = builtins.readFile (fromRoot "assets/browser/userChrome.css");
+          userChrome = builtins.readFile ./userChrome.css;
           search = {
             force = true;
             default = "_Google";

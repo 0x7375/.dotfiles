@@ -73,6 +73,8 @@ in
 
     py = "python";
 
+    tm = "${pkgs.scripts.tmux-sessionizer}/bin/tmux-sessionizer";
+
     temp = "cd $(mktemp -d)";
     ".." = "cd ..";
     "..." = "cd ../..";
@@ -217,24 +219,14 @@ in
         ${pkgs.nix}/bin/nix eval --json path:$FLAKE#nixosConfigurations.''${2:-$HOST}.config.$1 | jq -r
       }
 
-      d() {
-        ${pkgs.coreutils}/bin/nohup $1 > /dev/null 2>&1 &
-      }
-
-      tm() {
-        ${pkgs.scripts.tmux-sessionizer}/bin/tmux-sessionizer $1
-      }
-
       suv() {
         [[ -L $1 ]] && {
           sudo cp "$1" "$1.bak"
           sudo rm "$1"
           sudo mv "$1.bak" "$1"
           sudo chmod 644 "$1"
-          sudo $EDITOR "$1"
-        } || {
-          echo "Not a symlink"
         }
+        sudo $EDITOR "$1"
       }
 
       uv() {
@@ -243,10 +235,8 @@ in
           rm "$1"
           mv "$1.bak" "$1"
           chmod 644 "$1"
-          $EDITOR "$1"
-        } || {
-          echo "Not a symlink"
         }
+        $EDITOR "$1"
       }
     '';
 }

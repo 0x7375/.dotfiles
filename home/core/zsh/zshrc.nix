@@ -13,6 +13,7 @@
       source $ZDOTDIR/widgets.zsh
       source $ZDOTDIR/bindings.zsh
       source $ZDOTDIR/set-prompt.sh
+      source $ZDOTDIR/global-aliases.zsh
       source $ZDOTDIR/longcmd-notify.zsh 2>/dev/null
 
       mkdir -p "$XDG_STATE_HOME"/zsh > /dev/null

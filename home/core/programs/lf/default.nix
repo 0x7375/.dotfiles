@@ -1,4 +1,5 @@
 {
+  myLib,
   lib,
   config,
   pkgs,
@@ -24,6 +25,39 @@ in
         });
       }
     )
+    (final: prev: {
+      xdg-desktop-portal-termfilechooser =
+        prev.xdg-desktop-portal-termfilechooser.overrideAttrs
+          (old: rec {
+            version = "caf24e77189f500b6a27ef502ef01d3a96196510";
+            src = pkgs.fetchFromGitHub {
+              owner = old.src.owner;
+              repo = old.src.repo;
+              rev = "${version}";
+              sha256 = "2A+y6twdfLl/Fy4Feop3tMGfTytxX80acTrFQ56kjS4=";
+            };
+          });
+
+      file-handler = pkgs.stdenv.mkDerivation {
+        name = "file-handler";
+        src = ./.;
+        dontUnpack = true;
+
+        nativeBuildInputs = with pkgs; [
+          dbus.dev
+          pkg-config
+        ];
+
+        buildPhase = ''
+          gcc -o file-handler $src/file-handler.c $(pkg-config --cflags --libs dbus-1)
+        '';
+
+        installPhase = ''
+          mkdir -p $out/bin
+          cp file-handler $out/bin
+        '';
+      };
+    })
   ];
 
   home.packages =
@@ -427,192 +461,39 @@ in
       };
     };
 
-  xdg.configFile."lf/colors" = {
-    enable = true;
-    text = # bash
-      ''
-        # default values from dircolors
-        # (entries with a leading # are not implemented in lf)
-        # #no     00              # NORMAL
-        # fi      00              # FILE
-        # #rs     0               # RESET
-        # di      01;34           # DIR
-        # ln      01;36           # LINK
-        # #mh     00              # MULTIHARDLINK
-        # pi      40;33           # FIFO
-        # so      01;35           # SOCK
-        # #do     01;35           # DOOR
-        # bd      40;33;01        # BLK
-        # cd      40;33;01        # CHR
-        # or      40;31;01        # ORPHAN
-        # #mi     00              # MISSING
-        # su      37;41           # SETUID
-        # sg      30;43           # SETGID
-        # #ca     30;41           # CAPABILITY
-        # tw      30;42           # STICKY_OTHER_WRITABLE
-        # ow      34;42           # OTHER_WRITABLE
-        # st      37;44           # STICKY
-        # ex      01;32           # EXEC
+  xdg.configFile."lf/colors".text = builtins.readFile ./colors;
 
-        # default values from lf (with matching order)
-        # ln      01;36   # LINK
-        # or      31;01   # ORPHAN
-        # tw      01;34   # STICKY_OTHER_WRITABLE
-        # ow      01;34   # OTHER_WRITABLE
-        # st      01;34   # STICKY
-        # di      01;34   # DIR
-        # pi      33      # FIFO
-        # so      01;35   # SOCK
-        # bd      33;01   # BLK
-        # cd      33;01   # CHR
-        # su      01;32   # SETUID
-        # sg      01;32   # SETGID
-        # ex      01;32   # EXEC
-        # fi      00      # FILE
+  xdg.configFile."xdg-desktop-portal-termfilechooser/config".text =
+    let
+      env = pkgs.buildEnv {
+        name = "lf-wrapper-env";
+        paths = with pkgs; [
+          lf
+          gnused
+          coreutils
+          bashInteractive
+          zsh
+          git
+        ];
+      };
+    in
+    # ini
+    ''
+      [filechooser]
+      env=PATH='${env}/bin'
+      env=TERMCMD='${pkgs.alacritty}/bin/alacritty -T filechooser -e'
+      cmd='${pkgs.xdg-desktop-portal-termfilechooser}/share/xdg-desktop-portal-termfilechooser/lf-wrapper.sh'
+      default_dir=${config.xdg.userDirs.download}
+    '';
 
-        # file types (with matching order)
-        ln      01;36   # LINK
-        or      31;01   # ORPHAN
-        tw      34      # STICKY_OTHER_WRITABLE
-        ow      34      # OTHER_WRITABLE
-        st      01;34   # STICKY
-        di      01;34   # DIR
-        pi      33      # FIFO
-        so      01;35   # SOCK
-        bd      33;01   # BLK
-        cd      33;01   # CHR
-        su      01;32   # SETUID
-        sg      01;32   # SETGID
-        ex      01;32   # EXEC
-        fi      00      # FILE
-
-        # archives or compressed (dircolors defaults)
-        *.tar   01;31
-        *.tgz   01;31
-        *.arc   01;31
-        *.arj   01;31
-        *.taz   01;31
-        *.lha   01;31
-        *.lz4   01;31
-        *.lzh   01;31
-        *.lzma  01;31
-        *.tlz   01;31
-        *.txz   01;31
-        *.tzo   01;31
-        *.t7z   01;31
-        *.zip   01;31
-        *.z     01;31
-        *.dz    01;31
-        *.gz    01;31
-        *.lrz   01;31
-        *.lz    01;31
-        *.lzo   01;31
-        *.xz    01;31
-        *.zst   01;31
-        *.tzst  01;31
-        *.bz2   01;31
-        *.bz    01;31
-        *.tbz   01;31
-        *.tbz2  01;31
-        *.tz    01;31
-        *.deb   01;31
-        *.rpm   01;31
-        *.jar   01;31
-        *.war   01;31
-        *.ear   01;31
-        *.sar   01;31
-        *.rar   01;31
-        *.alz   01;31
-        *.ace   01;31
-        *.zoo   01;31
-        *.cpio  01;31
-        *.7z    01;31
-        *.rz    01;31
-        *.cab   01;31
-        *.wim   01;31
-        *.swm   01;31
-        *.dwm   01;31
-        *.esd   01;31
-
-        # image formats (dircolors defaults)
-        *.jpg   01;35
-        *.jpeg  01;35
-        *.mjpg  01;35
-        *.mjpeg 01;35
-        *.gif   01;35
-        *.bmp   01;35
-        *.pbm   01;35
-        *.pgm   01;35
-        *.ppm   01;35
-        *.tga   01;35
-        *.xbm   01;35
-        *.xpm   01;35
-        *.tif   01;35
-        *.tiff  01;35
-        *.png   01;35
-        *.jfif  01;35
-        *.ico   01;35
-        *.svg   01;35
-        *.svgz  01;35
-        *.mng   01;35
-        *.pcx   01;35
-        *.mov   01;35
-        *.mpg   01;35
-        *.mpeg  01;35
-        *.m2v   01;35
-        *.mkv   01;35
-        *.webm  01;35
-        *.ogm   01;35
-        *.mp4   01;35
-        *.m4v   01;35
-        *.mp4v  01;35
-        *.vob   01;35
-        *.qt    01;35
-        *.nuv   01;35
-        *.wmv   01;35
-        *.asf   01;35
-        *.rm    01;35
-        *.rmvb  01;35
-        *.flc   01;35
-        *.avi   01;35
-        *.fli   01;35
-        *.flv   01;35
-        *.gl    01;35
-        *.dl    01;35
-        *.xcf   01;35
-        *.xwd   01;35
-        *.yuv   01;35
-        *.cgm   01;35
-        *.emf   01;35
-        *.ogv   01;35
-        *.ogx   01;35
-
-        # audio formats (dircolors defaults)
-        *.aac   00;36
-        *.au    00;36
-        *.flac  00;36
-        *.m4a   00;36
-        *.mid   00;36
-        *.midi  00;36
-        *.mka   00;36
-        *.mp3   00;36
-        *.mpc   00;36
-        *.ogg   00;36
-        *.ra    00;36
-        *.wav   00;36
-        *.oga   00;36
-        *.opus  00;36
-        *.spx   00;36
-        *.xspf  00;36
-
-        # compilation files
-        *.aux   00;37
-        *.log   00;37
-        *.out   00;37
-        *.toc   00;37
-        *.class 00;37
-        *.o     00;37
-        *.pyc   00;37
-      '';
+  systemd.user.services."file-handler" = {
+    Service.ExecStart = "${pkgs.file-handler}/bin/file-handler";
   };
+
+  xdg.dataFile."dbus-1/services/org.freedesktop.FileManager1.service".text = # ini
+    ''
+      [D-BUS Service]
+      Name=org.freedesktop.FileManager1
+      Exec=${pkgs.file-handler}/bin/file-handler
+    '';
 }

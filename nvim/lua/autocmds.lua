@@ -109,10 +109,10 @@ vim.api.nvim_create_autocmd({
                 return
             end
 
-            if vim.tbl_contains(winbar_filetype_exclude, vim.bo.filetype) then
-                vim.wo.winbar = ""
-                return
-            end
+            -- if vim.tbl_contains(winbar_filetype_exclude, vim.bo.filetype) then
+            --     vim.wo.winbar = ""
+            --     return
+            -- end
 
             vim.wo.winbar = require("util.bar").build_bar()
         end

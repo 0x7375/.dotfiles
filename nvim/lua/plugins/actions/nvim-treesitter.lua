@@ -32,7 +32,7 @@ return {
         }
     },
     opts = {
-        ensure_installed = {
+        ensure_installed = not vim.g.windows and {
             "c", "go", "java", "python", "sql", "nix", "bash",
 
             "vim", "vimdoc", "query", "regex", "markdown", "markdown_inline",
@@ -43,8 +43,8 @@ return {
 
             "html", "css", "javascript", "tsx", "typescript", "php", "graphql",
             "latex", "typst",
-        },
-        auto_install = false,
+        } or {},
+        auto_install = vim.g.windows,
         highlight = {
             enable = true,
             disable = function(lang, buf)

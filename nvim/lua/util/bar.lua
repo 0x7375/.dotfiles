@@ -1,6 +1,7 @@
 local M = {}
 
 local function git_branch()
+    if vim.g.windows then return "" end
     local ref = vim.fn.system("git rev-parse --abbrev-ref HEAD 2>/dev/null | tr -d '\n'")
     local branch = ""
     if ref == "HEAD" then

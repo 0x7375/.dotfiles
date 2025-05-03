@@ -53,10 +53,6 @@ lib.mkIf config.me.secrets.enable {
               time = "18:00:00";
               path = "/srv/backups/";
             };
-            koofr = {
-              time = "20:00:00";
-              path = "rclone:koofr:";
-            };
             google = {
               time = "22:00:00";
               path = "rclone:google:";
@@ -126,7 +122,6 @@ lib.mkIf config.me.secrets.enable {
             })
             [
               "local"
-              "koofr"
               "google"
             ]
         );

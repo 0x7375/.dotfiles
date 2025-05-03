@@ -117,3 +117,15 @@ vim.api.nvim_create_autocmd({
             vim.wo.winbar = require("util.bar").build_bar()
         end
     })
+
+-- set pwd to first argument if said argument is a directory
+vim.api.nvim_create_autocmd("VimEnter", {
+    callback = function()
+        if vim.fn.argc() == 1 then
+            local target = vim.fn.argv(0)
+            if vim.fn.isdirectory(target) == 1 then
+                vim.cmd("cd " .. vim.fn.fnameescape(target))
+            end
+        end
+    end,
+})

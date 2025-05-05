@@ -1,15 +1,31 @@
 {
-  pkgs,
+  inputs,
   lib,
   config,
   ...
 }:
 
 lib.mkIf config.me.gui.enable {
+  nixpkgs.overlays = [
+    (
+      final: prev:
+      let
+        auto = import inputs.auto-update {
+          system = final.system;
+          config.allowUnfree = true;
+        };
+      in
+      {
+        _1password-cli = auto._1password-cli;
+        _1password-gui = auto._1password-gui;
+        _1password = auto._1password-gui;
+      }
+    )
+  ];
+
   programs = {
     _1password.enable = true;
     _1password-gui = {
-      package = pkgs._1password-gui;
       enable = true;
       polkitPolicyOwners = [ config.me.user ];
     };

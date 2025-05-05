@@ -125,7 +125,7 @@ pkgs.writeShellApplication {
         --no-prefix \
         --minimal \
         -- \
-        '*.nix' \
+        '*.nix' '*.lock' \
         | { grep -v -E "index [0-9a-f]{7}\.\.[0-9a-f]{7}" --color=never || true; }
       }
 

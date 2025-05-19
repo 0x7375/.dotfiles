@@ -83,7 +83,7 @@ lib.mkIf config.me.gui.enable {
             "${modifier}+d" =
               "exec --no-startup-id ${j4-dmenu-desktop}/bin/j4-dmenu-desktop --no-generic -d '${pkgs.bemenu}/bin/bemenu -p \"DESKTOP\"'";
             "${modifier}+i" = "exec --no-startup-id ${pkgs.polybar}/bin/polybar-msg cmd toggle";
-            "${modifier}+space" = "exec --no-startup-id ${pkgs.dunst}/bin/dunstctl close-all";
+            "${modifier}+x" = "exec --no-startup-id ${pkgs.dunst}/bin/dunstctl close-all";
             "${modifier}+r" = "exec --no-startup-id ${pkgs.dunst}/bin/dunstctl history-pop";
             "${modifier}+a" = "exec --no-startup-id ${pkgs.dunst}/bin/dunstctl action";
 
@@ -135,27 +135,27 @@ lib.mkIf config.me.gui.enable {
             "${modifier}+Return" = "floating toggle";
             "${modifier}+g" = "focus mode_toggle";
 
-            "${modifier}+plus" = "workspace $ws1";
+            "${modifier}+Shift+equal" = "workspace $ws1";
             "${modifier}+bracketleft" = "workspace $ws2";
-            "${modifier}+braceleft" = "workspace $ws3";
-            "${modifier}+parenleft" = "workspace $ws4";
-            "${modifier}+ampersand" = "workspace $ws5";
+            "${modifier}+Shift+bracketleft" = "workspace $ws3";
+            "${modifier}+Shift+9" = "workspace $ws4";
+            "${modifier}+Shift+7" = "workspace $ws5";
             "${modifier}+equal" = "workspace $ws6";
-            "${modifier}+parenright" = "workspace $ws7";
-            "${modifier}+braceright" = "workspace $ws8";
+            "${modifier}+Shift+0" = "workspace $ws7";
+            "${modifier}+Shift+bracketright" = "workspace $ws8";
             "${modifier}+bracketright" = "workspace $ws9";
-            "${modifier}+percent" = "workspace $ws10";
+            "${modifier}+Shift+5" = "workspace $ws10";
 
-            "${modifier}+Shift+plus" = "move container to workspace $ws1";
-            "${modifier}+Shift+bracketleft" = "move container to workspace $ws2";
-            "${modifier}+Shift+braceleft" = "move container to workspace $ws3";
-            "${modifier}+Shift+parenleft" = "move container to workspace $ws4";
-            "${modifier}+Shift+ampersand" = "move container to workspace $ws5";
-            "${modifier}+Shift+equal" = "move container to workspace $ws6";
-            "${modifier}+Shift+bracketright" = "move container to workspace $ws7";
-            "${modifier}+Shift+braceright" = "move container to workspace $ws8";
-            "${modifier}+Shift+parenright" = "move container to workspace $ws9";
-            "${modifier}+Shift+percent" = "move container to workspace $ws10";
+            "${modifier}+1" = "move container to workspace $ws1";
+            "${modifier}+2" = "move container to workspace $ws2";
+            "${modifier}+3" = "move container to workspace $ws3";
+            "${modifier}+4" = "move container to workspace $ws4";
+            "${modifier}+5" = "move container to workspace $ws5";
+            "${modifier}+6" = "move container to workspace $ws6";
+            "${modifier}+7" = "move container to workspace $ws7";
+            "${modifier}+8" = "move container to workspace $ws8";
+            "${modifier}+9" = "move container to workspace $ws9";
+            "${modifier}+0" = "move container to workspace $ws10";
 
             "${modifier}+Shift+h" = "resize shrink width 30 px or 30 ppt";
             "${modifier}+Shift+j" = "resize grow height 30 px or 30 ppt";

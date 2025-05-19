@@ -127,10 +127,27 @@ in
             # css
             ''
               /* change selected urlbar result font color */
-              .urlbarView-row[selected] .urlbarView-row-inner {
-                color: ${myLib.palette.fg0} !important;
+              .urlbarView-row {
+                &[selected] {
+                  & * {
+                    color: ${myLib.palette.fg0} !important;
+                  }
+                }
               }
 
+              /* change selected urlbar result icon bg color */
+              .urlbarView-row {
+                &[selected] {
+                  & .urlbarView-favicon {
+                    background-color: transparent !important;
+                  }
+                }
+              }
+
+              /* hide workspace indicator */
+              #zen-current-workspace-indicator-container {
+                display: none;
+              }
               * { animation: none !important; }
             '';
           settings = cfg.profiles.default.settings // {

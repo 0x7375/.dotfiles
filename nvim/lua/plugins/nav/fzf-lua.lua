@@ -57,7 +57,7 @@ return {
             preview = {
                 scrollbar = false,
                 layout = 'vertical',
-                vertical = 'up:60%',
+                vertical = 'up:70%',
                 border = "single",
             },
             border = "single",

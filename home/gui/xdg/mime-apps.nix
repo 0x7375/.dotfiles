@@ -39,6 +39,7 @@ lib.mkIf config.me.gui.enable {
           "image/vnd.microsoft.icon"
           "image/jpeg"
           "image/webp"
+          "image/svg+xml"
         ] "feh")
 
         // (mapEntries [

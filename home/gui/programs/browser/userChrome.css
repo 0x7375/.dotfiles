@@ -175,7 +175,7 @@ toolbarbutton.titlebar-button.titlebar-restore { display: none !important; }
 
 /* Hide mute tabs button */
 .tab-icon-overlay {
-    display: none;
+    display: none !important;
 }
 .tab-icon-image {
     opacity: 1 !important;

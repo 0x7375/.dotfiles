@@ -36,18 +36,7 @@
     };
 
     xserver = {
-      xkb = {
-        layout = "pwerty";
-        variant = "";
-        model = "";
-        options = "compose:ralt";
-        extraLayouts.pwerty = {
-          description = "Modified qwerty for programming";
-          languages = [ "eng" ];
-          symbolsFile = myLib.fromRoot "assets/kb/pwerty";
-        };
-      };
-
+      xkb.options = "compose:ralt";
       autoRepeatDelay = 200;
       autoRepeatInterval = 30;
     };

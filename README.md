@@ -110,7 +110,7 @@ swapon /dev/disk/by-label/NIXSWAP
 Connect to wifi if needed, `nmtui`, and clone the repo
 
 ```bash
-git clone https://codeberg.org/0xB0F/.dotfiles ~/.config/nixcfg
+git clone https://codeberg.org/0x7E/.dotfiles ~/.config/nixcfg
 ```
 
 Copy ssh key over from another machine (or just disable secrets in options

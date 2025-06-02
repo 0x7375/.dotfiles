@@ -38,7 +38,7 @@ in
     df = "${pkgs.coreutils}/bin/df -h";
     du = "${pkgs.coreutils}/bin/du -h";
 
-    ffmpeg = "${pkgs.ffmpeg}/bin/ffmpeg -hide_banner";
+    ffmpeg = "${pkgs.ffmpeg-full}/bin/ffmpeg -hide_banner";
 
     grep = "${pkgs.gnugrep}/bin/grep --color=always";
     ls = "ls --color --group-directories-first";

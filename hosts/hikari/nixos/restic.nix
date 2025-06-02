@@ -39,11 +39,16 @@ lib.mkIf config.me.secrets.enable {
         config.services.qBittorrent.dataDir
         config.services.radarr.dataDir
         config.services.sonarr.dataDir
-        "/var/lib/prowlarr"
+        config.services.prowlarr.dataDir
+        config.services.bazarr.dataDir
       ];
 
       gitRepos = [
         "/home/${config.me.user}/git"
+      ];
+
+      androidBackup = [
+        "/srv/androidbackup/data/DataBackup"
       ];
 
       backupConfig =
@@ -53,9 +58,9 @@ lib.mkIf config.me.secrets.enable {
               time = "18:00:00";
               path = "/srv/backups/";
             };
-            google = {
+            backblaze = {
               time = "22:00:00";
-              path = "rclone:google:";
+              path = "rclone:backblaze:restic9678412/";
             };
           };
         in
@@ -94,6 +99,10 @@ lib.mkIf config.me.secrets.enable {
             OnCalendar = day + " *-*-* " + remotes.${remote}.time;
             Persistent = true;
           };
+          rcloneOptions = {
+            "fast-list" = "true"; # single api call to list every directory
+            "transfers" = "50";
+          };
         };
 
       createBackups =
@@ -122,7 +131,7 @@ lib.mkIf config.me.secrets.enable {
             })
             [
               "local"
-              "google"
+              "backblaze"
             ]
         );
     in
@@ -140,6 +149,10 @@ lib.mkIf config.me.secrets.enable {
       exclude = [
         "node_modules"
       ];
+    })
+    // (createBackups "android" {
+      paths = androidBackup;
+      day = "Tue";
     });
 
   systemd.services = lib.mkMerge (

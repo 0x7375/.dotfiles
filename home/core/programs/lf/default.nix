@@ -177,7 +177,7 @@ in
         compress = # bash
           ''
             %{{
-              default_name="$(basename $(echo "$fx" | awk '{print $1}'))"
+              default_name="$(basename $(echo "$fx" | head -n1))"
               default_name="''${default_name%%.*}.zip"
               
               printf "Archive name (default: $default_name): "

@@ -1,5 +1,5 @@
 return {
-    "0xB0F/lf.nvim",
+    "0x7375/lf.nvim",
     cond = not vim.g.windows,
     dependencies = {
         "akinsho/toggleterm.nvim",

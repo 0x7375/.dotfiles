@@ -32,7 +32,7 @@
             # {
             #   src =
             #     pkgs.fetchFromGitHub {
-            #       owner = "0xB0F";
+            #       owner = "0x7E";
             #       repo = "Spicetify-Extensions";
             #       rev = "main";
             #       sha256 = "sha256-+Th5o00c3Y8U+Y/RGmRSkWWp97YCoCJmoESFLZf9dwM=";

@@ -6,7 +6,7 @@ stdenv.mkDerivation rec {
 
   src = fetchFromGitea {
     domain = "codeberg.org";
-    owner = "0xB0F";
+    owner = "0x7E";
     repo = "fonts";
     rev = version;
     hash = "sha256-j6UudLRVAVZJUon/0AUjZEuFRmj9oA7cCMhD27ooOYI=";
@@ -20,6 +20,6 @@ stdenv.mkDerivation rec {
 
   meta = {
     description = "InconsolataNF";
-    homepage = "https://codeberg.org/0xB0F/fonts";
+    homepage = "https://codeberg.org/0x7E/fonts";
   };
 }

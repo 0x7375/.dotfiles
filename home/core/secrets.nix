@@ -43,7 +43,7 @@
         Type = "oneshot";
         ExecStart = pkgs.writeShellScript "clone-dotfiles" ''
           if [[ ! -e ${config.me.flakeDir} ]]; then
-            ${pkgs.git}/bin/git -c core.sshCommand="${pkgs.openssh}/bin/ssh -o StrictHostKeyChecking=accept-new" clone codeberg:0xB0F/.dotfiles ${config.me.flakeDir}
+            ${pkgs.git}/bin/git -c core.sshCommand="${pkgs.openssh}/bin/ssh -o StrictHostKeyChecking=accept-new" clone codeberg:0x7E/.dotfiles ${config.me.flakeDir}
           fi
         '';
         RemainAfterExit = true;

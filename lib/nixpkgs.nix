@@ -21,25 +21,27 @@
         config.allowUnfree = true;
       };
 
-      nix =
-        if config.me.gui.enable then
-          prev.nix.overrideAttrs (old: {
-            postPatch = ''
-              for file in \
-                src/libfetchers/github.cc \
-                src/libflake/flake/url-name.cc \
-                src/libexpr/primops/fetchTree.cc \
-                tests/nixos/sourcehut-flakes.nix \
-                src/libfetchers-tests/access-tokens.cc \
-                src/libflake-tests/url-name.cc
-              do
-                [[ -f $file ]] && substituteInPlace "$file" --replace-fail "sourcehut" "codeberg"
-              done
-              substituteInPlace src/libfetchers/github.cc --replace-fail "git.sr.ht" "codeberg.org"
-            '';
-          })
-        else
-          prev.nix;
+      # ffmpeg = prev.ffmpeg.override { withFullDeps = true; };
+
+      # nix =
+      #   if config.me.gui.enable then
+      #     prev.nix.overrideAttrs (old: {
+      #       postPatch = ''
+      #         for file in \
+      #           src/libfetchers/github.cc \
+      #           src/libflake/flake/url-name.cc \
+      #           src/libexpr/primops/fetchTree.cc \
+      #           tests/nixos/sourcehut-flakes.nix \
+      #           src/libfetchers-tests/access-tokens.cc \
+      #           src/libflake-tests/url-name.cc
+      #         do
+      #           [[ -f $file ]] && substituteInPlace "$file" --replace-fail "sourcehut" "codeberg"
+      #         done
+      #         substituteInPlace src/libfetchers/github.cc --replace-fail "git.sr.ht" "codeberg.org"
+      #       '';
+      #     })
+      #   else
+      #     prev.nix;
 
       #   nil = prev.nil.override (old: {
       #     rustPlatform = old.rustPlatform // {

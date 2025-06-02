@@ -6,7 +6,7 @@ pkgs.writeShellApplication {
     curl
   ];
   text = ''
-    owner="0xB0F"
+    owner="0x7E"
     repo="templates"
     repo_url="https://codeberg.org/''${owner}/''${repo}"
 

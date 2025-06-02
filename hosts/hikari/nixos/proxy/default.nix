@@ -7,7 +7,7 @@
 }:
 
 let
-  url = "kaen.duckdns.org";
+  url = "0xaa.me";
   ip = myLib.network.lan.addr.server;
   mkSubDomain = port: {
     forceSSL = true;
@@ -48,6 +48,7 @@ in
       "indexer.${url}" = mkSubDomain 9696;
       "movies.${url}" = mkSubDomain 7878;
       "series.${url}" = mkSubDomain 8989;
+      "subtitles.${url}" = mkSubDomain 6767;
 
       "router.${url}" = {
         forceSSL = true;
@@ -61,8 +62,8 @@ in
     myLib.notifyOnServiceFailure "nginx"
     // myLib.notifyOnServiceFailure "acme-${url}";
 
-  sops.secrets.duckdns = {
-    sopsFile = "${secrets}/duckdns.env";
+  sops.secrets.cloudflare = {
+    sopsFile = "${secrets}/cloudflare.env";
     format = "dotenv";
     key = "";
   };
@@ -72,16 +73,9 @@ in
     defaults.email = "nginx.commerce973@simplelogin.com";
     certs."${url}" = {
       extraDomainNames = [ "*.${url}" ];
-      dnsProvider = "duckdns";
-      environmentFile = config.sops.secrets.duckdns.path;
+      dnsProvider = "cloudflare";
+      environmentFile = config.sops.secrets.cloudflare.path;
       webroot = null;
-
-      # https://github.com/go-acme/lego/discussions/2244#discussioncomment-11008783
-      extraLegoFlags = [
-        "--dns.propagation-disable-ans"
-        "--dns.resolvers=1.1.1.1"
-        "--dns.resolvers=8.8.8.8"
-      ];
     };
   };
 }

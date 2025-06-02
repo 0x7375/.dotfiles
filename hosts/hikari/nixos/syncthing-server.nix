@@ -108,6 +108,9 @@ lib.mkIf config.me.secrets.enable {
                 "ryusei"
               ];
             };
+            ro-devices = [
+              "neiro"
+            ];
           })
           // (mkRo {
             name = "notes";
@@ -143,7 +146,6 @@ lib.mkIf config.me.secrets.enable {
             };
             ro-devices = [
               "tsuno"
-              "neiro"
             ];
           });
       };

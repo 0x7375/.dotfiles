@@ -13,7 +13,7 @@ lib.mkIf config.me.gui.enable {
       st = pkgs.st.overrideAttrs (old: {
         src = fetchFromGitea {
           domain = "codeberg.org";
-          owner = "0xB0F";
+          owner = "0x7E";
           repo = "st";
           rev = "main";
           sha256 = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
@@ -21,12 +21,14 @@ lib.mkIf config.me.gui.enable {
       });
     in
     [
+      protonvpn-gui
+      protonmail-desktop
       stable.ente-auth
       gnome-text-editor
 
       (discord.override {
         withOpenASAR = true;
-        withVencord = true;
+        withVencord = false;
       })
 
       scripts.update-icons-color
@@ -44,7 +46,7 @@ lib.mkIf config.me.gui.enable {
       vlc
       celluloid
       jellyfin-media-player
-      (ffmpeg.override { withFullDeps = true; })
+      ffmpeg-full
 
       # files
       nautilus

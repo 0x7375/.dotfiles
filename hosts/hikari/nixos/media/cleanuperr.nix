@@ -13,6 +13,11 @@ lib.mkIf config.me.secrets.enable {
     key = "";
   };
 
+  systemd.tmpfiles.rules = [
+    "d /var/lib/cleanuperr 0755 root root -"
+    "d /var/lib/cleanuperr/logs 0755 root root -"
+  ];
+
   virtualisation.oci-containers.containers.cleanuperr = {
     image = "ghcr.io/flmorg/cleanuperr:latest";
 
@@ -23,6 +28,10 @@ lib.mkIf config.me.secrets.enable {
 
       finalImageTag = "latest";
     };
+
+    # volumes = [
+    #   "/var/lib/cleanuperr/logs:/var/logs"
+    # ];
 
     extraOptions = [
       "--add-host=host.docker.internal:host-gateway"
@@ -35,6 +44,10 @@ lib.mkIf config.me.secrets.enable {
     environment = {
       TZ = config.time.timeZone;
 
+      # "LOGGING__LOGLEVEL" = "Verbose";
+      # "LOGGING__FILE__ENABLED" = "false";
+      # "LOGGING__FILE__PATH" = "/var/logs/";
+
       "QUEUECLEANER__IMPORT_FAILED_MAX_STRIKES" = "0";
       "QUEUECLEANER__IMPORT_FAILED_IGNORE_PATTERNS__0" = "title mismatch";
       "QUEUECLEANER__IMPORT_FAILED_IGNORE_PATTERNS__1" = "manual import required";
@@ -44,9 +57,9 @@ lib.mkIf config.me.secrets.enable {
 
       "DOWNLOADCLEANER__ENABLED" = "true";
       "DOWNLOADCLEANER__CATEGORIES__0__NAME" = "tv-sonarr";
-      "DOWNLOADCLEANER__CATEGORIES__0__MAX_RATIO" = "2";
+      "DOWNLOADCLEANER__CATEGORIES__0__MAX_RATIO" = "2.0";
       "DOWNLOADCLEANER__CATEGORIES__1__NAME" = "radarr";
-      "DOWNLOADCLEANER__CATEGORIES__1__MAX_RATIO" = "2";
+      "DOWNLOADCLEANER__CATEGORIES__1__MAX_RATIO" = "2.0";
 
       "SONARR__ENABLED" = "true";
       "SONARR__INSTANCES__0__URL" = "http://host.docker.internal:8989";

@@ -1,5 +1,5 @@
 return {
-    "0xB0F/CopilotChat.nvim",
+    "CopilotC-Nvim/CopilotChat.nvim",
     cond = true,
     build = "make tiktoken",
     dependencies = {

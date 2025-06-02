@@ -6,7 +6,7 @@
         sourcehut = {
           user = {
             name = "ayko";
-            email = "sr.fastness739@aleeas.com";
+            email = "sourcehut.buckshot@0xaa.me";
           };
           commit = {
             gpgSign = false;
@@ -14,14 +14,14 @@
         };
         github = {
           user = {
-            name = "0xB0F";
-            email = "github.gimmick175@slmails.com";
+            name = "0x7375";
+            email = "github.little@0xaa.me";
           };
         };
         codeberg = {
           user = {
-            name = "0xB0F";
-            email = "codeberg.whooping751@simplelogin.com";
+            name = "0x7E";
+            email = "codeberg.unmapped@0xaa.me";
           };
         };
       in

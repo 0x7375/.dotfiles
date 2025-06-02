@@ -19,7 +19,7 @@ lib.mkIf config.me.secrets.enable {
       # bash
       ''
         remote_url="https://codeberg.org"
-        user="0xB0F"
+        user="0x7E"
         remote="''${remote_url}/''${user}"
         backup_dir="/home/${config.me.user}/git"
         mkdir -p "$backup_dir"

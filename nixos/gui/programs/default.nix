@@ -20,6 +20,8 @@ lib.mkIf config.me.gui.enable {
 
     wireshark.enable = true;
 
+    kdeconnect.enable = true;
+
     localsend = {
       enable = true;
       package = pkgs.auto.localsend;

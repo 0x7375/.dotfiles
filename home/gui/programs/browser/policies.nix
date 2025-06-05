@@ -11,7 +11,6 @@ let
   policies = {
     Cookies = {
       Allow = [
-        "https://brave.com"
         "https://reddit.com"
         "https://twitch.tv"
         "https://monkeytype.com"
@@ -20,9 +19,6 @@ let
         "https://openai.com"
         "https://chatgpt.com"
         "https://claude.ai"
-        "https://deepseek.com"
-        "https://matrix.org"
-        "https://element.io"
       ];
     };
     ExtensionSettings =

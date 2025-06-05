@@ -20,7 +20,6 @@
       setopt histignorespace
       setopt histsavenodups
       setopt histreduceblanks
-      setopt histverify
       setopt prompt_subst
       setopt inc_append_history_time
       setopt no_nomatch

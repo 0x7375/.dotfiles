@@ -49,7 +49,6 @@ in
         "dotglob"
         "failglob"
         "interactive_comments"
-        "histverify"
       ];
       initExtra = # bash
         ''

@@ -38,5 +38,27 @@
       }
       zle -N fzf-history-widget
 
+      ks() {
+        if ! command -v kdeconnect-cli &> /dev/null; then
+          echo "kdeconnect is not installed."
+          return 1
+        fi
+
+        kdeconnect-cli --refresh
+        local device=$(kdeconnect-cli --list-devices --name-only | ${pkgs.fzf}/bin/fzf --height 40% --reverse)
+
+        if [ -z "$device" ]; then
+          return 1
+        fi
+        
+        echo "Sharing with $device"
+        if [[ -z $1 ]]; then
+          kdeconnect-cli --send-clipboard -n "$device"
+        elif [[ -f $1 || "$1" =~ ^https?:// ]]; then
+          kdeconnect-cli --share "$@" -n "$device"
+        else
+          kdeconnect-cli --share-text "$1" -n "$device"
+        fi
+      }
     '';
 }

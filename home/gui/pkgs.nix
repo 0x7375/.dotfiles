@@ -22,7 +22,6 @@ lib.mkIf config.me.gui.enable {
     in
     [
       protonvpn-gui
-      protonmail-desktop
       stable.ente-auth
       gnome-text-editor
 

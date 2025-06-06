@@ -314,7 +314,19 @@ in
           '';
         open = "&mimeopen \"$f\" > /dev/null 2>&1";
 
-        share = "$''${pkgs.curl}/bin/curl -F\"file=@$f\" https://0x0.st | ${pkgs.xsel}/bin/xsel -ib";
+        online-share = "$''${pkgs.curl}/bin/curl -F\"file=@$f\" https://0x0.st | ${pkgs.xsel}/bin/xsel -ib";
+        local-share = # bash
+          ''
+            ''${{
+              source ~/.config/zsh/widgets.zsh
+              out=$(ks $fx)
+              device=$(echo "$out" | head -n 1 | cut -d\  -f3)
+              count=$(echo "$out" | tail -n +2 | wc -l)
+
+              lf -remote 'send unselect'
+              lf -remote "send echo '$count Files sent to $device'"
+            }}
+          '';
         paste-overwrite = # bash
           ''
             %{{
@@ -437,7 +449,8 @@ in
         "=" = "toggle-executable";
         gL = "follow_link";
         "<c-z>" = "$kill -STOP $PPID";
-        W = "share";
+        w = "local-share";
+        W = "online-share";
 
         "g/" = "cd /";
         "~" = "cd /home/${user}";

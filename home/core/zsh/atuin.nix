@@ -58,7 +58,7 @@ lib.mkIf config.me.secrets.enable {
             selected=$(eval "atuin search ''${atuin_opts}" | fzf "''${fzf_opts[@]}")
             local ret=$?
             if [[ -n $selected ]]; then
-                LBUFFER+="''${selected}"
+                LBUFFER="''${selected}"
             fi
             zle reset-prompt
             return $ret

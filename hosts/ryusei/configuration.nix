@@ -57,8 +57,11 @@
       RUN+="${pkgs.su}/bin/su ${config.me.user} -c '${pkgs.scripts.charging-notify}/bin/charging-notify 1'"
     '';
 
+  programs.i3lock.enable = true;
+
   environment.systemPackages = with pkgs; [
     acpi
+    scripts.xidle-check
   ];
 
   environment.variables = {

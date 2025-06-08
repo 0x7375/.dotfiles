@@ -8,6 +8,10 @@ pkgs.writeShellApplication {
     xorg.xrandr
     xorg.xset
   ];
+  bashOptions = [
+    "nounset"
+    "pipefail"
+  ];
   text = ''
     # ignore standby and suspend when connected to a monitor
     external_monitor_connected=$(xrandr --query | grep -w "connected" | grep -v "eDP")

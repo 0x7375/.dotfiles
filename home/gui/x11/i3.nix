@@ -200,7 +200,11 @@ lib.mkIf config.me.gui.enable {
             notification = false;
           }
           {
-            command = "${pkgs.feh}/bin/feh --no-fehbg --bg-fill ${config.me.flakeDir}/assets/wallpaper.png";
+            command = "kdeconnect-cli --refresh";
+            notification = false;
+          }
+          {
+            command = "if [[ -d ~/pictures/wallpapers/landscapes ]]; then shuf -e -n1 ~/pictures/wallpapers/landscapes/* | ${pkgs.findutils}/bin/xargs ${pkgs.feh}/bin/feh --no-fehbg --bg-fill; else ${pkgs.feh}/bin/feh --no-fehbg --bg-fill ${config.me.flakeDir}/assets/wallpaper.png; fi";
             always = true;
             notification = false;
           }

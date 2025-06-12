@@ -70,7 +70,7 @@ in
 
   security.acme = lib.mkIf config.me.secrets.enable {
     acceptTerms = true;
-    defaults.email = "nginx.commerce973@simplelogin.com";
+    defaults.email = "acme.ranked@0xaa.me";
     certs."${url}" = {
       extraDomainNames = [ "*.${url}" ];
       dnsProvider = "cloudflare";

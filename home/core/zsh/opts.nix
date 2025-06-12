@@ -21,7 +21,6 @@
       setopt histsavenodups
       setopt histreduceblanks
       setopt prompt_subst
-      setopt inc_append_history_time
       setopt no_nomatch
       unsetopt share_history
     '';

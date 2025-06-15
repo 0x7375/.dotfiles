@@ -2,9 +2,14 @@
 
 {
   systemd.user.services.atuinExport = {
-    description = "Export Atuin history";
+    path = with pkgs; [
+      atuin
+      gawk
+    ];
     script = ''
-      ${pkgs.atuin}/bin/atuin history list --format "{command}" > ~/documents/backup/shell_history
+      set +e
+      export ATUIN_SESSION=$(atuin uuid)
+      atuin history list --format {command} | awk '!seen[$0]++' > ~/documents/backup/shell_history
     '';
     serviceConfig = {
       Type = "oneshot";

@@ -102,7 +102,7 @@ lib.mkIf config.me.gui.enable {
       taplo
       jq
 
-      # android-studio
+      android-studio
       # stable.jetbrains.idea-community
 
       # codium

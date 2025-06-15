@@ -248,21 +248,21 @@ pkgs.writeShellApplication {
 
           echo "$result" > "$result_file"
           echo "$current_hash" > "$hash_file"
-
-          if [[ -n $remote_build ]]; then
-            # prevent garbage collection of the closure
-            silent sudo nix-store --realise "$result" --add-root "/nix/var/nix/gcroot/$host-nixos"
-
-            log "Copying closure to $host"
-            env "NIX_SSHOPTS=-q ''${ssh_opts[*]}" nix-copy-closure --to "$user"@"$host" "$result"
-          fi
-
-          if [[ $changing_generation -eq 1 ]]; then
-            log "Comparing configurations"
-            show_generation_diff "$result"
-          fi
         else
           log "No changes detected, skipping build"
+        fi
+
+        if [[ -n $remote_build ]]; then
+          # prevent garbage collection of the closure
+          silent sudo nix-store --realise "$result" --add-root "/nix/var/nix/gcroot/$host-nixos"
+
+          log "Copying closure to $host"
+          env "NIX_SSHOPTS=-q ''${ssh_opts[*]}" nix-copy-closure --to "$user"@"$host" "$result"
+        fi
+
+        if [[ $changing_generation -eq 1 ]]; then
+          log "Comparing configurations"
+          show_generation_diff "$result"
         fi
 
         case $action in

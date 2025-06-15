@@ -48,9 +48,17 @@ lib.mkIf config.me.secrets.enable {
       # "LOGGING__FILE__ENABLED" = "false";
       # "LOGGING__FILE__PATH" = "/var/logs/";
 
-      "QUEUECLEANER__IMPORT_FAILED_MAX_STRIKES" = "0";
+      "QUEUECLEANER__IMPORT_FAILED_MAX_STRIKES" = "3";
       "QUEUECLEANER__IMPORT_FAILED_IGNORE_PATTERNS__0" = "title mismatch";
       "QUEUECLEANER__IMPORT_FAILED_IGNORE_PATTERNS__1" = "manual import required";
+
+      "QUEUECLEANER__STALLED_MAX_STRIKES" = "3";
+      "QUEUECLEANER__DOWNLOADING_METADATA_MAX_STRIKES" = "3";
+      "QUEUECLEANER__STALLED_RESET_STRIKES_ON_PROGRESS" = "true";
+
+      "QUEUECLEANER__SLOW_MAX_STRIKES" = "3";
+      "QUEUECLEANER__SLOW_MAX_TIME" = "168";
+      "QUEUECLEANER__SLOW_RESET_STRIKES_ON_PROGRESS" = "true";
 
       "DOWNLOAD_CLIENT" = "qbittorrent";
       "QBITTORRENT__URL" = "http://host.docker.internal:8080";

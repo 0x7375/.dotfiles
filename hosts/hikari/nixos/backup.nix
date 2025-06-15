@@ -38,8 +38,6 @@ lib.mkIf config.me.secrets.enable {
             git clone --bare "codeberg:$user/$repo_name" "$repo_dir"
           fi
         done
-
-        atuin history list --format {command} | awk '!seen[$0]++' > ~/documents/backup/history
       '';
     serviceConfig = {
       Type = "oneshot";

@@ -62,6 +62,16 @@ lib.mkIf config.me.gui.enable {
             "${modifier}+q" = "kill";
             "${modifier}+e" = "exec --no-startup-id $term ${pkgs.lf}/bin/lf";
             "${modifier}+Shift+e" = "exec --no-startup-id $term sudo ${pkgs.lf}/bin/lf";
+            "${modifier}+m" =
+              let
+                dir = "$HOME/notes";
+              in
+              "exec --no-startup-id $term $(${pkgs.writeShellScript "open-note" ''
+                note=$(ls ${dir} | sed 's/\.md$//' | bemenu -p "NOTE")
+                if [ -n "$note" ]; then
+                  echo $EDITOR "${dir}/$note.md"
+                fi
+              ''})";
             "${modifier}+n" =
               "exec --no-startup-id $term ${pkgs.zsh}/bin/zsh -c '${pkgs.networkmanager}/bin/nmcli device wifi rescan && unset COLORTERM && TERM=xterm-old ${pkgs.networkmanager}/bin/nmtui'";
             "${modifier}+b" = "exec --no-startup-id $term ${pkgs.bluetuith}/bin/bluetuith --no-warning";

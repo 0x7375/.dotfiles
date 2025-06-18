@@ -42,6 +42,8 @@ lib.mkIf config.me.secrets.enable {
     ];
 
     environment = {
+      # 1 strike happens every 5 minutes
+
       TZ = config.time.timeZone;
 
       # "LOGGING__LOGLEVEL" = "Verbose";
@@ -52,13 +54,15 @@ lib.mkIf config.me.secrets.enable {
       "QUEUECLEANER__IMPORT_FAILED_IGNORE_PATTERNS__0" = "title mismatch";
       "QUEUECLEANER__IMPORT_FAILED_IGNORE_PATTERNS__1" = "manual import required";
 
-      "QUEUECLEANER__STALLED_MAX_STRIKES" = "3";
-      "QUEUECLEANER__DOWNLOADING_METADATA_MAX_STRIKES" = "3";
+      # 3 hours
+      "QUEUECLEANER__STALLED_MAX_STRIKES" = "36";
       "QUEUECLEANER__STALLED_RESET_STRIKES_ON_PROGRESS" = "true";
 
-      "QUEUECLEANER__SLOW_MAX_STRIKES" = "3";
-      "QUEUECLEANER__SLOW_MAX_TIME" = "168";
-      "QUEUECLEANER__SLOW_RESET_STRIKES_ON_PROGRESS" = "true";
+      "QUEUECLEANER__DOWNLOADING_METADATA_MAX_STRIKES" = "3";
+
+      # "QUEUECLEANER__SLOW_MAX_STRIKES" = "3";
+      # "QUEUECLEANER__SLOW_MAX_TIME" = "168";
+      # "QUEUECLEANER__SLOW_RESET_STRIKES_ON_PROGRESS" = "true";
 
       "DOWNLOAD_CLIENT" = "qbittorrent";
       "QBITTORRENT__URL" = "http://host.docker.internal:8080";

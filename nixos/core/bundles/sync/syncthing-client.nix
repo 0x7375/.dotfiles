@@ -8,6 +8,20 @@
 lib.mkIf (config.me.syncthing-client.enable && config.me.secrets.enable) {
   programs.fuse.userAllowOther = true;
 
+  systemd.tmpfiles.rules =
+    let
+      content = builtins.replaceStrings [ "\n" ] [ "\\n" ] ''
+        !/bis/user
+        !/bis/system/save
+        **
+      '';
+    in
+    [
+      "d /home/${config.me.user}/.config 0755 ${config.me.user} users - -"
+      "d /home/${config.me.user}/.config/Ryujinx 0755 ${config.me.user} users - -"
+      "f /home/${config.me.user}/.config/Ryujinx/.stignore 0644 ${config.me.user} users - ${content}"
+    ];
+
   services.syncthing = {
     settings = {
       devices = {
@@ -36,6 +50,24 @@ lib.mkIf (config.me.syncthing-client.enable && config.me.secrets.enable) {
         };
         ds = syncthingDirConfig {
           path = "games/ds";
+          devices = [
+            "server"
+          ];
+        };
+        switch = syncthingDirConfig {
+          path = "games/switch";
+          devices = [
+            "server"
+          ];
+        };
+        ryujinx = syncthingDirConfig {
+          path = ".config/Ryujinx";
+          devices = [
+            "server"
+          ];
+        };
+        dolphin = syncthingDirConfig {
+          path = ".local/share/dolphin-emu/StateSaves";
           devices = [
             "server"
           ];

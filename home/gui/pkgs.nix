@@ -57,6 +57,8 @@ lib.mkIf config.me.gui.enable {
       dia
       gnome-calculator
       melonDS
+      ryubing
+      dolphin-emu
       perl538Packages.FileMimeInfo
       qbittorrent
       scrcpy

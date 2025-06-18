@@ -65,6 +65,31 @@ lib.mkIf config.me.secrets.enable {
               devices = [
                 "yugen"
                 "ryusei"
+                "tsuno"
+              ];
+            };
+            switch = syncthingDirConfig {
+              path = "games/switch";
+              devices = [
+                "yugen"
+                "ryusei"
+                "tsuno"
+              ];
+            };
+            ryujinx = syncthingDirConfig {
+              path = "ryujinx";
+              devices = [
+                "yugen"
+                "ryusei"
+                "tsuno"
+              ];
+            };
+            dolphin = syncthingDirConfig {
+              path = "dolphin";
+              devices = [
+                "yugen"
+                "ryusei"
+                "tsuno"
               ];
             };
             perso = syncthingDirConfig {
@@ -109,7 +134,7 @@ lib.mkIf config.me.secrets.enable {
               ];
             };
             ro-devices = [
-              "neiro"
+              "tsuno"
             ];
           })
           // (mkRo {

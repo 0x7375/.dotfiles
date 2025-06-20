@@ -1,4 +1,5 @@
 {
+  pkgs,
   config,
   myLib,
   ...
@@ -22,6 +23,8 @@
   users.users.root.openssh.authorizedKeys.keys = [
     myLib.ssh-keys.ryusei
   ];
+
+  powerManagement.cpuFreqGovernor = "performance";
 
   boot.supportedFilesystems = [ "ntfs" ];
 

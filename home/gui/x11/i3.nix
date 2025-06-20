@@ -202,6 +202,7 @@ lib.mkIf config.me.gui.enable {
             { class = "Main"; }
             { class = "Matplotlib"; }
             { class = "gnome-calculator"; }
+            { class = "Ryujinx"; }
           ];
         };
         startup = [

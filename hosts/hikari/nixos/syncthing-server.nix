@@ -84,6 +84,14 @@ lib.mkIf config.me.secrets.enable {
                 "tsuno"
               ];
             };
+            gamecube = syncthingDirConfig {
+              path = "games/gamecube";
+              devices = [
+                "yugen"
+                "ryusei"
+                "tsuno"
+              ];
+            };
             dolphin = syncthingDirConfig {
               path = "dolphin";
               devices = [
@@ -135,6 +143,7 @@ lib.mkIf config.me.secrets.enable {
             };
             ro-devices = [
               "tsuno"
+              "neiro"
             ];
           })
           // (mkRo {

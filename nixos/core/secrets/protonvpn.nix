@@ -8,6 +8,7 @@
 
 let
   gw-ip = "10.2.0.1";
+  server = config.me.hostname == "hikari";
 in
 lib.mkIf config.me.secrets.enable {
   sops.secrets."proton_vpn/endpoint" = { };
@@ -18,7 +19,6 @@ lib.mkIf config.me.secrets.enable {
     let
       inherit (myLib) network;
       writeScriptFile = name: text: ((pkgs.writeShellScriptBin name text) + "/bin/${name}");
-      server = config.me.hostname == "hikari";
       ip = "10.2.0.2";
       table = "200";
       postUpFile = writeScriptFile "postUp.sh" (
@@ -79,7 +79,7 @@ lib.mkIf config.me.secrets.enable {
     autostart = false;
   };
 
-  systemd.services."proton-portforward" = {
+  systemd.services."proton-portforward" = lib.mkIf server {
     requires = [ "network-online.target" ];
     after = [ "network-online.target" ];
     bindsTo = [ "wg-quick-proton.service" ];

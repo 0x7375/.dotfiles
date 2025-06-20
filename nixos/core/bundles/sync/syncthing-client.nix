@@ -66,6 +66,12 @@ lib.mkIf (config.me.syncthing-client.enable && config.me.secrets.enable) {
             "server"
           ];
         };
+        gamecube = syncthingDirConfig {
+          path = "games/gamecube";
+          devices = [
+            "server"
+          ];
+        };
         dolphin = syncthingDirConfig {
           path = ".local/share/dolphin-emu/StateSaves";
           devices = [

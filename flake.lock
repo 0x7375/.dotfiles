@@ -384,11 +384,11 @@
     "secrets": {
       "flake": false,
       "locked": {
-        "lastModified": 1749416540,
-        "narHash": "sha256-BUnkEXQqWWLpMsPnSxzkuM8mQlXg9SkTpCRHFhaECho=",
+        "lastModified": 1750352700,
+        "narHash": "sha256-Gjw9CviDTN1fSmNmS4z969XL3VSmCR/BS9s84ib8bDs=",
         "ref": "refs/heads/main",
-        "rev": "2ced0efc8def4a98d8afc91a0b25bd04603c2dc1",
-        "revCount": 58,
+        "rev": "a40bb14fa4a2659702465f9661e5a1589fe7dfce",
+        "revCount": 59,
         "type": "git",
         "url": "ssh://git@codeberg.org/0x7E/nix-secrets"
       },

@@ -46,9 +46,9 @@ lib.mkIf config.me.secrets.enable {
 
       TZ = config.time.timeZone;
 
-      # "LOGGING__LOGLEVEL" = "Verbose";
+      "LOGGING__LOGLEVEL" = "Verbose";
       # "LOGGING__FILE__ENABLED" = "false";
-      # "LOGGING__FILE__PATH" = "/var/logs/";
+      # "LOGGING__FILE__PATH" = "/var/log/";
 
       "QUEUECLEANER__IMPORT_FAILED_MAX_STRIKES" = "3";
       "QUEUECLEANER__IMPORT_FAILED_IGNORE_PATTERNS__0" = "title mismatch";

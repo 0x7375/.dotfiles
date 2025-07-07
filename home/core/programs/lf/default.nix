@@ -89,6 +89,11 @@ in
       enable = true;
 
       extraConfig =
+        let
+          confirm-key = "s";
+          no-confirm =
+            keys: lib.concatStringsSep "\n" (map (key: "vmap ${key} push ${confirm-key}${key}") keys);
+        in
         lib.optionalString gui
           # bash
           ''
@@ -104,6 +109,22 @@ in
             setlocal ~/pictures/ reverse
 
             on-focus-gained
+
+            vmap s visual-toggle
+            vmap o visual-change
+            vmap <esc> visual-discard
+            ${no-confirm [
+              "D"
+              "x"
+              "y"
+              "Y"
+              "H"
+              "l"
+              "ze"
+              "zc"
+              "w"
+              "<c-n>"
+            ]}
 
             &[ "$LF_LEVEL" -eq 1 ] || lf -remote "send $id echoerr \"Warning: You're in a nested lf instance!\""
           '';
@@ -392,9 +413,8 @@ in
         H = "copy-path";
         C = "clear";
         x = "cut";
-        s = "toggle";
-        V = "invert";
-        v = "invert-below";
+        s = "visual";
+        v = "invert";
         u = "unselect";
         j = "down";
         k = "up";

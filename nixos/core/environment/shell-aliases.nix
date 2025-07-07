@@ -6,25 +6,14 @@ let
 in
 {
   environment.shellAliases = {
-    nr = "${pkgs.nix}/bin/nix run";
     np = "${pkgs.nix}/bin/nix profile";
-    nb = "${pkgs.nix}/bin/nix build";
     ns = "${pkgs.nix}/bin/nix shell";
-    ne = "${pkgs.nix}/bin/nix eval";
 
     svn = "${pkgs.subversion}/bin/svn --config-dir $XDG_CONFIG_HOME/subversion";
     adb = "HOME=$XDG_DATA_HOME/android ${pkgs.android-tools}/bin/adb";
     wget = "${pkgs.wget}/bin/wget --hsts-file=$XDG_DATA_HOME/wget-hsts";
 
-    l = "${config.services.locate.package}/bin/locate -d ~/.cache/locate.db";
-    lu = "${config.services.locate.package}/bin/updatedb --output=/home/${config.me.user}/.cache/locate.db";
-
-    t = "history -D | ${pkgs.coreutils}/bin/tail -n 1 | ${pkgs.gawk}/bin/awk '{ print $2 }'";
     v = "$EDITOR";
-    please = "sudo $(fc -ln -1)";
-
-    s = "${pkgs.systemd}/bin/systemctl";
-    j = "${pkgs.systemd}/bin/journalctl";
 
     e = "${pkgs.atool}/bin/aunpack";
     c = "${pkgs.atool}/bin/apack";
@@ -41,12 +30,11 @@ in
     ffmpeg = "${pkgs.ffmpeg-full}/bin/ffmpeg -hide_banner";
 
     grep = "${pkgs.gnugrep}/bin/grep --color=always";
-    ls = "ls --color --group-directories-first";
+    ls = "ls --color --group-directories-first -h";
     ll = "${pkgs.coreutils}/bin/ls -lha --color --group-directories-first";
     lsblk = "${pkgs.util-linux}/bin/lsblk -o NAME,FSTYPE,SIZE,MOUNTPOINTS";
     tree = "${pkgs.tree}/bin/tree -L 4";
     diff = "${pkgs.diffutils}/bin/diff --color";
-    pk = "${pkgs.procps}/bin/pkill";
     bc = "${pkgs.bc}/bin/bc -l";
 
     so = "${pkgs.ncurses}/bin/clear; exec $SHELL";
@@ -60,16 +48,9 @@ in
     open = "${pkgs.xdg-utils}/bin/xdg-open";
 
     gd = "${git} diff";
-    gds = "${git} diff --staged";
-    gs = "${git} status --short";
-    gss = "${git} status";
+    gs = "${git} status";
     ga = "${git} add";
     gc = "${git} commit";
-    gca = "${git} commit --amend";
-    gk = "${git} checkout";
-    gh = "${git} stash";
-
-    clip = "${pkgs.xclip}/bin/xclip -sel clip";
 
     py = "python";
 
@@ -166,7 +147,7 @@ in
             } | less -R
           ''
         }
-        }
+      }
 
       vpn () {
         if [[ $# -eq 0 ]]; then

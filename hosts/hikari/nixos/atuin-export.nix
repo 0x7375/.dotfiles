@@ -1,7 +1,7 @@
 { pkgs, ... }:
 
 {
-  systemd.user.services.atuinExport = {
+  systemd.user.services.atuin-export = {
     path = with pkgs; [
       atuin
       gawk
@@ -16,7 +16,7 @@
     };
   };
 
-  systemd.user.timers.atuinExport = {
+  systemd.user.timers.atuin-export = {
     description = "Weekly Atuin history export";
     wantedBy = [ "timers.target" ];
     timerConfig = {

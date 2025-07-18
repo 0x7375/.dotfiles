@@ -6,16 +6,15 @@
 }:
 
 lib.mkIf (config.me.gui.enable && false) {
-  systemd.timers."look-away" = {
+  systemd.timers.look-away = {
     wantedBy = [ "timers.target" ];
     timerConfig = {
       OnBootSec = "20m";
       OnUnitActiveSec = "20m";
-      Unit = "look-away.service";
     };
   };
 
-  systemd.services."look-away" = {
+  systemd.services.look-away = {
     script = ''
       ${pkgs.systemd}/bin/systemctl start look-away-notify
     '';
@@ -24,7 +23,7 @@ lib.mkIf (config.me.gui.enable && false) {
     };
   };
 
-  systemd.services."look-away-notify" = {
+  systemd.services.look-away-notify = {
     script = pkgs.writeShellScript "look-away-notify" ''
       ADDRESS=/run/user/${toString config.me.uid}/bus
 

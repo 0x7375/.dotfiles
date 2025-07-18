@@ -35,8 +35,8 @@
   ];
 
   services.journald.extraConfig = ''
-    SystemMaxFileSize=50M
-    SystemMaxUse=400M
+    SystemMaxFileSize=40M
+    SystemMaxUse=200M
   '';
 
   systemd.services."service-failure-notify@" = {

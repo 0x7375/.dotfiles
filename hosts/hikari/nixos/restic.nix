@@ -41,6 +41,7 @@ lib.mkIf config.me.secrets.enable {
         config.services.sonarr.dataDir
         config.services.prowlarr.dataDir
         config.services.bazarr.dataDir
+        "/var/lib/cleanuparr"
       ];
 
       gitRepos = [

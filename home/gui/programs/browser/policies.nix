@@ -1,7 +1,5 @@
 {
-  inputs,
   config,
-  system,
   myLib,
   lib,
   ...

@@ -6,14 +6,13 @@
 }:
 
 lib.mkIf config.me.secrets.enable {
-  systemd.services.backup = {
+  systemd.services.git-backup = {
     path = with pkgs; [
       git
       coreutils
       curl
       jq
       openssh
-      atuin
     ];
     script =
       # bash
@@ -45,7 +44,7 @@ lib.mkIf config.me.secrets.enable {
     };
   };
 
-  systemd.timers.backup = {
+  systemd.timers.git-backup = {
     wantedBy = [ "timers.target" ];
     timerConfig = {
       OnCalendar = "weekly";

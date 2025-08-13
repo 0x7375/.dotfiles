@@ -22,27 +22,29 @@
       in
       {
         enable = true;
-        enabledExtensions = with spicePkgs.extensions; [
-          shuffle
-          betterGenres
-          adblock
-          # ]
-          # ++ [
-          #   {
-          #     src =
-          #       pkgs.fetchFromGitHub {
-          #         owner = "spicetify";
-          #         repo = "spicetify-extensions";
-          #         rev = "main";
-          #         sha256 = "sha256-LbU3owID3LrfBjaPnspnO+l7g/iSxXcoyBgKduK/d3w=";
-          #       }
-          #       + "/startup-page/dist";
-          #     name = "startup-page.js";
-          #   }
-        ];
+        enabledExtensions =
+          with spicePkgs.extensions;
+          [
+            shuffle
+            betterGenres
+            adblock
+          ]
+          ++ [
+            {
+              src =
+                pkgs.fetchFromGitHub {
+                  owner = "Resxt";
+                  repo = "Spicetify-Extensions";
+                  rev = "main";
+                  sha256 = "sha256-+Th5o00c3Y8U+Y/RGmRSkWWp97YCoCJmoESFLZf9dwM=";
+                }
+                + "/startup-page/dist";
+              name = "startup-page.js";
+            }
+          ];
         enabledCustomApps = with spicePkgs.apps; [
           marketplace
-          # betterLibrary
+          betterLibrary
         ];
         enabledSnippets = with spicePkgs.snippets; [
           removePopular

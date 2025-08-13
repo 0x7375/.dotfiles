@@ -156,6 +156,7 @@ pkgs.writeShellApplication {
         local -a nix_build_flags=()
         local -i found_separator=0
         local -i force_rebuild=0
+        local -i auto_accept=0
         local -i changing_generation=0
 
         for arg in "$@"; do
@@ -165,6 +166,8 @@ pkgs.writeShellApplication {
             found_separator=1
           elif [[ $arg == "-f" || $arg == "--force" ]]; then
             force_rebuild=1
+          elif [[ $arg == "-y" || $arg == "--yes" ]]; then
+            auto_accept=1
           elif [[ $arg == "-h" || $arg == "--help" ]]; then
             doc
           else
@@ -279,7 +282,11 @@ pkgs.writeShellApplication {
         esac
 
         echo -n " [y/N]$hide_cursor"
-        read -s -r -n 1 answer
+        if [[ $auto_accept -eq 1 ]]; then
+          answer=y
+        else
+          read -s -r -n 1 answer
+        fi
         echo "$show_cursor"
 
         if [[ $answer == "y" ]]; then

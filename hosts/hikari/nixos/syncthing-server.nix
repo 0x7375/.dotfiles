@@ -57,6 +57,9 @@ lib.mkIf config.me.secrets.enable {
           "tsuno" = {
             id = "XAFE3W3-FG4XVNB-GCPR4CU-XAYED7H-AISJHBI-JREWBFT-CLUTRPZ-EVYV5AH";
           };
+          "samsung" = {
+            id = "4J5QS3L-TBUVQNM-RID2OP7-RTQG4GA-NWRB2E5-HXMTK7R-4C4QBFL-7M3RDAU";
+          };
         };
         folders =
           {
@@ -128,6 +131,7 @@ lib.mkIf config.me.secrets.enable {
                 "ryusei"
                 "yugen"
                 "neiro"
+                "samsung"
               ];
             };
           }

@@ -1,5 +1,6 @@
 {
   lib,
+  pkgs,
   config,
   ...
 }:
@@ -18,6 +19,7 @@ in
     services.syncthing = {
       enable = true;
       inherit user;
+      package = pkgs.auto.syncthing;
       dataDir = "/home/${user}";
       overrideDevices = true;
       overrideFolders = true;

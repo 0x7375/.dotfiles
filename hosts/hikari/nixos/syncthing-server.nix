@@ -121,6 +121,15 @@ lib.mkIf config.me.secrets.enable {
                 "yugen"
               ];
             };
+            courses = syncthingDirConfig {
+              path = "courses";
+              devices = [
+                "tsuno"
+                "ryusei"
+                "yugen"
+                "neiro"
+              ];
+            };
           }
           // (mkRo {
             name = "pictures";

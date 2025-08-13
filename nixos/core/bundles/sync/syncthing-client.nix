@@ -84,6 +84,12 @@ lib.mkIf (config.me.syncthing-client.enable && config.me.secrets.enable) {
             "server"
           ];
         };
+        courses = syncthingDirConfig {
+          path = "courses";
+          devices = [
+            "server"
+          ];
+        };
         perso = syncthingDirConfig {
           path = "perso";
           devices = [

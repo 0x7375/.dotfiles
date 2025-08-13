@@ -12,50 +12,49 @@
   ];
 
   config = lib.mkIf config.me.gui.enable {
-    home.packages = with pkgs; [
-      spotify
-    ];
+    # home.packages = with pkgs; [
+    #   spotify
+    # ];
 
     programs.spicetify =
       let
         spicePkgs = inputs.spicetify-nix.legacyPackages.${pkgs.system};
       in
       {
-        enable = false;
-        enabledExtensions =
-          with spicePkgs.extensions;
-          [
-            shuffle
-            # betterGenres
-          ]
-          ++ [
-            # {
-            #   src =
-            #     pkgs.fetchFromGitHub {
-            #       owner = "0x7E";
-            #       repo = "Spicetify-Extensions";
-            #       rev = "main";
-            #       sha256 = "sha256-+Th5o00c3Y8U+Y/RGmRSkWWp97YCoCJmoESFLZf9dwM=";
-            #     }
-            #     + "/startup-page/dist";
-            #   name = "startup-page.js";
-            # }
-          ];
+        enable = true;
+        enabledExtensions = with spicePkgs.extensions; [
+          shuffle
+          betterGenres
+          adblock
+          # ]
+          # ++ [
+          #   {
+          #     src =
+          #       pkgs.fetchFromGitHub {
+          #         owner = "spicetify";
+          #         repo = "spicetify-extensions";
+          #         rev = "main";
+          #         sha256 = "sha256-LbU3owID3LrfBjaPnspnO+l7g/iSxXcoyBgKduK/d3w=";
+          #       }
+          #       + "/startup-page/dist";
+          #     name = "startup-page.js";
+          #   }
+        ];
         enabledCustomApps = with spicePkgs.apps; [
-          # marketplace
+          marketplace
           # betterLibrary
         ];
         enabledSnippets = with spicePkgs.snippets; [
-          # removePopular
-          # hideFriendActivityButton
-          # hidePlayingGif
-          # hideRecentlyPlayed
-          # hideRecentSearches
-          # hideWhatsNewButton
-          # hideMadeForYou
-          # removeRecentlyPlayed
-          # hideNowPlayingViewButton
-          # hideMiniPlayerButton
+          removePopular
+          hideFriendActivityButton
+          hidePlayingGif
+          hideRecentlyPlayed
+          hideRecentSearches
+          hideWhatsNewButton
+          hideMadeForYou
+          removeRecentlyPlayed
+          hideNowPlayingViewButton
+          hideMiniPlayerButton
         ];
         # theme = {
         #   src = spicePkgs.sources.lucidSrc + "/src";

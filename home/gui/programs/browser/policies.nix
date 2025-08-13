@@ -17,6 +17,7 @@ let
         "https://openai.com"
         "https://chatgpt.com"
         "https://claude.ai"
+        "https://keybr.com"
       ];
     };
     ExtensionSettings =

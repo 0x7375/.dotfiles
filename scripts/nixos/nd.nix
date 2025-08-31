@@ -9,7 +9,7 @@ pkgs.writeShellApplication {
   runtimeInputs = with pkgs; [
     coreutils
     gnutar
-    nvd
+    dix
     git
     nix-output-monitor
     jq
@@ -131,7 +131,7 @@ pkgs.writeShellApplication {
 
       show_generation_diff() {
         local -r result="$1"
-        local -r cmd="nix run nixpkgs#nvd diff /run/current-system $result"
+        local -r cmd="nix run nixpkgs#dix /run/current-system $result"
 
         if [[ -n $remote_build ]]; then
           ssh_run "$cmd"

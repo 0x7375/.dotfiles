@@ -76,8 +76,6 @@ lib.mkIf config.me.gui.enable {
 
       go
 
-      protege-distribution
-
       # nodePackages.eas-cli
 
       # haskell

@@ -25,6 +25,7 @@
     initialHashedPassword = lib.mkForce null;
     openssh.authorizedKeys.keys = [
       myLib.ssh-keys.yugen
+      myLib.ssh-keys.ryusei
     ];
   };
 

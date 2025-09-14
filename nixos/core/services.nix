@@ -13,7 +13,7 @@
 
     fail2ban = {
       enable = true;
-      maxretry = 5;
+      maxretry = 10;
     };
 
     openssh = {
@@ -27,7 +27,7 @@
         ];
       };
       extraConfig = ''
-        Match Address ${myLib.network.lan.subnet}
+        Match Address ${myLib.network.lan.subnet},${myLib.network.vpn.subnet}
           AuthenticationMethods publickey
 
         Match All

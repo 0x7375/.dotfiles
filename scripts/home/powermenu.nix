@@ -8,6 +8,10 @@ pkgs.writeShellApplication {
     bemenu
     i3
   ];
+  bashOptions = [
+    "nounset"
+    "pipefail"
+  ];
   text = ''
     options=(kill logout shutdown reboot setup)
     if [[ -d /sys/class/power_supply/BAT0 ]]; then

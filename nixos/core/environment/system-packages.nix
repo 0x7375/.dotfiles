@@ -13,16 +13,6 @@
     gcc
     unzip
     (openssl.override { withZlib = true; })
-    wget
-    age
-    bc
-    cron
-    efibootmgr
-    fastfetch
-    ripgrep
-    tldr
-    trash-cli
-    tree
     nixpkgs-fmt
   ];
 }

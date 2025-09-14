@@ -9,7 +9,7 @@
       enable = true;
       bundles = {
         virtualBox.enable = true;
-        gaming.enable = true;
+        gaming.enable = false;
         gns3.enable = true;
       };
     };

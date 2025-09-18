@@ -84,6 +84,10 @@ in
 
       export SUDO_PROMPT="''${dots} Password for %p: "
 
+      fixpdf() {
+          ${pkgs.poppler-utils}/bin/pdftocairo -pdf "$1" "''${1%.pdf}-fixed.pdf"
+      }
+
       dotr() {
         ${cdDotfiles
           # bash

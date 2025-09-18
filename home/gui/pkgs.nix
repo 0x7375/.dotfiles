@@ -66,7 +66,7 @@ lib.mkIf config.me.gui.enable {
       omnissa-horizon-client
       auto.ungoogled-chromium
       auto.mullvad-browser
-      signal-desktop
+      auto.signal-desktop
       # st
     ]
     ++ [

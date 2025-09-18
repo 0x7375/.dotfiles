@@ -68,7 +68,19 @@
     WINIT_X11_SCALE_FACTOR = "1.20"; # giga zoom on alacritty otherwise
   };
 
+  # services.logind.settings.Login.HandleLidSwitch = "ignore";
   services.logind.lidSwitch = "ignore";
+
+  systemd.services.disable-lid-wakeup = {
+    description = "Disable lid switch as wake source";
+    wantedBy = [ "multi-user.target" ];
+    after = [ "multi-user.target" ];
+    serviceConfig = {
+      Type = "oneshot";
+      ExecStart = "${pkgs.bash}/bin/bash -c 'echo LID > /proc/acpi/wakeup'";
+      RemainAfterExit = true;
+    };
+  };
 
   services.auto-cpufreq.enable = true;
 

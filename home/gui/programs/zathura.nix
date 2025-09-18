@@ -94,7 +94,8 @@ let
       set statusbar-h-padding	"0"
       set statusbar-v-padding	"0"
 
-      map <C-I> feedkeys ":exec '${swap-zathura-theme}'"<Return>:source<Return>
+      map <C-S> feedkeys ":exec '${swap-zathura-theme}'<Return>:source<Return>"
+
       map <C-N> exec 'zathura "$FILE"'
       map <C-j> navigate next
       map <C-k> navigate previous
@@ -105,6 +106,13 @@ let
       map D toggle_page_mode
       map J zoom out
       map K zoom in
+
+      # Smooth scrolling
+      map j feedkeys "<C-Down>"
+      map k feedkeys "<C-Up>"
+      map h feedkeys "<C-Left>"
+      map l feedkeys "<C-Right>"
+
       map R reload
       map [index] <C-m> navigate_index select
       map b navigate previous
@@ -139,6 +147,6 @@ lib.mkIf config.me.gui.enable {
       content = builtins.replaceStrings [ "\n" ] [ "\\n" ] (rc + theme true);
     in
     [
-      "f /home/${config.me.user}/.config/zathura/zathurarc 0644 ${config.me.user} users - ${content}"
+      "f+ /home/${config.me.user}/.config/zathura/zathurarc 0644 ${config.me.user} users - ${content}"
     ];
 }

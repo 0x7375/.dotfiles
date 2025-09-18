@@ -14,6 +14,7 @@
     efibootmgr
     fastfetch
     ripgrep
+    fd
     tlrc
     trash-cli
     tree

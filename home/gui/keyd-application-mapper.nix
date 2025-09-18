@@ -63,7 +63,7 @@ lib.mkIf (config.me.gui.enable && config.me.keyd.enable) {
         ${defaultWithEnter}
         control.e = f6
 
-        [zen]
+        [zen-beta]
         ${defaultWithEnter}
         control.e = f6
 

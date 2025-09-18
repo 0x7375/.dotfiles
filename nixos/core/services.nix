@@ -47,4 +47,9 @@
       cachixTokenFile = config.sops.secrets.cachix.path;
     };
   };
+
+  systemd.services.cachix-watch-store-agent.serviceConfig = {
+    KillMode = lib.mkForce "control-group";
+    KillSignal = "SIGTERM";
+  };
 }

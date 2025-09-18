@@ -330,10 +330,11 @@ in
           userChrome = builtins.readFile ./userChrome.css;
           search = {
             force = true;
-            default = "_Google";
+            default = "Startpage";
             order = [
               "_Google"
               "Google Images"
+              "Startpage"
               "Brave"
               "Brave Images"
               "Nix Packages"
@@ -391,6 +392,23 @@ in
                   icon = "https://icons.duckduckgo.com/ip3/google.com.ico";
                   updateInterval = day;
                   metaData.alias = "!gi";
+                };
+                "Startpage" = {
+                  urls = [
+                    {
+                      template = "https://www.startpage.com/do/dsearch?prfe=d7a6edf2bdae7d159fd3c7281470fb1b1611b9ebc58099d433766aab83750a24485b18c6615e9979c5ef4f823efb2326568630359a4cfaca9f87b8eda4b78324a831f096405c6b39160f84ca";
+                      params = [
+                        {
+                          name = "query";
+                          value = "{searchTerms}";
+                        }
+                      ];
+                    }
+                  ];
+
+                  icon = "https://icons.duckduckgo.com/ip3/startpage.com.ico";
+                  updateInterval = day;
+                  metaData.alias = "!s";
                 };
                 "Dofus" = {
                   urls = [

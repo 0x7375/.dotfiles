@@ -13,7 +13,6 @@ let
         "https://twitch.tv"
         "https://monkeytype.com"
         "https://youtube.com"
-        "https://google.com"
         "https://openai.com"
         "https://chatgpt.com"
         "https://claude.ai"

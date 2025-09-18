@@ -64,8 +64,8 @@ vim.keymap.set("n", "<S-Tab>", "<C-^>", { desc = "Alternate file" })
 -- Indent whole file
 vim.keymap.set("n", "<leader>=", "mzgg=G`zzz", { desc = "Indent whole file" })
 
-vim.keymap.set({ 'n', 'x' }, 'go', function() vim.cmd("silent !xdg-open <cfile> &") end,
-    { desc = "Open file in default program" })
+-- vim.keymap.set({ 'n', 'x' }, 'go', function() vim.cmd("silent !xdg-open <cfile> &") end,
+--     { desc = "Open file in default program" })
 
 -- toggle line wrap
 vim.keymap.set('n', '<leader>l', function() vim.cmd("set wrap!") end, { desc = "Toggle line wrap" })

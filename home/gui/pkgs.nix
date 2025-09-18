@@ -44,7 +44,8 @@ lib.mkIf config.me.gui.enable {
       sly
       vlc
       celluloid
-      jellyfin-media-player
+      # insecure because of qt5: https://github.com/nixos/nixpkgs/issues/437865
+      # auto.jellyfin-media-player
       ffmpeg-full
 
       # files
@@ -62,7 +63,7 @@ lib.mkIf config.me.gui.enable {
       perl538Packages.FileMimeInfo
       qbittorrent
       scrcpy
-      vmware-horizon-client
+      omnissa-horizon-client
       auto.ungoogled-chromium
       auto.mullvad-browser
       signal-desktop
@@ -75,6 +76,8 @@ lib.mkIf config.me.gui.enable {
       deno
 
       go
+
+      apache-hop
 
       # nodePackages.eas-cli
 

@@ -48,5 +48,12 @@ lib.mkIf config.me.gui.enable {
       exec = "file-roller %F";
       name = "File Roller";
     };
+
+    "apache-hop" = {
+      exec = "hop-gui";
+      name = "Apache Hop";
+      type = "Application";
+      categories = [ "Development" ];
+    };
   };
 }

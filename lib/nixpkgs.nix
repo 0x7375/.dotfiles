@@ -101,6 +101,8 @@
         InconsolataNF = prev.callPackage ../derivations/fonts/InconsolataNF.nix { };
       };
 
+      apache-hop = prev.callPackage ../derivations/apache-hop.nix { };
+
       # namespace for scripts: e.g. "scripts.tmux-sessionizer"
       scripts = builtins.listToAttrs (
         map (path: {

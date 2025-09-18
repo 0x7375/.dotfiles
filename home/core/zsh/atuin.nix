@@ -79,5 +79,4 @@ lib.mkIf config.me.secrets.enable {
         bindkey '^P' atuin-history-up
         bindkey '^N' atuin-history-down
       '';
-
 }

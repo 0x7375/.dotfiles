@@ -52,6 +52,11 @@
       url = "github:nix-community/lanzaboote/v0.4.2";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    unf = {
+      url = "git+https://git.atagen.co/atagen/unf";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
   outputs =
     { ... }@inputs:

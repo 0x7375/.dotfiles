@@ -48,10 +48,6 @@ lib.mkIf config.me.secrets.enable {
         "/home/${config.me.user}/git"
       ];
 
-      androidBackup = [
-        "/srv/androidbackup/data/DataBackup"
-      ];
-
       backupConfig =
         let
           remotes = {
@@ -150,10 +146,6 @@ lib.mkIf config.me.secrets.enable {
       exclude = [
         "node_modules"
       ];
-    })
-    // (createBackups "android" {
-      paths = androidBackup;
-      day = "Tue";
     });
 
   systemd.services = lib.mkMerge (

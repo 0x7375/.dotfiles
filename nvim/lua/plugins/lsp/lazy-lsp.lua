@@ -157,9 +157,15 @@ return {
                         end
                     end,
                     init_options = { documentFormatting = true, documentRangeFormatting = true },
-                    filetypes = { "sh", "nix", "php", "markdown" },
+                    filetypes = { "sh", "nix", "php", "markdown", "typst" },
                     settings = {
                         languages = {
+                            typst = {
+                                {
+                                    formatCommand = "typstyle --wrap-text",
+                                    formatStdin = true,
+                                }
+                            },
                             nix = {
                                 {
                                     formatCommand = "nixfmt",
@@ -196,6 +202,7 @@ return {
                             "nixfmt-rfc-style",
                             "php81Packages.php-codesniffer",
                             "deno",
+                            "typstyle",
                         }, new_config.cmd)
                     end,
                 },

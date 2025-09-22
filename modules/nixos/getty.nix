@@ -1,3 +1,4 @@
+# override getty to use --login-options
 {
   config,
   lib,

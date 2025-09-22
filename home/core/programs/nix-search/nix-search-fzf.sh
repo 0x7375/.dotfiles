@@ -7,25 +7,23 @@ SHELL="bash"
 # === Change keybinds or add more here ===
 
 declare -a INDEXES=(
-    "nixpkgs ctrl-n"
-    "home-manager ctrl-h"
-
+    "nixpkgs alt-j"
+    "home-manager alt-h"
+    "nixos alt-k"
     # you can add any indexes combination here,
     # like `nixpkgs,nixos`
-
-    "all ctrl-a"
+    "all alt-l"
 )
 
-SEARCH_SNIPPET_KEY="ctrl-w"
-OPEN_SOURCE_KEY="ctrl-n"
-OPEN_HOMEPAGE_KEY="ctrl-o"
-NIX_SHELL_KEY="ctrl-i"
-NIX_PROFILE_KEY="ctrl-p"
+SEARCH_SNIPPET_KEY="alt-s"
+OPEN_SOURCE_KEY="alt-o"
+OPEN_HOMEPAGE_KEY="alt-w"
+NIX_SHELL_KEY="alt-S"
+NIX_PROFILE_KEY="alt-P"
 
 OPENER="xdg-open"
 
 # ========================================
-
 # for debug / development
 CMD="${NIX_SEARCH_TV:-nix-search-tv}"
 
@@ -33,74 +31,62 @@ CMD="${NIX_SEARCH_TV:-nix-search-tv}"
 bind_index() {
     local key="$1"
     local index="$2"
-
     local prompt=""
     local indexes_flag=""
     if [[ -n "$index" && "$index" != "all" ]]; then
         indexes_flag="--indexes $index"
         prompt=$index
     fi
-
     local preview="$CMD preview $indexes_flag"
     local print="$CMD print $indexes_flag"
-
     echo "$key:change-prompt($prompt> )+change-preview($preview {})+reload($print)"
 }
 
 STATE_FILE="/tmp/nix-search-tv-fzf"
-
 # save_state saves the currently displayed index
 # to the $STATE_FILE. This file serves as an external script state
 # for communication between "print" and "preview" commands
 save_state() {
     local index="$1"
-
     local indexes_flag=""
     if [[ -n "$index" && "$index" != "all" ]]; then
         indexes_flag="--indexes $index"
     fi
-
     echo "execute(echo $indexes_flag > $STATE_FILE)"
 }
 
-FZF_BINDS=""
+FZF_BINDS=()
 for e in "${INDEXES[@]}"; do
     index=$(echo "$e" | awk '{ print $1 }')
     keybind=$(echo "$e" | awk '{ print $2 }')
-
     fzf_bind=$(bind_index "$keybind" "$index")
     fzf_save_state=$(save_state "$index")
-    FZF_BINDS="$FZF_BINDS --bind '$fzf_bind+$fzf_save_state'"
+    FZF_BINDS+=("--bind" "$fzf_bind+$fzf_save_state")
 done
-
+#
 # reset the state
 echo "" >/tmp/nix-search-tv-fzf
 
 SEARCH_SNIPPET_CMD=$'echo "{}"'
 # fzf surrounds the matched package with ', trim them
-SEARCH_SNIPPET_CMD="$SEARCH_SNIPPET_CMD | tr -d \"\'\" "
+SEARCH_SNIPPET_CMD="$SEARCH_SNIPPET_CMD | tr -d \"'\" "
 # if it's multi-index search, then we need to remote the prefix
-SEARCH_SNIPPET_CMD="$SEARCH_SNIPPET_CMD | awk \'{ if (\$2) { print \$2 } else print \$1 }\' "
-SEARCH_SNIPPET_CMD="$SEARCH_SNIPPET_CMD | xargs printf \"https://github.com/search?type=code&q=lang:nix+%s\" \$1 "
+SEARCH_SNIPPET_CMD="$SEARCH_SNIPPET_CMD | awk '{ if (\$2) { print \$2 } else print \$1 }' "
+SEARCH_SNIPPET_CMD="$SEARCH_SNIPPET_CMD | xargs printf \"https://grep.app/search?f.lang=Nix&f.lang.pattern=nix&q=%s\" \$1 "
 
-NIX_SHELL_CMD='nix shell nixpkgs#$(echo "{}" | sed "s:nixpkgs/::g"'
-NIX_SHELL_CMD="$NIX_SHELL_CMD | tr -d \"\'\")"
+NIX_SHELL_CMD="nix shell nixpkgs#\$(echo '{}' | sed 's:nixpkgs/::g' | tr -d \"'\")"
+NIX_PROFILE_CMD="nix profile install nixpkgs#\$(echo \"{}\" | sed \"s:nixpkgs/::g\" | tr -d \"'\")"
 
-NIX_PROFILE_CMD="nix profile install nixpkgs#\$(echo \"{}\" | sed \"s:nixpkgs/::g\""
-NIX_PROFILE_CMD="$NIX_PROFILE_CMD | tr -d \"'\\\"\")"
+PREVIEW_WINDOW="wrap,up"
 
-PREVIEW_WINDOW="wrap"
-[ "$(tput cols)" -lt 90 ] && PREVIEW_WINDOW="$PREVIEW_WINDOW,up"
-
-eval "$CMD print | fzf \
-    --preview '$CMD preview \$(cat $STATE_FILE) {}' \
-    --bind '$OPEN_SOURCE_KEY:execute($CMD source \$(cat $STATE_FILE) {} | xargs $OPENER)' \
-    --bind '$OPEN_HOMEPAGE_KEY:execute($CMD homepage \$(cat $STATE_FILE) {} | xargs $OPENER)' \
-    --bind $'$SEARCH_SNIPPET_KEY:execute($SEARCH_SNIPPET_CMD | xargs $OPENER)' \
-    --bind $'$NIX_SHELL_KEY:become($NIX_SHELL_CMD)' \
-    --bind $'$NIX_PROFILE_KEY:execute($NIX_PROFILE_CMD)' \
+exec "$CMD" print | fzf \
+    --preview "$CMD preview \$(cat $STATE_FILE) {}" \
+    --bind "$OPEN_SOURCE_KEY:execute($CMD source \$(cat $STATE_FILE) {} | sed 's|nixos/modules/nixos/modules/|nixos/modules/|g' | xargs $OPENER)" \
+    --bind "$OPEN_HOMEPAGE_KEY:execute($CMD homepage \$(cat $STATE_FILE) {} | xargs $OPENER)" \
+    --bind "$SEARCH_SNIPPET_KEY:execute($SEARCH_SNIPPET_CMD | xargs $OPENER)" \
+    --bind "$NIX_SHELL_KEY:become($NIX_SHELL_CMD)" \
+    --bind "$NIX_PROFILE_KEY:execute($NIX_PROFILE_CMD)" \
     --layout reverse \
     --scheme history \
-    --preview-window='$PREVIEW_WINDOW' \
-    $FZF_BINDS
-"
+    --preview-window="$PREVIEW_WINDOW" \
+    "${FZF_BINDS[@]}"

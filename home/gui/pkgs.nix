@@ -24,6 +24,7 @@ lib.mkIf config.me.gui.enable {
       protonvpn-gui
       stable.ente-auth
       gnome-text-editor
+      calibre
 
       (discord.override {
         withOpenASAR = true;

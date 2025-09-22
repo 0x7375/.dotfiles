@@ -30,6 +30,7 @@
     # copilot
     nodejs
 
+    nix-melt
     scripts.flake
   ];
 }

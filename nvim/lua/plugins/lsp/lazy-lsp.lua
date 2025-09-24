@@ -124,12 +124,9 @@ return {
                         }, new_config.cmd)
                     end,
                 },
-                hls = {
-                    on_attach = lspformat.on_attach,
-                },
-                gopls = {
-                    on_attach = lspformat.on_attach,
-                },
+                clangd = { on_attach = lspformat.on_attach, },
+                hls = { on_attach = lspformat.on_attach, },
+                gopls = { on_attach = lspformat.on_attach, },
                 intelephense = {
                     on_attach = lspformat.on_attach,
                     on_init = function(client)

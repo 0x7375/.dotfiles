@@ -18,7 +18,7 @@
       <Multi_key> <I> : "ï"
 
       <Multi_key> <u> : "û"
-      <Multi_key> <U> : "Û"
+      <Multi_key> <U> : "μ"
       <Multi_key> <y> : "ù"
 
       <Multi_key> <c> : "ç"

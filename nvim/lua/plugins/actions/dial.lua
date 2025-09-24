@@ -21,6 +21,26 @@ return {
                     cyclic = true,
                 }),
                 augend.constant.new({
+                    elements = { "TRUE", "FALSE" },
+                    word = true,
+                    cyclic = true,
+                }),
+                augend.constant.new({
+                    elements = { "left", "right" },
+                    word = true,
+                    cyclic = true,
+                }),
+                augend.constant.new({
+                    elements = { "LEFT", "RIGHT" },
+                    word = true,
+                    cyclic = true,
+                }),
+                augend.constant.new({
+                    elements = { "Left", "Right" },
+                    word = true,
+                    cyclic = true,
+                }),
+                augend.constant.new({
                     elements = { "and", "or" },
                     word = true,
                     cyclic = true,

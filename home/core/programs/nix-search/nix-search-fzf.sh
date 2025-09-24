@@ -77,7 +77,8 @@ SEARCH_SNIPPET_CMD="$SEARCH_SNIPPET_CMD | xargs printf \"https://grep.app/search
 NIX_SHELL_CMD="nix shell nixpkgs#\$(echo '{}' | sed 's:nixpkgs/::g' | tr -d \"'\")"
 NIX_PROFILE_CMD="nix profile install nixpkgs#\$(echo \"{}\" | sed \"s:nixpkgs/::g\" | tr -d \"'\")"
 
-PREVIEW_WINDOW="wrap,up"
+PREVIEW_WINDOW="wrap"
+[ "$(tput cols)" -lt 90 ] && PREVIEW_WINDOW="$PREVIEW_WINDOW,up"
 
 exec "$CMD" print | fzf \
     --preview "$CMD preview \$(cat $STATE_FILE) {}" \

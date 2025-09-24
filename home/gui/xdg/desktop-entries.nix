@@ -50,7 +50,7 @@ lib.mkIf config.me.gui.enable {
     };
 
     "apache-hop" = {
-      exec = "hop-gui";
+      exec = "env GTK_THEME=Adwaita:dark hop-gui";
       name = "Apache Hop";
       type = "Application";
       categories = [ "Development" ];

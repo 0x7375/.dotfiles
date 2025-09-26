@@ -1,8 +1,8 @@
 {
   lib,
   config,
-  pkgs,
   secrets,
+  pkgs,
   ...
 }:
 
@@ -10,33 +10,38 @@ let
   template = "@nextdnsId@";
 in
 lib.mkIf (config.me.secrets.enable && config.me.network.enable) {
-  sops.secrets.networkingEnvironment = {
-    sopsFile = "${secrets}/networking-environment.env";
-    format = "dotenv";
-    key = "";
-    owner = config.me.user;
-  };
-
   sops.secrets.nextdns_id = {
     owner = config.me.user;
     neededForUsers = true;
   };
 
-  system.activationScripts."resolved-secret-substitution" = ''
+  system.activationScripts."unbound-secret-substitution" = ''
     secret=$(cat "${config.sops.secrets.nextdns_id.path}")
-    configFile=/etc/systemd/resolved.conf
+    configFile=/etc/unbound/unbound.conf
     ${pkgs.gnused}/bin/sed -i "s#${template}#$secret#" "$configFile"
   '';
 
-  services.resolved = {
+  services.unbound = {
     enable = true;
-    extraConfig = ''
-      DNS=45.90.28.0#${template}.dns.nextdns.io
-      DNS=2a07:a8c0::#${template}.dns.nextdns.io
-      DNS=45.90.30.0#${template}.dns.nextdns.io
-      DNS=2a07:a8c1::#${template}.dns.nextdns.io
-      DNSOverTLS=yes
-    '';
+    settings.forward-zone = [
+      {
+        name = ".";
+        forward-tls-upstream = "yes";
+        forward-addr = [
+          "45.90.28.0@853#${template}.dns.nextdns.io"
+          "2a07:a8c0::@853#${template}.dns.nextdns.io"
+          "45.90.30.0@853#${template}.dns.nextdns.io"
+          "2a07:a8c1::@853#${template}.dns.nextdns.io"
+        ];
+      }
+    ];
+  };
+
+  sops.secrets.networkingEnvironment = {
+    sopsFile = "${secrets}/networking-environment.env";
+    format = "dotenv";
+    key = "";
+    owner = config.me.user;
   };
 
   networking.networkmanager.ensureProfiles = lib.mkIf (config.me.hostname != "hikari") {

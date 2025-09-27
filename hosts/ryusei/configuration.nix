@@ -7,13 +7,12 @@
 }:
 
 {
-  imports =
-    [
-      ./hardware.nix
-      ./options.nix
-    ]
-    ++ (myLib.filesIn ../../nixos)
-    ++ (myLib.filesIn ./nixos);
+  imports = [
+    ./hardware.nix
+    ./options.nix
+  ]
+  ++ (myLib.filesIn ../../nixos)
+  ++ (myLib.filesIn ./nixos);
 
   networking.hostName = config.me.hostname;
 
@@ -29,12 +28,11 @@
   };
 
   hardware.brillo.enable = true;
-
   services.udev.extraRules = # bash
     ''
       # Allow video group to change screen brightness
-      SUBSYSTEM=="backlight", \
       ACTION=="add", \
+      SUBSYSTEM=="backlight", \
       KERNEL=="amdgpu_bl0", \
       RUN+="${pkgs.coreutils}/bin/chgrp video /sys/class/backlight/%k/brightness", \
       RUN+="${pkgs.coreutils}/bin/chmod g+w /sys/class/backlight/%k/brightness"
@@ -68,8 +66,7 @@
     WINIT_X11_SCALE_FACTOR = "1.20"; # giga zoom on alacritty otherwise
   };
 
-  # services.logind.settings.Login.HandleLidSwitch = "ignore";
-  services.logind.lidSwitch = "ignore";
+  services.logind.settings.Login.HandleLidSwitch = "ignore";
 
   systemd.services.disable-lid-wakeup = {
     description = "Disable lid switch as wake source";

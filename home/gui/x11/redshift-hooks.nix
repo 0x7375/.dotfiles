@@ -7,6 +7,7 @@
 
 lib.mkIf config.me.gui.enable {
   xdg.configFile."redshift/hooks/brightness.sh" = {
+    enable = true;
     executable = true;
     text = # bash
       ''

@@ -123,7 +123,7 @@ lib.mkIf config.me.gui.enable {
             "notebook.dragAndDropEnabled": false,
             "notebook.undoRedoPerCell": false,
             "security.workspace.trust.banner": "never",
-            "editor.fontFamily": "'Inconsolata Nerd Font', 'serif'",
+            "editor.fontFamily": "'0xproto Nerd Font', 'serif'",
             "editor.wordSeparators": "`~!@#$%^&*()-=+[{]}\\|;:'\",.<>/?_",
             "editor.minimap.enabled": false,
             "notebook.cellToolbarLocation": {
@@ -138,7 +138,7 @@ lib.mkIf config.me.gui.enable {
             "editor.occurrencesHighlight": false,
             "editor.renderLineHighlight": "none",
             "workbench.editor.showTabs": "single",
-            "editor.fontSize": 15,
+            "editor.fontSize": 12,
             "editor.padding.top": 10,
             "editor.folding": false,
             "editor.renderWhitespace": "none",
@@ -197,7 +197,7 @@ lib.mkIf config.me.gui.enable {
             "editor.fontWeight": "bold",
             "editor.hover.enabled": false,
             "editor.wordWrap": "on",
-            "editor.inlayHints.enabled": "off",
+            "editor.inlayHints.enabled": "on",
             "redhat.telemetry.enabled": false
         }
       '';

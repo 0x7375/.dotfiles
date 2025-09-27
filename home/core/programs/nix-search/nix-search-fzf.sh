@@ -1,5 +1,3 @@
-#!/usr/bin/env bash
-
 # In case the system uses a non-POSIX shell, like fish or nushell,
 # we want to ensure run also our forked processes in a bash environment.
 SHELL="bash"
@@ -7,11 +5,9 @@ SHELL="bash"
 # === Change keybinds or add more here ===
 
 declare -a INDEXES=(
-    "nixpkgs alt-j"
     "home-manager alt-h"
-    "nixos alt-k"
-    # you can add any indexes combination here,
-    # like `nixpkgs,nixos`
+    "nixos alt-j"
+    "nixpkgs alt-k"
     "all alt-l"
 )
 
@@ -74,14 +70,22 @@ SEARCH_SNIPPET_CMD="$SEARCH_SNIPPET_CMD | tr -d \"'\" "
 SEARCH_SNIPPET_CMD="$SEARCH_SNIPPET_CMD | awk '{ if (\$2) { print \$2 } else print \$1 }' "
 SEARCH_SNIPPET_CMD="$SEARCH_SNIPPET_CMD | xargs printf \"https://grep.app/search?f.lang=Nix&f.lang.pattern=nix&q=%s\" \$1 "
 
-NIX_SHELL_CMD="nix shell nixpkgs#\$(echo '{}' | sed 's:nixpkgs/::g' | tr -d \"'\")"
-NIX_PROFILE_CMD="nix profile install nixpkgs#\$(echo \"{}\" | sed \"s:nixpkgs/::g\" | tr -d \"'\")"
+PACKAGE_NAME="\$(echo '{}' | sed 's:nixpkgs/ ::g')"
+NIX_SHELL_CMD="nix shell nixpkgs#$PACKAGE_NAME"
+if [ -n "$TMUX" ]; then
+    NIX_SHELL_CMD="tmux new-window -n nix-shell-$PACKAGE_NAME -c \$PWD \"$NIX_SHELL_CMD\""
+fi
+
+NIX_PROFILE_CMD="nix profile install nixpkgs#$PACKAGE_NAME"
 
 PREVIEW_WINDOW="wrap"
 [ "$(tput cols)" -lt 90 ] && PREVIEW_WINDOW="$PREVIEW_WINDOW,up"
 
 exec "$CMD" print | fzf \
     --preview "$CMD preview \$(cat $STATE_FILE) {}" \
+    --bind "ctrl-u:preview-up" \
+    --bind "ctrl-d:preview-down" \
+    --bind "ctrl-a:execute(tmux resize-pane -Z 2>/dev/null)" \
     --bind "$OPEN_SOURCE_KEY:execute($CMD source \$(cat $STATE_FILE) {} | sed 's|nixos/modules/nixos/modules/|nixos/modules/|g' | xargs $OPENER)" \
     --bind "$OPEN_HOMEPAGE_KEY:execute($CMD homepage \$(cat $STATE_FILE) {} | xargs $OPENER)" \
     --bind "$SEARCH_SNIPPET_KEY:execute($SEARCH_SNIPPET_CMD | xargs $OPENER)" \
@@ -89,5 +93,6 @@ exec "$CMD" print | fzf \
     --bind "$NIX_PROFILE_KEY:execute($NIX_PROFILE_CMD)" \
     --layout reverse \
     --scheme history \
+    --border \
     --preview-window="$PREVIEW_WINDOW" \
     "${FZF_BINDS[@]}"

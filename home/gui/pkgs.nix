@@ -57,6 +57,7 @@ lib.mkIf config.me.gui.enable {
       mimeo
       blueberry
       dia
+      stable.gaphor
       gnome-calculator
       melonDS
       ryubing
@@ -77,6 +78,7 @@ lib.mkIf config.me.gui.enable {
       deno
 
       go
+      delve
 
       apache-hop
 
@@ -126,6 +128,7 @@ lib.mkIf config.me.gui.enable {
             ms-python.python
             redhat.java
             mkhl.direnv
+            golang.go
           ]
           ++ vscode-utils.extensionsFromVscodeMarketplace [
             # {

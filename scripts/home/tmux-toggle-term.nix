@@ -10,7 +10,7 @@ pkgs.writeShellApplication {
       tmux detach-client
     else
       popup_session="''${current_session}-popup"
-      tmux popup -d '#{pane_current_path}' -xC -yC -w100% -h100% -E "tmux attach -t $popup_session || tmux new -s $popup_session"
+      tmux popup -d '#{pane_current_path}' -xC -yC -w 100% -h 100% -E "tmux attach -t $popup_session || tmux new -s $popup_session"
       tmux set-hook -g session-closed "if-shell -b '[[ #{session_name} == $popup_session ]]' 'kill-session -t popup'"
     fi
   '';

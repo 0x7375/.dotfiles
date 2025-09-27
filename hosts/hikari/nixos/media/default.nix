@@ -10,7 +10,7 @@
       "jellyfin"
       "jellyseerr"
       "prowlarr"
-      "qBittorrent"
+      "qbittorrent"
       "radarr"
       "sonarr"
     ]

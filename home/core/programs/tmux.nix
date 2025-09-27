@@ -120,8 +120,6 @@ in
 
         bind k run-shell "tmux popup -E ${pkgs.scripts.tmux-sessionizer}/bin/tmux-sessionizer || true"
 
-        # bind H run-shell "${pkgs.scripts.tmux-sessionizer}/bin/tmux-sessionizer ${config.me.flakeDir}"
-
         bind -n 'C-\' run-shell -b "${pkgs.scripts.tmux-toggle-term}/bin/tmux-toggle-term"
 
         # navigate prompts

@@ -23,6 +23,7 @@ let
   wslOptions =
     inputs.nixos-wsl.packages.${system}.docs.optionsDoc.optionsJSON
     + /share/doc/nixos/options.json;
+  nst = (pkgs.writeShellScriptBin "nst" (builtins.readFile ./nix-search-fzf.sh));
 in
 {
   programs.nix-search-tv = {
@@ -36,7 +37,7 @@ in
     };
   };
 
-  home.packages = [ (pkgs.writeShellScriptBin "nst" (builtins.readFile ./nix-search-fzf.sh)) ];
+  home.packages = [ nst ];
 
   xdg.configFile."zsh/widgets.zsh".text =
     lib.mkAfter
@@ -55,4 +56,9 @@ in
       ''
         bindkey '^G' nix-search-widget
       '';
+
+  programs.tmux.extraConfig = # tmux
+    ''
+      bind-key m run-shell "tmux popup -E -w 80% -h 80% ${nst}/bin/nst || true"
+    '';
 }

@@ -215,7 +215,15 @@ lib.mkIf config.me.gui.enable {
             notification = false;
           }
           {
-            command = "if [[ -d ~/pictures/wallpapers/landscapes ]]; then shuf -e -n1 ~/pictures/wallpapers/landscapes/* | ${pkgs.findutils}/bin/xargs ${pkgs.feh}/bin/feh --no-fehbg --bg-fill; else ${pkgs.feh}/bin/feh --no-fehbg --bg-fill ${config.me.flakeDir}/assets/wallpaper.png; fi";
+            command = "${pkgs.writeShellScript "set-wallpaper" ''
+              if [[ -d ~/pictures/wallpapers/landscapes ]]; then
+                shuf -e -n1 --random-source=<(date +%Y%m%d | md5sum) \
+                  ~/pictures/wallpapers/landscapes/* | \
+                  ${pkgs.findutils}/bin/xargs ${pkgs.feh}/bin/feh --no-fehbg --bg-fill
+              else
+                ${pkgs.feh}/bin/feh --no-fehbg --bg-fill ${config.me.flakeDir}/assets/wallpaper.png
+              fi
+            ''}";
             always = true;
             notification = false;
           }

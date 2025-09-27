@@ -13,7 +13,7 @@ pkgs.writeShellApplication {
     else
       hosts="$(cut -d' ' -f1 < ~/.ssh/known_hosts 2>/dev/null | sed 's/,/ /g' | tr ' ' '\n' | sort -u)"
       
-      selected=$(echo "$hosts" | fzf --reverse)
+      selected=$(echo "$hosts" | fzf --reverse --border)
     fi
 
     [[ -z $selected ]] && exit 0

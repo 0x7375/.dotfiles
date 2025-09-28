@@ -37,8 +37,6 @@ in
       "f+ /var/www/index.html 0644 root root - ${content}"
     ];
 
-  sops.secrets."hikari/cleanuparr" = { };
-
   services.nginx = {
     enable = true;
     virtualHosts = {
@@ -77,8 +75,7 @@ in
   };
 
   systemd.services =
-    myLib.notifyOnServiceFailure "nginx"
-    // myLib.notifyOnServiceFailure "acme-${url}";
+    myLib.notifyOnServiceFailure "nginx" // myLib.notifyOnServiceFailure "acme-${url}";
 
   sops.secrets.cloudflare = {
     sopsFile = "${secrets}/cloudflare.env";

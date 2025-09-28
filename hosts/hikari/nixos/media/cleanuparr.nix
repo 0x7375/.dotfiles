@@ -5,8 +5,7 @@
   ...
 }:
 
-lib.mkIf config.me.secrets.enable {
-
+{
   systemd.tmpfiles.rules = [
     "d /var/lib/cleanuparr 0755 root root -"
   ];

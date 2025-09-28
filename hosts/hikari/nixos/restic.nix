@@ -36,7 +36,7 @@ lib.mkIf config.me.secrets.enable {
       mediaDirs = [
         config.services.jellyseerr.configDir
         config.services.jellyfin.dataDir
-        config.services.qbittorrent.profileDir
+        (config.services.qbittorrent.profileDir + "/qBittorrent")
         config.services.radarr.dataDir
         config.services.sonarr.dataDir
         config.services.prowlarr.dataDir

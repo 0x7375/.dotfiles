@@ -14,6 +14,7 @@ lib.mkIf config.me.secrets.enable {
   sops.secrets."proton_vpn/endpoint" = { };
   sops.secrets."proton_vpn/pk" = { };
   sops.secrets."proton_vpn/sk" = { };
+  sops.secrets."hikari/qbittorrent_pw" = { };
 
   sops.templates."proton-vpn.conf".content =
     let
@@ -85,13 +86,31 @@ lib.mkIf config.me.secrets.enable {
     bindsTo = [ "wg-quick-proton.service" ];
 
     serviceConfig = {
+      LoadCredential = [ "password:${config.sops.secrets."hikari/qbittorrent_pw".path}" ];
       ExecStartPre = pkgs.writeShellScript "get-proton-port" ''
         OUTPUT=$(${pkgs.libnatpmp}/bin/natpmpc -g ${gw-ip} -a 1 0 tcp 60 2>/dev/null)
         PORT=$(echo "$OUTPUT" | ${pkgs.gawk}/bin/awk '/Mapped public port/ {print $4}')
 
         if [ -n "$PORT" ]; then
-          echo "$PORT" > /tmp/proton-vpn-port
-          echo "Successfully got port: $PORT"
+          if [ -f /tmp/proton-vpn-port ] && [ "$(cat /tmp/proton-vpn-port)" == "$PORT" ]; then
+            echo "Port unchanged: $PORT"
+          else
+            echo "$PORT" > /tmp/proton-vpn-port
+            echo "Successfully got new port: $PORT"
+            
+            if systemctl is-active --quiet qbittorrent; then
+              PASS=$(cat "$CREDENTIALS_DIRECTORY/password")
+              SID=$(${pkgs.curl}/bin/curl -s -i -X POST "http://localhost:8080/api/v2/auth/login" \
+                --data "username=admin&password=$PASS" | grep -i set-cookie | sed 's/.*SID=\([^;]*\);.*/\1/')
+              
+                ${pkgs.curl}/bin/curl -s -X POST "http://localhost:8080/api/v2/app/setPreferences" \
+                  -H "Content-Type: application/x-www-form-urlencoded" \
+                  -H "Cookie: SID=$SID" \
+                  --data "json={\"listen_port\":$PORT}" && echo "qBittorrent port updated to $PORT"
+            else
+              echo "qBittorrent not running, skipping port update"
+            fi
+          fi
         fi
       '';
 

@@ -7,6 +7,8 @@
 
 {
   services = {
+    arbtt.enable = true;
+
     earlyoom.enable = true;
 
     locate.enable = true;

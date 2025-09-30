@@ -36,6 +36,8 @@
     __GL_SHADER_DISK_CACHE_SKIP_CLEANUP = "1";
 
     HISTFILE = "${XDG_STATE_HOME}/bash/history";
+    PYTHON_HISTORY = "${XDG_STATE_HOME}/python_history";
+    GOPATH = "${XDG_DATA_HOME}/go";
     PGPASSFILE = "${XDG_CONFIG_HOME}/pg/pgpass";
     MYSQL_HISTFILE = "${XDG_DATA_HOME}/mysql_history";
     PSQL_HISTORY = "${XDG_DATA_HOME}/psql_history";

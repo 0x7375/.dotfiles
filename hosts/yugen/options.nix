@@ -12,7 +12,6 @@
         postgresql.enable = false;
         neo4j.enable = false;
         gaming.enable = false;
-        gns3.enable = false;
       };
     };
     devPkgs.enable = true;

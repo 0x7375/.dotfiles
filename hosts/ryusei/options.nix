@@ -10,7 +10,6 @@
       bundles = {
         virtualBox.enable = true;
         gaming.enable = false;
-        gns3.enable = true;
       };
     };
     devPkgs.enable = true;

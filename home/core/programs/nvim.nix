@@ -1,4 +1,6 @@
 {
+  lib,
+  secrets,
   config,
   pkgs,
   ...
@@ -26,18 +28,12 @@
   systemd.user.tmpfiles.rules = [
     "L /home/${config.me.user}/.config/nvim - - - - ${config.me.flakeDir}/nvim"
   ];
-
-  # https://github.com/nix-community/home-manager/issues/676#issuecomment-1595795685
-  # lib.meta = {
-  #   configPath = config.me.flakeDir;
-  #   mkMutableSymlink =
-  #     path:
-  #     config.lib.file.mkOutOfStoreSymlink (
-  #       config.lib.meta.configPath + lib.removePrefix (toString inputs.self) (toString path)
-  #     );
-  # };
-  #
-  # xdg.configFile."nvim" = {
-  #   source = config.lib.meta.mkMutableSymlink ../../../nvim;
-  # };
+}
+// lib.mkIf config.me.secrets.enable {
+  sops.secrets.copilot = {
+    sopsFile = "${secrets}/copilot.json";
+    format = "json";
+    key = "";
+    path = "/home/${config.me.user}/.config/github-copilot/apps.json";
+  };
 }

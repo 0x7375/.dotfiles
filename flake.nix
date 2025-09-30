@@ -12,8 +12,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # nix-maid.url = "github:viperML/nix-maid";
+    # wrapper.url = "github:viperLM/wrapper-manager";
+
     auto-update.url = "github:nixos/nixpkgs/nixos-unstable";
-    gns3.url = "github:nixos/nixpkgs/dd5621df6dcb90122b50da5ec31c411a0de3e538a";
 
     zen-browser = {
       url = "github:0xc000022070/zen-browser-flake";
@@ -36,7 +38,10 @@
       flake = false;
     };
 
-    spicetify-nix.url = "github:Gerg-L/spicetify-nix";
+    spicetify-nix = {
+      url = "github:Gerg-L/spicetify-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     nix-index-database = {
       url = "github:nix-community/nix-index-database";
@@ -64,48 +69,15 @@
       myLib = import ./lib/myLib.nix { inherit inputs; };
       aarch = "aarch64-linux";
       x86 = "x86_64-linux";
-      inherit (myLib) mkSystem mkHome;
-      hosts = {
-        yugen = {
-          nixos = ./hosts/yugen/configuration.nix;
-          home = ./hosts/yugen/home.nix;
-        };
-        ryusei = {
-          nixos = ./hosts/ryusei/configuration.nix;
-          home = ./hosts/ryusei/home.nix;
-        };
-        hikari = {
-          nixos = ./hosts/hikari/configuration.nix;
-          home = ./hosts/hikari/home.nix;
-        };
-        kumo = {
-          nixos = ./hosts/kumo/configuration.nix;
-          home = ./hosts/kumo/home.nix;
-        };
-        isoImg = {
-          nixos = ./hosts/isoImg/configuration.nix;
-          home = ./hosts/isoImg/home.nix;
-        };
-      };
+      inherit (myLib) mkSystem;
     in
     {
       nixosConfigurations = {
-        yugen = mkSystem hosts.yugen.nixos hosts.yugen.home x86;
-        ryusei = mkSystem hosts.ryusei.nixos hosts.ryusei.home x86;
-        hikari = mkSystem hosts.hikari.nixos hosts.hikari.home aarch;
-        kumo = mkSystem hosts.kumo.nixos hosts.kumo.home x86;
-        isoImg = mkSystem hosts.isoImg.nixos hosts.isoImg.home x86;
+        yugen = mkSystem "yugen" x86;
+        ryusei = mkSystem "ryusei" x86;
+        hikari = mkSystem "hikari" aarch;
+        kumo = mkSystem "kumo" x86;
+        isoImg = mkSystem "isoImg" x86;
       };
-
-      homeConfigurations =
-        let
-          user = "ayko";
-        in
-        {
-          "${user}@yugen" = mkHome hosts.yugen.home x86;
-          "${user}@ryusei" = mkHome hosts.ryusei.home x86;
-          "${user}@kumo" = mkHome hosts.kumo.home x86;
-          "${user}@hikari" = mkHome hosts.hikari.home aarch;
-        };
     };
 }

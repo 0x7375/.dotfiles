@@ -14,5 +14,17 @@
     unzip
     (openssl.override { withZlib = true; })
     nixpkgs-fmt
+    ncdu
+    wget
+    age
+    bc
+    efibootmgr
+    ripgrep
+    fd
+    tlrc
+    trash-cli
+    tree
+    nix-melt
+    scripts.flake
   ];
 }

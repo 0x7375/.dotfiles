@@ -107,7 +107,6 @@
         postgresql.enable = lib.mkEnableOption "Run a postgresql server";
         virtualBox.enable = lib.mkEnableOption "Enable virtual box";
         neo4j.enable = lib.mkEnableOption "Run a neo4j server";
-        gns3.enable = lib.mkEnableOption "Run gns3 server";
       };
     };
   };

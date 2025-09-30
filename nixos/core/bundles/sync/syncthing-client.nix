@@ -78,6 +78,12 @@ lib.mkIf (config.me.syncthing-client.enable && config.me.secrets.enable) {
             "server"
           ];
         };
+        arbtt = syncthingDirConfig {
+          path = ".arbtt";
+          devices = [
+            "server"
+          ];
+        };
         notes = syncthingDirConfig {
           path = "notes";
           devices = [

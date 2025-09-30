@@ -27,13 +27,6 @@ in
       in
       [
         {
-          plugin = tmuxPlugins.fpp;
-          extraConfig = # tmux
-            ''
-              set -g @plugin 'tmux-plugins/tmux-fpp'
-            '';
-        }
-        {
           plugin = tmuxPlugins.fzf-tmux-url;
           extraConfig = # tmux
             ''
@@ -48,19 +41,6 @@ in
           extraConfig = # tmux
             ''
               set -g @plugin 'tmux-plugins/tmux-yank'
-            '';
-        }
-        {
-          # prefix + shift + p -> start/stop loggin current pane
-          # prefix + alt + c -> clear pane history
-          # prefix + alt + shift + p -> save complete history
-          # prefix + alt + p -> save screen history
-          plugin = tmuxPlugins.logging;
-          extraConfig = # tmux
-            ''
-              set -g @plugin 'tmux-plugins/tmux-logging'
-
-              set -g @logging-path "/home/${config.me.user}/.local/state/tmux-logging"
             '';
         }
       ];
@@ -78,7 +58,9 @@ in
         set -g window-status-current-format '#W'
         set -g window-status-format '#W'
         set -g window-status-separator ' '
-        set -g status-left '#S: '
+        set -g status-justify centre
+        # set -g status-left '#S: '
+        set -g status-left '''
         set -g status-left-length 120
         set -g status-right '''
 
@@ -120,8 +102,6 @@ in
 
         bind k run-shell "tmux popup -E ${pkgs.scripts.tmux-sessionizer}/bin/tmux-sessionizer || true"
 
-        bind -n 'C-\' run-shell -b "${pkgs.scripts.tmux-toggle-term}/bin/tmux-toggle-term"
-
         # navigate prompts
         bind -n M-p copy-mode \; \
           send-keys -X start-of-line \; \
@@ -140,7 +120,6 @@ in
         bind [ select-window -t :=2
         bind \{ select-window -t :=3
         bind ( select-window -t :=4
-        bind & select-window -t :=5
 
         bind r command-prompt -I'#W' { rename-window -- '%%' }
 

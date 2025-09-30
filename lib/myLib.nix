@@ -7,7 +7,7 @@ let
   };
   lib = inputs.nixpkgs.lib;
 in
-rec {
+{
   pkgsFor = system: inputs.nixpkgs.legacyPackages.${system};
 
   filesIn =
@@ -20,31 +20,25 @@ rec {
       name = baseNameOf path;
     };
 
-  mkHome =
-    config: system:
-    inputs.home-manager.lib.homeManagerConfiguration {
-      pkgs = pkgsFor system;
-      extraSpecialArgs = specialArgs // {
-        inherit system;
-      };
-      modules = [
-        config
-      ];
-    };
-
   mkSystem =
-    nixosConfig: hmConfig: system:
+    hostname: system:
     inputs.nixpkgs.lib.nixosSystem {
       specialArgs = specialArgs // {
         inherit system;
       };
       modules = [
-        nixosConfig
+        ../hosts/${hostname}/configuration.nix
+        # inputs.nix-maid.nixosModules.default
         inputs.home-manager.nixosModules.home-manager
         (
           { config, ... }:
           {
-            home-manager.users.${config.me.user} = import hmConfig;
+            # maid.sharedModules = (myLib.filesIn ../maid);
+            # users.users.${config.me.user}.maid = {
+            #   imports = [ ../hosts/${hostname}/maid.nix ];
+            #   _module.args.osConfig = config;
+            # };
+            home-manager.users.${config.me.user} = import ../hosts/${hostname}/home.nix;
             home-manager.extraSpecialArgs = specialArgs // {
               inherit system;
             };

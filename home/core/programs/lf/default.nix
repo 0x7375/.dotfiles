@@ -60,22 +60,21 @@ in
     })
   ];
 
-  home.packages =
-    [
-      pkgs.ouch
-    ]
-    ++ lib.optionals gui [
-      ctpv
-      pkgs.ueberzugpp
-      # pkgs.pistol
-      pkgs.poppler_utils
-      pkgs.libreoffice
-    ];
+  home.packages = [
+    pkgs.ouch
+  ]
+  ++ lib.optionals gui [
+    ctpv
+    pkgs.ueberzugpp
+    # pkgs.pistol
+    pkgs.poppler_utils
+    pkgs.libreoffice
+  ];
 
   xdg.configFile."ctpv/config" = {
     enable = gui;
     text = ''
-      preview null .env .git-credentials .wakatime.cfg .keyring {{
+      preview null .env .git-credentials .keyring {{
           echo "preview disabled"
       }}
     '';

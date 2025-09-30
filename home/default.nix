@@ -9,7 +9,8 @@
 {
   imports = [
     ../lib
-  ] ++ (myLib.filesIn ../modules/home);
+  ]
+  ++ (myLib.filesIn ../modules/home);
 
   nixpkgs.overlays = [
     (final: prev: {
@@ -21,7 +22,6 @@
           rev = version;
           sha256 = "sLv2dUdRs65GYEpq3yrmktdV9QwZiCO/8dwEeq4nEhk=";
         };
-
         vendorHash = "sha256-ZShpWCfEVPLafrn3MvtxkRsBvwUEOiLBs1gZhKSBrsQ=";
       });
     })

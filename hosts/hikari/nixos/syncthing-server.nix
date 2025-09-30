@@ -61,140 +61,146 @@ lib.mkIf config.me.secrets.enable {
             id = "4J5QS3L-TBUVQNM-RID2OP7-RTQG4GA-NWRB2E5-HXMTK7R-4C4QBFL-7M3RDAU";
           };
         };
-        folders =
-          {
-            ds = syncthingDirConfig {
-              path = "games/ds";
-              devices = [
-                "yugen"
-                "ryusei"
-                "tsuno"
-              ];
-            };
-            switch = syncthingDirConfig {
-              path = "games/switch";
-              devices = [
-                "yugen"
-                "ryusei"
-                "tsuno"
-              ];
-            };
-            ryujinx = syncthingDirConfig {
-              path = "ryujinx";
-              devices = [
-                "yugen"
-                "ryusei"
-                "tsuno"
-              ];
-            };
-            gamecube = syncthingDirConfig {
-              path = "games/gamecube";
-              devices = [
-                "yugen"
-                "ryusei"
-                "tsuno"
-              ];
-            };
-            dolphin = syncthingDirConfig {
-              path = "dolphin";
-              devices = [
-                "yugen"
-                "ryusei"
-                "tsuno"
-              ];
-            };
-            perso = syncthingDirConfig {
-              path = "perso";
-              devices = [
-                "yugen"
-                "ryusei"
-              ];
-            };
-            universite = syncthingDirConfig {
-              path = "documents/pdf/universite";
-              devices = [
-                "neiro"
-              ];
-            };
-            windows = syncthingDirConfig {
-              path = "windows";
-              devices = [
-                "tsuno"
-                "ryusei"
-                "yugen"
-              ];
-            };
-            courses = syncthingDirConfig {
-              path = "courses";
-              devices = [
-                "tsuno"
-                "ryusei"
-                "yugen"
-                "neiro"
-                "samsung"
-              ];
-            };
-          }
-          // (mkRo {
-            name = "pictures";
-            config = {
-              path = "pictures";
-              devices = [
-                "yugen"
-                "ryusei"
-              ];
-            };
-          })
-          // (mkRo {
-            name = "documents";
-            config = {
-              path = "documents";
-              devices = [
-                "yugen"
-                "ryusei"
-              ];
-            };
-            ro-devices = [
+        folders = {
+          ds = syncthingDirConfig {
+            path = "games/ds";
+            devices = [
+              "yugen"
+              "ryusei"
               "tsuno"
+            ];
+          };
+          switch = syncthingDirConfig {
+            path = "games/switch";
+            devices = [
+              "yugen"
+              "ryusei"
+              "tsuno"
+            ];
+          };
+          ryujinx = syncthingDirConfig {
+            path = "ryujinx";
+            devices = [
+              "yugen"
+              "ryusei"
+              "tsuno"
+            ];
+          };
+          gamecube = syncthingDirConfig {
+            path = "games/gamecube";
+            devices = [
+              "yugen"
+              "ryusei"
+              "tsuno"
+            ];
+          };
+          dolphin = syncthingDirConfig {
+            path = "dolphin";
+            devices = [
+              "yugen"
+              "ryusei"
+              "tsuno"
+            ];
+          };
+          arbtt = syncthingDirConfig {
+            path = ".arbtt";
+            devices = [
+              "yugen"
+              "ryusei"
+            ];
+          };
+          perso = syncthingDirConfig {
+            path = "perso";
+            devices = [
+              "yugen"
+              "ryusei"
+            ];
+          };
+          universite = syncthingDirConfig {
+            path = "documents/pdf/universite";
+            devices = [
               "neiro"
             ];
-          })
-          // (mkRo {
-            name = "notes";
-            config = {
-              path = "notes";
-              devices = [
-                "yugen"
-                "ryusei"
-                "neiro"
-              ];
-            };
-          })
-          // (mkRo {
-            name = "photos";
-            config = {
-              path = "photos";
-              devices = [
-                "yugen"
-                "ryusei"
-                "neiro"
-              ];
-            };
-          })
-
-          // (mkRo {
-            name = "uni";
-            config = {
-              path = "uni";
-              devices = [
-                "yugen"
-                "ryusei"
-              ];
-            };
-            ro-devices = [
+          };
+          windows = syncthingDirConfig {
+            path = "windows";
+            devices = [
               "tsuno"
+              "ryusei"
+              "yugen"
             ];
-          });
+          };
+          courses = syncthingDirConfig {
+            path = "courses";
+            devices = [
+              "tsuno"
+              "ryusei"
+              "yugen"
+              "neiro"
+              "samsung"
+            ];
+          };
+        }
+        // (mkRo {
+          name = "pictures";
+          config = {
+            path = "pictures";
+            devices = [
+              "yugen"
+              "ryusei"
+            ];
+          };
+        })
+        // (mkRo {
+          name = "documents";
+          config = {
+            path = "documents";
+            devices = [
+              "yugen"
+              "ryusei"
+            ];
+          };
+          ro-devices = [
+            "tsuno"
+            "neiro"
+          ];
+        })
+        // (mkRo {
+          name = "notes";
+          config = {
+            path = "notes";
+            devices = [
+              "yugen"
+              "ryusei"
+              "neiro"
+            ];
+          };
+        })
+        // (mkRo {
+          name = "photos";
+          config = {
+            path = "photos";
+            devices = [
+              "yugen"
+              "ryusei"
+              "neiro"
+            ];
+          };
+        })
+
+        // (mkRo {
+          name = "uni";
+          config = {
+            path = "uni";
+            devices = [
+              "yugen"
+              "ryusei"
+            ];
+          };
+          ro-devices = [
+            "tsuno"
+          ];
+        });
       };
   };
 }

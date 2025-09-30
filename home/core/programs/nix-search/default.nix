@@ -17,6 +17,7 @@ let
     };
 
   sopsOptions = mkOpts system inputs.sops-nix.nixosModules.default;
+  # maidOptions = mkOpts system inputs.nix-maid.nixosModules.default;
   spicetifyOptions =
     inputs.spicetify-nix.legacyPackages.${system}.docs.optionsJSON
     + /share/doc/nixos/options.json;
@@ -33,6 +34,7 @@ in
         spicetify = "${spicetifyOptions}";
         sops = "${sopsOptions}";
         wsl = "${wslOptions}";
+        # maid = "${maidOptions}";
       };
     };
   };

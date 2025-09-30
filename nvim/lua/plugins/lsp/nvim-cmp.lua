@@ -22,6 +22,12 @@ return {
                 local t = ls.text_node
                 local i = ls.insert_node
 
+                ls.add_snippets("typst", {
+                    s("o", {
+                        t("ol("), i(1), t(") "), i(0)
+                    })
+                })
+
                 ls.add_snippets("php", {
                     s("php", {
                         t({ "<?php declare(strict_types=1);", "", "" }),

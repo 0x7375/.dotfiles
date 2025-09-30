@@ -147,7 +147,7 @@ lib.mkIf config.me.gui.enable {
             "security.workspace.trust.enabled": false,
             "workbench.colorTheme": "Gruvbox Dark Hard",
             "workbench.activityBar.location": "hidden",
-            "terminal.external.linuxExec": "alacritty -e tmux",
+            "terminal.external.linuxExec": "${config.me.gui.terminal} -e tmux",
             "explorer.confirmDelete": false,
             "workbench.colorCustomizations": {
                 "[Gruvbox Dark Hard]": {

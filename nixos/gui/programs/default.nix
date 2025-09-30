@@ -29,7 +29,7 @@ lib.mkIf config.me.gui.enable {
 
     nautilus-open-any-terminal = {
       enable = true;
-      terminal = "alacritty";
+      terminal = config.me.gui.terminal;
     };
 
     gnome-disks.enable = true;

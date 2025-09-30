@@ -508,12 +508,13 @@ in
           git
         ];
       };
+      term = config.me.gui.terminal;
     in
     # ini
     ''
       [filechooser]
       env=PATH='${env}/bin'
-      env=TERMCMD='${pkgs.alacritty}/bin/alacritty -T filechooser -e'
+      env=TERMCMD='${pkgs.${term}}/bin/${term} -T filechooser -e'
       cmd='${pkgs.xdg-desktop-portal-termfilechooser}/share/xdg-desktop-portal-termfilechooser/lf-wrapper.sh'
       default_dir=${config.xdg.userDirs.download}
     '';

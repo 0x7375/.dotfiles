@@ -37,12 +37,6 @@
       '';
     };
 
-    xserver = {
-      xkb.options = "compose:ralt";
-      autoRepeatDelay = 200;
-      autoRepeatInterval = 30;
-    };
-
     cachix-watch-store = lib.mkIf config.me.secrets.enable {
       enable = true;
       cacheName = "ayko";

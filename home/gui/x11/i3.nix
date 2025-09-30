@@ -8,8 +8,9 @@
 
 let
   palette = myLib.palette;
+  inherit (config.me) gui;
 in
-lib.mkIf config.me.gui.enable {
+lib.mkIf (gui.enable && gui.displayServer == "xorg") {
   xsession.windowManager.i3 = {
     enable = true;
 

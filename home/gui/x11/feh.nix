@@ -1,6 +1,9 @@
 { lib, config, ... }:
 
-lib.mkIf config.me.gui.enable {
+let
+  inherit (config.me) gui;
+in
+lib.mkIf (gui.enable && gui.displayServer == "xorg") {
   programs.feh = {
     enable = true;
     keybindings = {

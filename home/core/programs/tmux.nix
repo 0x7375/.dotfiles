@@ -48,7 +48,7 @@ in
     mouse = true;
     extraConfig = # tmux
       ''
-        set -ga terminal-overrides ",alacritty:RGB" # support for undercurl
+        set -ga terminal-overrides ",${config.me.gui.terminal}:RGB" # support for undercurl
 
         set -g focus-events on
         set -g detach-on-destroy off

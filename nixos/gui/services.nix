@@ -24,31 +24,6 @@ lib.mkIf config.me.gui.enable {
 
     ddccontrol.enable = true; # external monitor brightness control
 
-    picom = {
-      enable = true;
-      shadow = false;
-      fade = false;
-      vSync = true;
-      backend = "glx";
-    };
-
-    xbanish.enable = true; # hide mouse cursor when typing
-
-    xserver = {
-      enable = true;
-      excludePackages = [ pkgs.xterm ];
-
-      windowManager.i3 = {
-        enable = true;
-        extraPackages = with pkgs; [
-          xdo
-          xclip
-          xsel
-          xdotool
-        ];
-      };
-    };
-
     libinput = {
       mouse = {
         accelProfile = "flat";
@@ -73,8 +48,6 @@ lib.mkIf config.me.gui.enable {
         ${removeRule "sound"}
       '';
 
-    gnome = {
-      sushi.enable = true;
-    };
+    gnome.sushi.enable = true;
   };
 }

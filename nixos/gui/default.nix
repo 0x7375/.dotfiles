@@ -27,6 +27,7 @@ lib.mkIf config.me.gui.enable {
     terminal-exec = {
       enable = true;
       settings.default = [
+        "Foot.desktop"
         "Alacritty.desktop"
       ];
     };

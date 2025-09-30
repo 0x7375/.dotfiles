@@ -102,6 +102,21 @@
     gui = {
       enable = lib.mkEnableOption "Enable graphical config";
 
+      displayServer = lib.mkOption {
+        type = lib.types.enum [
+          "xorg"
+          "wayland"
+        ];
+        default = "xorg";
+        description = "Display server to use";
+      };
+
+      terminal = lib.mkOption {
+        type = lib.types.str;
+        default = if config.me.gui.displayServer == "xorg" then "alacritty" else "foot";
+        description = "Default terminal emulator";
+      };
+
       bundles = {
         gaming.enable = lib.mkEnableOption "Install steam and other game launchers";
         postgresql.enable = lib.mkEnableOption "Run a postgresql server";

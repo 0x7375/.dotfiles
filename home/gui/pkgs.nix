@@ -26,9 +26,9 @@ lib.mkIf config.me.gui.enable {
       gnome-text-editor
       calibre
 
-      (discord.override {
-        withOpenASAR = true;
-        withVencord = false;
+      (auto.discord.override {
+        # withOpenASAR = true;
+        withVencord = true;
       })
 
       scripts.update-icons-color

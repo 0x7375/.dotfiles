@@ -63,7 +63,7 @@
   ];
 
   environment.variables = {
-    WINIT_X11_SCALE_FACTOR = "1.10"; # giga zoom on alacritty otherwise
+    WINIT_X11_SCALE_FACTOR = "1.11"; # giga zoom on alacritty otherwise
   };
 
   services.logind.settings.Login.HandleLidSwitch = "ignore";

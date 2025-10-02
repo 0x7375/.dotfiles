@@ -20,7 +20,7 @@ in
   options =
     let
 
-      mergeAttrsList = builtins.foldl' (lib.mergeAttrs) { };
+      mergeAttrsList = builtins.foldl' (lib.recursiveUpdate) { };
 
       fileAttrsType = lib.types.attrsOf (
         lib.types.submodule (
@@ -79,11 +79,10 @@ in
           ''
         );
 
-        command =
-          ''
-            echo "Copying mutable home files for $HOME"
-          ''
-          + lib.concatLines (map toCommand mutableFiles);
+        command = ''
+          echo "Copying mutable home files for $HOME"
+        ''
+        + lib.concatLines (map toCommand mutableFiles);
 
       in
       (lib.hm.dag.entryAfter [ "linkGeneration" ] command);

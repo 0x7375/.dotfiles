@@ -1,7 +1,7 @@
 { lib, config, ... }:
 
 lib.mkIf config.me.gui.enable {
-  home.file.".config/melonDS/melonDS.toml" = {
+  xdg.configFile."melonDS/melonDS.toml" = {
     force = true;
     mutable = true;
     text =

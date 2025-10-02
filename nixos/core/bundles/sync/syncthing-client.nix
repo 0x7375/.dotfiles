@@ -79,7 +79,7 @@ lib.mkIf (config.me.syncthing-client.enable && config.me.secrets.enable) {
           ];
         };
         arbtt = syncthingDirConfig {
-          path = ".arbtt";
+          path = ".local/share/arbtt.log";
           devices = [
             "server"
           ];

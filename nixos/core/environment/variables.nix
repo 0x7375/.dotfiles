@@ -45,7 +45,6 @@
       PGPASSFILE = "${XDG_CONFIG_HOME}/pg/pgpass";
       MYSQL_HISTFILE = "${XDG_DATA_HOME}/mysql_history";
       PSQL_HISTORY = "${XDG_DATA_HOME}/psql_history";
-      PYTHONSTARTUP = "${XDG_CONFIG_HOME}/python/pythonrc";
       _Z_DATA = "${XDG_DATA_HOME}/z";
       GTK2_RC_FILES = "${XDG_CONFIG_HOME}/gtk-2.0/gtkrc";
       ANSIBLE_HOME = "${XDG_DATA_HOME}/ansible";

@@ -9,7 +9,7 @@ let
   palette = myLib.palette;
 in
 lib.mkIf config.me.gui.enable {
-  home.file.".config/VSCodium/User/keybindings.json" = {
+  xdg.configFile."VSCodium/User/keybindings.json" = {
     enable = true;
     force = true;
     mutable = true;
@@ -70,7 +70,7 @@ lib.mkIf config.me.gui.enable {
       '';
   };
 
-  home.file.".config/VSCodium/User/settings.json" = {
+  xdg.configFile."VSCodium/User/settings.json" = {
     enable = true;
     force = true;
     mutable = true;

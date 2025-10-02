@@ -519,6 +519,27 @@ in
       default_dir=${config.xdg.userDirs.download}
     '';
 
+  xdg.desktopEntries."swap-file-chooser" = {
+    exec = "${pkgs.writeShellScript "swap-file-chooser" ''
+      CONFIG="$HOME/.config/xdg-desktop-portal/portals.conf"
+      sed -i 's/gtk;termfilechooser/TEMP/' "$CONFIG" && \
+      sed -i 's/termfilechooser;gtk/gtk;termfilechooser/' "$CONFIG" && \
+      sed -i 's/TEMP/termfilechooser;gtk/' "$CONFIG"
+      systemctl --user restart xdg-desktop-portal
+    ''}";
+    name = "Swap File Chooser";
+  };
+
+  xdg.configFile."xdg-desktop-portal/portals.conf" = {
+    mutable = true;
+    force = true;
+    text = # ini
+      ''
+        [preferred]
+        org.freedesktop.impl.portal.FileChooser=termfilechooser;gtk
+      '';
+  };
+
   systemd.user.services."file-handler" = {
     Service.ExecStart = "${pkgs.file-handler}/bin/file-handler";
   };

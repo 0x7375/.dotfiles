@@ -11,7 +11,7 @@
       bundles = {
         postgresql.enable = false;
         neo4j.enable = false;
-        gaming.enable = false;
+        gaming.enable = true;
       };
     };
     devPkgs.enable = true;

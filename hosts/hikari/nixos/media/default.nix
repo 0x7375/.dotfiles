@@ -8,7 +8,7 @@
       "podman-flaresolverr"
       "podman-cleanuparr"
       "jellyfin"
-      "jellyseerr"
+      # "jellyseerr"
       "prowlarr"
       "qbittorrent"
       "radarr"

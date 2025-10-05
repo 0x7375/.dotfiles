@@ -27,7 +27,8 @@ lib.mkIf config.me.secrets.enable {
     };
     preStart = ''
       secret=$(cat "${config.sops.secrets."hikari/qbittorrent_pw_hash".path}")
-      port=$(cat /tmp/proton-vpn-port)
+      port=00000
+      [ -f /var/lib/proton-vpn-port ] && port=$(< /var/lib/proton-vpn-port)
       configFile=${config.services.qbittorrent.profileDir}/qBittorrent/config/qBittorrent.conf
 
       ${pkgs.gnused}/bin/sed -i "s#@guiPassword@#$secret#" "$configFile"

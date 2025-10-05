@@ -65,7 +65,7 @@ vim.opt.grepprg = 'rg --vimgrep'
 vim.opt.grepformat = '%f:%l:%c:%m'
 
 -- Number of recent files
-vim.opt.shada = "!,'300,<50,s10,h"
+vim.opt.shada = "!,'1000,<50,s10,h"
 
 vim.opt.viminfofile = nil
 

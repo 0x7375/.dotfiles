@@ -11,7 +11,7 @@ lib.mkIf config.me.gui.bundles.gaming.enable {
     dedicatedServer.openFirewall = false; # Open ports in the firewall for Source Dedicated Server
   };
 
-  # powerManagement.cpuFreqGovernor = "performance";
+  powerManagement.cpuFreqGovernor = "performance";
 
   environment.systemPackages = with pkgs; [
     protontricks
@@ -21,6 +21,7 @@ lib.mkIf config.me.gui.bundles.gaming.enable {
     heroic
     steamtinkerlaunch
     # modrinth-app
+    (bottles.override { removeWarningPopup = true; })
     lutris
   ];
 

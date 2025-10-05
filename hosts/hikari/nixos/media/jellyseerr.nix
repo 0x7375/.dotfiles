@@ -2,7 +2,7 @@
 
 {
   services.jellyseerr = {
-    enable = true;
+    enable = false;
     openFirewall = true;
     package = pkgs.auto.jellyseerr;
     configDir = "/var/lib/jellyseerr";

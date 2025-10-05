@@ -80,6 +80,8 @@ lib.mkIf config.me.secrets.enable {
     autostart = false;
   };
 
+  networking.firewall.trustedInterfaces = [ "proton" ];
+
   systemd.services."proton-portforward" = lib.mkIf server {
     requires = [ "network-online.target" ];
     after = [ "network-online.target" ];
@@ -92,10 +94,10 @@ lib.mkIf config.me.secrets.enable {
         PORT=$(echo "$OUTPUT" | ${pkgs.gawk}/bin/awk '/Mapped public port/ {print $4}')
 
         if [ -n "$PORT" ]; then
-          if [ -f /tmp/proton-vpn-port ] && [ "$(cat /tmp/proton-vpn-port)" == "$PORT" ]; then
+          if [ -f /var/lib/proton-vpn-port ] && [ "$(< /var/lib/proton-vpn-port)" == "$PORT" ]; then
             echo "Port unchanged: $PORT"
           else
-            echo "$PORT" > /tmp/proton-vpn-port
+            echo "$PORT" > /var/lib/proton-vpn-port
             echo "Successfully got new port: $PORT"
             
             if systemctl is-active --quiet qbittorrent; then

@@ -413,7 +413,8 @@ in
         C = "clear";
         x = "cut";
         s = "visual";
-        v = "invert";
+        v = "toggle";
+        V = "invert";
         u = "unselect";
         j = "down";
         k = "up";

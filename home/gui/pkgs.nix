@@ -99,6 +99,8 @@ lib.mkIf config.me.gui.enable {
 
       # sql
       mariadb
+      sqlite
+      litecli
 
       # c
       clang-tools

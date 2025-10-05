@@ -520,6 +520,10 @@ in
       default_dir=${config.xdg.userDirs.download}
     '';
 
+  home.sessionVariables = {
+    QT_QPA_PLATFORMTHEME = "xdgdesktopportal";
+  };
+
   xdg.desktopEntries."swap-file-chooser" = {
     exec = "${pkgs.writeShellScript "swap-file-chooser" ''
       CONFIG="$HOME/.config/xdg-desktop-portal/portals.conf"

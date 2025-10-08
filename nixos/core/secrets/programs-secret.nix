@@ -20,8 +20,8 @@ lib.mkIf config.me.secrets.enable {
     server=$(cat "${config.sops.secrets."server_uni/server".path}")
     user=$(cat "${config.sops.secrets."server_uni/user".path}")
     configFile=/etc/ssh/ssh_config
-    ${pkgs.gnused}/bin/sed -i "s#@server@#$server#" "$configFile"
-    ${pkgs.gnused}/bin/sed -i "s#@user@#$user#" "$configFile"
+    ${lib.getExe' pkgs.gnused "sed"} -i "s#@server@#$server#" "$configFile"
+    ${lib.getExe' pkgs.gnused "sed"} -i "s#@user@#$user#" "$configFile"
   '';
 
   programs = {

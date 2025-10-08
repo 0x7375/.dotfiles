@@ -7,9 +7,8 @@
 
 let
   palette = myLib.palette;
-  inherit (config.me) gui;
 in
-lib.mkIf (gui.enable && gui.displayServer == "xorg") {
+lib.mkIf (config.me.gui.displayServer == "xorg") {
   xresources = {
     path = "/home/${config.me.user}/.config/X11/xresources";
     properties = {

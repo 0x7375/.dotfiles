@@ -7,6 +7,18 @@
 }:
 
 lib.mkIf config.me.gui.enable {
+
+  nixpkgs.overlays = [
+    (final: prev: {
+      pamixer = prev.pamixer.overrideAttrs (oldAttrs: {
+        # Follow recommended fix from NixOS issue #394444
+        cmakeFlags = (oldAttrs.cmakeFlags or [ ]) ++ [
+          "-DCMAKE_POLICY_VERSION_MINIMUM=3.10"
+        ];
+      });
+    })
+  ];
+
   home.packages =
     with pkgs;
     let

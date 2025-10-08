@@ -18,12 +18,6 @@ lib.mkIf config.me.gui.enable {
       extraPresets.default = builtins.fromJSON (builtins.readFile ./easyeffects.json);
     };
 
-    gromit-mpx = {
-      enable = true;
-      hotKey = null;
-      undoKey = null;
-    };
-
     polkit-gnome.enable = true;
   };
 }

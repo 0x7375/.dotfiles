@@ -7,6 +7,8 @@
 
     nixpkgs.follows = "nixpkgs-unstable";
 
+    # nixpkgs-patcher.url = "github:gepbird/nixpkgs-patcher";
+
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";

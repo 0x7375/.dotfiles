@@ -18,7 +18,7 @@ lib.mkIf (config.me.secrets.enable && config.me.network.enable) {
   system.activationScripts."unbound-secret-substitution" = ''
     secret=$(cat "${config.sops.secrets.nextdns_id.path}")
     configFile=/etc/unbound/unbound.conf
-    ${pkgs.gnused}/bin/sed -i "s#${template}#$secret#" "$configFile"
+    ${lib.getExe' pkgs.gnused "sed"} -i "s#${template}#$secret#" "$configFile"
   '';
 
   services.unbound = {

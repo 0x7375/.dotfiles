@@ -5,10 +5,7 @@
   ...
 }:
 
-let
-  inherit (config.me) gui;
-in
-lib.mkIf (gui.enable && gui.displayServer == "xorg") {
+lib.mkIf (config.me.gui.displayServer == "xorg") {
   nixpkgs.overlays = [
     (final: prev: {
       grobi = prev.grobi.overrideAttrs (old: rec {
@@ -31,7 +28,7 @@ lib.mkIf (gui.enable && gui.displayServer == "xorg") {
   xsession.numlock.enable = true;
   xsession.initExtra = # bash
     ''
-      ${pkgs.xset}/bin/xset s off -dpms
+      ${lib.getExe pkgs.xset} s off -dpms
     '';
 
   xdg.configFile."zsh/.zshrc".text =

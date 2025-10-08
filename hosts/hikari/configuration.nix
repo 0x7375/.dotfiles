@@ -7,13 +7,12 @@
 }:
 
 {
-  imports =
-    [
-      ./hardware.nix
-      ./options.nix
-    ]
-    ++ (myLib.filesIn ./nixos)
-    ++ (myLib.filesIn ../../nixos);
+  imports = [
+    ./hardware.nix
+    ./options.nix
+  ]
+  ++ (myLib.filesIn ./nixos)
+  ++ (myLib.filesIn ../../nixos);
 
   networking.hostName = config.me.hostname;
 
@@ -43,7 +42,7 @@
     description = "Send notification when a service fails";
     serviceConfig = {
       Type = "oneshot";
-      ExecStart = "${pkgs.curl}/bin/curl -d \"Service %i failed\" http://${myLib.network.lan.addr.server}:8719/status";
+      ExecStart = "${lib.getExe pkgs.curl} -d \"Service %i failed\" http://${myLib.network.lan.addr.server}:8719/status";
     };
   };
 

@@ -10,13 +10,13 @@ let
   palette = myLib.palette;
   inherit (config.me) gui;
 in
-lib.mkIf (gui.enable && gui.displayServer == "xorg") {
+lib.mkIf (gui.displayServer == "xorg") {
   xsession.windowManager.i3 = {
     enable = true;
 
     extraConfig = ''
-      set $tmux ${pkgs.alacritty}/bin/alacritty -e ${pkgs.tmux}/bin/tmux new-session
-      set $term ${pkgs.alacritty}/bin/alacritty -e
+      set $tmux ${lib.getExe pkgs.${gui.terminal}} -e ${lib.getExe pkgs.tmux} new-session
+      set $term ${lib.getExe pkgs.${gui.terminal}} -e
       set $browser ${config.me.browser}
       set $alt Mod1
       set $win Mod4
@@ -56,70 +56,68 @@ lib.mkIf (gui.enable && gui.displayServer == "xorg") {
             };
           in
           {
-            "${modifier}+t" =
-              "exec --no-startup-id $term ${pkgs.scripts.tmux-sessionizer}/bin/tmux-sessionizer ~/";
-            "${modifier}+s" = "exec --no-startup-id $term ${pkgs.scripts.tmux-sshr}/bin/tmux-sshr";
+            "${modifier}+t" = "exec --no-startup-id $term ${lib.getExe pkgs.scripts.tmux-sessionizer} ~/";
+            "${modifier}+s" = "exec --no-startup-id $term ${lib.getExe pkgs.scripts.tmux-sshr}";
             "${modifier}+Shift+t" = "exec --no-startup-id $tmux";
             "${modifier}+q" = "kill";
-            "${modifier}+e" = "exec --no-startup-id $term ${pkgs.lf}/bin/lf";
-            "${modifier}+Shift+e" = "exec --no-startup-id $term sudo ${pkgs.lf}/bin/lf";
+            "${modifier}+e" = "exec --no-startup-id $term ${lib.getExe' pkgs.lf "lf"}";
+            "${modifier}+Shift+e" = "exec --no-startup-id $term sudo ${lib.getExe' pkgs.lf "lf"}";
             "${modifier}+m" =
               let
                 dir = "$HOME/notes";
               in
               "exec --no-startup-id $term $(${pkgs.writeShellScript "open-note" ''
                 note=$(ls ${dir} | sed 's/\.md$//' | bemenu -p "NOTE")
-                if [ -n "$note" ]; then
-                  echo $EDITOR "${dir}/$note.md"
-                fi
+                [ -n "$note" ] && echo $EDITOR "${dir}/$note.md"
               ''})";
             "${modifier}+n" =
-              "exec --no-startup-id $term ${pkgs.zsh}/bin/zsh -c '${pkgs.networkmanager}/bin/nmcli device wifi rescan && unset COLORTERM && TERM=xterm-old ${pkgs.networkmanager}/bin/nmtui'";
-            "${modifier}+b" = "exec --no-startup-id $term ${pkgs.bluetuith}/bin/bluetuith --no-warning";
+              "exec --no-startup-id $term ${lib.getExe pkgs.zsh} -c '${lib.getExe' pkgs.networkmanager "nmcli"} device wifi rescan && unset COLORTERM && TERM=xterm-old ${lib.getExe' pkgs.networkmanager "nmtui'"}";
+            "${modifier}+b" = "exec --no-startup-id $term ${lib.getExe pkgs.bluetuith} --no-warning";
             "${modifier}+Shift+b" = "exec --no-startup-id ${pkgs.writeShellScript "bluetooth-toogle" ''
-              if ${pkgs.bluez}/bin/bluetoothctl info ${airpods} | grep -q "Connected: yes"; then
-                echo -e "disconnect ${airpods}\nquit" | ${pkgs.bluez}/bin/bluetoothctl
+              if ${lib.getExe' pkgs.bluez "bluetoothctl"} info ${airpods} | grep -q "Connected: yes"; then
+                echo -e "disconnect ${airpods}\nquit" | ${lib.getExe' pkgs.bluez "bluetoothctl"}
               else
-                echo -e "connect ${airpods}\nquit" | ${pkgs.bluez}/bin/bluetoothctl
+                echo -e "connect ${airpods}\nquit" | ${lib.getExe' pkgs.bluez "bluetoothctl"}
               fi
             ''}";
-            "${modifier}+Shift+n" = "exec --no-startup-id ${pkgs.networkmanager}/bin/nmcli device wifi rescan";
+            "${modifier}+Shift+n" =
+              "exec --no-startup-id ${lib.getExe' pkgs.networkmanager "nmcli"} device wifi rescan";
 
             "${modifier}+w" = "exec --no-startup-id $browser";
-            "${modifier}+Shift+p" = "exec --no-startup-id ${pkgs.copyq}/bin/copyq show";
-            # "${modifier}+s" = "exec --no-startup-id ${pkgs.scripts.dofus-travel}/bin/dofus-travel";
+            "${modifier}+Shift+p" = "exec --no-startup-id ${lib.getExe pkgs.copyq} show";
+            # "${modifier}+s" = "exec --no-startup-id ${lib.getExe pkgs.scripts.dofus-travel}";
 
-            "${modifier}+u" = "exec --no-startup-id ${pkgs._1password-gui}/bin/1password --quick-access";
+            "${modifier}+u" =
+              "exec --no-startup-id ${lib.getExe' pkgs._1password-gui "1password"} --quick-access";
 
             "${modifier}+d" =
-              "exec --no-startup-id ${j4-dmenu-desktop}/bin/j4-dmenu-desktop --no-generic -d '${pkgs.bemenu}/bin/bemenu -p \"DESKTOP\"'";
-            "${modifier}+i" = "exec --no-startup-id ${pkgs.polybar}/bin/polybar-msg cmd toggle";
-            "${modifier}+x" = "exec --no-startup-id ${pkgs.dunst}/bin/dunstctl close-all";
-            "${modifier}+r" = "exec --no-startup-id ${pkgs.dunst}/bin/dunstctl history-pop";
-            "${modifier}+a" = "exec --no-startup-id ${pkgs.dunst}/bin/dunstctl action";
+              "exec --no-startup-id ${lib.getExe j4-dmenu-desktop} --no-generic -d '${lib.getExe pkgs.bemenu} -p \"DESKTOP\"'";
+            "${modifier}+i" = "exec --no-startup-id ${lib.getExe' pkgs.polybar "polybar-msg"} cmd toggle";
+            "${modifier}+x" = "exec --no-startup-id ${lib.getExe' pkgs.dunst "dunstctl"} close-all";
+            "${modifier}+r" = "exec --no-startup-id ${lib.getExe' pkgs.dunst "dunstctl"} history-pop";
+            "${modifier}+a" = "exec --no-startup-id ${lib.getExe' pkgs.dunst "dunstctl"} action";
 
-            "${modifier}+o" = "exec --no-startup-id ${pkgs.gromit-mpx}/bin/gromit-mpx --toggle";
-            "F9" = "exec --no-startup-id ${pkgs.gromit-mpx}/bin/gromit-mpx --toggle";
+            "${modifier}+o" = "exec --no-startup-id ${lib.getExe pkgs.gromit-mpx} --toggle";
+            "F9" = "exec --no-startup-id ${lib.getExe pkgs.gromit-mpx} --toggle";
 
-            "${modifier}+Shift+o" = "exec --no-startup-id ${pkgs.gromit-mpx}/bin/gromit-mpx --clear";
+            "${modifier}+Shift+o" = "exec --no-startup-id ${lib.getExe pkgs.gromit-mpx} --clear";
 
-            "${modifier}+p" = "exec --no-startup-id ${pkgs.scripts.powermenu}/bin/powermenu";
-            "--release ${modifier}+Shift+c" = "exec ${pkgs.scripts.color-picker}/bin/color-picker";
+            "${modifier}+p" = "exec --no-startup-id ${lib.getExe pkgs.scripts.powermenu}";
+            "--release ${modifier}+Shift+c" = "exec ${lib.getExe pkgs.scripts.color-picker}";
             "--release ${modifier}+Shift+m" =
-              "exec $tmux -s 'xprop' '${pkgs.xorg.xprop}/bin/xprop; exec $SHELL";
+              "exec $tmux -s 'xprop' '${lib.getExe' pkgs.xorg.xprop "xprop"} exec $SHELL";
 
-            "Print" = "exec --no-startup-id ${pkgs.scripts.screenshot}/bin/screenshot region";
-            "$alt+Sys_Req" = "exec --no-startup-id ${pkgs.scripts.screenshot}/bin/screenshot window";
-            "Shift+Print" = "exec --no-startup-id ${pkgs.scripts.screenshot}/bin/screenshot monitor";
+            "Print" = "exec --no-startup-id ${lib.getExe pkgs.scripts.screenshot} region";
+            "$alt+Sys_Req" = "exec --no-startup-id ${lib.getExe pkgs.scripts.screenshot} window";
+            "Shift+Print" = "exec --no-startup-id ${lib.getExe pkgs.scripts.screenshot} monitor";
 
-            "XF86AudioRaiseVolume" = "exec --no-startup-id ${pkgs.scripts.change-volume}/bin/change-volume up";
-            "XF86AudioLowerVolume" =
-              "exec --no-startup-id ${pkgs.scripts.change-volume}/bin/change-volume down";
-            "XF86AudioMute" = "exec --no-startup-id ${pkgs.scripts.change-volume}/bin/change-volume mute";
+            "XF86AudioRaiseVolume" = "exec --no-startup-id ${lib.getExe pkgs.scripts.change-volume} up";
+            "XF86AudioLowerVolume" = "exec --no-startup-id ${lib.getExe pkgs.scripts.change-volume} down";
+            "XF86AudioMute" = "exec --no-startup-id ${lib.getExe pkgs.scripts.change-volume} mute";
 
-            "XF86AudioNext" = "exec --no-startup-id ${pkgs.playerctl}/bin/playerctl next";
-            "XF86AudioPrev" = "exec --no-startup-id ${pkgs.playerctl}/bin/playerctl previous";
-            "XF86AudioPlay" = "exec --no-startup-id ${pkgs.playerctl}/bin/playerctl play-pause";
+            "XF86AudioNext" = "exec --no-startup-id ${lib.getExe pkgs.playerctl} next";
+            "XF86AudioPrev" = "exec --no-startup-id ${lib.getExe pkgs.playerctl} previous";
+            "XF86AudioPlay" = "exec --no-startup-id ${lib.getExe pkgs.playerctl} play-pause";
 
             "${modifier}+Shift+r" = "restart";
 
@@ -173,10 +171,8 @@ lib.mkIf (gui.enable && gui.displayServer == "xorg") {
             "${modifier}+Shift+k" = "resize shrink height 30 px or 30 ppt";
             "${modifier}+Shift+l" = "resize grow width 30 px or 30 ppt";
 
-            "XF86MonBrightnessDown" =
-              "exec --no-startup-id ${pkgs.scripts.change-brightness}/bin/change-brightness down";
-            "XF86MonBrightnessUp" =
-              "exec --no-startup-id ${pkgs.scripts.change-brightness}/bin/change-brightness up";
+            "XF86MonBrightnessDown" = "exec --no-startup-id ${lib.getExe pkgs.scripts.change-brightness} down";
+            "XF86MonBrightnessUp" = "exec --no-startup-id ${lib.getExe pkgs.scripts.change-brightness} up";
           };
         floating = {
           inherit modifier;
@@ -208,7 +204,7 @@ lib.mkIf (gui.enable && gui.displayServer == "xorg") {
         };
         startup = [
           {
-            command = "${pkgs.dbus}/bin/dbus-update-activation-environment --all";
+            command = "${lib.getExe' pkgs.dbus "dbus-update-activation-environment"} --all";
             notification = false;
           }
           {
@@ -220,26 +216,26 @@ lib.mkIf (gui.enable && gui.displayServer == "xorg") {
               if [[ -d ~/pictures/wallpapers/landscapes ]]; then
                 shuf -e -n1 --random-source=<(date +%Y%m%d | md5sum) \
                   ~/pictures/wallpapers/landscapes/* | \
-                  ${pkgs.findutils}/bin/xargs ${pkgs.feh}/bin/feh --no-fehbg --bg-fill
+                  ${lib.getExe' pkgs.findutils "xargs"} ${lib.getExe pkgs.feh} --no-fehbg --bg-fill
               else
-                ${pkgs.feh}/bin/feh --no-fehbg --bg-fill ${config.me.flakeDir}/assets/wallpaper.png
+                ${lib.getExe pkgs.feh} --no-fehbg --bg-fill ${config.me.flakeDir}/assets/wallpaper.png
               fi
             ''}";
             always = true;
             notification = false;
           }
           {
-            command = "${pkgs.i3altlayout}/bin/i3altlayout";
+            command = "${lib.getExe' pkgs.i3altlayout "i3altlayout"}";
             always = true;
             notification = false;
           }
           {
-            command = "${pkgs.polybar}/bin/polybar-msg cmd restart";
+            command = "${lib.getExe' pkgs.polybar "polybar-msg"} cmd restart";
             always = true;
             notification = false;
           }
           {
-            command = "${pkgs.polybar}/bin/polybar";
+            command = "${lib.getExe' pkgs.polybar "polybar"}";
             notification = false;
           }
           # hide polybar at startup
@@ -249,11 +245,11 @@ lib.mkIf (gui.enable && gui.displayServer == "xorg") {
           # }
 
           {
-            command = "${pkgs.i3}/bin/i3-msg workspace 1";
+            command = "${lib.getExe' pkgs.i3 "i3-msg"} workspace 1";
             notification = false;
           }
         ];
-        terminal = "${pkgs.alacritty}/bin/alacritty";
+        terminal = "${lib.getExe' pkgs.${gui.terminal} gui.term}";
         assigns = {
           "4" = [
             { class = "^spotify$"; }

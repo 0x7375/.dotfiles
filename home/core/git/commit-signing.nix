@@ -30,9 +30,9 @@ in
     Service = {
       Type = "oneshot";
       # Wait a bit for the socket to be ready
-      ExecStartPre = "${pkgs.coreutils}/bin/sleep 1";
+      ExecStartPre = "${lib.getExe' pkgs.coreutils "sleep"} 1";
       Environment = "SSH_AUTH_SOCK=%t/ssh-agent";
-      ExecStart = "${pkgs.openssh}/bin/ssh-add %h/.ssh/id_ed25519";
+      ExecStart = "${lib.getExe' pkgs.openssh "ssh-add"} %h/.ssh/id_ed25519";
       RemainAfterExit = "yes";
     };
     Install = {

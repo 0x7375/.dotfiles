@@ -8,10 +8,14 @@
 lib.mkIf (config.me.gui.enable && config.me.keyd.enable) {
   xsession.windowManager.i3.config.startup = [
     {
-      command = "${pkgs.systemd}/bin/systemctl --user restart keyd-application-mapper";
+      command = "${lib.getExe' pkgs.systemd "systemctl"} --user restart keyd-application-mapper";
       always = true;
       notification = false;
     }
+  ];
+
+  wayland.windowManager.hyprland.settings.exec = [
+    "${lib.getExe' pkgs.systemd "systemctl"} --user restart keyd-application-mapper"
   ];
 
   systemd.user.services.keyd-application-mapper = {
@@ -21,7 +25,7 @@ lib.mkIf (config.me.gui.enable && config.me.keyd.enable) {
 
     Service = {
       Environment = "KEYD_SOCKET=/run/keyd/keyd.sock";
-      ExecStart = "${pkgs.keyd}/bin/keyd-application-mapper";
+      ExecStart = "${lib.getExe' pkgs.keyd "keyd-application-mapper"}";
       Restart = "always";
     };
   };

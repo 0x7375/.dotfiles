@@ -527,8 +527,12 @@ in
                 "Github" = {
                   urls = [
                     {
-                      template = "https://grep.app/search";
+                      template = "https://github.com/search";
                       params = [
+                        {
+                          name = "type";
+                          value = "code";
+                        }
                         {
                           name = "q";
                           value = "{searchTerms}";

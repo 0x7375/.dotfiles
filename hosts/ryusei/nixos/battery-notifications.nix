@@ -1,4 +1,9 @@
-{ config, pkgs, ... }:
+{
+  lib,
+  config,
+  pkgs,
+  ...
+}:
 
 {
   systemd.timers.battery-timer = {
@@ -11,8 +16,8 @@
 
   systemd.services.battery-timer = {
     script = ''
-      ${pkgs.systemd}/bin/systemctl start battery-notify
-      ${pkgs.systemd}/bin/systemctl start battery-check
+      ${lib.getExe' pkgs.systemd "systemctl"} start battery-notify
+      ${lib.getExe' pkgs.systemd "systemctl"} start battery-check
     '';
     serviceConfig = {
       Type = "oneshot";
@@ -22,7 +27,7 @@
 
   systemd.services.battery-notify = {
     script = ''
-      ${pkgs.scripts.battery-notify}/bin/battery-notify
+      ${lib.getExe pkgs.scripts.battery-notify}
     '';
     serviceConfig = {
       Type = "oneshot";
@@ -32,7 +37,7 @@
 
   systemd.services."battery-check" = {
     script = ''
-      ${pkgs.scripts.battery-check}/bin/battery-check
+      ${lib.getExe pkgs.scripts.battery-check}
     '';
     serviceConfig = {
       Type = "oneshot";

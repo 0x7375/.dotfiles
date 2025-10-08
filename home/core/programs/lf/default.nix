@@ -1,5 +1,4 @@
 {
-  myLib,
   lib,
   config,
   pkgs,
@@ -25,39 +24,6 @@ in
         });
       }
     )
-    (final: prev: {
-      xdg-desktop-portal-termfilechooser =
-        prev.xdg-desktop-portal-termfilechooser.overrideAttrs
-          (old: rec {
-            version = "caf24e77189f500b6a27ef502ef01d3a96196510";
-            src = pkgs.fetchFromGitHub {
-              owner = old.src.owner;
-              repo = old.src.repo;
-              rev = "${version}";
-              sha256 = "2A+y6twdfLl/Fy4Feop3tMGfTytxX80acTrFQ56kjS4=";
-            };
-          });
-
-      file-handler = pkgs.stdenv.mkDerivation {
-        name = "file-handler";
-        src = ./.;
-        dontUnpack = true;
-
-        nativeBuildInputs = with pkgs; [
-          dbus.dev
-          pkg-config
-        ];
-
-        buildPhase = ''
-          gcc -o file-handler $src/file-handler.c $(pkg-config --cflags --libs dbus-1)
-        '';
-
-        installPhase = ''
-          mkdir -p $out/bin
-          cp file-handler $out/bin
-        '';
-      };
-    })
   ];
 
   home.packages = [
@@ -96,9 +62,9 @@ in
         lib.optionalString gui
           # bash
           ''
-            &${ctpv}/bin/ctpv -s $id
-            cmd on-quit %${ctpv}/bin/ctpv -e $id
-            set cleaner ${ctpv}/bin/ctpvclear
+            &${lib.getExe' ctpv "ctpv"} -s $id
+            cmd on-quit %${lib.getExe' ctpv "ctpv"} -e $id
+            set cleaner ${lib.getExe' ctpv "ctpvclear"}
           ''
         +
           # bash
@@ -190,8 +156,8 @@ in
           ''
             ''${{
               set -f
-              ${pkgs.ouch}/bin/ouch decompress $fx
-              ${pkgs.trash-cli}/bin/trash $f
+              ${lib.getExe pkgs.ouch} decompress $fx
+              ${lib.getExe' pkgs.trash-cli "trash"} $f
             }}
           '';
         compress = # bash
@@ -206,7 +172,7 @@ in
                 new_name=$default_name
               fi
 
-              ${pkgs.ouch}/bin/ouch compress $(realpath --relative-to="$(pwd)" $fx) $new_name 
+              ${lib.getExe pkgs.ouch} compress $(realpath --relative-to="$(pwd)" $fx) $new_name 
 
               lf -remote "send $id unselect"
               lf -remote "send $id select \"$new_name\""
@@ -220,20 +186,20 @@ in
               
               # make sure we are not in a mount point
               while [[ $path == *".mnt"* ]]; do
-                path=$(${pkgs.coreutils}/bin/dirname "$path")
+                path=$(${lib.getExe' pkgs.coreutils "dirname"} "$path")
               done
               
               echo "$path" > "$LF_CD_FILE"
-              ${pkgs.lf}/bin/lf -remote "send $id quit"
+              ${lib.getExe pkgs.lf} -remote "send $id quit"
             }}
           '';
         mount-archive = # bash
           ''
             ''${{
-              if ${pkgs.file}/bin/file --mime-type "$f" | grep -qE 'application/zip|application/x-tar|application/x-7z-compressed|application/octet-stream|application/gzip'; then
+              if ${lib.getExe pkgs.file} --mime-type "$f" | grep -qE 'application/zip|application/x-tar|application/x-7z-compressed|application/octet-stream|application/gzip'; then
                 mntdir="''${f}.mnt"
                 mkdir -p "$mntdir"
-                ${pkgs.archivemount}/bin/archivemount "$f" "$mntdir"
+                ${lib.getExe pkgs.archivemount} "$f" "$mntdir"
                 lf -remote "send $id cd $mntdir"
               fi
             }}
@@ -262,7 +228,7 @@ in
         bulkrename = # bash
           ''
             ''${{
-              export VIMV=1; ${pkgs.vimv-rs}/bin/vimv -- $fs
+              export VIMV=1; ${lib.getExe' pkgs.vimv-rs "vimv"} -- $fs
               lf -remote "send $id load"
               lf -remote "send $id unselect"
             }}
@@ -334,7 +300,7 @@ in
           '';
         open = "&mimeopen \"$f\" > /dev/null 2>&1";
 
-        online-share = "$''${pkgs.curl}/bin/curl -F\"file=@$f\" https://0x0.st | ${pkgs.xsel}/bin/xsel -ib";
+        online-share = "$''${lib.getExe pkgs.curl} -F\"file=@$f\" https://0x0.st | ${lib.getExe pkgs.xsel} -ib";
         local-share = # bash
           ''
             ''${{
@@ -351,7 +317,7 @@ in
           ''
             %{{
                 mode=$(head -1 ~/.local/share/lf/files)
-                list=$(${pkgs.gnused}/bin/sed 1d ~/.local/share/lf/files)
+                list=$(${lib.getExe' pkgs.gnused "sed"} 1d ~/.local/share/lf/files)
                 if [[ $mode == "copy" ]]; then
                     cp -r $list .
                 elif [[ $mode == "move" ]]; then
@@ -365,7 +331,7 @@ in
         copy-path = # bash
           ''
             ''${{
-              echo -en "$fx" | tr ' ' '\n' | ${pkgs.xsel}/bin/xsel -ib
+              echo -en "$fx" | tr ' ' '\n' | ${lib.getExe pkgs.xsel} -ib
               lf -remote 'send unselect'
               lf -remote 'send echo "Path copied to clipboard"'
             }}
@@ -373,7 +339,7 @@ in
         external-copy = # bash
           ''
             ''${{
-              echo -en "$fx" | sed 's|^|file://|' | tr ' ' '\n' | ${pkgs.xclip}/bin/xclip -i -sel clip -t text/uri-list
+              echo -en "$fx" | sed 's|^|file://|' | tr ' ' '\n' | ${lib.getExe pkgs.xclip} -i -sel clip -t text/uri-list
               lf -remote 'send unselect'
               lf -remote 'send echo "Files copied to clipboard"'
             }}
@@ -461,7 +427,7 @@ in
         ze = "extract";
         zc = "compress";
 
-        O = lib.optionalString gui "&${pkgs.xdragon}/bin/xdragon $fx";
+        O = lib.optionalString gui "&${lib.getExe pkgs.xdragon} $fx";
         md = "mkdir";
         mf = "touch";
         me = "edit-new";
@@ -495,64 +461,4 @@ in
     };
 
   xdg.configFile."lf/colors".text = builtins.readFile ./colors;
-
-  xdg.configFile."xdg-desktop-portal-termfilechooser/config".text =
-    let
-      env = pkgs.buildEnv {
-        name = "lf-wrapper-env";
-        paths = with pkgs; [
-          lf
-          gnused
-          coreutils
-          bashInteractive
-          zsh
-          git
-        ];
-      };
-      term = config.me.gui.terminal;
-    in
-    # ini
-    ''
-      [filechooser]
-      env=PATH='${env}/bin'
-      env=TERMCMD='${pkgs.${term}}/bin/${term} -T filechooser -e'
-      cmd='${pkgs.xdg-desktop-portal-termfilechooser}/share/xdg-desktop-portal-termfilechooser/lf-wrapper.sh'
-      default_dir=${config.xdg.userDirs.download}
-    '';
-
-  home.sessionVariables = {
-    QT_QPA_PLATFORMTHEME = "xdgdesktopportal";
-  };
-
-  xdg.desktopEntries."swap-file-chooser" = {
-    exec = "${pkgs.writeShellScript "swap-file-chooser" ''
-      CONFIG="$HOME/.config/xdg-desktop-portal/portals.conf"
-      sed -i 's/gtk;termfilechooser/TEMP/' "$CONFIG" && \
-      sed -i 's/termfilechooser;gtk/gtk;termfilechooser/' "$CONFIG" && \
-      sed -i 's/TEMP/termfilechooser;gtk/' "$CONFIG"
-      systemctl --user restart xdg-desktop-portal
-    ''}";
-    name = "Swap File Chooser";
-  };
-
-  xdg.configFile."xdg-desktop-portal/portals.conf" = {
-    mutable = true;
-    force = true;
-    text = # ini
-      ''
-        [preferred]
-        org.freedesktop.impl.portal.FileChooser=termfilechooser;gtk
-      '';
-  };
-
-  systemd.user.services."file-handler" = {
-    Service.ExecStart = "${pkgs.file-handler}/bin/file-handler";
-  };
-
-  xdg.dataFile."dbus-1/services/org.freedesktop.FileManager1.service".text = # ini
-    ''
-      [D-BUS Service]
-      Name=org.freedesktop.FileManager1
-      Exec=${pkgs.file-handler}/bin/file-handler
-    '';
 }

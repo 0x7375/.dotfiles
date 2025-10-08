@@ -78,12 +78,12 @@ lib.mkIf config.me.secrets.enable {
           #   ''
           #     systemctl is-active --quiet wg-quick
           #     echo $? > /tmp/restore-proton-vpn
-          #     ${pkgs.systemd}/bin/systemctl stop wg-quick-proton
+          #     ${lib.getExe' pkgs.systemd "systemctl"} stop wg-quick-proton
           #   '';
           # backupCleanupCommand =
           #   # bash
           #   ''
-          #     [[ $(< /tmp/restore-proton-vpn) -eq 0 ]] && ${pkgs.systemd}/bin/systemctl start wg-quick-proton
+          #     [[ $(< /tmp/restore-proton-vpn) -eq 0 ]] && ${lib.getExe' pkgs.systemd "systemctl"} start wg-quick-proton
           #     rm -f /tmp/restore-proton-vpn
           #   '';
           inherit paths;

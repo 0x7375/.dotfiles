@@ -58,7 +58,8 @@ vim.opt.foldcolumn = "0"
 vim.opt.foldmethod = "indent"
 
 vim.opt.timeout = false
-vim.opt.ttimeout = false
+vim.opt.ttimeout = true
+vim.opt.ttimeoutlen = 10
 
 -- Use ripgrep for grepping.
 vim.opt.grepprg = 'rg --vimgrep'

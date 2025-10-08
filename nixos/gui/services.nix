@@ -13,7 +13,7 @@ lib.mkIf config.me.gui.enable {
         mount = "/run/media/ayko";
       in
       lib.mkForce ''
-        ${pkgs.udevil}/bin/devmon --exec-on-remove "notify-send 'Device %%f unmounted from ${mount}' -i disk -r 9998" --exec-on-drive "notify-send 'Device %%f mounted at ${mount}' -i disk -r 9999"
+        ${lib.getExe' pkgs.udevil "devmon"} --exec-on-remove "notify-send 'Device %%f unmounted from ${mount}' -i disk -r 9998" --exec-on-drive "notify-send 'Device %%f mounted at ${mount}' -i disk -r 9999"
       '';
   };
 
@@ -39,7 +39,7 @@ lib.mkIf config.me.gui.enable {
           SUBSYSTEM=="${subsystem}", \
           ENV{DISPLAY}=":0", \
           ENV{XAUTHORITY}="/run/user/${toString config.me.uid}/Xauthority", \
-          RUN+="${pkgs.su}/bin/su ${config.me.user} -c '${pkgs.playerctl}/bin/playerctl pause --all-players'"
+          RUN+="${lib.getExe' pkgs.su "su"} ${config.me.user} -c '${lib.getExe pkgs.playerctl} pause --all-players'"
         '';
       in
       ''

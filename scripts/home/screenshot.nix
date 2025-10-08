@@ -11,7 +11,7 @@ pkgs.writeShellApplication {
       xclip
       libnotify
       xdotool
-      alacritty
+      config.me.gui.terminal
       lf
     ]
     ++ lib.optionals config.wayland.windowManager.hyprland.enable [
@@ -29,7 +29,7 @@ pkgs.writeShellApplication {
     function send_notification() {
         local -r action=$(notify-send --icon "$folder$file" "Screenshot saved" "You can paste the image from the clipboard" -A open=open)
         if [[ $action == *open* ]]; then
-            alacritty -e lf "$(xdg-user-dir SCREENSHOTS)"
+            ${config.me.gui.terminal} -e lf "$(xdg-user-dir SCREENSHOTS)"
         fi
     }
 

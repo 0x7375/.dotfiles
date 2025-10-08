@@ -8,6 +8,7 @@
     btrfs.enable = true;
     gui = {
       enable = true;
+      displayServer = "wayland";
       bundles = {
         postgresql.enable = false;
         neo4j.enable = false;

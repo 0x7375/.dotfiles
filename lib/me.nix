@@ -103,13 +103,22 @@
       enable = lib.mkEnableOption "Enable graphical config";
 
       displayServer = lib.mkOption {
-        type = lib.types.enum [
-          "xorg"
-          "wayland"
-        ];
-        default = "xorg";
+        type = lib.types.nullOr (
+          lib.types.enum [
+            "xorg"
+            "wayland"
+          ]
+        );
+        default = if config.me.gui.enable then "xorg" else null;
         description = "Display server to use";
       };
+
+      assertions = [
+        {
+          assertion = config.me.displayServer == null || config.me.gui.enable;
+          message = "Display server '${config.me.displayServer}' requires gui.enable to be true";
+        }
+      ];
 
       terminal = lib.mkOption {
         type = lib.types.str;

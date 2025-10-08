@@ -1,4 +1,9 @@
-{ config, pkgs, ... }:
+{
+  lib,
+  config,
+  pkgs,
+  ...
+}:
 
 {
   systemd.timers.auto-input = {
@@ -11,8 +16,8 @@
 
   systemd.services.auto-input = {
     script = ''
-      ${pkgs.nix}/bin/nix flake update auto-update --flake ${config.me.flakeDir}
-      ${pkgs.nix}/bin/nix flake update zen-browser --flake ${config.me.flakeDir}
+      ${lib.getExe pkgs.nix} flake update auto-update --flake ${config.me.flakeDir}
+      ${lib.getExe pkgs.nix} flake update zen-browser --flake ${config.me.flakeDir}
     '';
     serviceConfig = {
       Type = "oneshot";

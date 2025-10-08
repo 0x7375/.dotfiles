@@ -93,7 +93,7 @@ lib.mkIf config.me.keyd.enable {
       SUBSYSTEM=="input", \
       ACTION=="add", \
       ATTR{name}!="keyd virtual*", \
-      RUN+="${pkgs.systemd}/bin/systemctl try-restart keyd.service", \
+      RUN+="${lib.getExe' pkgs.systemd "systemctl"} try-restart keyd.service", \
     '';
 
   systemd.services.keyd.serviceConfig = {

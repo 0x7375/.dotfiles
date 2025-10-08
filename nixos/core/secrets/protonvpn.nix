@@ -90,8 +90,8 @@ lib.mkIf config.me.secrets.enable {
     serviceConfig = {
       LoadCredential = [ "password:${config.sops.secrets."hikari/qbittorrent_pw".path}" ];
       ExecStartPre = pkgs.writeShellScript "get-proton-port" ''
-        OUTPUT=$(${pkgs.libnatpmp}/bin/natpmpc -g ${gw-ip} -a 1 0 tcp 60 2>/dev/null)
-        PORT=$(echo "$OUTPUT" | ${pkgs.gawk}/bin/awk '/Mapped public port/ {print $4}')
+        OUTPUT=$(${lib.getExe' pkgs.libnatpmp "natpmpc"} -g ${gw-ip} -a 1 0 tcp 60 2>/dev/null)
+        PORT=$(echo "$OUTPUT" | ${lib.getExe' pkgs.gawk "awk"} '/Mapped public port/ {print $4}')
 
         if [ -n "$PORT" ]; then
           if [ -f /var/lib/proton-vpn-port ] && [ "$(< /var/lib/proton-vpn-port)" == "$PORT" ]; then
@@ -102,10 +102,10 @@ lib.mkIf config.me.secrets.enable {
             
             if systemctl is-active --quiet qbittorrent; then
               PASS=$(cat "$CREDENTIALS_DIRECTORY/password")
-              SID=$(${pkgs.curl}/bin/curl -s -i -X POST "http://localhost:8080/api/v2/auth/login" \
+              SID=$(${lib.getExe pkgs.curl} -s -i -X POST "http://localhost:8080/api/v2/auth/login" \
                 --data "username=admin&password=$PASS" | grep -i set-cookie | sed 's/.*SID=\([^;]*\);.*/\1/')
               
-                ${pkgs.curl}/bin/curl -s -X POST "http://localhost:8080/api/v2/app/setPreferences" \
+                ${lib.getExe pkgs.curl} -s -X POST "http://localhost:8080/api/v2/app/setPreferences" \
                   -H "Content-Type: application/x-www-form-urlencoded" \
                   -H "Cookie: SID=$SID" \
                   --data "json={\"listen_port\":$PORT}" && echo "qBittorrent port updated to $PORT"
@@ -118,8 +118,8 @@ lib.mkIf config.me.secrets.enable {
 
       ExecStart = pkgs.writeShellScript "renew-proton-port" ''
         while true; do
-          ${pkgs.libnatpmp}/bin/natpmpc -g ${gw-ip} -a 1 0 tcp 60 >/dev/null 2>&1
-          ${pkgs.libnatpmp}/bin/natpmpc -g ${gw-ip} -a 1 0 udp 60 >/dev/null 2>&1
+          ${lib.getExe' pkgs.libnatpmp "natpmpc"} -g ${gw-ip} -a 1 0 tcp 60 >/dev/null 2>&1
+          ${lib.getExe' pkgs.libnatpmp "natpmpc"} -g ${gw-ip} -a 1 0 udp 60 >/dev/null 2>&1
           echo "Port forwarding renewed"
           sleep 45
         done

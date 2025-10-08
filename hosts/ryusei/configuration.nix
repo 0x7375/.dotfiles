@@ -34,8 +34,8 @@
       ACTION=="add", \
       SUBSYSTEM=="backlight", \
       KERNEL=="amdgpu_bl0", \
-      RUN+="${pkgs.coreutils}/bin/chgrp video /sys/class/backlight/%k/brightness", \
-      RUN+="${pkgs.coreutils}/bin/chmod g+w /sys/class/backlight/%k/brightness"
+      RUN+="${lib.getExe' pkgs.coreutils "chgrp"} video /sys/class/backlight/%k/brightness", \
+      RUN+="${lib.getExe' pkgs.coreutils "chmod"} g+w /sys/class/backlight/%k/brightness"
 
       # Notifications on power plug/unplug
       ACTION=="change", \
@@ -44,7 +44,7 @@
       ATTR{online}=="0", \
       ENV{DISPLAY}=":0", \
       ENV{XAUTHORITY}="/run/user/${toString config.me.uid}/Xauthority", \
-      RUN+="${pkgs.su}/bin/su ${config.me.user} -c '${pkgs.scripts.charging-notify}/bin/charging-notify 0'"
+      RUN+="${lib.getExe' pkgs.su "su"} ${config.me.user} -c '${lib.getExe pkgs.scripts.charging-notify} 0'"
 
       ACTION=="change", \
       SUBSYSTEM=="power_supply", \
@@ -52,7 +52,7 @@
       ATTR{online}=="1", \
       ENV{DISPLAY}=":0", \
       ENV{XAUTHORITY}="/run/user/${toString config.me.uid}/Xauthority", \
-      RUN+="${pkgs.su}/bin/su ${config.me.user} -c '${pkgs.scripts.charging-notify}/bin/charging-notify 1'"
+      RUN+="${lib.getExe' pkgs.su "su"} ${config.me.user} -c '${lib.getExe pkgs.scripts.charging-notify} 1'"
     '';
 
   programs.i3lock.enable = true;
@@ -74,7 +74,7 @@
     after = [ "multi-user.target" ];
     serviceConfig = {
       Type = "oneshot";
-      ExecStart = "${pkgs.bash}/bin/bash -c 'echo LID > /proc/acpi/wakeup'";
+      ExecStart = "${lib.getExe pkgs.bash} -c 'echo LID > /proc/acpi/wakeup'";
       RemainAfterExit = true;
     };
   };

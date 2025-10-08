@@ -1,5 +1,6 @@
 {
   config,
+  lib,
   myLib,
   pkgs,
   ...
@@ -12,6 +13,7 @@ in
   home.packages = with pkgs; [
     scripts.tmux-sessionizer
     scripts.tmux-sshr
+    wl-clipboard
   ];
 
   programs.tmux = {
@@ -47,6 +49,13 @@ in
     historyLimit = 50000;
     mouse = true;
     extraConfig = # tmux
+      let
+        clip =
+          if config.me.gui.displayServer == "wayland" then
+            "${lib.getExe' pkgs.wl-clipboard "wl-copy"}"
+          else
+            "${lib.getExe pkgs.xsel} -i";
+      in
       ''
         set -ga terminal-overrides ",${config.me.gui.terminal}:RGB" # support for undercurl
 
@@ -100,7 +109,7 @@ in
 
         unbind t
 
-        bind k run-shell "tmux popup -E ${pkgs.scripts.tmux-sessionizer}/bin/tmux-sessionizer || true"
+        bind k run-shell "tmux popup -E ${lib.getExe pkgs.scripts.tmux-sessionizer} || true"
 
         # navigate prompts
         bind -n M-p copy-mode \; \
@@ -132,20 +141,20 @@ in
         # don't cancel mouse selection on release
         bind -T copy-mode-vi MouseDragEnd1Pane \
           select-pane \; \
-          send -X copy-pipe-no-clear "${pkgs.xsel}/bin/xsel -i"
+          send -X copy-pipe-no-clear "${clip}"
 
         bind -T copy-mode-vi DoubleClick1Pane \
           select-pane \; \
           send -X select-word \; \
-          send -X copy-pipe-no-clear "${pkgs.xsel}/bin/xsel -i"
+          send -X copy-pipe-no-clear "${clip}"
 
         bind -T copy-mode-vi TripleClick1Pane \
           select-pane \; \
           send -X select-line \; \
-          send -X copy-pipe-no-clear "${pkgs.xsel}/bin/xsel -i"
+          send -X copy-pipe-no-clear "${clip}"
 
         bind -T copy-mode-vi 'y' \
-          send -X copy-pipe-and-cancel "${pkgs.xsel}/bin/xsel -i --clipboard"
+          send -X copy-pipe-and-cancel "${clip}"
       '';
   };
 }

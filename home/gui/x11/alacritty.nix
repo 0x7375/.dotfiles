@@ -6,10 +6,9 @@
 }:
 
 let
-  inherit (config.me) gui;
   hex = myLib.hex;
 in
-lib.mkIf (gui.enable && gui.displayServer == "xorg") {
+lib.mkIf (config.me.gui.displayServer == "xorg") {
   programs.alacritty = {
     enable = true;
     settings = {

@@ -5,8 +5,27 @@
   ...
 }:
 
-lib.mkIf (config.me.gui.displayServer == "xorg") {
-  xdg.configFile."redshift/hooks/brightness.sh" = {
+lib.mkIf (config.me.gui.displayServer == "wayland" && config.me.secrets.enable) {
+  sops.secrets.coordinates = { };
+
+  services.gammastep = {
+    enable = true;
+    longitude = "0";
+    latitude = "0";
+  };
+
+  systemd.user.services.gammastep.Service.ExecStart = lib.mkForce (
+    pkgs.writeShellScript "gammastep-start" ''
+      set -euo pipefail
+      exec ${lib.getExe pkgs.gammastep} \
+        -l "$(cat ${config.sops.secrets.coordinates.path})" \
+        -t 6500:3000 \
+        -b 1.0:1.0 \
+        -v
+    ''
+  );
+
+  xdg.configFile."gammastep/hooks/brightness.sh" = {
     enable = true;
     executable = true;
     text = # bash

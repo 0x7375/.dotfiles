@@ -31,8 +31,8 @@ lib.mkIf config.me.secrets.enable {
       [ -f /var/lib/proton-vpn-port ] && port=$(< /var/lib/proton-vpn-port)
       configFile=${config.services.qbittorrent.profileDir}/qBittorrent/config/qBittorrent.conf
 
-      ${pkgs.gnused}/bin/sed -i "s#@guiPassword@#$secret#" "$configFile"
-      ${pkgs.gnused}/bin/sed -i "s#@port@#$port#" "$configFile"
+      ${lib.getExe' pkgs.gnused "sed"} -i "s#@guiPassword@#$secret#" "$configFile"
+      ${lib.getExe' pkgs.gnused "sed"} -i "s#@port@#$port#" "$configFile"
     '';
   };
 

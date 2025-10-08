@@ -72,7 +72,7 @@ let
         }
   ) (filterAttrs (_: folder: folder.enable) cfg.settings.folders);
 
-  jq = "${pkgs.jq}/bin/jq";
+  jq = "${lib.getExe pkgs.jq}";
   updateConfig = pkgs.writers.writeBash "merge-syncthing-config" (
     ''
       set -efu
@@ -83,13 +83,13 @@ let
       curl() {
           # get the api key by parsing the config.xml
           while
-              ! ${pkgs.libxml2}/bin/xmllint \
+              ! ${lib.getExe' pkgs.libxml2 "xmllint"} \
                   --xpath 'string(configuration/gui/apikey)' \
                   ${cfg.configDir}/config.xml \
                   >"$RUNTIME_DIRECTORY/api_key"
           do sleep 1; done
           (printf "X-API-Key: "; cat "$RUNTIME_DIRECTORY/api_key") >"$RUNTIME_DIRECTORY/headers"
-          ${pkgs.curl}/bin/curl -sSLk -H "@$RUNTIME_DIRECTORY/headers" \
+          ${lib.getExe pkgs.curl} -sSLk -H "@$RUNTIME_DIRECTORY/headers" \
               --retry 1000 --retry-delay 1 --retry-all-errors \
               "$@"
       }
@@ -256,7 +256,7 @@ let
     +
       # Now we hash the contents of guiPasswordFile and use the result to update the gui password
       (lib.optionalString (cfg.guiPasswordFile != null) ''
-        ${pkgs.mkpasswd}/bin/mkpasswd -m bcrypt --stdin <"${cfg.guiPasswordFile}" | tr -d "\n" > "$RUNTIME_DIRECTORY/password_bcrypt"
+        ${lib.getExe pkgs.mkpasswd} -m bcrypt --stdin <"${cfg.guiPasswordFile}" | tr -d "\n" > "$RUNTIME_DIRECTORY/password_bcrypt"
         curl -X PATCH --variable "pw_bcrypt@$RUNTIME_DIRECTORY/password_bcrypt" --expand-json '{ "password": "{{pw_bcrypt}}" }' ${curlAddressArgs "/rest/config/gui"}
       '')
     + ''

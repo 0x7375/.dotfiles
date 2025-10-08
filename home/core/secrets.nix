@@ -28,7 +28,7 @@
         ''
           [[ ! -e /home/${config.me.user}/.config/sops/age/keys.txt ]] && {
             run mkdir -p /home/${config.me.user}/.config/sops/age
-            run ${pkgs.ssh-to-age}/bin/ssh-to-age -private-key -i ${builtins.head config.sops.age.sshKeyPaths} \
+            run ${lib.getExe pkgs.ssh-to-age} -private-key -i ${builtins.head config.sops.age.sshKeyPaths} \
               -o /home/${config.me.user}/.config/sops/age/keys.txt
           }
         '';
@@ -43,7 +43,7 @@
         Type = "oneshot";
         ExecStart = pkgs.writeShellScript "clone-dotfiles" ''
           if [[ ! -e ${config.me.flakeDir} ]]; then
-            ${pkgs.git}/bin/git -c core.sshCommand="${pkgs.openssh}/bin/ssh -o StrictHostKeyChecking=accept-new" clone codeberg:0x7E/.dotfiles ${config.me.flakeDir}
+            ${lib.getExe pkgs.git} -c core.sshCommand="${lib.getExe' pkgs.openssh "ssh"} -o StrictHostKeyChecking=accept-new" clone codeberg:0x7E/.dotfiles ${config.me.flakeDir}
           fi
         '';
         RemainAfterExit = true;

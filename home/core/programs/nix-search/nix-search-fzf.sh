@@ -68,7 +68,7 @@ SEARCH_SNIPPET_CMD=$'echo "{}"'
 SEARCH_SNIPPET_CMD="$SEARCH_SNIPPET_CMD | tr -d \"'\" "
 # if it's multi-index search, then we need to remote the prefix
 SEARCH_SNIPPET_CMD="$SEARCH_SNIPPET_CMD | awk '{ if (\$2) { print \$2 } else print \$1 }' "
-SEARCH_SNIPPET_CMD="$SEARCH_SNIPPET_CMD | xargs printf \"https://grep.app/search?f.lang=Nix&f.lang.pattern=nix&q=%s\" \$1 "
+SEARCH_SNIPPET_CMD="$SEARCH_SNIPPET_CMD | xargs printf \"https://github.com/search?type=code&q=lang:nix+%s\" \$1 "
 
 PACKAGE_NAME="\$(echo '{}' | sed 's:nixpkgs/ ::g')"
 NIX_SHELL_CMD="nix shell nixpkgs#$PACKAGE_NAME"

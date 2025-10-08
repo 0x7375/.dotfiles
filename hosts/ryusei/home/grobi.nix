@@ -1,6 +1,54 @@
-{ pkgs, ... }:
-
 {
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+
+lib.mkIf (config.me.gui.displayServer == "x11") {
+  xsession.windowManager.i3.config.workspaceOutputAssign = [
+    {
+      output = "HDMI-1";
+      workspace = "1";
+    }
+    {
+      output = "HDMI-1";
+      workspace = "2";
+    }
+    {
+      output = "HDMI-1";
+      workspace = "3";
+    }
+    {
+      output = "HDMI-1";
+      workspace = "4";
+    }
+    {
+      output = "eDP-1";
+      workspace = "5";
+    }
+    {
+      output = "HDMI-1";
+      workspace = "6";
+    }
+    {
+      output = "HDMI-1";
+      workspace = "7";
+    }
+    {
+      output = "HDMI-1";
+      workspace = "8";
+    }
+    {
+      output = "HDMI-1";
+      workspace = "9";
+    }
+    {
+      output = "HDMI-1";
+      workspace = "10";
+    }
+  ];
+
   services.grobi.rules =
     let
       HDMI-common =
@@ -20,8 +68,8 @@
           atomic = true;
           primary = "HDMI-1";
           execute_after = [
-            "${pkgs.i3}/bin/i3-msg restart"
-            "${pkgs.xorg.xset}/bin/xset s off -dpms"
+            "${lib.getExe' pkgs.i3 "i3-msg"} restart"
+            "${lib.getExe' pkgs.xorg.xset "xset"} s off -dpms"
           ];
         };
       HDMI-240 = HDMI-common { rate = 240; };
@@ -40,7 +88,7 @@
         primary = true;
         atomic = true;
         execute_after = [
-          "${pkgs.i3}/bin/i3-msg restart"
+          "${lib.getExe' pkgs.i3 "i3-msg"} restart"
         ];
       }
       {

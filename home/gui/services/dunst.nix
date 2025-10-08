@@ -22,7 +22,14 @@ lib.mkIf config.me.gui.enable {
         width = 400;
         height = 200;
         origin = "top-center";
-        offset = "0x${toString (config.services.polybar.settings."bar/main".height + 10)}";
+        offset = "0x${
+          toString (
+            if config.me.gui.displayServer == "xorg" then
+              config.services.polybar.settings."bar/main".height + 10
+            else
+              config.programs.waybar.settings.primary.height + 10
+          )
+        }";
         scale = 0;
         notification_limit = 20;
 
@@ -66,7 +73,7 @@ lib.mkIf config.me.gui.enable {
         max_icon_size = 80;
         sticky_history = true;
         history_length = 20;
-        browser = "${pkgs.xdg-utils}/bin/xdg-open";
+        browser = "${lib.getExe' pkgs.xdg-utils "xdg-open"}";
         always_run_script = true;
         title = "Dunst";
         class = "Dunst";

@@ -17,17 +17,10 @@ lib.mkIf config.me.gui.enable {
   };
 
   xdg = {
-    # make dark theme work notably
-    portal = {
-      enable = true;
-      config.common.default = "*";
-      extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
-    };
-
     terminal-exec = {
       enable = true;
       settings.default = [
-        "Foot.desktop"
+        "foot.desktop"
         "Alacritty.desktop"
       ];
     };

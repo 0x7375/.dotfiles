@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ lib, pkgs, ... }:
 
 {
   systemd.timers.clean-old-trash = {
@@ -11,7 +11,7 @@
 
   systemd.services.clean-old-trash = {
     script = ''
-      ${pkgs.trash-cli}/bin/trash-empty 15
+      ${lib.getExe' pkgs.trash-cli "trash-empty"} 15
     '';
     serviceConfig = {
       Type = "oneshot";

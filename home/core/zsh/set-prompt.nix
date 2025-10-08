@@ -1,18 +1,18 @@
-{ pkgs, ... }:
+{ lib, pkgs, ... }:
 
 {
   xdg.configFile."zsh/set-prompt.sh".text = # bash
     ''
       function is_dirty {
-          [[ -n $(${pkgs.git}/bin/git diff --shortstat 2> /dev/null | ${pkgs.coreutils-full}/bin/tail -n1) ]] && ${pkgs.coreutils-full}/bin/echo "*"
+          [[ -n $(${lib.getExe pkgs.git} diff --shortstat 2> /dev/null | ${lib.getExe' pkgs.coreutils-full "tail"} -n1) ]] && ${lib.getExe' pkgs.coreutils-full "echo"} "*"
       }
 
       function get_git_info() {
-          local -r ref=$(${pkgs.git}/bin/git rev-parse --abbrev-ref HEAD 2>/dev/null)
+          local -r ref=$(${lib.getExe pkgs.git} rev-parse --abbrev-ref HEAD 2>/dev/null)
 
           local branch
           if [[ $ref == "HEAD" ]]; then
-            branch=$(${pkgs.git}/bin/git rev-parse --short HEAD 2>/dev/null)
+            branch=$(${lib.getExe pkgs.git} rev-parse --short HEAD 2>/dev/null)
           else
             branch=$ref
           fi
@@ -20,7 +20,7 @@
           local -r dirty_status="$(is_dirty)"
 
           if [[ -n $branch ]]; then
-              ${pkgs.coreutils-full}/bin/echo " $branch$dirty_status"
+              ${lib.getExe' pkgs.coreutils-full "echo"} " $branch$dirty_status"
           fi
       }
 

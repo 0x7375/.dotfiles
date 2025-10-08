@@ -1,51 +1,56 @@
-{ config, pkgs, ... }:
+{
+  lib,
+  config,
+  pkgs,
+  ...
+}:
 
 let
-  tput = "${pkgs.ncurses}/bin/tput";
-  git = "${pkgs.git}/bin/git";
+  tput = "${lib.getExe' pkgs.ncurses "tput"}";
+  git = "${lib.getExe' pkgs.git "git"}";
 in
 {
   environment.shellAliases = {
-    np = "${pkgs.nix}/bin/nix profile";
-    ns = "${pkgs.nix}/bin/nix shell";
+    np = "${lib.getExe pkgs.nix} profile";
+    ns = "${lib.getExe pkgs.nix} shell";
 
-    svn = "${pkgs.subversion}/bin/svn --config-dir $XDG_CONFIG_HOME/subversion";
-    adb = "HOME=$XDG_DATA_HOME/android ${pkgs.android-tools}/bin/adb";
-    wget = "${pkgs.wget}/bin/wget --hsts-file=$XDG_DATA_HOME/wget-hsts";
+    svn = "${lib.getExe' pkgs.subversion "svn"} --config-dir $XDG_CONFIG_HOME/subversion";
+    adb = "HOME=$XDG_DATA_HOME/android ${lib.getExe' pkgs.android-tools "adb"}";
+    wget = "${lib.getExe pkgs.wget} --hsts-file=$XDG_DATA_HOME/wget-hsts";
 
     v = "$EDITOR";
 
-    e = "${pkgs.atool}/bin/aunpack";
-    c = "${pkgs.atool}/bin/apack";
+    e = "${lib.getExe' pkgs.atool "aunpack"}";
+    c = "${lib.getExe' pkgs.atool "apack"}";
 
     mkdir = "mkdir -vp";
     rm = "rm -v";
     cp = "cp -v";
     mv = "mv -v";
 
-    free = "${pkgs.procps}/bin/free -h";
-    df = "${pkgs.coreutils}/bin/df -h";
-    du = "${pkgs.coreutils}/bin/du -h";
+    free = "${lib.getExe' pkgs.procps "free"} -h";
+    df = "${lib.getExe' pkgs.coreutils "df"} -h";
+    du = "${lib.getExe' pkgs.coreutils "du"} -h";
 
-    ffmpeg = "${pkgs.ffmpeg-full}/bin/ffmpeg -hide_banner";
+    ffmpeg = "${lib.getExe' pkgs.ffmpeg-full "ffmpeg"} -hide_banner";
 
-    grep = "${pkgs.gnugrep}/bin/grep --color=always";
+    grep = "${lib.getExe' pkgs.gnugrep "grep"} --color=always";
     ls = "ls --color --group-directories-first -h";
-    ll = "${pkgs.coreutils}/bin/ls -lha --color --group-directories-first";
-    lsblk = "${pkgs.util-linux}/bin/lsblk -o NAME,FSTYPE,SIZE,MOUNTPOINTS";
-    tree = "${pkgs.tree}/bin/tree -L 4";
-    diff = "${pkgs.diffutils}/bin/diff --color";
-    bc = "${pkgs.bc}/bin/bc -l";
+    ll = "${lib.getExe' pkgs.coreutils "ls"} -lha --color --group-directories-first";
+    lsblk = "${lib.getExe' pkgs.util-linux "lsblk"} -o NAME,FSTYPE,SIZE,MOUNTPOINTS";
+    tree = "${lib.getExe pkgs.tree} -L 4";
+    diff = "${lib.getExe' pkgs.diffutils "diff"} --color";
+    bc = "${lib.getExe pkgs.bc} -l";
 
-    so = "${pkgs.ncurses}/bin/clear; exec $SHELL";
+    so = "${lib.getExe' pkgs.ncurses "clear"} exec $SHELL";
 
-    mount-web = "${pkgs.sshfs}/bin/sshfs -o gid=1000,uid=1000,noauto,_netdev,reconnect,auto_cache,ServerAliveInterval=5,ServerAliveCountMax=3 web:/www-dev/ ~/uni/web";
-    unmount-web = "${pkgs.fuse}/bin/fusermount -uz ~/uni/web";
+    mount-web = "${lib.getExe pkgs.sshfs} -o gid=1000,uid=1000,noauto,_netdev,reconnect,auto_cache,ServerAliveInterval=5,ServerAliveCountMax=3 web:/www-dev/ ~/uni/web";
+    unmount-web = "${lib.getExe' pkgs.fuse "fusermount"} -uz ~/uni/web";
 
     # make sudo work with aliases
     sudo = "sudo ";
 
-    open = "${pkgs.xdg-utils}/bin/xdg-open";
+    open = "${lib.getExe' pkgs.xdg-utils "xdg-open"}";
 
     gd = "${git} diff";
     gs = "${git} status";
@@ -54,7 +59,7 @@ in
 
     py = "python";
 
-    tm = "${pkgs.scripts.tmux-sessionizer}/bin/tmux-sessionizer";
+    tm = "${lib.getExe pkgs.scripts.tmux-sessionizer}";
 
     temp = "cd $(mktemp -d)";
     ".." = "cd ..";
@@ -85,7 +90,7 @@ in
       export SUDO_PROMPT="''${dots} Password for %p: "
 
       fixpdf() {
-          ${pkgs.poppler-utils}/bin/pdftocairo -pdf "$1" "''${1%.pdf}-fixed.pdf"
+          ${lib.getExe' pkgs.poppler-utils "pdftocairo"} -pdf "$1" "''${1%.pdf}-fixed.pdf"
       }
 
       dotr() {
@@ -193,15 +198,15 @@ in
       }
 
       r() {
-        ${pkgs.coreutils}/bin/realpath $(where $1);
+        ${lib.getExe' pkgs.coreutils "realpath"} $(where $1);
       }
 
       nhv() {
-        ${pkgs.nix}/bin/nix eval --json path:$FLAKE#homeConfigurations."$USER@''${2:-$HOST}".config.$1 | jq -r
+        ${lib.getExe pkgs.nix} eval --json path:$FLAKE#homeConfigurations."$USER@''${2:-$HOST}".config.$1 | jq -r
       }
 
       nv() {
-        ${pkgs.nix}/bin/nix eval --json path:$FLAKE#nixosConfigurations.''${2:-$HOST}.config.$1 | jq -r
+        ${lib.getExe pkgs.nix} eval --json path:$FLAKE#nixosConfigurations.''${2:-$HOST}.config.$1 | jq -r
       }
 
       suv() {

@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ lib, pkgs, ... }:
 
 {
   xdg.configFile."zsh/widgets.zsh".text = # bash
@@ -6,10 +6,10 @@
       function lf() {
           export LF_CD_FILE=/var/tmp/.lfcd-$$
 
-          command ${pkgs.lf}/bin/lf "$@"
+          command ${lib.getExe pkgs.lf} "$@"
 
           # remove mounted archives
-          ${pkgs.gawk}/bin/awk '$1 == "archivemount" { print $2 }' /etc/mtab | while read -r mntdir
+          ${lib.getExe' pkgs.gawk "awk"} '$1 == "archivemount" { print $2 }' /etc/mtab | while read -r mntdir
           do
             umount "$mntdir" -l
             rmdir "$mntdir"
@@ -45,7 +45,7 @@
         fi
 
         kdeconnect-cli --refresh
-        local device=$(kdeconnect-cli --list-devices --name-only | ${pkgs.fzf}/bin/fzf --height 40% --reverse)
+        local device=$(kdeconnect-cli --list-devices --name-only | ${lib.getExe pkgs.fzf} --height 40% --reverse)
 
         if [ -z "$device" ]; then
           return 1

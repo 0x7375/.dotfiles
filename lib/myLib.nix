@@ -23,6 +23,10 @@ in
   mkSystem =
     hostname: system:
     inputs.nixpkgs.lib.nixosSystem {
+      # nixpkgsPatcher = {
+      #   inherit inputs;
+      #   nixpkgs = inputs.nixpkgs-unstable;
+      # };
       specialArgs = specialArgs // {
         inherit system;
       };

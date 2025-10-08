@@ -5,11 +5,23 @@
   ...
 }:
 
+let
+  cfg = config.me;
+in
 {
+  config = {
+    assertions = [
+      {
+        assertion = cfg.gui.displayServer == null || cfg.gui.enable;
+        message = "Display server '${cfg.gui.displayServer}' requires gui.enable to be true";
+      }
+    ];
+  };
+
   options.me = {
     flakeDir = lib.mkOption {
       type = lib.types.str;
-      default = "/home/${config.me.user}/.config/nixcfg";
+      default = "/home/${cfg.user}/.config/nixcfg";
       description = "Path to the nixos flake directory";
     };
 
@@ -39,7 +51,7 @@
 
     publicKey = lib.mkOption {
       type = lib.types.str;
-      default = myLib.ssh-keys.${config.me.hostname} or "";
+      default = myLib.ssh-keys.${cfg.hostname} or "";
       description = "Public key used for commit signing";
     };
 
@@ -63,7 +75,7 @@
       };
       silent.enable = lib.mkOption {
         type = lib.types.bool;
-        default = (!config.me.boot.debug.enable && config.me.boot.enable);
+        default = (!cfg.boot.debug.enable && cfg.boot.enable);
         description = "Enable silent boot";
       };
       debug.enable = lib.mkEnableOption "Make boot verbose";
@@ -89,7 +101,7 @@
 
     syncthing.enable = lib.mkOption {
       type = lib.types.bool;
-      default = config.me.syncthing-client.enable;
+      default = cfg.syncthing-client.enable;
       description = "Setup syncthing";
     };
     syncthing-client.enable = lib.mkEnableOption "Enable syncthing client and setup directories";
@@ -109,21 +121,20 @@
             "wayland"
           ]
         );
-        default = if config.me.gui.enable then "xorg" else null;
+        default = if cfg.gui.enable then "xorg" else null;
         description = "Display server to use";
       };
 
-      assertions = [
-        {
-          assertion = config.me.displayServer == null || config.me.gui.enable;
-          message = "Display server '${config.me.displayServer}' requires gui.enable to be true";
-        }
-      ];
-
       terminal = lib.mkOption {
         type = lib.types.str;
-        default = if config.me.gui.displayServer == "xorg" then "alacritty" else "foot";
-        description = "Default terminal emulator";
+        default = if cfg.gui.displayServer == "xorg" then "alacritty" else "foot";
+        description = "Default terminal emulator (needs to be valid pkg aswell)";
+      };
+
+      fontSize = lib.mkOption {
+        type = lib.types.int;
+        default = 16;
+        description = "Font size for terminal";
       };
 
       bundles = {

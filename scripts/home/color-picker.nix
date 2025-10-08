@@ -18,29 +18,34 @@ pkgs.writeShellApplication {
     in
     [
       coreutils-full
-      xcolor
-      xsel
-      hyprpicker
       libnotify
       imagemagick
     ]
-    ++ lib.optionals config.wayland.windowManager.hyprland.enable [
-      hyprpicker
-    ];
+    ++ (
+      if config.me.gui.displayServer == "wayland" then
+        [
+          hyprpicker
+        ]
+      else
+        [
+          xcolor
+          xsel
+        ]
+    );
   text = ''
     size="80x80"
+    color=
 
     if [[ $XDG_SESSION_TYPE == "x11" ]]; then
       color=$(xcolor | tr -d '\n')
       [[ -n $color ]] && {
         echo -n "$color" | xsel -ib
-        convert -size "$size" xc:"$color" /tmp/color.png
-        notify-send --icon "/tmp/color.png" "Copied $color to clipboard"
       }
     else
       color=$(hyprpicker -ra)
-      convert -size "$size" xc:"$color" /tmp/color.png
+    fi && {
       notify-send --icon "/tmp/color.png" "Copied $color to clipboard"
-    fi
+      convert -size "$size" xc:"$color" /tmp/color.png
+    }
   '';
 }

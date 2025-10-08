@@ -7,7 +7,8 @@
     btrfs.enable = true;
     gui = {
       enable = true;
-      displayServer = "xorg";
+      displayServer = "wayland";
+      fontSize = 11;
       bundles = {
         virtualBox.enable = true;
         gaming.enable = false;

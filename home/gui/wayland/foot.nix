@@ -12,11 +12,12 @@ lib.mkIf (config.me.gui.displayServer == "wayland") {
     enable = true;
     settings = {
       main = {
-        font = "0xproto Nerd Font:size=16:style=Bold";
+        font = "0xproto Nerd Font:size=${toString config.me.gui.fontSize}:style=Bold";
         horizontal-letter-offset = 0;
         vertical-letter-offset = 0;
         pad = "10x10 center";
         selection-target = "clipboard";
+        dpi-aware = "yes";
       };
 
       bell = {
@@ -47,8 +48,8 @@ lib.mkIf (config.me.gui.displayServer == "wayland") {
       key-bindings = {
         clipboard-paste = "Mod1+v";
         clipboard-copy = "Mod1+c";
-        font-decrease = "Mod1+Shift+u";
-        font-increase = "Mod1+Shift+d";
+        font-decrease = "Mod1+Shift+d";
+        font-increase = "Mod1+Shift+u";
         font-reset = "Mod1+Shift+r";
       };
 

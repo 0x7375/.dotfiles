@@ -7,72 +7,78 @@ pkgs.writeShellApplication {
     [
       coreutils
       xdg-user-dirs
-      maim
-      xclip
       libnotify
-      xdotool
       config.me.gui.terminal
       lf
     ]
-    ++ lib.optionals config.wayland.windowManager.hyprland.enable [
-      hyprshot
-    ];
-  text = ''
-    time=$(date -u "+%s" | cut -c 7-)
-    file="Screenshot-$(date -u +%d-%m-%Y-"$time").png"
-    folder="$(xdg-user-dir SCREENSHOTS)/"
+    ++ (
+      if config.me.gui.displayServer == "wayland" then
+        [
+          hyprshot
+        ]
+      else
+        [
+          xdotool
+          maim
+          xclip
+        ]
+    );
+  text =
+    # bash
+    ''
+      time=$(date -u "+%s" | cut -c 7-)
+      file="Screenshot-$(date -u +%d-%m-%Y-"$time").png"
+      folder="$(xdg-user-dir SCREENSHOTS)/"
 
-    function copy_image() {
-        xclip -sel clipboard -target image/png < "$folder$file"
-    }
+      function copy_image() {
+          xclip -sel clipboard -target image/png < "$folder$file"
+      }
 
-    function send_notification() {
-        local -r action=$(notify-send --icon "$folder$file" "Screenshot saved" "You can paste the image from the clipboard" -A open=open)
-        if [[ $action == *open* ]]; then
-            ${config.me.gui.terminal} -e lf "$(xdg-user-dir SCREENSHOTS)"
-        fi
-    }
+      function send_notification() {
+          local -r action=$(notify-send --icon "$folder$file" "Screenshot saved" "You can paste the image from the clipboard" -A open=open)
+          if [[ $action == *open* ]]; then
+              ${config.me.gui.terminal} -e lf "$(xdg-user-dir SCREENSHOTS)"
+          fi
+      }
 
-    function region() {
-        if [[ $XDG_SESSION_TYPE == "x11" ]]; then
-            maim --select -u "$folder$file" && copy_image
-        else
-            hyprshot -o "$folder" -f "$file" -m region -s
-        fi && send_notification
-    }
+      function x11_screenshot() {
+          local mode=$1
+          case "$mode" in
+              region)
+                  maim --select -u "$folder$file" && copy_image
+                  ;;
+              window)
+                  maim -u --window "$(xdotool getactivewindow)" "$folder$file" && copy_image
+                  ;;
+              monitor)
+                  local -r primary_geometry=$(xrandr --query | grep primary | grep -oP '\d+x\d+\+\d+\+\d+')
+                  maim -g "$primary_geometry" -u "$folder$file" && copy_image
+                  ;;
+          esac
+      }
 
-    function window() {
-        if [[ $XDG_SESSION_TYPE == "x11" ]]; then
-            maim -u --window "$(xdotool getactivewindow)" "$folder$file" && copy_image
-        else
-            hyprshot -o "$folder" -f "$file" -m window -sc
-        fi && send_notification
-    }
+      function wayland_screenshot() {
+          local mode=$1
+          local hypr_mode
+          case "$mode" in
+              region) hypr_mode="region" ;;
+              window) hypr_mode="window" ;;
+              monitor) hypr_mode="output" ;;
+          esac
+          hyprshot -o "$folder" -f "$file" -m "$hypr_mode" -sc
+      }
 
-    function monitor() {
-        if [[ $XDG_SESSION_TYPE == "x11" ]]; then
-            local -r primary_geometry=$(xrandr --query | grep primary | grep -oP '\d+x\d+\+\d+\+\d+')
-            maim -g "$primary_geometry" -u "$folder$file" && copy_image
-        else
-            hyprshot -o "$folder" -f "$file" -m output -sc
-        fi && send_notification
-    }
+      function take_screenshot() {
+          local mode=$1
+          if [[ $XDG_SESSION_TYPE == "x11" ]]; then
+              x11_screenshot "$mode"
+          else
+              wayland_screenshot "$mode"
+          fi && send_notification
+      }
 
-    doc() {
-        echo "Usage:
-        screenshot [Options]
-
-        Options:
-        region       Screenshots the selected area
-        window     Screenshots the focussed window
-        monitor     Screenshots the focussed display"
-    }
-
-    case $1 in 
-        region) region      ;;
-        window) window      ;;
-        monitor) monitor    ;;
-        *) doc              ;;
-    esac
-  '';
+      function region() { take_screenshot region; }
+      function window() { take_screenshot window; }
+      function monitor() { take_screenshot monitor; }
+    '';
 }

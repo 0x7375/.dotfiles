@@ -21,27 +21,6 @@ lib.mkIf (config.me.gui.displayServer == "wayland") {
   services.kanshi.settings = [
     {
       profile = {
-        name = "laptop_hdmi_240";
-        outputs = [
-          {
-            criteria = "HDMI-A-1";
-            status = "enable";
-            mode = "1920x1080@240Hz";
-            position = "0,0";
-          }
-          {
-            criteria = "eDP-1";
-            status = "enable";
-            position = "0,1080";
-          }
-        ];
-        exec = [
-          "${lib.getExe pkgs.scripts.waybar-output}"
-        ];
-      };
-    }
-    {
-      profile = {
         name = "laptop_hdmi_120";
         outputs = [
           {

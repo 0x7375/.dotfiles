@@ -59,7 +59,7 @@
 
   environment.systemPackages = with pkgs; [
     acpi
-    scripts.xidle-check
+    scripts.idle-check
   ];
 
   environment.variables = {

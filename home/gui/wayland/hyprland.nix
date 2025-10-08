@@ -72,11 +72,8 @@ lib.mkIf (config.me.gui.displayServer == "wayland") {
         repeat_rate = 30;
         repeat_delay = 200;
 
-        force_no_accel = true;
-        sensitivity = 0.0;
-
         touchpad = {
-          natural_scroll = false;
+          natural_scroll = true;
         };
       };
 
@@ -115,7 +112,7 @@ lib.mkIf (config.me.gui.displayServer == "wayland") {
         movefocus_cycles_fullscreen = false;
       };
 
-      ecosystem.no_update_news = false;
+      ecosystem.no_update_news = true;
 
       windowrulev2 = [
         "float,title:^(About)$"
@@ -158,7 +155,10 @@ lib.mkIf (config.me.gui.displayServer == "wayland") {
         "SUPER,e,exec,${term} ${lib.getExe pkgs.lf}"
         "SUPERSHIFT,e,exec,${term} sudo ${lib.getExe pkgs.lf}"
         "SUPER,w,exec,${browser}"
+
         "SUPER,u,exec,${lib.getExe' pkgs._1password-gui "1password"} --quick-access"
+        "CTRL SHIFT,L,pass,class:^(1Password)$"
+
         "SUPER,d,exec,${lib.getExe j4-dmenu-desktop} --no-generic -d '${lib.getExe pkgs.bemenu} -p \"DESKTOP\"'"
 
         "SUPER,m,exec,${pkgs.writeShellScript "open-note" ''

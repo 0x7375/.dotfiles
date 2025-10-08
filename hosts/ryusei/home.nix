@@ -19,15 +19,15 @@
     timers = [
       {
         delay = 600;
-        command = "${lib.getExe pkgs.scripts.xidle-check} standby";
+        command = "${lib.getExe pkgs.scripts.idle-check} standby";
       }
       {
         delay = 20;
-        command = "${lib.getExe pkgs.scripts.xidle-check} lock";
+        command = "${lib.getExe pkgs.scripts.idle-check} lock";
       }
       {
         delay = 2980;
-        command = "${lib.getExe pkgs.scripts.xidle-check} hibernate";
+        command = "${lib.getExe pkgs.scripts.idle-check} hibernate";
       }
     ];
   };

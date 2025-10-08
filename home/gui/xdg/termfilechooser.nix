@@ -54,7 +54,6 @@ lib.mkIf config.me.gui.enable {
   # xdg portal needed for global dark theme
   xdg.portal = {
     enable = true;
-    config.common.default = "*";
     extraPortals = [
       pkgs.xdg-desktop-portal-termfilechooser
       pkgs.xdg-desktop-portal-gtk
@@ -106,7 +105,7 @@ lib.mkIf config.me.gui.enable {
     text = # ini
       ''
         [preferred]
-        default = hyprland;gtk
+        default=*
         org.freedesktop.impl.portal.FileChooser=termfilechooser;gtk
       '';
   };

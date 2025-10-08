@@ -204,7 +204,7 @@ lib.mkIf (gui.displayServer == "xorg") {
         };
         startup = [
           {
-            command = "${lib.getExe' pkgs.dbus "dbus-update-activation-environment"} --all";
+            command = "${lib.getExe' pkgs.dbus "dbus-update-activation-environment"} --systemd --all";
             notification = false;
           }
           {

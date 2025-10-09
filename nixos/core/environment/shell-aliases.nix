@@ -42,7 +42,7 @@ in
     diff = "${lib.getExe' pkgs.diffutils "diff"} --color";
     bc = "${lib.getExe pkgs.bc} -l";
 
-    so = "${lib.getExe' pkgs.ncurses "clear"} exec $SHELL";
+    so = "${lib.getExe' pkgs.ncurses "clear"}; exec $SHELL";
 
     mount-web = "${lib.getExe pkgs.sshfs} -o gid=1000,uid=1000,noauto,_netdev,reconnect,auto_cache,ServerAliveInterval=5,ServerAliveCountMax=3 web:/www-dev/ ~/uni/web";
     unmount-web = "${lib.getExe' pkgs.fuse "fusermount"} -uz ~/uni/web";

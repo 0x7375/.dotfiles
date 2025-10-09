@@ -33,6 +33,8 @@ lib.mkIf (config.me.gui.displayServer == "wayland") {
 
         modules-left = [
           "custom/menu"
+          "custom/separator"
+          "hyprland/window"
         ];
 
         modules-center = [ "hyprland/workspaces" ];
@@ -72,11 +74,20 @@ lib.mkIf (config.me.gui.displayServer == "wayland") {
 
         "hyprland/workspaces" = {
           on-click = "activate";
-          all-outputs = false;
+          all-outputs = true;
           active-only = false;
           show-special = false;
           persistent-workspaces = {
             "*" = 1;
+          };
+        };
+
+        "hyprland/window" = {
+          format = " {}";
+          "rewrite" = {
+            "(.*) Zen Browser" = " zen";
+            "(.*) LibreWolf" = " librewolf";
+            "(.*) Firefox" = " firefox";
           };
         };
 

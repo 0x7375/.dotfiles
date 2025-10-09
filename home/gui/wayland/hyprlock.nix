@@ -42,6 +42,15 @@ lib.mkIf (config.me.gui.displayServer == "wayland") {
         font_family = "Mononoki Nerd Font";
         placeholder_text = "";
       };
+
+      label = {
+        text = "~locked";
+        color = rgba hex.fg0 "ff";
+        font_family = "Mononoki Nerd Font";
+        valign = "top";
+        halign = "center";
+        position = "0,-10";
+      };
     };
   };
 }

@@ -27,7 +27,7 @@ lib.mkIf config.me.gui.enable {
             if config.me.gui.displayServer == "xorg" then
               config.services.polybar.settings."bar/main".height + 10
             else
-              config.programs.waybar.settings.primary.height + 10
+              config.programs.waybar.settings.primary.height
           )
         }";
         scale = 0;

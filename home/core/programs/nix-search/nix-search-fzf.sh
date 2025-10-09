@@ -12,7 +12,8 @@ declare -a INDEXES=(
 )
 
 SEARCH_SNIPPET_KEY="alt-s"
-OPEN_SOURCE_KEY="alt-o"
+REMOTE_OPEN_SOURCE_KEY="alt-o"
+OPEN_SOURCE_KEY="alt-e"
 OPEN_HOMEPAGE_KEY="alt-w"
 NIX_SHELL_KEY="alt-S"
 NIX_PROFILE_KEY="alt-P"
@@ -78,6 +79,8 @@ fi
 
 NIX_PROFILE_CMD="nix profile install nixpkgs#$PACKAGE_NAME"
 
+OPEN_SOURCE_CMD="nix edit nixpkgs#$PACKAGE_NAME"
+
 PREVIEW_WINDOW="wrap"
 [ "$(tput cols)" -lt 90 ] && PREVIEW_WINDOW="$PREVIEW_WINDOW,up"
 
@@ -85,12 +88,12 @@ exec "$CMD" print | fzf \
     --preview "$CMD preview \$(cat $STATE_FILE) {}" \
     --bind "ctrl-u:preview-up" \
     --bind "ctrl-d:preview-down" \
-    --bind "ctrl-a:execute(tmux resize-pane -Z 2>/dev/null)" \
-    --bind "$OPEN_SOURCE_KEY:execute($CMD source \$(cat $STATE_FILE) {} | sed 's|nixos/modules/nixos/modules/|nixos/modules/|g' | xargs $OPENER)" \
+    --bind "$REMOTE_OPEN_SOURCE_KEY:execute($CMD source \$(cat $STATE_FILE) {} | sed 's|nixos/modules/nixos/modules/|nixos/modules/|g' | xargs $OPENER)" \
     --bind "$OPEN_HOMEPAGE_KEY:execute($CMD homepage \$(cat $STATE_FILE) {} | xargs $OPENER)" \
     --bind "$SEARCH_SNIPPET_KEY:execute($SEARCH_SNIPPET_CMD | xargs $OPENER)" \
     --bind "$NIX_SHELL_KEY:become($NIX_SHELL_CMD)" \
     --bind "$NIX_PROFILE_KEY:execute($NIX_PROFILE_CMD)" \
+    --bind "$OPEN_SOURCE_KEY:execute($OPEN_SOURCE_CMD)" \
     --layout reverse \
     --scheme history \
     --border \

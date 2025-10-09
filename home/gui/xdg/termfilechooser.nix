@@ -51,14 +51,9 @@ lib.mkIf config.me.gui.enable {
     GTK_USE_PORTAL = "1";
   };
 
-  # xdg portal needed for global dark theme
-  xdg.portal = {
-    enable = true;
-    extraPortals = [
-      pkgs.xdg-desktop-portal-termfilechooser
-      pkgs.xdg-desktop-portal-gtk
-    ];
-  };
+  xdg.portal.extraPortals = [
+    pkgs.xdg-desktop-portal-termfilechooser
+  ];
 
   xdg.configFile."xdg-desktop-portal-termfilechooser/config".text =
     let
@@ -84,10 +79,6 @@ lib.mkIf config.me.gui.enable {
       default_dir=${config.xdg.userDirs.download}
     '';
 
-  home.sessionVariables = {
-    QT_QPA_PLATFORMTHEME = "xdgdesktopportal";
-  };
-
   xdg.desktopEntries."swap-file-chooser" = {
     exec = "${pkgs.writeShellScript "swap-file-chooser" ''
       CONFIG="$HOME/.config/xdg-desktop-portal/portals.conf"
@@ -108,6 +99,10 @@ lib.mkIf config.me.gui.enable {
         default=*
         org.freedesktop.impl.portal.FileChooser=termfilechooser;gtk
       '';
+  };
+
+  home.sessionVariables = {
+    QT_QPA_PLATFORMTHEME = "xdgdesktopportal";
   };
 
   systemd.user.services."file-handler" = {

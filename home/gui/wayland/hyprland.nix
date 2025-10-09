@@ -129,6 +129,8 @@ lib.mkIf (config.me.gui.displayServer == "wayland") {
         "float,class:^(gnome-calculator)$"
         "float,class:^(Ryujinx)$"
 
+        "noscreenshare,class:^(Bitwarden)$"
+
         "workspace 4,class:^(spotify)$"
         "workspace 4,title:^(ncspot)$"
 
@@ -157,7 +159,7 @@ lib.mkIf (config.me.gui.displayServer == "wayland") {
         "SUPER,w,exec,${browser}"
 
         "SUPER,u,exec,${lib.getExe' pkgs._1password-gui "1password"} --quick-access"
-        "CTRL SHIFT,L,pass,class:^(1Password)$"
+        # "CTRL SHIFT,L,pass,class:^(1Password)$"
 
         "SUPER,d,exec,${lib.getExe j4-dmenu-desktop} --no-generic -d '${lib.getExe pkgs.bemenu} -p \"DESKTOP\"'"
 
@@ -234,8 +236,6 @@ lib.mkIf (config.me.gui.displayServer == "wayland") {
         "SUPER,8,movetoworkspace,8"
         "SUPER,9,movetoworkspace,9"
         "SUPER,0,movetoworkspace,10"
-
-        "SUPERSHIFT,r,exec,hyprctl reload"
       ];
 
       bindl = [

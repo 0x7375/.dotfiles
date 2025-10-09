@@ -1,3 +1,4 @@
+# inspired by https://github.com/nix-community/nh
 { config, pkgs, ... }:
 
 pkgs.writeShellApplication {

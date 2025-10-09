@@ -28,8 +28,12 @@ let
     '';
 in
 lib.mkIf config.me.gui.enable {
-  home.file.".local/share/icons/Gruvbox-Plus-Dark".source =
-    "${pkgs.gruvbox-plus-icons}/share/icons/Gruvbox-Plus-Dark";
+  # home.file.".local/share/icons/Gruvbox-Plus-Dark".source =
+  #   "${pkgs.gruvbox-plus-icons}/share/icons/Gruvbox-Plus-Dark";
+
+  home.sessionVariables = {
+    GTK_THEME = config.gtk.theme.name;
+  };
 
   gtk = rec {
     enable = true;
@@ -39,16 +43,30 @@ lib.mkIf config.me.gui.enable {
       size = 11;
     };
     iconTheme = {
+      # package = (
+      #   pkgs.gruvbox-plus-icons.override {
+      #     folder-color = "grey";
+      #   }
+      # );
+      # name = "Gruvbox-Plus-Dark";
       package = (
-        pkgs.gruvbox-plus-icons.override {
-          folder-color = "grey";
+        pkgs.colloid-icon-theme.override {
+          colorVariants = [ "grey" ];
         }
       );
-      name = "Gruvbox-Plus-Dark";
+      name = "Colloid-Grey-Dark";
     };
     theme = {
-      package = (pkgs.gruvbox-gtk-theme.override { colorVariants = [ "dark" ]; });
-      name = "Gruvbox-Dark";
+      package = (
+        pkgs.colloid-gtk-theme.override {
+          themeVariants = [ "grey" ];
+          tweaks = [
+            "black"
+            "rimless"
+          ];
+        }
+      );
+      name = "Colloid-Dark";
     };
     cursorTheme = {
       name = "Bibata-Modern-Ice";

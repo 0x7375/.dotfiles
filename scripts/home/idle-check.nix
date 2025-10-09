@@ -28,22 +28,18 @@ pkgs.writeShellApplication {
       external_monitor_connected=$(hyprctl monitors -j | ${pkgs.jq}/bin/jq -r '.[] | select(.name != "eDP-1") | .name' | head -n1)
     fi
 
-    if [[ -n $external_monitor_connected ]]; then
-      case $1 in
-        "lock") lock ;;
-      esac
-    else
-      case $1 in
-        "standby")
-          if [[ $XDG_SESSION_TYPE == "x11" ]]; then
-            xset dpms force standby
-          else
-            hyprctl dispatch dpms off
-          fi
-          ;;
-        "lock") lock ;;
-        "hibernate") systemctl hibernate ;;
-      esac
-    fi
+    case $1 in
+      "standby")
+        [[ -n $external_monitor_connected ]] && exit 0
+
+        if [[ $XDG_SESSION_TYPE == "x11" ]]; then
+          xset dpms force standby
+        else
+          hyprctl dispatch dpms off
+        fi
+        ;;
+      "lock") pidof lock || lock ;;
+      "hibernate") systemctl hibernate ;;
+    esac
   '';
 }

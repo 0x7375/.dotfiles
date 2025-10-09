@@ -296,6 +296,7 @@ lib.mkIf (config.me.gui.displayServer == "wayland") {
       exec-once = [
         "${lib.getExe' pkgs.dbus "dbus-update-activation-environment"} --systemd --all"
         "kdeconnect-cli --refresh"
+        "${lib.getExe' pkgs.hyprland "hyprctl"} dispatch workspace 1"
       ];
     };
   };

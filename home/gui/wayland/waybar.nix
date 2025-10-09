@@ -95,10 +95,6 @@ lib.mkIf (config.me.gui.displayServer == "wayland") {
           bat = "BAT0";
           format = "pow: {capacity}%";
           format-charging = "pow: ~{capacity}%";
-          states = {
-            warning = 30;
-            critical = 15;
-          };
         };
 
         network = {

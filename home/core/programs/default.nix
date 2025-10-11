@@ -16,7 +16,7 @@ in
     fzf = {
       enable = true;
       colors = {
-        bg = palette.bg0;
+        # bg = palette.bg0;
         "bg+" = palette.bg1;
         fg = palette.fg1;
         "fg+" = palette.fg0;

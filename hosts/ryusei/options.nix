@@ -8,7 +8,6 @@
     gui = {
       enable = true;
       displayServer = "wayland";
-      fontSize = 11;
       bundles = {
         virtualBox.enable = true;
         gaming.enable = false;

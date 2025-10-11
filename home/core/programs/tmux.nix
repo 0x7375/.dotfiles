@@ -77,8 +77,7 @@ in
         set -g status-interval 1
 
         set -g status on
-        set -g status-style fg=${palette.bg2},bg=${palette.bg0}
-        set -g mode-style 'bg=${palette.bg0_dark},fg=${palette.red},reverse'
+        set -g status-style bg=default
         set -g message-style 'fg=${palette.red}'
         set -g popup-border-style fg=${palette.bg1}
 

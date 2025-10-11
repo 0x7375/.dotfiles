@@ -129,3 +129,18 @@ vim.api.nvim_create_autocmd("VimEnter", {
         end
     end,
 })
+
+-- Toggle background between light and dark on SIGUSR1
+vim.api.nvim_create_autocmd("Signal", {
+    pattern = "SIGUSR1",
+    group = vim.api.nvim_create_augroup("toggle_bg_on_SIGUSR1", {}),
+    callback = function()
+        local option = "background"
+        local dark = vim.api.nvim_get_option_value(option, {}) == "dark"
+        vim.api.nvim_set_option_value(option, dark and "light" or "dark", {})
+        vim.schedule(function()
+            vim.cmd("redraw!")
+        end)
+    end,
+    nested = true,
+})

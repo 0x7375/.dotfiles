@@ -131,12 +131,6 @@ in
         description = "Default terminal emulator (needs to be valid pkg aswell)";
       };
 
-      fontSize = lib.mkOption {
-        type = lib.types.int;
-        default = 16;
-        description = "Font size for terminal";
-      };
-
       bundles = {
         gaming.enable = lib.mkEnableOption "Install steam and other game launchers";
         postgresql.enable = lib.mkEnableOption "Run a postgresql server";

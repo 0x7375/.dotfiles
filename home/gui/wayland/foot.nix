@@ -12,12 +12,12 @@ lib.mkIf (config.me.gui.displayServer == "wayland") {
     enable = true;
     settings = {
       main = {
-        font = "0xproto Nerd Font:size=${toString config.me.gui.fontSize}:style=Bold";
+        font = "0xproto Nerd Font:pixelsize=22:style=Bold";
         horizontal-letter-offset = 0;
         vertical-letter-offset = 0;
         pad = "10x10 center";
         selection-target = "clipboard";
-        dpi-aware = "yes";
+        dpi-aware = "no";
       };
 
       bell = {
@@ -53,27 +53,27 @@ lib.mkIf (config.me.gui.displayServer == "wayland") {
         font-reset = "Mod1+Shift+r";
       };
 
-      # colors = {
-      #   foreground = hex.fg0;
-      #   background = hex.bg0;
-      #
-      #   regular0 = hex.bg3;
-      #   regular1 = hex.red;
-      #   regular2 = hex.green;
-      #   regular3 = hex.yellow;
-      #   regular4 = hex.blue;
-      #   regular5 = hex.magenta;
-      #   regular6 = hex.cyan;
-      #   regular7 = hex.fg3;
-      #   bright0 = hex.bg3;
-      #   bright1 = hex.red;
-      #   bright2 = hex.green;
-      #   bright3 = hex.yellow;
-      #   bright4 = hex.blue;
-      #   bright5 = hex.magenta;
-      #   bright6 = hex.cyan;
-      #   bright7 = hex.fg0;
-      # };
+      colors = {
+        foreground = hex.fg0;
+        background = hex.bg0;
+
+        regular0 = hex.bg3;
+        regular1 = hex.red;
+        regular2 = hex.green;
+        regular3 = hex.yellow;
+        regular4 = hex.blue;
+        regular5 = hex.magenta;
+        regular6 = hex.cyan;
+        regular7 = hex.fg3;
+        bright0 = hex.bg3;
+        bright1 = hex.red;
+        bright2 = hex.green;
+        bright3 = hex.yellow;
+        bright4 = hex.blue;
+        bright5 = hex.magenta;
+        bright6 = hex.cyan;
+        bright7 = hex.fg0;
+      };
     };
   };
 }

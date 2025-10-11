@@ -67,7 +67,8 @@ lib.mkIf (config.me.gui.displayServer == "wayland") {
       input = {
         kb_options = "compose:ralt";
 
-        follow_mouse = 1;
+        follow_mouse = 2;
+        float_switch_override_focus = 0;
 
         repeat_rate = 30;
         repeat_delay = 200;

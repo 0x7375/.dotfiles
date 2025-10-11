@@ -72,24 +72,7 @@ return {
     dependencies = {
         { "MunifTanjim/nui.nvim" },
         {
-            'stevearc/dressing.nvim',
-            opts = {
-                input = {
-                    border = "single",
-                    relative = "editor"
-                },
-                select = {
-                    backend = { "fzf_lua", "fzf", "nui", "builtin", "telescope" },
-                    builtin = {
-                        border = "single"
-                    },
-                    nui = {
-                        border = {
-                            style = "single"
-                        }
-                    }
-                }
-            },
+            "folke/snacks.nvim",
         },
         {
             "rcarriga/nvim-notify",

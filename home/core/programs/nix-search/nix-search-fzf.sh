@@ -96,6 +96,7 @@ exec "$CMD" print | fzf \
     --bind "$OPEN_SOURCE_KEY:execute($OPEN_SOURCE_CMD)" \
     --layout reverse \
     --scheme history \
-    --border \
+    --border=sharp \
+    --preview-border=sharp \
     --preview-window="$PREVIEW_WINDOW" \
     "${FZF_BINDS[@]}"

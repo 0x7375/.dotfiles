@@ -6,13 +6,18 @@
     nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-24.11";
 
     nixpkgs.follows = "nixpkgs-unstable";
-
     # nixpkgs-patcher.url = "github:gepbird/nixpkgs-patcher";
 
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    # hyprland.url = "github:hyprwm/Hyprland";
+    # split-monitor-workspaces = {
+    #   url = "github:Duckonaut/split-monitor-workspaces";
+    #   inputs.hyprland.follows = "hyprland";
+    # };
 
     # nix-maid.url = "github:viperML/nix-maid";
     # wrapper.url = "github:viperLM/wrapper-manager";

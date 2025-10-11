@@ -66,7 +66,7 @@ lib.mkIf config.me.gui.enable {
           ];
         }
       );
-      name = "Colloid-Dark";
+      name = "Colloid-Grey-Dark";
     };
     cursorTheme = {
       name = "Bibata-Modern-Ice";

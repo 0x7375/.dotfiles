@@ -2,12 +2,9 @@ return {
     "ellisonleao/gruvbox.nvim",
     lazy = false,
     priority = 1000,
-    init = function()
-        vim.api.nvim_set_hl(0, "Comment", { link = "NonText" })
-    end,
     config = function()
         require("gruvbox").setup({
-            transparent_mode = false,
+            transparent_mode = true,
             dim_inactive = false,
             overrides = {
                 RainbowPurple = { link = "GruvboxPurple" },
@@ -33,6 +30,9 @@ return {
                 TelescopeNormal = { link = "Normal" },
                 TelescopeSelection = { link = "GruvboxAquaSign" },
 
+                CursorLineNr = { link = "Normal" },
+                CursorLine = { bg = "" },
+
                 -- cleaner window separator
                 WinSeparator = { link = "NonText" },
 
@@ -50,6 +50,6 @@ return {
                 folds = false,
             },
         })
-        vim.cmd.colorscheme("gruvbox")
+        -- vim.cmd.colorscheme("gruvbox")
     end
 }

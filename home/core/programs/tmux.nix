@@ -10,6 +10,16 @@ let
   palette = myLib.palette;
 in
 {
+  nixpkgs.overlays = [
+    (final: prev: {
+      tmux = prev.tmux.overrideAttrs (old: {
+        patches = (old.patches or [ ]) ++ [
+          (myLib.fromRoot "assets/patches/tmux_bigger_input_buffer.patch")
+        ];
+      });
+    })
+  ];
+
   home.packages = with pkgs; [
     scripts.tmux-sessionizer
     scripts.tmux-sshr

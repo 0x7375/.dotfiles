@@ -15,9 +15,5 @@ lib.mkIf (config.me.gui.displayServer == "xorg") {
       zoom_out = "J";
       delete = "D";
     };
-    buttons = {
-      zoom_in = 4;
-      zoom_out = 5;
-    };
   };
 }

@@ -71,7 +71,7 @@ return {
         local completion_opts = {
             border = "single",
             scrollbar = false,
-            winhighlight = "Normal:NormalFloat,FloatBorder:EndOfBuffer,CursorLine:PmenuSel",
+            winhighlight = "Normal:NormalFloat,FloatBorder:Comment,CursorLine:PmenuSel",
         }
 
         return {

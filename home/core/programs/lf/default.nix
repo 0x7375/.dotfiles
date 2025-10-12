@@ -45,8 +45,14 @@ in
   xdg.configFile."ctpv/config" = {
     enable = gui;
     text = ''
+      set chafasixel
+
       preview null .env .git-credentials .keyring {{
           echo "preview disabled"
+      }}
+
+      preview image image/* {{
+        chafa -s "''${w}x''${h}" -f sixels --polite on "$f"
       }}
     '';
   };
@@ -77,6 +83,8 @@ in
             setlocal ~/pictures/ info time
             setlocal ~/pictures/ sortby time
             setlocal ~/pictures/ reverse
+
+            set sixel true
 
             on-focus-gained
 

@@ -40,7 +40,7 @@ lib.mkIf config.me.gui.enable {
         "image/jpeg"
         "image/webp"
         "image/svg+xml"
-      ] "feh")
+      ] (if config.me.gui.displayServer == "xorg" then "feh" else "pqiv"))
 
       // (mapEntries [
         "text/plain"

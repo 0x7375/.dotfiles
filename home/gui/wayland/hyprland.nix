@@ -123,6 +123,7 @@ lib.mkIf (config.me.gui.displayServer == "wayland") {
         "float,title:^(Friends List)$"
         "float,title:^(filechooser)$"
         "float,class:^(feh)$"
+        "float,class:^(Pqiv)$"
         "float,class:^(1Password)$"
         "float,class:^(Org.gnome.NautilusPreviewer)$"
         "float,class:^(Main)$"
@@ -258,7 +259,6 @@ lib.mkIf (config.me.gui.displayServer == "wayland") {
         "ALT,Sys_Req,exec,${lib.getExe pkgs.scripts.screenshot} window"
         "SHIFT,Print,exec,${lib.getExe pkgs.scripts.screenshot} monitor"
         "SUPERSHIFT,c,exec,${lib.getExe pkgs.scripts.color-picker}"
-        "SUPERSHIFT,m,exec,${tmux} -s 'xprop' '${lib.getExe pkgs.xorg.xprop} exec $SHELL"
       ];
 
       bindm = [

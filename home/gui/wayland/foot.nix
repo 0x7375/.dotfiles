@@ -5,7 +5,7 @@
   ...
 }:
 let
-  hex = myLib.hex;
+  inherit (myLib) hex hexLight;
 in
 lib.mkIf (config.me.gui.displayServer == "wayland") {
   programs.foot = {
@@ -73,6 +73,28 @@ lib.mkIf (config.me.gui.displayServer == "wayland") {
         bright5 = hex.magenta;
         bright6 = hex.cyan;
         bright7 = hex.fg0;
+      };
+
+      colors2 = {
+        foreground = hexLight.fg0;
+        background = hexLight.bg0;
+
+        regular0 = hexLight.bg3;
+        regular1 = hexLight.red;
+        regular2 = hexLight.green;
+        regular3 = hexLight.yellow;
+        regular4 = hexLight.blue;
+        regular5 = hexLight.magenta;
+        regular6 = hexLight.cyan;
+        regular7 = hexLight.fg3;
+        bright0 = hexLight.bg3;
+        bright1 = hexLight.red;
+        bright2 = hexLight.green;
+        bright3 = hexLight.yellow;
+        bright4 = hexLight.blue;
+        bright5 = hexLight.magenta;
+        bright6 = hexLight.cyan;
+        bright7 = hexLight.fg0;
       };
     };
   };

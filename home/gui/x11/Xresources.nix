@@ -12,8 +12,8 @@ lib.mkIf (config.me.gui.displayServer == "xorg") {
   xresources = {
     path = "/home/${config.me.user}/.config/X11/xresources";
     properties = {
-      "st.font" = "0xproto Nerd Font:style=Bold:size=20";
-      "st.font2" = "0xproto Nerd Font:style=Bold:size=20";
+      "st.font" = "${config.me.gui.font} Nerd Font:style=Bold:size=20";
+      "st.font2" = "${config.me.gui.font} Nerd Font:style=Bold:size=20";
       "st.cursorColor" = palette.fg0;
       "st.background" = palette.bg0;
       "st.foreground" = palette.fg0;

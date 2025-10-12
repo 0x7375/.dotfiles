@@ -10,7 +10,7 @@ lib.mkIf config.me.gui.enable {
     fontconfig = {
       enable = true;
       defaultFonts = {
-        monospace = [ "Inconsolata Nerd Font" ];
+        monospace = [ "${config.me.gui.font} Nerd Font" ];
         sansSerif = [ "Ubuntu Nerd Font" ];
       };
     };
@@ -21,6 +21,7 @@ lib.mkIf config.me.gui.enable {
       font-awesome
       nerd-fonts.mononoki
       nerd-fonts._0xproto
+      nerd-fonts.jetbrains-mono
       nerd-fonts.ubuntu
       nerd-fonts.fira-code
       noto-fonts

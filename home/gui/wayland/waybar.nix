@@ -32,8 +32,8 @@ lib.mkIf (config.me.gui.displayServer == "wayland") {
         include = [ "~/.config/waybar/output.json" ];
 
         modules-left = [
-          "custom/menu"
-          "custom/separator"
+          # "custom/hostname"
+          # "custom/separator"
           "hyprland/window"
         ];
 
@@ -60,14 +60,14 @@ lib.mkIf (config.me.gui.displayServer == "wayland") {
           "clock"
         ];
 
-        "custom/menu" = {
+        "custom/hostname" = {
           type = "custom/text";
           format = "~${config.me.hostname}";
           tooltip = false;
         };
 
         "custom/separator" = {
-          "format" = "|";
+          "format" = " ";
           "interval" = "once";
           "tooltip" = false;
         };
@@ -83,11 +83,11 @@ lib.mkIf (config.me.gui.displayServer == "wayland") {
         };
 
         "hyprland/window" = {
-          format = " {}";
+          format = "{}";
           "rewrite" = {
-            "(.*) Zen Browser" = " zen";
-            "(.*) LibreWolf" = " librewolf";
-            "(.*) Firefox" = " firefox";
+            "(.*) Zen Browser" = "zen";
+            "(.*) LibreWolf" = "librewolf";
+            "(.*) Firefox" = "firefox";
           };
         };
 
@@ -148,7 +148,7 @@ lib.mkIf (config.me.gui.displayServer == "wayland") {
           background-color: transparent;
         }
 
-        #custom-menu {
+        #custom-hostname {
           padding: 0 8px;
           color: ${palette.fg0};
         }

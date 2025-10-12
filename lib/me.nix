@@ -131,6 +131,12 @@ in
         description = "Default terminal emulator (needs to be valid pkg aswell)";
       };
 
+      font = lib.mkOption {
+        type = lib.types.str;
+        default = "Inconsolata";
+        description = "Default font";
+      };
+
       bundles = {
         gaming.enable = lib.mkEnableOption "Install steam and other game launchers";
         postgresql.enable = lib.mkEnableOption "Run a postgresql server";

@@ -42,10 +42,7 @@
               name = "startup-page.js";
             }
           ];
-        enabledCustomApps = with spicePkgs.apps; [
-          marketplace
-          betterLibrary
-        ];
+        enabledCustomApps = with spicePkgs.apps; [ marketplace ];
         enabledSnippets = with spicePkgs.snippets; [
           removePopular
           hideFriendActivityButton
@@ -58,6 +55,19 @@
           hideNowPlayingViewButton
           hideMiniPlayerButton
         ];
+        wayland = config.me.gui.displayServer == "wayland";
+        theme = {
+          name = "Blackout";
+          src = "${
+            pkgs.fetchFromGitHub {
+              owner = "spicetify";
+              repo = "spicetify-themes";
+              rev = "726097a544172523cdae15da8d3c84032aec8c3b";
+              sha256 = "sha256-mQgkmbkgzfWlT1iv4jB/cw95v4q0/+57B9rgmezAY34=";
+            }
+          }/Blackout";
+        };
+        colorScheme = "def";
         # theme = {
         #   src = spicePkgs.sources.lucidSrc + "/src";
         #   name = "lucid";

@@ -12,7 +12,7 @@ lib.mkIf (config.me.gui.displayServer == "wayland") {
     enable = true;
     settings = {
       main = {
-        font = "0xproto Nerd Font:pixelsize=22:style=Bold";
+        font = "${config.me.gui.font} Nerd Font:pixelsize=22:style=Bold";
         horizontal-letter-offset = 0;
         vertical-letter-offset = 0;
         pad = "10x10 center";

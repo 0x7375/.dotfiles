@@ -5,14 +5,6 @@ let
 in
 {
   programs = {
-    bat = {
-      enable = true;
-      config = {
-        theme = "gruvbox-dark";
-        style = "header,grid";
-      };
-    };
-
     fzf = {
       enable = true;
       colors = {

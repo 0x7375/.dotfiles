@@ -218,7 +218,7 @@ lib.mkIf (gui.displayServer == "xorg") {
                   ~/pictures/wallpapers/landscapes/* | \
                   ${lib.getExe' pkgs.findutils "xargs"} ${lib.getExe pkgs.feh} --no-fehbg --bg-fill
               else
-                ${lib.getExe pkgs.feh} --no-fehbg --bg-fill ${config.me.flakeDir}/assets/wallpaper.png
+                ${lib.getExe pkgs.feh} --no-fehbg --bg-fill ${config.me.flakeDir}/assets/wallpaper.jpg
               fi
             ''}";
             always = true;

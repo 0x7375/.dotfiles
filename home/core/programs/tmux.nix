@@ -88,14 +88,17 @@ in
 
         set -g status on
         set -g status-style bg=default
-        set -g message-style 'fg=${palette.red}'
+        set -g message-style 'fg=${palette.fg0}'
+
         set -g popup-border-style fg=${palette.bg1}
 
-        set -g window-status-current-style fg=${palette.red}
+        set -g window-status-current-style fg=${palette.fg0}
         set -g window-status-style fg=${palette.bg2}
 
-        set -g pane-active-border-style fg=${palette.red}
+        set -g pane-active-border-style fg=${palette.fg0}
         set -g pane-border-style fg=${palette.bg2}
+
+        set -g mode-style 'fg=${palette.fg0},reverse'
 
         setw -g mode-keys vi
 

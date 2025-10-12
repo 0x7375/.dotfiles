@@ -123,7 +123,7 @@ lib.mkIf config.me.gui.enable {
             "notebook.dragAndDropEnabled": false,
             "notebook.undoRedoPerCell": false,
             "security.workspace.trust.banner": "never",
-            "editor.fontFamily": "'0xproto Nerd Font', 'serif'",
+            "editor.fontFamily": "'${config.me.gui.font} Nerd Font', 'serif'",
             "editor.wordSeparators": "`~!@#$%^&*()-=+[{]}\\|;:'\",.<>/?_",
             "editor.minimap.enabled": false,
             "notebook.cellToolbarLocation": {

@@ -57,7 +57,6 @@ lib.mkIf (config.me.gui.displayServer == "wayland") {
       general = {
         gaps_in = 0;
         gaps_out = 0;
-        border_size = 1;
         "col.active_border" = rgba hex.fg2 "ee";
         "col.inactive_border" = rgba hex.bg1 "aa";
         layout = "dwindle";
@@ -280,15 +279,16 @@ lib.mkIf (config.me.gui.displayServer == "wayland") {
               ((timeout--))
             done
 
-            if [[ -d ~/pictures/wallpapers/landscapes ]]; then
+            # if [[ -d ~/pictures/wallpapers/landscapes ]]; then
+            if [[ false ]]; then
               wallpaper=$(shuf -e -n1 --random-source=<(date +%Y%m%d | md5sum) \
                 ~/pictures/wallpapers/landscapes/*)
 
               ${lib.getExe' pkgs.hyprland "hyprctl"} hyprpaper preload $wallpaper
               ${lib.getExe' pkgs.hyprland "hyprctl"} hyprpaper wallpaper ",$wallpaper"
             else
-              ${lib.getExe' pkgs.hyprland "hyprctl"} hyprpaper preload ${config.me.flakeDir}/assets/wallpaper.png
-              ${lib.getExe' pkgs.hyprland "hyprctl"} hyprpaper wallpaper ",${config.me.flakeDir}/assets/wallpaper.png"
+              ${lib.getExe' pkgs.hyprland "hyprctl"} hyprpaper preload ${config.me.flakeDir}/assets/wallpaper.jpg
+              ${lib.getExe' pkgs.hyprland "hyprctl"} hyprpaper wallpaper ",${config.me.flakeDir}/assets/wallpaper.jpg"
             fi
           ''
         }"

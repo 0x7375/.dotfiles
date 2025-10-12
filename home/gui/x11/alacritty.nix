@@ -65,8 +65,7 @@ lib.mkIf (config.me.gui.displayServer == "xorg") {
       font = {
         builtin_box_drawing = true;
         normal = {
-          family = "0xproto Nerd Font";
-          # family = "Inconsolata Nerd Font";
+          family = "${config.me.gui.font} Nerd Font";
           style = "Bold";
         };
         size = 16;

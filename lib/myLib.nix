@@ -86,52 +86,48 @@ in
   hex = lib.mapAttrs (name: value: lib.removePrefix "#" value) myLib.palette;
   hexLight = lib.mapAttrs (name: value: lib.removePrefix "#" value) myLib.light;
 
-  # colors from https://github.com/sainnhe/gruvbox-material
-  # take neovim monochrome theme colors otherwise
   palette = {
     bg0_dark = "#000000";
-    bg0 = "#0E0E0E";
-    bg0_light = "#1A1A1A";
-    bg1 = "#262626";
-    bg2 = "#333333";
-    bg3 = "#404040";
-    fg4 = "#666666";
+    bg0 = "#000000";
+    bg0_light = "#404040";
+    bg1 = "#404040";
+    bg2 = "#606060";
+    bg3 = "#606060";
+    fg4 = "#808080";
     fg3 = "#808080";
-    fg2 = "#999999";
-    fg1 = "#B3B3B3";
-    fg0 = "#D4D4D4";
-    fg0_light = "#E6E6E6";
-
-    red = "#E96962";
-    yellow = "#D7A657";
-    green = "#A8B665";
-    cyan = "#89B482";
-    blue = "#7DAEA3";
-    magenta = "#D3869B";
-    orange = "#E68A4E";
+    fg2 = "#A0A0A0";
+    fg1 = "#A0A0A0";
+    fg0 = "#A0A0A0";
+    fg0_light = "#A0A0A0";
+    red = "#404040";
+    yellow = "#606060";
+    green = "#A0A0A0";
+    cyan = "#808080";
+    blue = "#A0A0A0";
+    magenta = "#808080";
+    orange = "#606060";
   };
 
   light = {
     bg0_dark = "#FFFFFF";
-    bg0 = "#EEEEEE";
-    bg0_light = "#EBEBEB";
-    bg1 = "#E0E0E0";
-    bg2 = "#D6D6D6";
-    bg3 = "#CCCCCC";
-    fg4 = "#999999";
-    fg3 = "#808080";
-    fg2 = "#666666";
-    fg1 = "#4D4D4D";
-    fg0 = "#2B2B2B";
-    fg0_light = "#1A1A1A";
-
-    red = "#C04A4A";
-    yellow = "#B37109";
-    green = "#6B782E";
-    cyan = "#4C7A5D";
-    blue = "#45707A";
-    magenta = "#945E80";
-    orange = "#C25E0A";
+    bg0 = "#FFFFFF";
+    bg0_light = "#BFBFBF";
+    bg1 = "#BFBFBF";
+    bg2 = "#9F9F9F";
+    bg3 = "#9F9F9F";
+    fg4 = "#7F7F7F";
+    fg3 = "#7F7F7F";
+    fg2 = "#5F5F5F";
+    fg1 = "#5F5F5F";
+    fg0 = "#5F5F5F";
+    fg0_light = "#5F5F5F";
+    red = "#BFBFBF";
+    yellow = "#9F9F9F";
+    green = "#5F5F5F";
+    cyan = "#7F7F7F";
+    blue = "#5F5F5F";
+    magenta = "#7F7F7F";
+    orange = "#9F9F9F";
   };
 
   # gruvbox

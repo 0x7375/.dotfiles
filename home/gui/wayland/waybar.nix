@@ -83,11 +83,11 @@ lib.mkIf (config.me.gui.displayServer == "wayland") {
         };
 
         "hyprland/window" = {
-          format = "{}";
+          format = " {}";
           "rewrite" = {
-            "(.*) Zen Browser" = "zen";
-            "(.*) LibreWolf" = "librewolf";
-            "(.*) Firefox" = "firefox";
+            "(.*) Zen Browser" = " zen";
+            "(.*) LibreWolf" = " librewolf";
+            "(.*) Firefox" = " firefox";
           };
         };
 

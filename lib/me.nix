@@ -133,7 +133,7 @@ in
 
       font = lib.mkOption {
         type = lib.types.str;
-        default = "Inconsolata";
+        default = "Terminess";
         description = "Default font";
       };
 

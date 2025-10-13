@@ -279,10 +279,9 @@ lib.mkIf (config.me.gui.displayServer == "wayland") {
               ((timeout--))
             done
 
-            # if [[ -d ~/pictures/wallpapers/landscapes ]]; then
-            if [[ false ]]; then
-              wallpaper=$(shuf -e -n1 --random-source=<(date +%Y%m%d | md5sum) \
-                ~/pictures/wallpapers/landscapes/*)
+            wallpapers="$HOME/pictures/wallpapers/black-and-white-landscapes"
+            if [[ -d $wallpapers ]]; then
+              wallpaper=$(shuf -e -n1 --random-source=<(date +%Y%m%d | md5sum) $wallpapers/*)
 
               ${lib.getExe' pkgs.hyprland "hyprctl"} hyprpaper preload $wallpaper
               ${lib.getExe' pkgs.hyprland "hyprctl"} hyprpaper wallpaper ",$wallpaper"

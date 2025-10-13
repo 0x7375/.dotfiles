@@ -12,10 +12,11 @@ lib.mkIf (config.me.gui.displayServer == "wayland") {
     enable = true;
     settings = {
       main = {
-        font = "${config.me.gui.font} Nerd Font:pixelsize=22:style=Bold";
+        # font = "${config.me.gui.font} Nerd Font:pixelsize=22:style=Bold";
+        font = "${config.me.gui.font} Nerd Font:size=18";
         horizontal-letter-offset = 0;
         vertical-letter-offset = 0;
-        pad = "10x10 center";
+        pad = "20x20 center";
         selection-target = "clipboard";
         dpi-aware = "no";
       };

@@ -24,6 +24,7 @@ lib.mkIf config.me.gui.enable {
       nerd-fonts.jetbrains-mono
       nerd-fonts.ubuntu
       nerd-fonts.fira-code
+      nerd-fonts.terminess-ttf
       noto-fonts
       noto-fonts-cjk-sans
       noto-fonts-emoji

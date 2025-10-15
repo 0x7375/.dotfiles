@@ -17,10 +17,12 @@ pkgs.writeShellApplication {
     battery_charging=$1
     battery_level=$(acpi -b | grep -E "remaining|zero|until" | grep -P -o '[0-9]+(?=%)')
 
+    theme=$(< "$HOME"/.local/state/current_theme)
+
     if [[ $battery_charging -eq 1 ]]; then
-      notify-send "Charging" "$battery_level% of battery charged." -a "charging" -i "battery-charging" -r 9991
+      notify-send "Charging" "$battery_level% of battery charged." -a "charging" -i "battery-charging-$theme" -r 9991
     elif [[ $battery_charging -eq 0 ]]; then
-      notify-send "Discharging" "$battery_level% of battery remaining." -a "charging" -i "battery" -r 9991
+      notify-send "Discharging" "$battery_level% of battery remaining." -a "charging" -i "battery-$theme" -r 9991
     fi
   '';
 }

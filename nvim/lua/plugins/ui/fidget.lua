@@ -3,9 +3,9 @@ return {
     event = "LspAttach",
     opts = {
         notification = {
-        window = {
-            winblend = 0,
-        },
+            window = {
+                winblend = 0,
+            },
         }
     },
 }

@@ -6,9 +6,11 @@
       source /etc/profile
       source ~/.profile
 
+      source $ZDOTDIR/completion.zsh
+
+      source ${pkgs.zsh-fzf-tab}/share/fzf-tab/fzf-tab.plugin.zsh
       source ${pkgs.zsh-syntax-highlighting}/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
-      source $ZDOTDIR/completion.zsh
       source $ZDOTDIR/opts.zsh
       source $ZDOTDIR/widgets.zsh
       source $ZDOTDIR/bindings.zsh

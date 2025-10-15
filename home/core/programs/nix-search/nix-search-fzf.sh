@@ -12,8 +12,8 @@ declare -a INDEXES=(
 )
 
 SEARCH_SNIPPET_KEY="alt-s"
-REMOTE_OPEN_SOURCE_KEY="alt-o"
-OPEN_SOURCE_KEY="alt-e"
+OPEN_SOURCE_KEY="alt-o"
+EDIT_SOURCE_KEY="alt-e"
 OPEN_HOMEPAGE_KEY="alt-w"
 NIX_SHELL_KEY="alt-S"
 NIX_PROFILE_KEY="alt-P"
@@ -79,7 +79,23 @@ fi
 
 NIX_PROFILE_CMD="nix profile install nixpkgs#$PACKAGE_NAME"
 
-OPEN_SOURCE_CMD="nix edit nixpkgs#$PACKAGE_NAME"
+GET_SOURCE_URL="$CMD source \$(cat $STATE_FILE) {} | sed 's|nixos/modules/nixos/modules/|nixos/modules/|g'"
+
+OPEN_SOURCE_CMD="$GET_SOURCE_URL | xargs $OPENER"
+
+EDIT_SOURCE_CMD="
+    source_url=\$($GET_SOURCE_URL)
+    
+    file_path=\$(echo \"\$source_url\" | sed 's|https://github.com/[^/]*/[^/]*/blob/[^/]*/||')
+    
+    if echo \"\$source_url\" | grep -q 'nix-community/home-manager'; then
+        repo_path=\"\$HOME/repos/home-manager\"
+    else
+        repo_path=\"\$HOME/repos/nixpkgs\"
+    fi
+    
+    \$EDITOR \"\$repo_path/\$file_path\"
+"
 
 PREVIEW_WINDOW="wrap"
 [ "$(tput cols)" -lt 90 ] && PREVIEW_WINDOW="$PREVIEW_WINDOW,up"
@@ -88,12 +104,12 @@ exec "$CMD" print | fzf \
     --preview "$CMD preview \$(cat $STATE_FILE) {}" \
     --bind "ctrl-u:preview-up" \
     --bind "ctrl-d:preview-down" \
-    --bind "$REMOTE_OPEN_SOURCE_KEY:execute($CMD source \$(cat $STATE_FILE) {} | sed 's|nixos/modules/nixos/modules/|nixos/modules/|g' | xargs $OPENER)" \
+    --bind "$OPEN_SOURCE_KEY:execute($OPEN_SOURCE_CMD)" \
+    --bind "$EDIT_SOURCE_KEY:execute($EDIT_SOURCE_CMD)" \
     --bind "$OPEN_HOMEPAGE_KEY:execute($CMD homepage \$(cat $STATE_FILE) {} | xargs $OPENER)" \
     --bind "$SEARCH_SNIPPET_KEY:execute($SEARCH_SNIPPET_CMD | xargs $OPENER)" \
     --bind "$NIX_SHELL_KEY:become($NIX_SHELL_CMD)" \
     --bind "$NIX_PROFILE_KEY:execute($NIX_PROFILE_CMD)" \
-    --bind "$OPEN_SOURCE_KEY:execute($OPEN_SOURCE_CMD)" \
     --layout reverse \
     --scheme history \
     --border=sharp \

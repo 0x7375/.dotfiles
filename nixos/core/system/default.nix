@@ -12,6 +12,9 @@
 
   hardware.i2c.enable = true;
 
+  documentation.man.generateCaches = true;
+  documentation.dev.enable = true;
+
   boot.tmp.useTmpfs = true;
   systemd.services.nix-daemon = {
     environment.TMPDIR = "/var/tmp";

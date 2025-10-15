@@ -27,6 +27,8 @@
     })
   ];
 
+  programs.man.generateCaches = true;
+
   xdg.configFile."nixpkgs/config.nix".text = # nix
     ''
       {

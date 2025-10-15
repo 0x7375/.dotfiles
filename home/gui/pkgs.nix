@@ -43,7 +43,7 @@ lib.mkIf config.me.gui.enable {
         withVencord = true;
       })
 
-      scripts.update-icons-color
+      scripts.generate-icons
 
       # audio
       pavucontrol

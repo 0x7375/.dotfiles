@@ -2,6 +2,9 @@
 
 pkgs.writeShellApplication {
   name = "battery-notify";
+  bashOptions = [
+    "nounset"
+  ];
   runtimeInputs = with pkgs; [
     gnugrep
     acpi
@@ -18,7 +21,7 @@ pkgs.writeShellApplication {
     empty_file=/tmp/batteryempty
     full_file=/tmp/batteryfull
 
-    battery_discharging=$(acpi -b | grep -E "remaining|charged|zero" | { grep -c "Discharging" || true; })
+    battery_discharging=$(acpi -b | grep -E "remaining|charged|zero" | grep -c "Discharging" )
     battery_level=$(acpi -b | grep -E "remaining|charged|zero" | grep -P -o '[0-9]+(?=%)')
 
     if [[ $battery_discharging -eq 1 ]] && [[ -f $full_file ]]; then
@@ -27,11 +30,13 @@ pkgs.writeShellApplication {
         rm $empty_file
     fi
 
+    theme=$(< "$HOME"/.local/state/current_theme)
+
     if [[ $battery_level -ge $full_level && $battery_discharging -eq 0 && ! -f $full_file ]]; then
-        notify-send "Battery Charged" "Battery is fully charged." -i "battery-full" -a "charged" -r 9991
+        notify-send "Battery Charged" "Battery is fully charged." -i "battery-full-$theme" -a "charged" -r 9991
         touch $full_file
     elif [[ $battery_level -le $warning_level ]] && [[ $battery_discharging -eq 1 ]] && [[ ! -f $empty_file ]]; then
-        notify-send "Low Battery" "$battery_level% of battery remaining." -u critical -i "battery-low" -a "alert" -r 9991
+        notify-send "Low Battery" "$battery_level% of battery remaining." -u critical -i "battery-low-$theme" -a "alert" -r 9991
         touch $empty_file
     fi
   '';

@@ -1,22 +1,27 @@
+local map = vim.keymap.set
+
+map({ "n", "x", "v" }, ":", ";")
+map({ "n", "x", "v" }, ";", ":")
+
 -- Don't leave visual after indent
-vim.keymap.set("x", "<", "<gv")
-vim.keymap.set("x", ">", ">gv")
+map("x", "<", "<gv")
+map("x", ">", ">gv")
 
 -- Remap U to redo
-vim.keymap.set("n", "<S-u>", "<C-r>")
+map("n", "<S-u>", "<C-r>")
 
 -- ! for shell command
-vim.keymap.set("n", "!", ":!", { silent = false })
+map("n", "!", ":!", { silent = false })
 
 -- Unbind space outside of insert
-vim.keymap.set({ 'n', 'v' }, '<space>', '<nop>')
+map({ 'n', 'v' }, '<space>', '<nop>')
 
-vim.keymap.set({ "n", "x" }, "s", "V")
+map({ "n", "x" }, "s", "V")
 
-vim.keymap.set("n", "<ESC>", vim.cmd.nohlsearch, { desc = "Clear search highlights" })
+map("n", "<ESC>", vim.cmd.nohlsearch, { desc = "Clear search highlights" })
 
 -- easy renaming
-vim.keymap.set("n", "<leader>r", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
+map("n", "<leader>r", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
 
 local function toggle_quickfix()
     local windows = vim.fn.getwininfo()
@@ -29,80 +34,80 @@ local function toggle_quickfix()
     vim.cmd.copen()
 end
 
-vim.keymap.set("n", "<leader>q", toggle_quickfix, { desc = "Toggle quickfix window" })
-vim.keymap.set("n", "<C-n>", vim.cmd.cnext, { desc = "Next quickfix" })
-vim.keymap.set("n", "<C-p>", vim.cmd.cprevious, { desc = "Previous quickfix" })
+map("n", "<leader>q", toggle_quickfix, { desc = "Toggle quickfix window" })
+map("n", "<C-n>", vim.cmd.cnext, { desc = "Next quickfix" })
+map("n", "<C-p>", vim.cmd.cprevious, { desc = "Previous quickfix" })
 
 -- Center on movement
-vim.keymap.set("n", "<C-d>", "<C-d>zz", { noremap = true })
-vim.keymap.set("n", "<C-u>", "<C-u>zz", { noremap = true })
-vim.keymap.set("n", "<C-b>", "<C-b>zz", { noremap = true })
-vim.keymap.set("n", "<C-f>", "<C-f>zz", { noremap = true })
-vim.keymap.set("n", "*", "*zz", { noremap = true })
-vim.keymap.set("n", "#", "#zz", { noremap = true })
-vim.keymap.set("n", "n", "nzz", { noremap = true })
-vim.keymap.set("n", "N", "Nzz", { noremap = true })
-vim.keymap.set("n", "G", "Gzz", { noremap = true })
-vim.keymap.set("n", "}", "}zz", { noremap = true })
-vim.keymap.set("n", "{", "{zz", { noremap = true })
+map("n", "<C-d>", "<C-d>zz", { noremap = true })
+map("n", "<C-u>", "<C-u>zz", { noremap = true })
+map("n", "<C-b>", "<C-b>zz", { noremap = true })
+map("n", "<C-f>", "<C-f>zz", { noremap = true })
+map("n", "*", "*zz", { noremap = true })
+map("n", "#", "#zz", { noremap = true })
+map("n", "n", "nzz", { noremap = true })
+map("n", "N", "Nzz", { noremap = true })
+map("n", "G", "Gzz", { noremap = true })
+map("n", "}", "}zz", { noremap = true })
+map("n", "{", "{zz", { noremap = true })
 
-vim.keymap.set("n", "<C-o>", "<C-o>zz", { noremap = true })
-vim.keymap.set("n", "<C-i>", "<C-i>zz", { noremap = true })
+map("n", "<C-o>", "<C-o>zz", { noremap = true })
+map("n", "<C-i>", "<C-i>zz", { noremap = true })
 -- Center on first search
 vim.cmd("cnoremap <silent><expr> <enter> index(['/', '?'], getcmdtype()) >= 0 ? '<enter>zz' : '<enter>'")
 
 -- Move lines
-vim.keymap.set("x", "J", ":m '>+1<CR>gv=gv", { desc = "Move lines down" })
-vim.keymap.set("x", "K", ":m '<-2<CR>gv=gv", { desc = "Move lines up" })
+map("x", "J", ":m '>+1<CR>gv=gv", { desc = "Move lines down" })
+map("x", "K", ":m '<-2<CR>gv=gv", { desc = "Move lines up" })
 
 -- Makes the file executable
-vim.keymap.set("n", "<leader>xm", function() vim.cmd("!chmod +x %") end, { silent = true, desc = "Make file executable" })
+map("n", "<leader>xm", function() vim.cmd("!chmod +x %") end, { silent = true, desc = "Make file executable" })
 
 -- Alternate file
-vim.keymap.set("n", "<S-Tab>", "<C-^>", { desc = "Alternate file" })
+map("n", "<S-Tab>", "<C-^>", { desc = "Alternate file" })
 
 -- Indent whole file
-vim.keymap.set("n", "<leader>=", "mzgg=G`zzz", { desc = "Indent whole file" })
+map("n", "<leader>=", "mzgg=G`zzz", { desc = "Indent whole file" })
 
--- vim.keymap.set({ 'n', 'x' }, 'go', function() vim.cmd("silent !xdg-open <cfile> &") end,
+-- map({ 'n', 'x' }, 'go', function() vim.cmd("silent !xdg-open <cfile> &") end,
 --     { desc = "Open file in default program" })
 
 -- toggle line wrap
-vim.keymap.set('n', '<leader>l', function() vim.cmd("set wrap!") end, { desc = "Toggle line wrap" })
+map('n', '<leader>l', function() vim.cmd("set wrap!") end, { desc = "Toggle line wrap" })
 
 -- insert and command line emacs keybinds
 -- cmdline
-vim.keymap.set('c', '<C-a>', '<Home>')
-vim.keymap.set('c', '<C-e>', '<End>')
-vim.keymap.set('c', '<C-k>', '<C-f>D<C-c><C-c>:<Up>')
-vim.keymap.set('c', '<A-b>', '<C-Left>')
-vim.keymap.set('c', '<A-f>', '<C-Right>')
-vim.keymap.set('c', '<A-d>', '<C-Right><C-w>')
-vim.keymap.set('c', '<C-h>', '<BS>')
-vim.keymap.set('c', '<C-d>', '<Del>')
-vim.keymap.set('c', '<C-f>', '<Right>')
-vim.keymap.set('c', '<C-b>', '<Left>')
+map('c', '<C-a>', '<Home>')
+map('c', '<C-e>', '<End>')
+map('c', '<C-k>', '<C-f>D<C-c><C-c>:<Up>')
+map('c', '<A-b>', '<C-Left>')
+map('c', '<A-f>', '<C-Right>')
+map('c', '<A-d>', '<C-Right><C-w>')
+map('c', '<C-h>', '<BS>')
+map('c', '<C-d>', '<Del>')
+map('c', '<C-f>', '<Right>')
+map('c', '<C-b>', '<Left>')
 
 -- scroll noice doc if possible
-vim.keymap.set("n", "<c-f>", function()
+map("n", "<c-f>", function()
     if not require("noice.lsp").scroll(4) then
         return "<c-f>"
     end
 end, { silent = true, expr = true })
 
-vim.keymap.set("n", "<c-b>", function()
+map("n", "<c-b>", function()
     if not require("noice.lsp").scroll(-4) then
         return "<c-b>"
     end
 end, { silent = true, expr = true })
 
-vim.keymap.set({ "i", "s" }, "<c-f>", function()
+map({ "i", "s" }, "<c-f>", function()
     if not require("noice.lsp").scroll(4) then
         return "<Right>"
     end
 end, { silent = true, expr = true })
 
-vim.keymap.set({ "i", "s" }, "<c-b>", function()
+map({ "i", "s" }, "<c-b>", function()
     if not require("noice.lsp").scroll(-4) then
         return "<Left>"
     end
@@ -137,17 +142,17 @@ local change_width = function(d)
     end
 end
 
-vim.keymap.set("n", "<M-h>", function() change_width("left") end, { desc = "Resize window left" })
-vim.keymap.set("n", "<M-l>", function() change_width("right") end, { desc = "Resize window right" })
-vim.keymap.set("n", "<M-k>", function() change_width("up") end, { desc = "Resize window up" })
-vim.keymap.set("n", "<M-j>", function() change_width("down") end, { desc = "Resize window down" })
+map("n", "<M-h>", function() change_width("left") end, { desc = "Resize window left" })
+map("n", "<M-l>", function() change_width("right") end, { desc = "Resize window right" })
+map("n", "<M-k>", function() change_width("up") end, { desc = "Resize window up" })
+map("n", "<M-j>", function() change_width("down") end, { desc = "Resize window down" })
 
-vim.keymap.set({ "x", "n" }, "+", "\"+", { desc = "+ for system clipboard register" })
-vim.keymap.set({ "x", "n" }, "_", "\"_", { desc = "_ for void register" })
-vim.keymap.set("x", "P", "pgv=", { desc = "Paste and indent in visual mode" })
-vim.keymap.set("n", "gp", "`[v`]", { desc = "Select last pasted text" })
+map({ "x", "n" }, "+", "\"+", { desc = "+ for system clipboard register" })
+map({ "x", "n" }, "_", "\"_", { desc = "_ for void register" })
+map("x", "P", "pgv=", { desc = "Paste and indent in visual mode" })
+map("n", "gp", "`[v`]", { desc = "Select last pasted text" })
 
-vim.keymap.set("n", "<leader>'", vim.cmd.Lazy, { desc = "Open Lazy UI" })
+map("n", "<leader>'", vim.cmd.Lazy, { desc = "Open Lazy UI" })
 
-vim.keymap.set("n", "<leader>xl", ":.lua<CR>", { desc = "Run current line with lua" })
-vim.keymap.set("x", "<leader>xl", ":lua<CR>", { desc = "Run visual selection with lua" })
+map("n", "<leader>xl", ":.lua<CR>", { desc = "Run current line with lua" })
+map("x", "<leader>xl", ":lua<CR>", { desc = "Run visual selection with lua" })

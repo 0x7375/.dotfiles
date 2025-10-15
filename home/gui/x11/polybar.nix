@@ -5,9 +5,6 @@
   ...
 }:
 
-let
-  palette = myLib.palette;
-in
 lib.mkIf (config.me.gui.displayServer == "xorg") {
   services.polybar = {
     enable = true;
@@ -16,6 +13,12 @@ lib.mkIf (config.me.gui.displayServer == "xorg") {
       settings = {
         screenchange.reload = true;
         pseudo.transparency = true;
+      };
+      "module/xwindow" = {
+        type = "internal/xwindow";
+        label = " %title%";
+        label-maxlen = 50;
+        label-empty = "~${config.me.hostname}";
       };
       "module/memory" = {
         type = "internal/memory";
@@ -31,9 +34,8 @@ lib.mkIf (config.me.gui.displayServer == "xorg") {
         width = "100%";
         height = 35;
         radius = 0;
-
-        background = palette.bg0_dark;
-        foreground = palette.fg0;
+        background = "\${xrdb:bg0_dark}";
+        foreground = "\${xrdb:fg0}";
 
         border.size = "0pt";
 
@@ -44,13 +46,13 @@ lib.mkIf (config.me.gui.displayServer == "xorg") {
         padding = 1;
         module-margin = 0;
 
-        modules.left = "nix";
+        modules.left = "xwindow";
         modules.center = "i3";
         modules.right = "cpu memory battery network datetime";
 
-        separator = "|";
+        separator = " ";
         separator-padding = 1;
-        separator-foreground = palette.fg0;
+        separator-foreground = "\${xrdb:fg0}";
 
         enable.ipc = true;
       };
@@ -69,13 +71,13 @@ lib.mkIf (config.me.gui.displayServer == "xorg") {
         label = rec {
           focused = {
             text = "%index%";
-            foreground = palette.fg0;
             padding = 1;
+            foreground = "\${xrdb:fg0}";
           };
           unfocused = {
             text = focused.text;
-            foreground = palette.bg2;
             padding = focused.padding;
+            foreground = "\${xrdb:bg2}";
           };
           visible = unfocused;
           urgent = unfocused;
@@ -111,7 +113,7 @@ lib.mkIf (config.me.gui.displayServer == "xorg") {
         };
         # label.disconnected.text = "󰤭";
         label.disconnected.text = "net: x";
-        label.disconnected.foreground = palette.fg3;
+        label.disconnected.foreground = "\${xrdb:fg3}";
         format.connected = "net: <label-connected>";
 
         # format.connected = "<ramp-signal> <label-connected>";

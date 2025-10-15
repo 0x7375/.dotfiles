@@ -30,7 +30,7 @@ lib.mkIf (config.me.gui.enable && true) {
       export DISPLAY=:0
       export DBUS_SESSION_BUS_ADDRESS="unix:path=$ADDRESS"
 
-      ${lib.getExe' pkgs.libnotify "notify-send"} "Look away" "Look away for 20 seconds." -i "eye" -t 20000
+      ${lib.getExe' pkgs.libnotify "notify-send"} "Look away" "Look away for 20 seconds." -i eye-$theme -t 20000
     ''}";
     serviceConfig = {
       Type = "oneshot";

@@ -12,6 +12,11 @@ lib.mkIf (config.me.gui.displayServer == "xorg" && config.me.secrets.enable) {
 
   services.redshift.enable = true;
 
+  location = {
+    latitude = 0.0;
+    longitude = 0.0;
+  };
+
   systemd.user.services.redshift.serviceConfig.ExecStart = lib.mkForce (
     pkgs.writeShellScript "redshift-start" ''
       set -euo pipefail

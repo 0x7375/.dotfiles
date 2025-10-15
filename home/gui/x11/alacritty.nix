@@ -6,12 +6,38 @@
 }:
 
 let
-  hex = myLib.hex;
+  nocolor = "00ff00";
+  colors = hex: ''
+    [colors.primary]
+    background = "0x${hex.bg0}"
+    foreground = "0x${hex.fg0}"
+
+    [colors.normal]
+    black = "0x${hex.bg1}"
+    red = "0x${hex.red}"
+    green = "0x${hex.green}"
+    yellow = "0x${hex.yellow}"
+    blue = "0x${hex.blue}"
+    magenta = "0x${hex.magenta}"
+    cyan = "0x${hex.cyan}"
+    white = "0x${hex.fg3}"
+
+    [colors.bright]
+    black = "0x${hex.bg3}" # inline zsh completion and *.old files in lf
+    red = "0x${nocolor}"
+    green = "0x${nocolor}"
+    yellow = "0x${nocolor}"
+    blue = "0x${hex.fg0}"
+    magenta = "0x${hex.bg3}"
+    cyan = "0x${hex.bg2}"
+    white = "0x${hex.bg0}"
+  '';
 in
 lib.mkIf (config.me.gui.displayServer == "xorg") {
   programs.alacritty = {
     enable = true;
     settings = {
+      general.import = [ "theme.toml" ];
       cursor.style.blinking = "Never";
       mouse.bindings = [
         {
@@ -57,8 +83,9 @@ lib.mkIf (config.me.gui.displayServer == "xorg") {
         }
       ];
       window = {
+        dynamic_padding = true;
         padding = rec {
-          x = 10;
+          x = 20;
           y = x;
         };
       };
@@ -66,38 +93,23 @@ lib.mkIf (config.me.gui.displayServer == "xorg") {
         builtin_box_drawing = true;
         normal = {
           family = "${config.me.gui.font} Nerd Font";
-          style = "Bold";
+          # style = "Bold";
         };
-        size = 16;
+        size = 18;
         # size = 19;
         offset.y = 0;
       };
-      colors = {
-        primary = {
-          background = "0x${hex.bg0}";
-          foreground = "0x${hex.fg0}";
-        };
-        normal = {
-          black = "0x${hex.bg3}";
-          red = "0x${hex.red}";
-          green = "0x${hex.green}";
-          yellow = "0x${hex.yellow}";
-          blue = "0x${hex.blue}";
-          magenta = "0x${hex.magenta}";
-          cyan = "0x${hex.cyan}";
-          white = "0x${hex.fg3}";
-        };
-        bright = {
-          black = "0x${hex.bg3}";
-          red = "0x${hex.red}";
-          green = "0x${hex.green}";
-          yellow = "0x${hex.yellow}";
-          blue = "0x${hex.blue}";
-          magenta = "0x${hex.magenta}";
-          cyan = "0x${hex.cyan}";
-          white = "0x${hex.fg0}";
-        };
-      };
     };
   };
+
+  xdg.configFile."alacritty/dark.toml".text = colors myLib.hex;
+  xdg.configFile."alacritty/light.toml".text = colors myLib.light_hex;
+
+  systemd.user.tmpfiles.rules =
+    let
+      alacritty = "/home/${config.me.user}/.config/alacritty";
+    in
+    [
+      "L ${alacritty}/theme.toml - - - - ${alacritty}/dark.toml"
+    ];
 }

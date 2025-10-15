@@ -7,7 +7,21 @@
 }:
 
 let
-  palette = myLib.palette;
+  colors = theme: palette: ''
+    [global]
+    background="#${palette.bg0}"
+    foreground="#${palette.fg0}"
+    highlight="#${palette.fg0}"
+    frame_color="#${palette.bg1}"
+
+    [urgency_critical]
+    frame_color="#${palette.red}"
+    foreground="#${palette.red}"
+
+    [charged]
+    frame_color="#${palette.green}"
+    foreground="#${palette.green}"
+  '';
 in
 lib.mkIf config.me.gui.enable {
   home.packages = [ pkgs.libnotify ];
@@ -16,7 +30,7 @@ lib.mkIf config.me.gui.enable {
     enable = true;
     settings = rec {
       global = {
-        icon_path = "${config.me.flakeDir}/assets/dunst";
+        icon_path = "${config.me.flakeDir}/assets/dunst/output";
         monitor = 0;
         follow = "none";
         width = 400;
@@ -49,10 +63,6 @@ lib.mkIf config.me.gui.enable {
         horizontal_padding = 24;
         text_icon_padding = 24;
         frame_width = 3;
-        highlight = palette.fg0;
-        frame_color = palette.bg1;
-        background = palette.bg0;
-        foreground = palette.fg0;
         gap_size = 0;
         separator_color = "frame";
         sort = true;
@@ -89,18 +99,10 @@ lib.mkIf config.me.gui.enable {
         timeout = 3;
       };
       urgency_critical = {
-        frame_color = palette.red;
-        foreground = palette.red;
         timeout = 0;
       };
-      network = {
-        body = "*network*";
-        new_icon = "wifi";
-      };
-      zcharged = {
+      charged = {
         body = "*fully*";
-        frame_color = palette.green;
-        foreground = palette.green;
       };
       experimental = {
         per_monitor_dpi = false;
@@ -115,4 +117,16 @@ lib.mkIf config.me.gui.enable {
       };
     };
   };
+
+  xdg.configFile."dunst/dunstrc.d/dark".text = colors "dark" myLib.hex;
+  xdg.configFile."dunst/dunstrc.d/light".text = colors "light" myLib.light_hex;
+
+  systemd.user.tmpfiles.rules =
+    let
+      dunst = "/home/${config.me.user}/.config/dunst/dunstrc.d";
+    in
+    [
+      "d ${dunst} 0755 ${config.me.user} users - -"
+      "L ${dunst}/theme.conf - - - - ${dunst}/dark"
+    ];
 }

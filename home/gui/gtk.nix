@@ -7,9 +7,21 @@
 }:
 
 let
-  inherit (myLib) palette;
+  inherit (config.gtk) gtk4;
+  pascal =
+    string:
+    let
+      firstLetter = lib.toUpper (lib.substring 0 1 string);
+      rest = lib.toLower (lib.substring 1 (lib.stringLength string - 1) string);
+    in
+    firstLetter + rest;
+
   cssContent = # css
-    ''
+    theme: ''
+      @import url("file://${gtk4.theme.package}/share/themes/${gtk4.theme.name}${
+        if theme != null then "-" + (pascal theme) else ""
+      }/gtk-4.0/gtk.css");
+
       window.csd {
         border-radius: 0;
       }
@@ -48,13 +60,13 @@ lib.mkIf config.me.gui.enable {
       #     folder-color = "grey";
       #   }
       # );
-      # name = "Gruvbox-Plus-Dark";
+      # name = "Gruvbox-Plus";
       package = (
         pkgs.colloid-icon-theme.override {
           colorVariants = [ "grey" ];
         }
       );
-      name = "Colloid-Grey-Dark";
+      name = "Colloid-Grey";
     };
     theme = {
       package = (
@@ -66,7 +78,7 @@ lib.mkIf config.me.gui.enable {
           ];
         }
       );
-      name = "Colloid-Grey-Dark";
+      name = "Colloid-Grey";
     };
     cursorTheme = {
       name = "Bibata-Modern-Ice";
@@ -74,27 +86,25 @@ lib.mkIf config.me.gui.enable {
       size = config.me.cursorSize;
     };
     gtk3.extraConfig = {
-      gtk-application-prefer-dark-theme = 1;
+      # gtk-application-prefer-dark-theme = 1;
       gtk-enable-primary-paste = false;
       gtk-decoration-layout = "";
       gtk-recent-files-enabled = false;
     };
     gtk2.configLocation = "${config.xdg.configHome}/gtk-2.0/gtkrc";
     gtk2.extraConfig = ''
-      gtk-application-prefer-dark-theme = "1"
+      # gtk-application-prefer-dark-theme = "1"
       gtk-enable-primary-paste = false
       gtk-decoration-layout =
     '';
     gtk4.extraConfig = gtk3.extraConfig;
-
-    gtk3.extraCss = cssContent;
-    gtk4.extraCss = gtk3.extraCss;
+    gtk3.extraCss = cssContent null;
   };
 
   dconf.settings = {
-    "org/gnome/desktop/interface" = {
-      color-scheme = "prefer-dark";
-    };
+    # "org/gnome/desktop/interface" = {
+    #   color-scheme = "prefer-dark";
+    # };
     "org/gtk/settings/file-chooser" = {
       show-hidden = true;
       sort-directories-first = true;
@@ -114,4 +124,17 @@ lib.mkIf config.me.gui.enable {
     '';
 
   home.packages = [ pkgs.gtk3 ];
+
+  xdg.configFile."gtk-4.0/gtk.css".enable = lib.mkForce false;
+
+  xdg.configFile."gtk-4.0/dark.css".text = cssContent "dark";
+  xdg.configFile."gtk-4.0/light.css".text = cssContent "light";
+
+  systemd.user.tmpfiles.rules =
+    let
+      gtk = "/home/${config.me.user}/.config/gtk-4.0";
+    in
+    [
+      "L ${gtk}/gtk.css - - - - ${gtk}/dark.css"
+    ];
 }

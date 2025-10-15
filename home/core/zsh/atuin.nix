@@ -53,7 +53,7 @@ lib.mkIf config.me.secrets.enable {
                 --tiebreak=index
                 "--query=''${LBUFFER}"
                 --reverse
-                --border
+                "--padding=1"
             )
 
             selected=$(eval "atuin search ''${atuin_opts}" | fzf "''${fzf_opts[@]}")

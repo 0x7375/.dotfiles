@@ -1,6 +1,6 @@
 return {
     'nvim-treesitter/nvim-treesitter',
-    cond = vim.g.pi,
+    cond = vim.g.rpi,
     build = ":TSUpdate",
     cmd = { "TSUpdateSync", "TSUpdate", "TSInstall" },
     event = { "BufReadPost", "BufWritePost", "BufNewFile", "CmdlineEnter" },
@@ -64,7 +64,7 @@ return {
             smart_rename = {
                 enable = true,
                 keymaps = {
-                    smart_rename = "<leader>r",
+                    smart_rename = "<leader>t",
                 },
             },
         },

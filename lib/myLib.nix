@@ -84,34 +84,34 @@ in
 
   bar.font-size = 13;
   hex = lib.mapAttrs (name: value: lib.removePrefix "#" value) myLib.palette;
-  hexLight = lib.mapAttrs (name: value: lib.removePrefix "#" value) myLib.light;
+  light_hex = lib.mapAttrs (name: value: lib.removePrefix "#" value) myLib.light_palette;
 
   palette = {
     bg0_dark = "#000000";
+
     bg0 = "#000000";
-    bg0_light = "#404040";
-    bg1 = "#404040";
-    bg2 = "#606060";
+    bg1 = "#202020";
+    bg2 = "#404040";
     bg3 = "#606060";
     fg4 = "#808080";
     fg3 = "#808080";
     fg2 = "#A0A0A0";
     fg1 = "#A0A0A0";
     fg0 = "#A0A0A0";
-    fg0_light = "#A0A0A0";
-    red = "#404040";
+
+    red = "#d4726f";
+    green = "#7eb882";
     yellow = "#606060";
-    green = "#A0A0A0";
-    cyan = "#808080";
+    cyan = "#404040";
     blue = "#A0A0A0";
     magenta = "#808080";
     orange = "#606060";
   };
 
-  light = {
+  light_palette = {
     bg0_dark = "#FFFFFF";
+
     bg0 = "#FFFFFF";
-    bg0_light = "#BFBFBF";
     bg1 = "#BFBFBF";
     bg2 = "#9F9F9F";
     bg3 = "#9F9F9F";
@@ -120,10 +120,10 @@ in
     fg2 = "#5F5F5F";
     fg1 = "#5F5F5F";
     fg0 = "#5F5F5F";
-    fg0_light = "#5F5F5F";
-    red = "#BFBFBF";
+
+    red = "#a8423f";
     yellow = "#9F9F9F";
-    green = "#5F5F5F";
+    green = "#4a7c4e";
     cyan = "#7F7F7F";
     blue = "#5F5F5F";
     magenta = "#7F7F7F";
@@ -143,7 +143,6 @@ in
   #   fg2 = "#bdae93";
   #   fg1 = "#d5c4a1";
   #   fg0 = "#ebdbb2";
-  #   fg0_light = "#fbf1c7";
   #   red = "#cc241d";
   #   yellow = "#d79921";
   #   green = "#98971a";

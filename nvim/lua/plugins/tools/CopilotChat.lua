@@ -52,7 +52,7 @@ return {
         error_header = ' ~ Error ',
         show_folds = false,
 
-        model = 'claude-3.7-sonnet-thought',
+        model = 'claude-sonnet-4.5',
         show_help = false,
         auto_follow_cursor = false,
         log_level = "warn",

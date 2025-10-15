@@ -80,7 +80,6 @@ return {
                     settings = {
                         nixd = (function()
                             local flake = "(builtins.getFlake \"" .. os.getenv("FLAKE") .. "\")"
-                            local user = os.getenv("USER")
                             local host = os.getenv("HOSTNAME")
 
                             return {
@@ -92,8 +91,16 @@ return {
                                         expr = string.format('%s.nixosConfigurations.%s.options', flake, host),
                                     },
                                     home_manager = {
-                                        expr = string.format('%s.homeConfigurations.\"%s@%s\".options', flake, user, host),
+                                        expr = string.format(
+                                            '%s.nixosConfigurations.%s.options.home-manager.users.type.getSubOptions []',
+                                            flake, host),
                                     },
+                                    -- // For flake-parts options.
+                                    -- // Firstly read the docs here to enable "debugging", exposing declarations for nixd.
+                                    -- // https://flake.parts/debug
+                                    -- "flake-parts": {
+                                    --   "expr": "(builtins.getFlake \"/path/to/your/flake\").debug.options"
+                                    -- },
                                 },
                             }
                         end)(),

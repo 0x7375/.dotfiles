@@ -130,17 +130,49 @@ vim.api.nvim_create_autocmd("VimEnter", {
     end,
 })
 
--- Toggle background between light and dark on SIGUSR1
+-- reload theme on SIGUSR1
 vim.api.nvim_create_autocmd("Signal", {
     pattern = "SIGUSR1",
-    group = vim.api.nvim_create_augroup("toggle_bg_on_SIGUSR1", {}),
+    group = vim.api.nvim_create_augroup("reload_theme_on_SIGUSR1", {}),
     callback = function()
-        local option = "background"
-        local dark = vim.api.nvim_get_option_value(option, {}) == "dark"
-        vim.api.nvim_set_option_value(option, dark and "light" or "dark", {})
-        vim.schedule(function()
-            vim.cmd("redraw!")
-        end)
+        local f = io.open(vim.fn.expand("~/.local/state/current_theme"), "r")
+        if not f then
+            return
+        end
+
+        local theme = f:read("*all"):gsub("%s+", "")
+        f:close()
+        vim.o.background = theme
     end,
+
     nested = true,
 })
+
+-- open binary files with default application
+local function open()
+    local prev_buf = vim.fn.bufnr('%')
+    local fn = vim.fn.expand('%:p')
+    vim.ui.open(fn)
+    print(string.format("Opening file: %s", fn))
+
+    if vim.fn.buflisted(prev_buf) == 1 then
+        vim.api.nvim_set_current_buf(prev_buf)
+    end
+
+    vim.api.nvim_buf_delete(0, { force = true })
+end
+
+local bin_files = vim.api.nvim_create_augroup("binFiles", { clear = true })
+
+local file_types = {
+    "pdf", "jpg", "jpeg", "webp", "png", "mp3", "mp4",
+    "xls", "xlsx", "xopp", "gif", "doc", "docx", "gaphor"
+}
+
+for _, ext in ipairs(file_types) do
+    vim.api.nvim_create_autocmd({ "BufReadCmd" }, {
+        pattern = "*." .. ext,
+        group = bin_files,
+        callback = open
+    })
+end

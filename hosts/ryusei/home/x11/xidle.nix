@@ -5,7 +5,7 @@
   ...
 }:
 
-lib.mkIf (config.me.gui.displayServer == "x11") {
+lib.mkIf (config.me.gui.displayServer == "xorg") {
   services.xidlehook = {
     enable = true;
     not-when-audio = true;

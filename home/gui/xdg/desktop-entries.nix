@@ -7,12 +7,6 @@
 
 lib.mkIf config.me.gui.enable {
   xdg.desktopEntries = {
-    feh = {
-      exec = "feh --scale-down --auto-zoom --max-dimension -. --image-bg black -g 1000x600 --start-at %F";
-      name = "feh";
-      noDisplay = true;
-    };
-
     dofus =
       let
         dofusLauncher = pkgs.fetchurl {

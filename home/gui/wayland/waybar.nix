@@ -6,8 +6,33 @@
   ...
 }:
 let
-  palette = myLib.palette;
+  colors =
+    palette:
+    # css
+    ''
+      window#waybar {
+        background-color: ${palette.bg0_dark};
+        color: ${palette.fg0};
+      }
+
+      #custom-hostname {
+        color: ${palette.fg0};
+      }
+
+      #workspaces button.active {
+        color: ${palette.fg0};
+      }
+
+      #workspaces button {
+        color: ${palette.bg2};
+      }
+
+      #network.disconnected {
+        color: ${palette.fg3};
+      }
+    '';
 in
+
 lib.mkIf (config.me.gui.displayServer == "wayland") {
   systemd.user.services.waybar = {
     Unit = {
@@ -128,6 +153,8 @@ lib.mkIf (config.me.gui.displayServer == "wayland") {
 
     style = # css
       ''
+        @import 'theme.css';
+
         * {
           font-family: Mononoki Nerd Font;
           font-size: ${toString myLib.bar.font-size}pt;
@@ -135,11 +162,6 @@ lib.mkIf (config.me.gui.displayServer == "wayland") {
           margin: 0;
           border: none;
           border-radius: 0;
-        }
-
-        window#waybar {
-          background-color: ${palette.bg0_dark};
-          color: ${palette.fg0};
         }
 
         .modules-left,
@@ -150,21 +172,11 @@ lib.mkIf (config.me.gui.displayServer == "wayland") {
 
         #custom-hostname {
           padding: 0 8px;
-          color: ${palette.fg0};
         }
 
         #workspaces button {
           padding: 0 8px;
-          color: ${palette.bg2};
           background-color: transparent;
-        }
-
-        #workspaces button.active {
-          color: ${palette.fg0};
-        }
-
-        #workspaces button.urgent {
-          color: ${palette.bg2};
         }
 
         #cpu,
@@ -174,18 +186,17 @@ lib.mkIf (config.me.gui.displayServer == "wayland") {
         #clock {
           padding: 0 8px;
         }
-
-        #battery.warning {
-          color: ${palette.yellow};
-        }
-
-        #battery.critical {
-          color: ${palette.red};
-        }
-
-        #network.disconnected {
-          color: ${palette.fg3};
-        }
       '';
   };
+
+  xdg.configFile."waybar/dark.css".text = colors myLib.hex;
+  xdg.configFile."waybar/light.css".text = colors myLib.light_hex;
+
+  systemd.user.tmpfiles.rules =
+    let
+      waybar = "/home/${config.me.user}/.config/waybar";
+    in
+    [
+      "L ${waybar}/theme.css - - - - ${waybar}/dark.css"
+    ];
 }

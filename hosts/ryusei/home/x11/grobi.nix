@@ -5,7 +5,7 @@
   ...
 }:
 
-lib.mkIf (config.me.gui.displayServer == "x11") {
+lib.mkIf (config.me.gui.displayServer == "xorg") {
   xsession.windowManager.i3.config.workspaceOutputAssign = [
     {
       output = "HDMI-1";

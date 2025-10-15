@@ -23,6 +23,7 @@ lib.mkIf (config.me.gui.displayServer == "xorg") {
     })
   ];
 
+  home.packages = [ pkgs.grobi ];
   services.grobi.enable = true;
 
   xsession.numlock.enable = true;

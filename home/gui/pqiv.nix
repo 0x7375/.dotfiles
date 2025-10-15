@@ -1,6 +1,6 @@
 { lib, config, ... }:
 
-lib.mkIf (config.me.gui.displayServer == "wayland") {
+lib.mkIf config.me.gui.enable {
   programs.pqiv = {
     enable = true;
     settings = {

@@ -1,5 +1,4 @@
 {
-  myLib,
   pkgs,
   lib,
   config,
@@ -7,7 +6,6 @@
 }:
 
 let
-  palette = myLib.palette;
   inherit (config.me) gui;
 in
 lib.mkIf (gui.displayServer == "xorg") {
@@ -33,6 +31,10 @@ lib.mkIf (gui.displayServer == "xorg") {
       set $ws8 "8"
       set $ws9 "9"
       set $ws10 "10"
+
+      set_from_resource $focused_bg bg0 #000000
+      set_from_resource $focused_fg fg2 #000000
+      set_from_resource $unfocused_bg bg1 #000000
     '';
     config =
       let
@@ -58,6 +60,7 @@ lib.mkIf (gui.displayServer == "xorg") {
           {
             "${modifier}+t" = "exec --no-startup-id $term ${lib.getExe pkgs.scripts.tmux-sessionizer} ~/";
             "${modifier}+s" = "exec --no-startup-id $term ${lib.getExe pkgs.scripts.tmux-sshr}";
+            "${modifier}+Shift+s" = "exec --no-startup-id ${lib.getExe pkgs.scripts.swap-theme}";
             "${modifier}+Shift+t" = "exec --no-startup-id $tmux";
             "${modifier}+q" = "kill";
             "${modifier}+e" = "exec --no-startup-id $term ${lib.getExe' pkgs.lf "lf"}";
@@ -193,7 +196,7 @@ lib.mkIf (gui.displayServer == "xorg") {
             { title = "Steam - Update News"; }
             { title = "^Friends List$"; }
             { title = "^filechooser$"; }
-            { class = "feh"; }
+            { class = "Pqiv"; }
             { class = "1Password"; }
             { class = "Org.gnome.NautilusPreviewer"; }
             { class = "Main"; }
@@ -212,10 +215,16 @@ lib.mkIf (gui.displayServer == "xorg") {
             notification = false;
           }
           {
+            command = "xrdb -load ~/.config/X11/xresources";
+            always = true;
+            notification = false;
+          }
+          {
             command = "${pkgs.writeShellScript "set-wallpaper" ''
-              if [[ -d ~/pictures/wallpapers/landscapes ]]; then
+              wallpapers="$HOME/pictures/wallpapers/$(< ~/.local/state/current_theme)"
+              if [[ -d $wallpapers ]]; then
                 shuf -e -n1 --random-source=<(date +%Y%m%d | md5sum) \
-                  ~/pictures/wallpapers/landscapes/* | \
+                  ''${wallpapers}/* | \
                   ${lib.getExe' pkgs.findutils "xargs"} ${lib.getExe pkgs.feh} --no-fehbg --bg-fill
               else
                 ${lib.getExe pkgs.feh} --no-fehbg --bg-fill ${config.me.flakeDir}/assets/wallpaper.jpg
@@ -258,15 +267,15 @@ lib.mkIf (gui.displayServer == "xorg") {
         };
         colors = rec {
           focused = rec {
-            background = palette.bg0;
-            border = palette.fg2;
+            background = "$focused_bg";
+            border = "$focused_fg";
             text = border;
             indicator = border;
             childBorder = border;
           };
           unfocused = rec {
             background = focused.border;
-            border = palette.bg1;
+            border = "$unfocused_bg";
             text = border;
             indicator = border;
             childBorder = border;
@@ -296,12 +305,6 @@ lib.mkIf (gui.displayServer == "xorg") {
               command = "border pixel 0";
               criteria = {
                 window_role = "Popup";
-              };
-            }
-            {
-              command = "border pixel 0";
-              criteria = {
-                window_type = "Popup";
               };
             }
           ];

@@ -13,14 +13,13 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # hyprland.url = "github:hyprwm/Hyprland";
-    # split-monitor-workspaces = {
-    #   url = "github:Duckonaut/split-monitor-workspaces";
-    #   inputs.hyprland.follows = "hyprland";
-    # };
-
     # nix-maid.url = "github:viperML/nix-maid";
     # wrapper.url = "github:viperLM/wrapper-manager";
+
+    wrappers = {
+      url = "github:Lassulus/wrappers";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     auto-update.url = "github:nixos/nixpkgs/nixos-unstable";
 

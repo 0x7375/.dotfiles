@@ -1,33 +1,24 @@
 return {
-    {
-        "kdheepak/monochrome.nvim",
-        enabled = false,
-        init = function()
-            vim.cmd.colorscheme("monochrome")
-            vim.api.nvim_set_hl(0, "Pmenu", { link = "Normal" })
+    "amedoeyes/eyes.nvim",
+    lazy = false,
+    priority = 1000,
+    init = function()
+        -- read theme on startup
+        local f = io.open(vim.fn.expand("~/.local/state/current_theme"), "r")
+        if f then
+            local theme = f:read("*all"):gsub("%s+", "")
+            f:close()
+            vim.o.background = theme
+        end
 
-            vim.api.nvim_set_hl(0, "FloatBorder", { link = "Comment" })
-            vim.api.nvim_set_hl(0, "FzfLuaBorder", { link = "Comment" })
-            vim.api.nvim_set_hl(0, "LspInfoBorder", { link = "Comment" })
-            vim.api.nvim_set_hl(0, "TelescopeBorder", { link = "Comment" })
-            vim.api.nvim_set_hl(0, "TelescopePreviewBorder", { link = "Comment" })
-            vim.api.nvim_set_hl(0, "TelescopePromptBorder", { link = "Comment" })
-            vim.api.nvim_set_hl(0, "TelescopeResultsBorder", { link = "Comment" })
+        vim.cmd.colorscheme("eyes")
+        vim.api.nvim_set_hl(0, "PmenuSel", { reverse = true })
 
-            vim.api.nvim_set_hl(0, "WinSeparator", { link = "Comment" })
-            vim.api.nvim_set_hl(0, "StatusLine", { link = "WinSeparator" })
-            vim.api.nvim_set_hl(0, "StatusLineNC", { link = "WinSeparator" })
-            vim.api.nvim_set_hl(0, "Winbar", { link = "WinSeparator" })
-            vim.api.nvim_set_hl(0, "WinbarNC", { link = "WinSeparator" })
-        end,
-    },
-    {
-        "amedoeyes/eyes.nvim",
-        lazy = false,
-        priority = 1000,
-        opts = {},
-        init = function()
-            vim.cmd.colorscheme("eyes")
-        end,
-    },
+        vim.api.nvim_create_autocmd("OptionSet", {
+            pattern = "background",
+            callback = function()
+                vim.api.nvim_set_hl(0, "PmenuSel", { reverse = true })
+            end,
+        })
+    end,
 }

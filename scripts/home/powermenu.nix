@@ -10,6 +10,7 @@ pkgs.writeShellApplication {
     systemd
     scripts.lock
     bemenu
+    procps
   ];
   bashOptions = [
     "nounset"

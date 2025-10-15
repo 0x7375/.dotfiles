@@ -5,7 +5,8 @@
   ...
 }:
 let
-  inherit (myLib) hex hexLight;
+  inherit (myLib) hex light_hex;
+  nocolor = "00ff00";
 in
 lib.mkIf (config.me.gui.displayServer == "wayland") {
   programs.foot = {
@@ -58,7 +59,7 @@ lib.mkIf (config.me.gui.displayServer == "wayland") {
         foreground = hex.fg0;
         background = hex.bg0;
 
-        regular0 = hex.bg3;
+        regular0 = hex.bg1;
         regular1 = hex.red;
         regular2 = hex.green;
         regular3 = hex.yellow;
@@ -66,36 +67,38 @@ lib.mkIf (config.me.gui.displayServer == "wayland") {
         regular5 = hex.magenta;
         regular6 = hex.cyan;
         regular7 = hex.fg3;
-        bright0 = hex.bg3;
-        bright1 = hex.red;
-        bright2 = hex.green;
-        bright3 = hex.yellow;
-        bright4 = hex.blue;
-        bright5 = hex.magenta;
-        bright6 = hex.cyan;
-        bright7 = hex.fg0;
+
+        bright0 = hex.bg3; # inline zsh completion and *.old files in lf
+        bright1 = nocolor;
+        bright2 = nocolor;
+        bright3 = nocolor;
+        bright4 = hex.fg0;
+        bright5 = hex.bg3;
+        bright6 = hex.bg2;
+        bright7 = hex.bg0;
       };
 
       colors2 = {
-        foreground = hexLight.fg0;
-        background = hexLight.bg0;
+        foreground = light_hex.fg0;
+        background = light_hex.bg0;
 
-        regular0 = hexLight.bg3;
-        regular1 = hexLight.red;
-        regular2 = hexLight.green;
-        regular3 = hexLight.yellow;
-        regular4 = hexLight.blue;
-        regular5 = hexLight.magenta;
-        regular6 = hexLight.cyan;
-        regular7 = hexLight.fg3;
-        bright0 = hexLight.bg3;
-        bright1 = hexLight.red;
-        bright2 = hexLight.green;
-        bright3 = hexLight.yellow;
-        bright4 = hexLight.blue;
-        bright5 = hexLight.magenta;
-        bright6 = hexLight.cyan;
-        bright7 = hexLight.fg0;
+        regular0 = light_hex.bg1;
+        regular1 = light_hex.red;
+        regular2 = light_hex.green;
+        regular3 = light_hex.yellow;
+        regular4 = light_hex.blue;
+        regular5 = light_hex.magenta;
+        regular6 = light_hex.cyan;
+        regular7 = light_hex.fg3;
+
+        bright0 = light_hex.bg3;
+        bright1 = nocolor;
+        bright2 = nocolor;
+        bright3 = nocolor;
+        bright4 = nocolor;
+        bright5 = nocolor;
+        bright6 = nocolor;
+        bright7 = nocolor;
       };
     };
   };

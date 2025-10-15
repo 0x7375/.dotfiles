@@ -186,7 +186,7 @@ lib.mkIf config.me.gui.enable {
         size=1
 
         [Theme]
-        alt_bg=${p.bg0_light}
+        alt_bg=${p.bg1}
         alt_item_css=
         bg=${p.bg0}
         css=
@@ -224,7 +224,7 @@ lib.mkIf config.me.gui.enable {
         num_margin=2
         search_bar="\n    ;background: ''${edit_bg}\n    ;color: ''${edit_fg}\n    ;border: 1px solid ''${alt_bg}\n    ;margin: 2px"
         search_bar_focused="\n    ;border: 1px solid ''${sel_bg}"
-        sel_bg=${p.bg1}
+        sel_bg=${p.bg2}
         sel_fg=${p.fg0}
         sel_item_css=
         show_number=false

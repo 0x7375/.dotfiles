@@ -26,5 +26,6 @@
     tree
     nix-melt
     scripts.flake
+    termdown
   ];
 }

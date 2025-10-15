@@ -19,7 +19,7 @@ pkgs.writeShellApplication {
       selected=$(find -L "''${dirs[@]}" \
         -maxdepth 1 -mindepth 1 -type d ! -name '.stfolder' ! -name '.stversions' \
         | sed "s|^$HOME|~|" \
-        | fzf --reverse --border)
+        | fzf --reverse --padding 1)
       selected=''${selected/\~/$HOME}
     fi
 

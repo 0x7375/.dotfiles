@@ -121,7 +121,6 @@ lib.mkIf (config.me.gui.displayServer == "wayland") {
         "float,title:^(Steam - Update News)$"
         "float,title:^(Friends List)$"
         "float,title:^(filechooser)$"
-        "float,class:^(feh)$"
         "float,class:^(Pqiv)$"
         "float,class:^(1Password)$"
         "float,class:^(Org.gnome.NautilusPreviewer)$"
@@ -131,6 +130,7 @@ lib.mkIf (config.me.gui.displayServer == "wayland") {
         "float,class:^(Ryujinx)$"
 
         "noscreenshare,class:^(Bitwarden)$"
+        "suppressevent maximize, class:^(zen-beta)$"
 
         "workspace 4,class:^(spotify)$"
         "workspace 4,title:^(ncspot)$"
@@ -182,6 +182,7 @@ lib.mkIf (config.me.gui.displayServer == "wayland") {
         ''}"
 
         "SUPERSHIFT,p,exec,${lib.getExe pkgs.copyq} show"
+        "SUPERSHIFT,i,exec,${lib.getExe' pkgs.procps "pkill"} -USR1 waybar"
         "SUPER,o,togglespecialworkspace,gromit"
         ",F9,exec,togglespecialworkspace,gromit"
         "SUPERSHIFT,o,exec,${lib.getExe pkgs.gromit-mpx} --clear"

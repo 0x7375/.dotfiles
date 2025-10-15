@@ -7,6 +7,8 @@ pkgs.writeShellApplication {
     libnotify
   ];
   text = ''
+    theme=$(< "$HOME"/.local/state/current_theme)
+
     send_notification() {
         local -ri volume=$(pamixer --get-volume)
 
@@ -19,11 +21,11 @@ pkgs.writeShellApplication {
             icon="low"
         fi
 
-        notify-send -a "volume" -t 2000 -r 9993 -u low -i "volume-$icon" -h int:value:"$volume" "Volume" "Currently at ''${volume}%"
+        notify-send -a "volume" -t 2000 -r 9993 -u low -i "volume-$icon-$theme" -h int:value:"$volume" "Volume" "Currently at ''${volume}%"
     }
 
     send_muted() {
-        notify-send -a "volume" -t 2000 -r 9993 -u low -i "volume-mute" "Muted"
+        notify-send -a "volume" -t 2000 -r 9993 -u low -i "volume-mute-$theme" "Muted"
     }
 
     case $1 in

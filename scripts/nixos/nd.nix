@@ -23,7 +23,6 @@ pkgs.writeShellApplication {
       green=$(tput setaf 2)
       reset=$(tput sgr0)
       tmp_dir=$(mktemp -d)
-      staged_diff_file="$tmp_dir/nd-diff-staged"
 
       doc() {
           echo "Usage:
@@ -145,7 +144,10 @@ pkgs.writeShellApplication {
       cleanup() {
         local -r err_code=$?
 
-        [[ -d .git && $err_code -ne 0 && $remote_build -ne 1 ]] && silent git reset && silent git apply --cached "$staged_diff_file"
+        [[ -d .git && $err_code -eq 0 && $remote_build -ne 1 ]] && {
+          git add .
+        }
+
         echo -n "$show_cursor"
         silent popd
 
@@ -244,8 +246,6 @@ pkgs.writeShellApplication {
             git add -N .
             log "Showing changes"
             show_git_diff
-            git diff --cached > "$staged_diff_file"
-            git add .
           }
 
           log "Building configuration";
@@ -295,6 +295,7 @@ pkgs.writeShellApplication {
           echo "yes"
           [[ $action != "boot" ]] && log "Switching to configuration"
           switch_configuration "$action" "$result"
+        
         else
           echo "no"
         fi

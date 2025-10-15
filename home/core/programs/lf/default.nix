@@ -45,15 +45,15 @@ in
   xdg.configFile."ctpv/config" = {
     enable = gui;
     text = ''
-      set chafasixel
+      # set chafasixel
 
       preview null .env .git-credentials .keyring {{
           echo "preview disabled"
       }}
 
-      preview image image/* {{
-        chafa -s "''${w}x''${h}" -f sixels --polite on "$f"
-      }}
+      # preview image image/* {{
+      #   chafa -s "''${w}x''${h}" -f sixels --polite on "$f"
+      # }}
     '';
   };
 
@@ -84,7 +84,7 @@ in
             setlocal ~/pictures/ sortby time
             setlocal ~/pictures/ reverse
 
-            set sixel true
+            # set sixel true
 
             on-focus-gained
 
@@ -126,6 +126,7 @@ in
         ignorecase = true;
         icons = false;
         scrolloff = 8;
+        promptfmt = "\\033[34;1m%d\\033[0m\\033[1m%f\\033[0m";
         tabstop = 4;
       };
       commands = {
@@ -134,9 +135,9 @@ in
             &{{
               if [ -d .git ] || [ -f .git ]; then
                   branch="$(git branch --show-current 2>/dev/null)" || true
-                  fmt="\033[32;1m%u@%h\033[0m:\033[34;1m%w\033[0m\033[32;1m git:$branch\033[0m"
+                  fmt="\033[34;1m%d\033[0m\033[1m%f\033[0m \033[32;1mgit:$branch\033[0m"
               else
-                  fmt="\033[32;1m%u@%h\033[0m:\033[34;1m%d\033[0m\033[1m%f\033[0m"
+                  fmt="\033[34;1m%d\033[0m\033[1m%f\033[0m"
               fi
               lf -remote "send $id set promptfmt \"$fmt\""
             }}'';

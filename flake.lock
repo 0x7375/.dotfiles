@@ -409,6 +409,7 @@
         "sops-nix": "sops-nix",
         "spicetify-nix": "spicetify-nix",
         "unf": "unf",
+        "wrappers": "wrappers",
         "zen-browser": "zen-browser"
       }
     },
@@ -539,6 +540,26 @@
       "original": {
         "type": "git",
         "url": "https://git.atagen.co/atagen/unf"
+      }
+    },
+    "wrappers": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1759785633,
+        "narHash": "sha256-+f1G3EcJ1x6d1W1cNyG9t5ZDfge/hg5LD0Nz/O3Tyq8=",
+        "owner": "Lassulus",
+        "repo": "wrappers",
+        "rev": "d94b22244c3e98bd07561797222e7e02522e59f1",
+        "type": "github"
+      },
+      "original": {
+        "owner": "Lassulus",
+        "repo": "wrappers",
+        "type": "github"
       }
     },
     "zen-browser": {

@@ -6,33 +6,39 @@
 }:
 
 let
-  palette = myLib.palette;
+  colors = palette: ''
+    *font: ${config.me.gui.font} Nerd Font:size=18
+    *font2: ${config.me.gui.font} Nerd Font:size=18
+    *padding: 20
+
+    *bg0_dark: ${palette.bg0_dark}
+    *bg0: ${palette.bg0}
+    *bg1: ${palette.bg1}
+    *bg2: ${palette.bg2}
+    *bg3: ${palette.bg3}
+    *fg4: ${palette.fg4}
+    *fg3: ${palette.fg3}
+    *fg2: ${palette.fg2}
+    *fg1: ${palette.fg1}
+    *fg0: ${palette.fg0}
+    *red: ${palette.red}
+    *green: ${palette.green}
+    *yellow: ${palette.yellow}
+    *cyan: ${palette.cyan}
+    *blue: ${palette.blue}
+    *magenta: ${palette.magenta}
+    *orange: ${palette.orange}
+  '';
 in
 lib.mkIf (config.me.gui.displayServer == "xorg") {
-  xresources = {
-    path = "/home/${config.me.user}/.config/X11/xresources";
-    properties = {
-      "st.font" = "${config.me.gui.font} Nerd Font:style=Bold:size=20";
-      "st.font2" = "${config.me.gui.font} Nerd Font:style=Bold:size=20";
-      "st.cursorColor" = palette.fg0;
-      "st.background" = palette.bg0;
-      "st.foreground" = palette.fg0;
-      "st.normalBlack" = palette.bg3;
-      "st.normalRed" = palette.red;
-      "st.normalGreen" = palette.green;
-      "st.normalYellow" = palette.yellow;
-      "st.normalBlue" = palette.blue;
-      "st.normalMagenta" = palette.magenta;
-      "st.normalCyan" = palette.cyan;
-      "st.normalWhite" = palette.fg3;
-      "st.brightBlack" = palette.fg4;
-      "st.brightRed" = palette.red;
-      "st.brightGreen" = palette.green;
-      "st.brightYellow" = palette.yellow;
-      "st.brightBlue" = palette.blue;
-      "st.brightMagenta" = palette.magenta;
-      "st.brightCyan" = palette.cyan;
-      "st.brightWhite" = palette.fg0;
-    };
-  };
+  xdg.configFile."X11/dark".text = colors myLib.palette;
+  xdg.configFile."X11/light".text = colors myLib.light_palette;
+
+  systemd.user.tmpfiles.rules =
+    let
+      xresources = "/home/${config.me.user}/.config/X11";
+    in
+    [
+      "L ${xresources}/xresources - - - - ${xresources}/dark"
+    ];
 }

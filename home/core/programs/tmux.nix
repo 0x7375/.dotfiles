@@ -6,9 +6,6 @@
   ...
 }:
 
-let
-  palette = myLib.palette;
-in
 {
   nixpkgs.overlays = [
     (final: prev: {
@@ -45,7 +42,7 @@ in
               set -g @plugin 'wfxr/tmux-fzf-url'
 
               set -g @fzf-url-history-limit '2000'
-              set -g @fzf-url-fzf-options '-w 60% -h 50% --multi -0 --no-preview --border=sharp --tac --color=border:${palette.bg1}'
+              set -g @fzf-url-fzf-options '-w 60% -h 50% --multi -0 --no-preview --border=sharp --tac'
             '';
         }
         {
@@ -74,7 +71,7 @@ in
 
         set -g set-titles on
         set -g set-titles-string '#S'
-        set -g window-status-current-format '#W'
+        set -g window-status-current-format '#W*'
         set -g window-status-format '#W'
         set -g window-status-separator ' '
         set -g status-justify centre
@@ -88,17 +85,17 @@ in
 
         set -g status on
         set -g status-style bg=default
-        set -g message-style 'fg=${palette.fg0}'
+        set -g message-style fg=terminal
 
-        set -g popup-border-style fg=${palette.bg1}
+        set -g popup-border-style fg=black
 
-        set -g window-status-current-style fg=${palette.fg0}
-        set -g window-status-style fg=${palette.bg2}
+        set -g window-status-current-style fg=default
+        set -g window-status-style fg=brightblack
 
-        set -g pane-active-border-style fg=${palette.fg0}
-        set -g pane-border-style fg=${palette.bg2}
+        set -g pane-active-border-style fg=default
+        set -g pane-border-style fg=brightblack
 
-        set -g mode-style 'fg=${palette.fg0},reverse'
+        set -g mode-style 'fg=default,reverse'
 
         setw -g mode-keys vi
 
@@ -122,6 +119,7 @@ in
         unbind t
 
         bind k run-shell "tmux popup -E ${lib.getExe pkgs.scripts.tmux-sessionizer} || true"
+        bind M new-window "man -k . | ${lib.getExe pkgs.fzf} --reverse --padding 1 | ${lib.getExe pkgs.gawk} '{print $1}' | xargs man"
 
         # navigate prompts
         bind -n M-p copy-mode \; \

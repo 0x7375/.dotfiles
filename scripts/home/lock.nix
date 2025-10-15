@@ -28,11 +28,22 @@ pkgs.writeShellApplication {
     );
   text = ''
     if [[ $XDG_SESSION_TYPE == "x11" ]]; then
-      i3lock -e -n --indicator --color=${hex.bg0_dark} \
-          --inside-color=${hex.bg0_dark}ff --ring-color=${hex.fg0}ff --line-uses-inside \
-          --separator-color=${hex.fg0}ff --keyhl-color=${hex.bg0}ff --bshl-color=${hex.red}ff \
-          --insidever-color=${hex.yellow}ff --insidewrong-color=${hex.red}ff \
-          --ringver-color=${hex.fg0}ff --ringwrong-color=${hex.fg0}ff --radius=60 \
+      xget() {
+        xrdb -query | grep "$1:" | cut -f2 | tr -d '#'
+      }
+
+      bg=$(xget "bg0")
+      fg=$(xget "fg0")
+      yellow=$(xget "yellow")
+      red=$(xget "red")
+
+      i3lock -e -n --indicator --color="''${bg}"ff \
+          --inside-color="''${bg}"ff --ring-color="''${fg}"ff --line-uses-inside \
+          --greeter-text="~locked" --greeter-pos="w/2:50" --greeter-color="''${fg}" \
+          --greeter-font="Mononoki Nerd Font" --greeter-size=24 \
+          --separator-color="''${fg}"ff --keyhl-color="''${bg}"ff --bshl-color="''${red}"ff \
+          --insidever-color="''${yellow}"ff --insidewrong-color="''${red}"ff \
+          --ringver-color="''${fg}"ff --ringwrong-color="''${fg}"ff --radius=60 \
           --verif-text="" --wrong-text="" --noinput-text="" --lock-text=""
     else
       hyprlock

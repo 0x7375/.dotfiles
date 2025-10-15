@@ -42,7 +42,7 @@ in
     diff = "${lib.getExe' pkgs.diffutils "diff"} --color";
     bc = "${lib.getExe pkgs.bc} -l";
 
-    so = "${lib.getExe' pkgs.ncurses "clear"}; exec $SHELL";
+    so = "exec $SHELL";
 
     mount-web = "${lib.getExe pkgs.sshfs} -o gid=1000,uid=1000,noauto,_netdev,reconnect,auto_cache,ServerAliveInterval=5,ServerAliveCountMax=3 web:/www-dev/ ~/uni/web";
     unmount-web = "${lib.getExe' pkgs.fuse "fusermount"} -uz ~/uni/web";
@@ -202,7 +202,7 @@ in
       }
 
       nhv() {
-        ${lib.getExe pkgs.nix} eval --json path:$FLAKE#homeConfigurations."$USER@''${2:-$HOST}".config.$1 | jq -r
+        ${lib.getExe pkgs.nix} eval --json path:$FLAKE#nixosConfigurations.''${2:-$HOST}.config.home-manager.users.$USER.$1 | jq -r
       }
 
       nv() {

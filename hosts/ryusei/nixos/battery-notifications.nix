@@ -27,6 +27,7 @@
 
   systemd.services.battery-notify = {
     script = ''
+      set +e
       ${lib.getExe pkgs.scripts.battery-notify}
     '';
     serviceConfig = {

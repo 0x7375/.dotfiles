@@ -29,9 +29,9 @@ in
       	<key>gutterSettings</key>
       	<dict>
       		<key>background</key>
-      		<string>${palette.bg0_light}</string>
+      		<string>${palette.bg0}</string>
       		<key>divider</key>
-      		<string>${palette.bg0_light}</string>
+      		<string>${palette.bg0}</string>
       		<key>foreground</key>
       		<string>${palette.fg4}</string>
       		<key>selectionBackground</key>
@@ -47,9 +47,9 @@ in
       				<key>background</key>
       				<string>${palette.bg0}</string>
       				<key>caret</key>
-      				<string>${palette.fg0}</string>
+      				<string>${palette.fg1}</string>
       				<key>foreground</key>
-      				<string>${palette.fg0}</string>
+      				<string>${palette.fg1}</string>
       				<key>invisibles</key>
       				<string>${palette.fg4}</string>
       				<key>lineHighlight</key>
@@ -66,7 +66,7 @@ in
       			<key>settings</key>
       			<dict>
       				<key>foreground</key>
-      				<string>${palette.fg0}</string>
+      				<string>${palette.fg1}</string>
       			</dict>
       		</dict>
       		<dict>
@@ -88,7 +88,7 @@ in
       			<key>settings</key>
       			<dict>
       				<key>foreground</key>
-      				<string>${palette.fg0}</string>
+      				<string>${palette.fg1}</string>
       			</dict>
       		</dict>
       		<dict>
@@ -99,7 +99,7 @@ in
       			<key>settings</key>
       			<dict>
       				<key>foreground</key>
-      				<string>${palette.fg0}</string>
+      				<string>${palette.fg1}</string>
       			</dict>
       		</dict>
       		<dict>
@@ -110,7 +110,7 @@ in
       			<key>settings</key>
       			<dict>
       				<key>foreground</key>
-      				<string>${palette.fg0}</string>
+      				<string>${palette.fg1}</string>
       			</dict>
       		</dict>
       		<dict>
@@ -176,7 +176,7 @@ in
       			<key>settings</key>
       			<dict>
       				<key>foreground</key>
-      				<string>${palette.fg0_light}</string>
+      				<string>${palette.fg0}</string>
       			</dict>
       		</dict>
       		<dict>
@@ -437,7 +437,7 @@ in
       				<key>background</key>
       				<string>${palette.bg2}</string>
       				<key>foreground</key>
-      				<string>${palette.fg0}</string>
+      				<string>${palette.fg1}</string>
       			</dict>
       		</dict>
       		<dict>
@@ -527,7 +527,7 @@ in
       				<key>background</key>
       				<string>${palette.red}</string>
       				<key>foreground</key>
-      				<string>${palette.fg0_light}</string>
+      				<string>${palette.fg0}</string>
       			</dict>
       		</dict>
       		<dict>
@@ -553,7 +553,7 @@ in
       				<key>background</key>
       				<string>${palette.orange}</string>
       				<key>foreground</key>
-      				<string>${palette.fg0_light}</string>
+      				<string>${palette.fg0}</string>
       			</dict>
       		</dict>
       		<dict>
@@ -566,7 +566,7 @@ in
       				<key>background</key>
       				<string>${palette.fg4}</string>
       				<key>foreground</key>
-      				<string>${palette.fg0_light}</string>
+      				<string>${palette.fg0}</string>
       			</dict>
       		</dict>
       	</array>

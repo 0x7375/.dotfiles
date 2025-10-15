@@ -1,6 +1,6 @@
 vim.g.windows = vim.fn.has("unix") ~= 1
 
-vim.g.pi = vim.fn.system("uname -m"):match("aarch64")
+vim.g.rpi = vim.fn.system("uname -m"):match("aarch64")
 
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
@@ -62,25 +62,31 @@ local opts = {
         },
     },
 }
+
 require("opts")
 require("keymaps")
+
 if vim.g.vscode then
     require("lazy").setup('plugins.actions', opts)
     require("codium")
-elseif vim.g.windows or vim.g.pi then
-    require("lazy").setup({
-        { import = 'plugins.nav' },
-        { import = 'plugins.actions' },
-        { import = 'plugins.ui' },
-    }, opts)
-    require("autocmds")
-else
-    require("lazy").setup({
-        { import = 'plugins.nav' },
-        { import = 'plugins.lsp' },
-        { import = 'plugins.actions' },
-        { import = 'plugins.tools' },
-        { import = 'plugins.ui' },
-    }, opts)
-    require("autocmds")
+    return
 end
+
+require("autocmds")
+
+if vim.g.windows or vim.g.rpi then
+    require("lazy").setup({
+        { import = 'plugins.nav' },
+        { import = 'plugins.actions' },
+        { import = 'plugins.ui' },
+    }, opts)
+    return
+end
+
+require("lazy").setup({
+    { import = 'plugins.nav' },
+    { import = 'plugins.lsp' },
+    { import = 'plugins.actions' },
+    { import = 'plugins.tools' },
+    { import = 'plugins.ui' },
+}, opts)

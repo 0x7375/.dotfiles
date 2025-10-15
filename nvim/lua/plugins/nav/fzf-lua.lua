@@ -38,6 +38,11 @@ return {
             ['--info'] = 'default',
             ['--layout'] = 'reverse',
         },
+        previewers = {
+            builtin = {
+                syntax_limit_b = 1024 * 500, -- 500KB
+            },
+        },
         keymap = {
             builtin = {
                 ['<C-/>'] = 'toggle-help',

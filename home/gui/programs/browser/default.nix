@@ -177,11 +177,10 @@ in
       };
       profiles.default =
         let
-          inherit (myLib) fromRoot;
           refreshRate = config.me.refreshRate;
-          fastfox = import (fromRoot "assets/browser/fastfox.nix");
-          peskyfox = import (fromRoot "assets/browser/peskyfox.nix");
-          securefox = import (fromRoot "assets/browser/securefox.nix");
+          fastfox = import ./_fastfox.nix;
+          peskyfox = import ./_peskyfox.nix;
+          securefox = import ./_securefox.nix;
           smoothfox =
             if refreshRate == 60 then
               {

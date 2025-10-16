@@ -13,10 +13,18 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    hjem = {
+      url = "github:feel-co/hjem";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     wrappers = {
       url = "github:Lassulus/wrappers";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    flake-parts.url = "github:hercules-ci/flake-parts";
+    import-tree.url = "github:vic/import-tree";
 
     auto-update.url = "github:nixos/nixpkgs/nixos-unstable";
 

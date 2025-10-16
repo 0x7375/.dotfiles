@@ -12,7 +12,7 @@ pkgs.writeShellApplication {
     let
       xcolor = pkgs.xcolor.overrideAttrs (old: {
         patches = (old.patches or [ ]) ++ [
-          (myLib.fromRoot "assets/patches/xcolor_cancel_with_right_click.patch")
+          ./xcolor_cancel_with_right_click.patch
         ];
       });
     in

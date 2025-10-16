@@ -11,14 +11,17 @@ in
   pkgsFor = system: inputs.nixpkgs.legacyPackages.${system};
 
   filesIn =
-    dir: lib.fileset.toList (lib.fileset.fileFilter (file: lib.hasSuffix ".nix" file.name) dir);
+    dir:
+    lib.fileset.toList (
+      lib.fileset.fileFilter (file: (lib.hasSuffix ".nix" file.name && !lib.hasPrefix "_" file.name)) dir
+    );
 
-  fromRoot =
-    path:
-    builtins.path {
-      path = "${inputs.self}/${path}";
-      name = baseNameOf path;
-    };
+  # fromRoot =
+  #   path:
+  #   builtins.path {
+  #     path = "${inputs.self}/${path}";
+  #     name = baseNameOf path;
+  #   };
 
   mkSystem =
     hostname: system:

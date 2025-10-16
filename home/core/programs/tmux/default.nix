@@ -1,7 +1,6 @@
 {
   config,
   lib,
-  myLib,
   pkgs,
   ...
 }:
@@ -11,7 +10,7 @@
     (final: prev: {
       tmux = prev.tmux.overrideAttrs (old: {
         patches = (old.patches or [ ]) ++ [
-          (myLib.fromRoot "assets/patches/tmux_bigger_input_buffer.patch")
+          ./tmux_bigger_input_buffer.patch
         ];
       });
     })

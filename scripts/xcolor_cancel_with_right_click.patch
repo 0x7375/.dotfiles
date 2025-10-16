@@ -1,0 +1,44 @@
+From 9f65128a97ddccf85448917f3d29ed34760e0549 Mon Sep 17 00:00:00 2001
+From: rareitems <rareitems1@protonmail.com>
+Date: Thu, 14 Apr 2022 02:25:58 +0200
+Subject: [PATCH] Add cancel with right mouse button
+
+---
+ README.md       | 1 +
+ src/location.rs | 4 ++++
+ 2 files changed, 5 insertions(+)
+
+diff --git a/README.md b/README.md
+index 2b36e04..29f6998 100644
+--- a/README.md
++++ b/README.md
+@@ -49,6 +49,7 @@ pacman -S xcolor
+ 
+ Simply invoke the `xcolor` command to select a color. The selected color will be
+ printed to the standard output.
++You can cancel the color picker by clicking right click.
+ 
+ ``` text
+ xcolor 0.5.0
+diff --git a/src/location.rs b/src/location.rs
+index 34ec212..c8e3fe4 100644
+--- a/src/location.rs
++++ b/src/location.rs
+@@ -11,6 +11,7 @@ use crate::util::EnsureOdd;
+ 
+ // Left mouse button
+ const SELECTION_BUTTON: xproto::Button = 1;
++const RIGHT_BUTTON: xproto::Button = 3;
+ const GRAB_MASK: u16 = (xproto::EVENT_MASK_BUTTON_PRESS | xproto::EVENT_MASK_POINTER_MOTION) as u16;
+ 
+ // Exclusively grabs the pointer so we get all its events
+@@ -194,6 +195,9 @@ pub fn wait_for_location(
+ 
+                             break Some(pixels[0]);
+                         }
++                        RIGHT_BUTTON => {
++                            return Ok(None);
++                        }
+                         _ => {}
+                     }
+                 }

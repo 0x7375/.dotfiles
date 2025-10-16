@@ -17,10 +17,8 @@ let
     firstLetter + rest;
 
   cssContent = # css
-    theme: ''
-      @import url("file://${gtk4.theme.package}/share/themes/${gtk4.theme.name}${
-        if theme != null then "-" + (pascal theme) else ""
-      }/gtk-4.0/gtk.css");
+    theme: version: ''
+      @import url("file://${gtk4.theme.package}/share/themes/${gtk4.theme.name}-${pascal theme}/gtk-${version}.0/gtk.css");
 
       window.csd {
         border-radius: 0;
@@ -98,7 +96,6 @@ lib.mkIf config.me.gui.enable {
       gtk-decoration-layout =
     '';
     gtk4.extraConfig = gtk3.extraConfig;
-    gtk3.extraCss = cssContent null;
   };
 
   dconf.settings = {
@@ -126,15 +123,20 @@ lib.mkIf config.me.gui.enable {
   home.packages = [ pkgs.gtk3 ];
 
   xdg.configFile."gtk-4.0/gtk.css".enable = lib.mkForce false;
+  xdg.configFile."gtk-3.0/gtk.css".enable = lib.mkForce false;
 
-  xdg.configFile."gtk-4.0/dark.css".text = cssContent "dark";
-  xdg.configFile."gtk-4.0/light.css".text = cssContent "light";
+  xdg.configFile."gtk-3.0/dark.css".text = cssContent "dark" "3";
+  xdg.configFile."gtk-3.0/light.css".text = cssContent "light" "3";
+  xdg.configFile."gtk-4.0/dark.css".text = cssContent "dark" "4";
+  xdg.configFile."gtk-4.0/light.css".text = cssContent "light" "4";
 
   systemd.user.tmpfiles.rules =
     let
-      gtk = "/home/${config.me.user}/.config/gtk-4.0";
+      gtk4 = "/home/${config.me.user}/.config/gtk-4.0";
+      gtk3 = "/home/${config.me.user}/.config/gtk-3.0";
     in
     [
-      "L ${gtk}/gtk.css - - - - ${gtk}/dark.css"
+      "L ${gtk4}/gtk.css - - - - ${gtk4}/dark.css"
+      "L ${gtk3}/gtk.css - - - - ${gtk3}/dark.css"
     ];
 }

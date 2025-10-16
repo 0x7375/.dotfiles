@@ -13,12 +13,10 @@
         xorg = prev.xorg.overrideScope (
           xFinal: xPrev: {
             xinit = xPrev.xinit.overrideAttrs (old: {
-              postInstall =
-                (old.postInstall or "")
-                + ''
-                  substituteInPlace $out/bin/startx \
-                    --replace-fail '$HOME/.serverauth.$$' ''\'''${XDG_RUNTIME_DIR:-$HOME/.cache}/xserverauth.$$'
-                '';
+              postInstall = (old.postInstall or "") + ''
+                substituteInPlace $out/bin/startx \
+                  --replace-fail '$HOME/.serverauth.$$' ''\'''${XDG_RUNTIME_DIR:-$HOME/.cache}/xserverauth.$$'
+              '';
             });
           }
         );
@@ -43,6 +41,9 @@
         ''
           source /etc/profile
           source ~/.profile
+
+          xrdb -load ~/.Xresources
+
           export SHLVL=1
           export XDG_SESSION_TYPE=x11
           export XAUTHORITY="''${XDG_RUNTIME_DIR}/Xauthority";

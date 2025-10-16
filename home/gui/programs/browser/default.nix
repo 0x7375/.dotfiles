@@ -127,22 +127,22 @@ in
             # css
             ''
               /* change selected urlbar result font color */
-              .urlbarView-row {
-                &[selected] {
-                  & * {
-                    color: ${myLib.palette.fg0} !important;
-                  }
-                }
-              }
+              /* .urlbarView-row { */
+              /*   &[selected] { */
+              /*     & * { */
+              /*       color: ${myLib.palette.fg0} !important; */
+              /*     } */
+              /*   } */
+              /* } */
 
               /* change selected urlbar result icon bg color */
-              .urlbarView-row {
-                &[selected] {
-                  & .urlbarView-favicon {
-                    background-color: transparent !important;
-                  }
-                }
-              }
+              /* .urlbarView-row { */
+              /*   &[selected] { */
+              /*     & .urlbarView-favicon { */
+              /*       background-color: transparent !important; */
+              /*     } */
+              /*   } */
+              /* } */
 
               /* hide workspace indicator */
               #zen-current-workspace-indicator-container {

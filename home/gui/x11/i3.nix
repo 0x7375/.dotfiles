@@ -215,11 +215,6 @@ lib.mkIf (gui.displayServer == "xorg") {
             notification = false;
           }
           {
-            command = "xrdb -load ~/.config/X11/xresources";
-            always = true;
-            notification = false;
-          }
-          {
             command = "${pkgs.writeShellScript "set-wallpaper" ''
               wallpapers="$HOME/pictures/wallpapers/$(< ~/.local/state/current_theme)"
               if [[ -d $wallpapers ]]; then
@@ -236,6 +231,10 @@ lib.mkIf (gui.displayServer == "xorg") {
           {
             command = "${lib.getExe' pkgs.i3altlayout "i3altlayout"}";
             always = true;
+            notification = false;
+          }
+          {
+            command = "${lib.getExe pkgs.gromit-mpx}";
             notification = false;
           }
           {

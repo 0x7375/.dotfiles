@@ -13,9 +13,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # nix-maid.url = "github:viperML/nix-maid";
-    # wrapper.url = "github:viperLM/wrapper-manager";
-
     wrappers = {
       url = "github:Lassulus/wrappers";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -36,6 +33,12 @@
 
     sops-nix = {
       url = "github:Mic92/sops-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    # needed for sops-nix options in nix-search-tv
+    unf = {
+      url = "git+https://git.atagen.co/atagen/unf";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -61,11 +64,6 @@
 
     lanzaboote = {
       url = "github:nix-community/lanzaboote/v0.4.2";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    unf = {
-      url = "git+https://git.atagen.co/atagen/unf";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };

@@ -18,11 +18,12 @@ in
   nixpkgs.overlays = [
     (
       final: prev:
-      {
+      { }
+      // (lib.optionalAttrs (config.me.hostname != "hikari") {
         ouch = prev.ouch.override {
           enableUnfree = true;
         };
-      }
+      })
       // (lib.optionalAttrs (prev.stdenv.hostPlatform.isAarch64) {
         ctpv = prev.ctpv.overrideAttrs (old: {
           CFLAGS = (old.CFLAGS or "") + " -fsigned-char";

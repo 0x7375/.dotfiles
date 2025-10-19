@@ -13,10 +13,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    hjem = {
-      url = "github:feel-co/hjem";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    # hjem = {
+    #   url = "github:feel-co/hjem";
+    #   inputs.nixpkgs.follows = "nixpkgs";
+    # };
 
     wrappers = {
       url = "github:Lassulus/wrappers";
@@ -87,6 +87,7 @@
       nixosConfigurations = {
         yugen = mkSystem "yugen" x86;
         ryusei = mkSystem "ryusei" x86;
+        tenkuu = mkSystem "tenkuu" x86;
         hikari = mkSystem "hikari" aarch;
         kumo = mkSystem "kumo" x86;
         isoImg = mkSystem "isoImg" x86;

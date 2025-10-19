@@ -64,7 +64,7 @@ map("x", "K", ":m '<-2<CR>gv=gv", { desc = "Move lines up" })
 map("n", "<leader>xm", function() vim.cmd("!chmod +x %") end, { silent = true, desc = "Make file executable" })
 
 -- Alternate file
-map("n", "<S-Tab>", "<C-^>", { desc = "Alternate file" })
+map("n", "<S-Tab>", "<C-^>zz", { desc = "Alternate file" })
 
 -- Indent whole file
 map("n", "<leader>=", "mzgg=G`zzz", { desc = "Indent whole file" })

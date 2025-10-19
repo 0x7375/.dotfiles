@@ -11,10 +11,10 @@ in
   pkgsFor = system: inputs.nixpkgs.legacyPackages.${system};
 
   filesIn =
-    dir:
-    lib.fileset.toList (
-      lib.fileset.fileFilter (file: (lib.hasSuffix ".nix" file.name && !lib.hasPrefix "_" file.name)) dir
-    );
+    let
+      filter = file: (lib.hasSuffix ".nix" file.name && !lib.hasPrefix "_" file.name);
+    in
+    dir: (lib.fileset.fileFilter filter dir) |> lib.fileset.toList;
 
   # fromRoot =
   #   path:

@@ -42,7 +42,7 @@
           source /etc/profile
           source ~/.profile
 
-          xrdb -load ~/.Xresources
+          xrdb -load "$HOME/.config/X11/xresources"
 
           export SHLVL=1
           export XDG_SESSION_TYPE=x11

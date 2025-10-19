@@ -73,11 +73,13 @@ lib.mkIf config.me.secrets.enable {
     lib.mkAfter
       # bash
       ''
-        bindkey '^R' fzf-atuin-history-widget
+        if atuin doctor 2>&1 | grep -q '"sync": null'; then
+          bindkey '^R' fzf-atuin-history-widget
 
-        bindkey '^[[A' atuin-history-up
-        bindkey '^[[B' atuin-history-down
-        bindkey '^P' atuin-history-up
-        bindkey '^N' atuin-history-down
+          bindkey '^[[A' atuin-history-up
+          bindkey '^[[B' atuin-history-down
+          bindkey '^P' atuin-history-up
+          bindkey '^N' atuin-history-down
+        fi
       '';
 }

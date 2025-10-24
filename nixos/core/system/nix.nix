@@ -32,6 +32,7 @@
       nixpkgs.flake = inputs.nixpkgs;
       stable.flake = inputs.nixpkgs-stable;
       n.flake = inputs.nixpkgs;
+      nur.flake = inputs.nur;
     };
   };
 

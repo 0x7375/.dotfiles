@@ -1,4 +1,11 @@
 local map = vim.keymap.set
+local bar = require("util.bar")
+
+map("n", "q", function()
+    local char = vim.fn.getcharstr()
+    vim.cmd("normal! q" .. char)
+    vim.schedule(bar.refresh)
+end)
 
 map({ "n", "x", "v" }, ":", ";")
 map({ "n", "x", "v" }, ";", ":")
@@ -45,16 +52,33 @@ map("n", "<C-b>", "<C-b>zz", { noremap = true })
 map("n", "<C-f>", "<C-f>zz", { noremap = true })
 map("n", "*", "*zz", { noremap = true })
 map("n", "#", "#zz", { noremap = true })
-map("n", "n", "nzz", { noremap = true })
-map("n", "N", "Nzz", { noremap = true })
+
+map('n', 'n', function()
+    vim.cmd('normal! nzz')
+    bar.refresh()
+end)
+
+vim.keymap.set('n', 'N', function()
+    vim.cmd('normal! Nzz')
+    bar.refresh()
+end)
+
 map("n", "G", "Gzz", { noremap = true })
 map("n", "}", "}zz", { noremap = true })
 map("n", "{", "{zz", { noremap = true })
 
 map("n", "<C-o>", "<C-o>zz", { noremap = true })
 map("n", "<C-i>", "<C-i>zz", { noremap = true })
--- Center on first search
-vim.cmd("cnoremap <silent><expr> <enter> index(['/', '?'], getcmdtype()) >= 0 ? '<enter>zz' : '<enter>'")
+
+vim.keymap.set('c', '<CR>', function()
+    local cmdtype = vim.fn.getcmdtype()
+    -- center and refresh winbar on search commands
+    if cmdtype == '/' or cmdtype == '?' then
+        return '<CR>zz<Cmd>lua require("util.bar").refresh()<CR>'
+    else
+        return '<CR>'
+    end
+end, { expr = true })
 
 -- Move lines
 map("x", "J", ":m '>+1<CR>gv=gv", { desc = "Move lines down" })

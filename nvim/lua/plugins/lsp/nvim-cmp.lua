@@ -65,6 +65,8 @@ return {
     },
     init = function()
         vim.opt.pumheight = 8 -- number of completion suggestions
+        vim.opt.pummaxwidth = 60
+        vim.opt.pumborder = "single"
     end,
     opts = function()
         local cmp = require('cmp')

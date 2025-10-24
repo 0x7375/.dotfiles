@@ -77,8 +77,20 @@ pkgs.writeShellApplication {
           fi && send_notification
       }
 
-      function region() { take_screenshot region; }
-      function window() { take_screenshot window; }
-      function monitor() { take_screenshot monitor; }
+      case "$1" in
+          region)
+              take_screenshot "region"
+              ;;
+          window)
+              take_screenshot "window"
+              ;;
+          monitor)
+              take_screenshot "monitor"
+              ;;
+          *)
+              echo "Usage: screenshot {region|window|monitor}"
+              exit 1
+              ;;
+      esac
     '';
 }

@@ -86,7 +86,11 @@ end
 require("lazy").setup({
     { import = 'plugins.nav' },
     { import = 'plugins.lsp' },
+    { import = 'plugins.dap' },
     { import = 'plugins.actions' },
     { import = 'plugins.tools' },
     { import = 'plugins.ui' },
 }, opts)
+
+-- experimental ui that avoid hit-enter prompts g< to open buffer
+require('vim._extui').enable({})

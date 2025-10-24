@@ -19,6 +19,7 @@ let
     foreground="#${palette.red}"
 
     [charged]
+    body="*fully*"
     frame_color="#${palette.green}"
     foreground="#${palette.green}"
   '';
@@ -100,9 +101,6 @@ lib.mkIf config.me.gui.enable {
       };
       urgency_critical = {
         timeout = 0;
-      };
-      charged = {
-        body = "*fully*";
       };
       experimental = {
         per_monitor_dpi = false;

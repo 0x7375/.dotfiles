@@ -8,7 +8,7 @@ vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {
 vim.api.nvim_create_autocmd("BufEnter", {
     callback = function()
         if vim.env.VIMV then
-            vim.api.nvim_buf_set_option(0, 'commentstring', '# %s')
+            vim.api.nvim_set_option_value('commentstring', '# %s', { buf = 0 })
         end
     end
 })
@@ -67,41 +67,25 @@ vim.api.nvim_create_autocmd({ "VimEnter", "DirChanged" }, {
     end
 })
 
--- Clear the command line on cursor move
-vim.api.nvim_create_autocmd("CursorMoved", {
-    callback = function()
-        vim.cmd("echon ''")
-    end,
-})
-
--- Redirect command output to temp buffer -> :Redir lua=require("telescope")
-vim.api.nvim_create_user_command('Redir', function(ctx)
-    local result = vim.api.nvim_exec2(ctx.args, { output = true })
-    local lines = vim.split(result.output or '', '\n', { plain = true })
-    vim.cmd('new')
-    vim.api.nvim_buf_set_lines(0, 0, -1, false, lines)
-    vim.opt_local.modified = false
-end, { nargs = '+', complete = 'command' })
+-- -- Clear the command line on cursor move
+-- vim.api.nvim_create_autocmd("CursorMoved", {
+--     callback = function()
+--         vim.cmd("echon ''")
+--     end,
+-- })
 
 -- update winbar when needed
 vim.api.nvim_create_autocmd({
         "BufEnter",
         "BufWritePost",
-        -- "TextChangedI",
         "TextChanged",
+        "TextChangedI",
         "WinEnter",
-        "InsertLeave",
         "TermEnter",
         "VimEnter",
     },
     {
         callback = function()
-            local winbar_filetype_exclude = {
-                -- "copilot-chat",
-                -- "toggleterm",
-                -- "fzf",
-            }
-
             -- no winbar for floating windows
             local win_config = vim.api.nvim_win_get_config(0)
             if win_config.relative ~= "" then
@@ -109,12 +93,7 @@ vim.api.nvim_create_autocmd({
                 return
             end
 
-            -- if vim.tbl_contains(winbar_filetype_exclude, vim.bo.filetype) then
-            --     vim.wo.winbar = ""
-            --     return
-            -- end
-
-            vim.wo.winbar = require("util.bar").build_bar()
+            require("util.bar").refresh()
         end
     })
 

@@ -78,7 +78,7 @@ lib.mkIf config.me.gui.enable {
       qbittorrent
       scrcpy
       omnissa-horizon-client
-      auto.ungoogled-chromium
+      nur.repos.Ev357.helium
       auto.mullvad-browser
       auto.signal-desktop
       # st
@@ -143,6 +143,7 @@ lib.mkIf config.me.gui.enable {
             redhat.java
             mkhl.direnv
             golang.go
+            llvm-vs-code-extensions.vscode-clangd
           ]
           ++ vscode-utils.extensionsFromVscodeMarketplace [
             # {
@@ -151,6 +152,12 @@ lib.mkIf config.me.gui.enable {
             #   version = "0.3.0";
             #   sha256 = "nZirzVvM160ZTpBLTimL2X35sIGy5j2LQOok7a2Yc7U=";
             # }
+            {
+              name = "debug";
+              publisher = "webfreak";
+              version = "0.27.0";
+              sha256 = "p/k5UcXldXKFKbPbnW603Jsut53n01azeDhWMDSd4nw=";
+            }
           ];
       })
     ]);

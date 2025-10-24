@@ -17,7 +17,7 @@ M.build_bar = function()
     local branch = git_branch()
     branch = ' ' .. branch
 
-    local set_green = "%#GruvboxGreen#"
+    local set_green = "%#DiffAdd#"
     local set_normal = "%#Comment#"
     local file_name = " " .. vim.fn.expand("%:~:.")
 
@@ -39,10 +39,17 @@ M.build_bar = function()
         end
     end
 
+    local recording = ""
+    local reg = vim.fn.reg_recording()
+    if reg ~= "" then
+        recording = " @" .. reg
+    end
+
     return table.concat({
         set_normal,
         file_name,
         modified,
+        recording,
         align_right,
         set_green,
         branch,
@@ -50,6 +57,10 @@ M.build_bar = function()
         search_count,
         position,
     }, "")
+end
+
+M.refresh = function()
+    vim.wo.winbar = M.build_bar()
 end
 
 return M

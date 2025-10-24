@@ -6,7 +6,7 @@ return {
         {
             "<leader>a",
             function()
-                require("harpoon"):list():append()
+                require("harpoon"):list():add()
                 print(vim.fn.fnamemodify(vim.fn.expand('%'), ':t') .. " added to harpoon")
             end,
             desc = "Add file to harpoon"

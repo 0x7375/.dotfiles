@@ -1,4 +1,5 @@
 {
+  inputs,
   lib,
   secrets,
   config,
@@ -9,6 +10,7 @@
 lib.mkMerge [
   {
     programs.neovim = {
+      package = inputs.neovim-nightly-overlay.packages.${pkgs.system}.default;
       enable = true;
       extraPackages = with pkgs; [
         tree-sitter

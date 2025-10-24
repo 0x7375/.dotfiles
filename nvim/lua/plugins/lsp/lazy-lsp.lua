@@ -20,7 +20,8 @@ return {
     cond = is_nixos(),
     dependencies = {
         {
-            "lukas-reineke/lsp-format.nvim",
+            "jfly/lsp-format.nvim",
+            branch = "issue-95",
             keys = {
                 { "<leader>ff", function() vim.lsp.buf.format({ async = true }) end, desc = "Format file" },
                 { "<leader>fd", function() vim.cmd("FormatToggle") end,              desc = "Toggle auto formatting" }
@@ -161,9 +162,15 @@ return {
                         end
                     end,
                     init_options = { documentFormatting = true, documentRangeFormatting = true },
-                    filetypes = { "sh", "nix", "php", "markdown", "typst" },
+                    filetypes = { "sh", "nix", "php", "markdown", "typst", "xml" },
                     settings = {
                         languages = {
+                            xml = {
+                                {
+                                    formatCommand = "xmllint --format -",
+                                    formatStdin = true,
+                                }
+                            },
                             typst = {
                                 {
                                     formatCommand = "typstyle --wrap-text",
@@ -207,6 +214,7 @@ return {
                             "php81Packages.php-codesniffer",
                             "deno",
                             "typstyle",
+                            "libxml2",
                         }, new_config.cmd)
                     end,
                 },

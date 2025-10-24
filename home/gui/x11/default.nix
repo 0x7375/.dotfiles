@@ -25,6 +25,7 @@ lib.mkIf (config.me.gui.displayServer == "xorg") {
 
   home.packages = [ pkgs.grobi ];
   services.grobi.enable = true;
+  systemd.user.services.grobi.Unit.X-RestartTriggers = [ config.xdg.configFile."grobi.conf".source ];
 
   xsession.numlock.enable = true;
   xsession.initExtra = # bash

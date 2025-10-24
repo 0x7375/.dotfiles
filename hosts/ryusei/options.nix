@@ -10,7 +10,7 @@
       displayServer = "xorg";
       bundles = {
         virtualBox.enable = true;
-        gaming.enable = false;
+        gaming.enable = true;
       };
     };
     devPkgs.enable = true;

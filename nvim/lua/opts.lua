@@ -78,7 +78,6 @@ vim.opt.cursorline = true
 -- vim.opt.fillchars:append("stl: ,stlnc: ")
 
 vim.opt.winbar = require("util.bar").build_bar()
--- vim.opt.statusline = require("util.bar").build_bar()
 
 vim.opt.laststatus = 0
 vim.opt.cmdheight = 0

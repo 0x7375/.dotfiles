@@ -310,4 +310,35 @@ lib.mkIf (gui.displayServer == "xorg") {
         };
       };
   };
+
+  home.packages = [ pkgs.libinput-gestures ];
+
+  xdg.configFile."libinput-gestures.conf" = {
+    text = ''
+      gesture swipe left 3 i3-msg workspace next
+      gesture swipe right 3 i3-msg workspace prev
+      gesture swipe down 3 i3-msg fullscreen
+      gesture swipe up 3 i3-msg fullscreen
+    '';
+  };
+
+  # user needs to be in the input group
+  systemd.user.services.libinput-gestures = {
+    Unit = {
+      After = [ "graphical-session-pre.target" ];
+      PartOf = [ "graphical-session.target" ];
+    };
+
+    Service = {
+      Environment = "PATH=${config.home.profileDirectory}/bin";
+      ExecStart = "${pkgs.libinput-gestures}/bin/libinput-gestures";
+      X-Restart-Triggers = [
+        "${config.xdg.configFile."libinput-gestures.conf".source}"
+      ];
+    };
+
+    Install = {
+      WantedBy = [ "graphical-session.target" ];
+    };
+  };
 }

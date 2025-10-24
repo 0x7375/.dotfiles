@@ -118,5 +118,6 @@
         }) (myLib.filesIn ../scripts)
       );
     })
-  ];
+  ]
+  ++ [ inputs.nur.overlays.default ];
 }

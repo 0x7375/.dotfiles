@@ -7,7 +7,6 @@ return {
     dependencies = {
         "nvim-treesitter/nvim-treesitter-textobjects",
         'nvim-treesitter/nvim-treesitter-refactor',
-        'JoosepAlviste/nvim-ts-context-commentstring',
         {
             "nvim-treesitter/playground",
             cmd = { "TSHighlightCapturesUnderCursor" },

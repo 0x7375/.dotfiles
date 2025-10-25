@@ -80,10 +80,6 @@ vim.keymap.set('c', '<CR>', function()
     end
 end, { expr = true })
 
--- Move lines
-map("x", "J", ":m '>+1<CR>gv=gv", { desc = "Move lines down" })
-map("x", "K", ":m '<-2<CR>gv=gv", { desc = "Move lines up" })
-
 -- Makes the file executable
 map("n", "<leader>xm", function() vim.cmd("!chmod +x %") end, { silent = true, desc = "Make file executable" })
 

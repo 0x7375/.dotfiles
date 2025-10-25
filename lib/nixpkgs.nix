@@ -102,6 +102,7 @@
       };
 
       apache-hop = prev.callPackage ../derivations/apache-hop.nix { };
+      jrl = prev.callPackage ../derivations/jrl.nix { };
 
       # namespace for scripts: e.g. "scripts.tmux-sessionizer"
       scripts = builtins.listToAttrs (

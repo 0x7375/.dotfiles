@@ -27,5 +27,6 @@
     nix-melt
     scripts.flake
     termdown
+    jrl
   ];
 }

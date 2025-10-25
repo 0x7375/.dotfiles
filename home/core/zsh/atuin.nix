@@ -22,6 +22,9 @@ lib.mkIf config.me.secrets.enable {
       sync_frequency = "5m";
       history_filter = [
         "^ .*"
+        "lf"
+        "nst"
+        "^v$"
       ];
     };
   };

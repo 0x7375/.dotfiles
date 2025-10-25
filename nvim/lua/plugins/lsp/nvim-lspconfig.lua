@@ -9,11 +9,6 @@ return {
     init = function()
         require('lspconfig.ui.windows').default_options.border = 'single'
 
-        -- local lspconfig = require("lspconfig")
-        -- lspconfig.emmet_language_server.setup({
-        --     filetypes = { "php", "css", "eruby", "html", "javascript", "javascriptreact", "less", "sass", "scss", "pug", "typescriptreact" },
-        -- })
-
         -- highlight line number with diagnostic color
         local base_config = {
             signs = {

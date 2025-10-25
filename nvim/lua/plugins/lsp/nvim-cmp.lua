@@ -3,7 +3,6 @@ return {
     event = { "InsertEnter", "CmdlineEnter" },
     dependencies = {
         'hrsh7th/cmp-buffer',
-        -- 'hrsh7th/cmp-path',
         'https://codeberg.org/FelipeLema/cmp-async-path.git',
         'hrsh7th/cmp-cmdline',
         'hrsh7th/cmp-nvim-lsp',
@@ -64,7 +63,7 @@ return {
         { mode = { "i" }, "<C-n>", "<nop>" },
     },
     init = function()
-        vim.opt.pumheight = 8 -- number of completion suggestions
+        vim.opt.pumheight = 8
         vim.opt.pummaxwidth = 60
         vim.opt.pumborder = "single"
     end,
@@ -80,17 +79,9 @@ return {
             default = {
                 snippet = {
                     expand = function(args)
-                        -- vim.fn["vsnip#anonymous"](args.body) -- For `vsnip` users.
-                        require('luasnip').lsp_expand(args.body) -- For `luasnip` users.
-                        -- require('snippy').expand_snippet(args.body) -- For `snippy` users.
-                        -- vim.fn["UltiSnips#Anon"](args.body) -- For `ultisnips` users.
+                        require('luasnip').lsp_expand(args.body)
                     end,
                 },
-                -- experimental = {
-                --     ghost_text = {
-                --         hl_group = "CmpGhostText",
-                --     },
-                -- },
                 formatting = {
                     fields = { "abbr", "kind" },
                     format = function(entry, vim_item)

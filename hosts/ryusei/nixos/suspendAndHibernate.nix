@@ -12,29 +12,33 @@ in
     wantedBy = [ "suspend.target" ];
     before = [ "systemd-suspend.service" ];
     environment = hibernateEnvironment;
-    script = ''
-      curtime=$(date +%s)
-      echo "$curtime $1" >> /tmp/autohibernate.log
-      echo "$curtime" > $HIBERNATE_LOCK
-      ${lib.getExe' pkgs.utillinux "rtcwake"} -m no -s $HIBERNATE_SECONDS
-    '';
-    serviceConfig.Type = "simple";
+    serviceConfig = {
+      Type = "simple";
+      ExecStart = ''
+        curtime=$(date +%s)
+        echo "$curtime $1" >> /tmp/autohibernate.log
+        echo "$curtime" > $HIBERNATE_LOCK
+        ${lib.getExe' pkgs.utillinux "rtcwake"} -m no -s $HIBERNATE_SECONDS
+      '';
+    };
   };
   systemd.services."hibernate-after-recovery" = {
     description = "Hibernates after a suspend recovery due to timeout";
     wantedBy = [ "suspend.target" ];
     after = [ "systemd-suspend.service" ];
     environment = hibernateEnvironment;
-    script = ''
-      curtime=$(date +%s)
-      sustime=$(cat $HIBERNATE_LOCK)
-      rm $HIBERNATE_LOCK
-      if [ $(($curtime - $sustime)) -ge $HIBERNATE_SECONDS ] ; then
-        systemctl hibernate
-      else
-        ${lib.getExe' pkgs.utillinux "rtcwake"} -m no -s 1
-      fi
-    '';
-    serviceConfig.Type = "simple";
+    serviceConfig = {
+      Type = "simple";
+      ExecStart = ''
+        curtime=$(date +%s)
+        sustime=$(cat $HIBERNATE_LOCK)
+        rm $HIBERNATE_LOCK
+        if [ $(($curtime - $sustime)) -ge $HIBERNATE_SECONDS ] ; then
+          systemctl hibernate
+        else
+          ${lib.getExe' pkgs.utillinux "rtcwake"} -m no -s 1
+        fi
+      '';
+    };
   };
 }

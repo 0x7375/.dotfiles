@@ -1,0 +1,55 @@
+{
+  "a6335949-4465-4b71-926c-4a52d34bc9c0": {
+    "id": "a6335949-4465-4b71-926c-4a52d34bc9c0",
+    "name": "Better Find Bar",
+    "description": "Improves the find bar, making it floating with theme match and customization.",
+    "homepage": "https://github.com/RobotoSkunk/zen-better-findbar",
+    "style": "https://raw.githubusercontent.com/zen-browser/theme-store/main/themes/a6335949-4465-4b71-926c-4a52d34bc9c0/chrome.css",
+    "readme": "https://raw.githubusercontent.com/zen-browser/theme-store/main/themes/a6335949-4465-4b71-926c-4a52d34bc9c0/readme.md",
+    "image": "https://raw.githubusercontent.com/zen-browser/theme-store/main/themes/a6335949-4465-4b71-926c-4a52d34bc9c0/image.png",
+    "author": "RobotoSkunk",
+    "preferences": "https://raw.githubusercontent.com/zen-browser/theme-store/main/themes/a6335949-4465-4b71-926c-4a52d34bc9c0/preferences.json",
+    "version": "1.3.5",
+    "tags": [
+      "find",
+      "bar",
+      "search",
+      "searchbar",
+      "find-bar",
+      "search-bar"
+    ],
+    "createdAt": "2024-11-24",
+    "updatedAt": "2025-09-18",
+    "enabled": true
+  },
+  "c6813222-6571-4ba6-8faf-58f3343324f6": {
+    "id": "c6813222-6571-4ba6-8faf-58f3343324f6",
+    "name": "Disable Rounded Corners",
+    "description": "Disable Rounded Corners from Web View.",
+    "homepage": "https://github.com/gunir/desktop/tree/themes/themes",
+    "style": "https://raw.githubusercontent.com/zen-browser/theme-store/main/themes/c6813222-6571-4ba6-8faf-58f3343324f6/chrome.css",
+    "readme": "https://raw.githubusercontent.com/zen-browser/theme-store/main/themes/c6813222-6571-4ba6-8faf-58f3343324f6/readme.md",
+    "image": "https://raw.githubusercontent.com/zen-browser/theme-store/main/themes/c6813222-6571-4ba6-8faf-58f3343324f6/image.png",
+    "author": "gunir",
+    "version": "3.0.0",
+    "tags": [],
+    "createdAt": "2024-08-19",
+    "updatedAt": "2025-01-26",
+    "enabled": true
+  },
+  "6f11c932-b992-433e-8c80-56a613cc511e": {
+    "id": "6f11c932-b992-433e-8c80-56a613cc511e",
+    "name": "Left close button",
+    "description": "Move the tab close button to the left side",
+    "homepage": "",
+    "style": "https://raw.githubusercontent.com/zen-browser/theme-store/main/themes/6f11c932-b992-433e-8c80-56a613cc511e/chrome.css",
+    "readme": "https://raw.githubusercontent.com/zen-browser/theme-store/main/themes/6f11c932-b992-433e-8c80-56a613cc511e/readme.md",
+    "image": "https://raw.githubusercontent.com/zen-browser/theme-store/main/themes/6f11c932-b992-433e-8c80-56a613cc511e/image.png",
+    "author": "markatom",
+    "version": "1.0.0",
+    "tags": [],
+    "createdAt": "2024-11-27",
+    "updatedAt": "2025-01-26",
+    "enabled": true
+  }
+}

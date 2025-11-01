@@ -8,7 +8,7 @@
     "d /home/${config.me.user}/.local/share/android 0755 ${config.me.user} users -"
   ];
 
-  environment.variables =
+  vars =
     let
       term = config.me.gui.terminal;
     in
@@ -46,7 +46,6 @@
       MYSQL_HISTFILE = "${XDG_DATA_HOME}/mysql_history";
       PSQL_HISTORY = "${XDG_DATA_HOME}/psql_history";
       _Z_DATA = "${XDG_DATA_HOME}/z";
-      GTK2_RC_FILES = "${XDG_CONFIG_HOME}/gtk-2.0/gtkrc";
       ANSIBLE_HOME = "${XDG_DATA_HOME}/ansible";
       CARGO_HOME = "${XDG_DATA_HOME}/cargo";
       CUDA_CACHE_PATH = "${XDG_CACHE_HOME}/nv";

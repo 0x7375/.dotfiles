@@ -13,7 +13,7 @@ lib.mkIf config.me.minecraft.enable {
   #   extraGroups = [ "minecraft" ];
   # };
 
-  environment.systemPackages = with pkgs; [
+  packages = with pkgs; [
     git
     git-lfs
   ];

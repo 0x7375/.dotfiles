@@ -16,13 +16,6 @@ in
     in
     dir: (lib.fileset.fileFilter filter dir) |> lib.fileset.toList;
 
-  # fromRoot =
-  #   path:
-  #   builtins.path {
-  #     path = "${inputs.self}/${path}";
-  #     name = baseNameOf path;
-  #   };
-
   mkSystem =
     hostname: system:
     inputs.nixpkgs.lib.nixosSystem {
@@ -35,22 +28,6 @@ in
       };
       modules = [
         ../hosts/${hostname}/configuration.nix
-        # inputs.nix-maid.nixosModules.default
-        inputs.home-manager.nixosModules.home-manager
-        (
-          { config, ... }:
-          {
-            # maid.sharedModules = (myLib.filesIn ../maid);
-            # users.users.${config.me.user}.maid = {
-            #   imports = [ ../hosts/${hostname}/maid.nix ];
-            #   _module.args.osConfig = config;
-            # };
-            home-manager.users.${config.me.user} = import ../hosts/${hostname}/home.nix;
-            home-manager.extraSpecialArgs = specialArgs // {
-              inherit system;
-            };
-          }
-        )
       ];
     };
 

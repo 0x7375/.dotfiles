@@ -15,4 +15,17 @@ lib.mkIf config.me.gui.enable {
   };
 
   users.users.${config.me.user}.extraGroups = [ "libvirtd" ];
+
+  programs.dconf.profiles = {
+    user.databases = [
+      {
+        settings = {
+          "org/virt-manager/virt-manager/connections" = {
+            autoconnect = [ "qemu:///system" ];
+            uris = [ "qemu:///system" ];
+          };
+        };
+      }
+    ];
+  };
 }

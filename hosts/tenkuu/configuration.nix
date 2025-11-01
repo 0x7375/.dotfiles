@@ -29,7 +29,7 @@
 
   services.logind.settings.Login.HandleLidSwitch = "ignore";
 
-  environment.systemPackages = [
+  packages = [
     pkgs.ncdu
     pkgs.xsel
   ];

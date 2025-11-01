@@ -55,6 +55,12 @@ in
       description = "Public key used for commit signing";
     };
 
+    barHeight = lib.mkOption {
+      type = lib.types.int;
+      default = 35;
+      description = "Top bar height";
+    };
+
     cursorSize = lib.mkOption {
       type = lib.types.int;
       default = 24;

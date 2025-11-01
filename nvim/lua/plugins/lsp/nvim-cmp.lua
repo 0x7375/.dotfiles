@@ -62,11 +62,6 @@ return {
         { mode = { "i" }, "<C-p>", "<nop>" },
         { mode = { "i" }, "<C-n>", "<nop>" },
     },
-    init = function()
-        vim.opt.pumheight = 8
-        vim.opt.pummaxwidth = 60
-        vim.opt.pumborder = "single"
-    end,
     opts = function()
         local cmp = require('cmp')
         local completion_opts = {

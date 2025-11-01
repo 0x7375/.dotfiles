@@ -31,7 +31,6 @@ pkgs.writeShellApplication {
 
     dconf write /org/gnome/desktop/interface/color-scheme "'prefer-''${theme}'"
 
-    systemctl restart --user waybar
     dunstctl reload
     i3-msg restart
     pkill nautilus

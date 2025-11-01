@@ -30,7 +30,7 @@
       ];
   };
 
-  environment.systemPackages = [
+  packages = [
     pkgs.ncdu
     pkgs.xsel
   ];

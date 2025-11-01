@@ -6,6 +6,9 @@
 }:
 
 lib.mkIf (config.me.gui.displayServer == "xorg") {
+  hj.xdg.config.files."zsh/.zshrc".text =
+    lib.mkBefore ''[[ $(tty) == "/dev/tty1" ]] && exec startx &> /dev/null'';
+
   services = {
     picom = {
       enable = true;
@@ -35,6 +38,15 @@ lib.mkIf (config.me.gui.displayServer == "xorg") {
         ];
       };
     };
-
+  };
+  systemd.user.services.numlock = {
+    description = "Numlock";
+    after = [ "graphical-session.target" ];
+    wantedBy = [ "default.target" ];
+    serviceConfig = {
+      ExecStart = "${pkgs.numlockx}/bin/numlockx on";
+      StandardInput = "tty";
+      RemainAfterExit = "yes";
+    };
   };
 }

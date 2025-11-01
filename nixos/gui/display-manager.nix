@@ -1,5 +1,6 @@
 {
   lib,
+  pkgs,
   config,
   ...
 }:
@@ -40,7 +41,6 @@
         # bash
         ''
           source /etc/profile
-          source ~/.profile
 
           xrdb -load "$HOME/.config/X11/xresources"
 

@@ -10,7 +10,7 @@ lib.mkIf config.me.gui.enable {
   services.gnome.gnome-keyring.enable = true;
   programs.seahorse.enable = true;
 
-  environment.systemPackages = with pkgs; [
+  packages = with pkgs; [
     polkit_gnome
     libsecret
     libgnome-keyring

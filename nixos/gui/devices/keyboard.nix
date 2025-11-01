@@ -6,7 +6,7 @@
 }:
 
 lib.mkIf config.me.gui.enable {
-  environment.systemPackages = with pkgs; [
+  packages = with pkgs; [
     via
     vial
   ];

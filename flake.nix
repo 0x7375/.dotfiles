@@ -1,5 +1,5 @@
 {
-  description = "NixOS and home-manager configuration";
+  description = "NixOS";
 
   inputs = {
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
@@ -8,23 +8,18 @@
     nixpkgs.follows = "nixpkgs-unstable";
     # nixpkgs-patcher.url = "github:gepbird/nixpkgs-patcher";
 
-    home-manager = {
-      url = "github:nix-community/home-manager";
+    hjem = {
+      url = "github:feel-co/hjem";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
-    # hjem = {
-    #   url = "github:feel-co/hjem";
-    #   inputs.nixpkgs.follows = "nixpkgs";
-    # };
 
     wrappers = {
       url = "github:Lassulus/wrappers";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    flake-parts.url = "github:hercules-ci/flake-parts";
-    import-tree.url = "github:vic/import-tree";
+    # flake-parts.url = "github:hercules-ci/flake-parts";
+    # import-tree.url = "github:vic/import-tree";
 
     nur = {
       url = "github:nix-community/NUR";
@@ -36,7 +31,7 @@
     zen-browser = {
       url = "github:0xc000022070/zen-browser-flake";
       inputs.nixpkgs.follows = "nixpkgs";
-      inputs.home-manager.follows = "home-manager";
+      inputs.home-manager.follows = "";
     };
 
     neovim-nightly-overlay = {
@@ -51,12 +46,6 @@
 
     sops-nix = {
       url = "github:Mic92/sops-nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    # needed for sops-nix options in nix-search-tv
-    unf = {
-      url = "git+https://git.atagen.co/atagen/unf";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 

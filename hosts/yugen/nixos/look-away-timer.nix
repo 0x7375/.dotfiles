@@ -14,17 +14,15 @@ lib.mkIf (config.me.gui.enable && true) {
     };
   };
 
-  systemd.services.look-away = {
-    script = ''
-      ${lib.getExe' pkgs.systemd "systemctl"} start look-away-notify
-    '';
-    serviceConfig = {
-      Type = "oneshot";
-    };
+  systemd.services.look-away.serviceConfig = {
+    Type = "oneshot";
+    ExecStart = "${lib.getExe' pkgs.systemd "systemctl"} start look-away-notify";
   };
 
-  systemd.services.look-away-notify = {
-    script = "${pkgs.writeShellScript "look-away-notify" ''
+  systemd.services.look-away-notify.serviceConfig = {
+    Type = "oneshot";
+    User = config.me.user;
+    ExecStart = "${pkgs.writeShellScript "look-away-notify" ''
       ADDRESS=/run/user/${toString config.me.uid}/bus
 
       export DISPLAY=:0
@@ -33,9 +31,5 @@ lib.mkIf (config.me.gui.enable && true) {
       theme=$(< "$HOME/.local/state/current_theme")
       ${lib.getExe' pkgs.libnotify "notify-send"} "Look away" "Look away for 20 seconds." -i "eye-$theme" -t 20000
     ''}";
-    serviceConfig = {
-      Type = "oneshot";
-      User = config.me.user;
-    };
   };
 }

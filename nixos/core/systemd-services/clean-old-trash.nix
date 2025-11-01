@@ -9,13 +9,9 @@
     };
   };
 
-  systemd.services.clean-old-trash = {
-    script = ''
-      ${lib.getExe' pkgs.trash-cli "trash-empty"} 15
-    '';
-    serviceConfig = {
-      Type = "oneshot";
-      User = "root";
-    };
+  systemd.services.clean-old-trash.serviceConfig = {
+    Type = "oneshot";
+    User = "root";
+    ExecStart = "${lib.getExe' pkgs.trash-cli " trash-empty "} 15";
   };
 }

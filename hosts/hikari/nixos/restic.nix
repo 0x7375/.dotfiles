@@ -8,12 +8,12 @@
 }:
 
 lib.mkIf config.me.secrets.enable {
-  environment.systemPackages = with pkgs; [
+  packages = with pkgs; [
     rclone
     restic
   ];
 
-  environment.variables.RESTIC_PASSWORD_FILE = config.sops.secrets."hikari/restic_pw".path;
+  vars.RESTIC_PASSWORD_FILE = config.sops.secrets."hikari/restic_pw".path;
 
   sops.secrets."hikari/restic_pw" = { };
 

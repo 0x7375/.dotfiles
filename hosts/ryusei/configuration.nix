@@ -27,6 +27,8 @@
       ];
   };
 
+  vars.WINIT_X11_SCALE_FACTOR = "1.11";
+
   hardware.brillo.enable = true;
   services.udev.extraRules = # bash
     ''
@@ -57,10 +59,11 @@
 
   programs.i3lock.enable = true;
 
-  environment.systemPackages = with pkgs; [
+  packages = with pkgs; [
     acpi
     scripts.idle-check
     scripts.lock
+    scripts.powermenu
   ];
 
   services.logind.settings.Login.HandleLidSwitch = "ignore";

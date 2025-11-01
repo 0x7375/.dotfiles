@@ -15,33 +15,24 @@
   };
 
   systemd.services.battery-timer = {
-    script = ''
-      ${lib.getExe' pkgs.systemd "systemctl"} start battery-notify
-      ${lib.getExe' pkgs.systemd "systemctl"} start battery-check
-    '';
     serviceConfig = {
       Type = "oneshot";
+      ExecStart = ''
+        ${lib.getExe' pkgs.systemd "systemctl"} start battery-notify
+        ${lib.getExe' pkgs.systemd "systemctl"} start battery-check
+      '';
     };
     wantedBy = [ "multi-user.target" ];
   };
 
-  systemd.services.battery-notify = {
-    script = ''
-      set +e
-      ${lib.getExe pkgs.scripts.battery-notify}
-    '';
-    serviceConfig = {
-      Type = "oneshot";
-      User = config.me.user;
-    };
+  systemd.services.battery-notify.serviceConfig = {
+    Type = "oneshot";
+    User = config.me.user;
+    ExecStart = lib.getExe pkgs.scripts.battery-notify;
   };
 
-  systemd.services."battery-check" = {
-    script = ''
-      ${lib.getExe pkgs.scripts.battery-check}
-    '';
-    serviceConfig = {
-      Type = "oneshot";
-    };
+  systemd.services."battery-check".serviceConfig = {
+    Type = "oneshot";
+    ExecStart = lib.getExe pkgs.scripts.battery-check;
   };
 }

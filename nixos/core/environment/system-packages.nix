@@ -1,7 +1,7 @@
 { pkgs, ... }:
 
 {
-  environment.systemPackages = with pkgs; [
+  packages = with pkgs; [
     scripts.nd
     scripts.dump-dotfiles
     nix-output-monitor

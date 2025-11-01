@@ -12,7 +12,7 @@
   ];
 
   config = lib.mkIf config.me.btrfs.enable {
-    environment.systemPackages = [ pkgs.btdu ];
+    packages = [ pkgs.btdu ];
 
     environment.shellAliases.btdu = "sudo mkdir /mnt/crypted; sudo mount -o subvol=/ /dev/mapper/crypted /mnt/crypted && sudo ${lib.getExe pkgs.btdu} /mnt/crypted && sudo umount -l /mnt/crypted";
 

@@ -13,7 +13,7 @@
   ];
 
   config = lib.mkIf config.me.secrets.enable {
-    environment.systemPackages = [ pkgs.sops ];
+    packages = [ pkgs.sops ];
 
     sops.secrets.server_vpn_endpoint = {
       owner = config.me.user;
@@ -28,5 +28,14 @@
     sops.gnupg.sshKeyPaths = [ ];
 
     sops.secrets.cachix = { };
+
+    system.activationScripts.generateSopsKey.text = # bash
+      ''
+        [[ ! -e /home/${config.me.user}/.config/sops/age/keys.txt ]] && {
+          mkdir -p /home/${config.me.user}/.config/sops/age
+          ${lib.getExe pkgs.ssh-to-age} -private-key -i ${builtins.head config.sops.age.sshKeyPaths} \
+            -o /home/${config.me.user}/.config/sops/age/keys.txt
+        }
+      '';
   };
 }

@@ -13,11 +13,12 @@
   imports = [
     ./options.nix
     inputs.nixos-wsl.nixosModules.wsl
-  ] ++ (myLib.filesIn ../../nixos);
+  ]
+  ++ (myLib.filesIn ../../nixos);
 
   networking.hostName = config.me.hostname;
 
-  environment.systemPackages = with pkgs; [
+  packages = with pkgs; [
     xsel
   ];
 
@@ -25,6 +26,14 @@
   wsl.defaultUser = config.me.user;
   wsl.wslConf.network.hostname = "kumo";
   wsl.interop.register = true;
+
+  hj.xdg.config.files."lf/lfrc".text = ''
+    map gh cd /mnt/c/Users/${config.me.user}
+    map gm cd /mnt/c/Users/${config.me.user}/Documents
+    map gw cd /mnt/c/Users/${config.me.user}/Downloads
+    map gA cd /mnt/c/Users/${config.me.user}/AppData
+    map gC cd /mnt/c/Users/${config.me.user}/.local/share/chezmoi
+  '';
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
 

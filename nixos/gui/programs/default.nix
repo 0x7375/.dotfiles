@@ -18,8 +18,6 @@ lib.mkIf config.me.gui.enable {
       clean.extraArgs = "--keep 5 --keep-since 7d";
     };
 
-    wireshark.enable = true;
-
     kdeconnect.enable = true;
 
     localsend = {

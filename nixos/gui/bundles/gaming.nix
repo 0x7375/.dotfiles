@@ -13,7 +13,7 @@ lib.mkIf config.me.gui.bundles.gaming.enable {
 
   powerManagement.cpuFreqGovernor = "performance";
 
-  environment.systemPackages = with pkgs; [
+  packages = with pkgs; [
     protontricks
     # winetricks
     # wine
@@ -25,7 +25,5 @@ lib.mkIf config.me.gui.bundles.gaming.enable {
     lutris
   ];
 
-  environment.sessionVariables = {
-    STEAM_EXTRA_COMPAT_TOOLS_PATHS = "/home/${config.me.user}/.steam/root/compatibilitytools.d";
-  };
+  vars.STEAM_EXTRA_COMPAT_TOOLS_PATHS = "/home/${config.me.user}/.steam/root/compatibilitytools.d";
 }

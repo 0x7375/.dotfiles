@@ -87,7 +87,6 @@ pkgs.writeShellApplication {
 
         [[ $action != "boot" ]] && {
           commands+=("$result/bin/switch-to-configuration test")
-          # commands+=("activate") # for nix-maid
         }
 
         [[ $action != "test" ]] && {

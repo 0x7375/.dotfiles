@@ -91,11 +91,12 @@ return {
                                     nixos = {
                                         expr = string.format('%s.nixosConfigurations.%s.options', flake, host),
                                     },
-                                    home_manager = {
-                                        expr = string.format(
-                                            '%s.nixosConfigurations.%s.options.home-manager.users.type.getSubOptions []',
-                                            flake, host),
-                                    },
+                                    -- home_manager = {
+                                    --     expr = string.format(
+                                    --         '%s.nixosConfigurations.%s.options.home-manager.users.type.getSubOptions []',
+                                    --         flake, host),
+                                    -- },
+                                    --
                                     -- // For flake-parts options.
                                     -- // Firstly read the docs here to enable "debugging", exposing declarations for nixd.
                                     -- // https://flake.parts/debug

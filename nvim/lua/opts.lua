@@ -5,6 +5,11 @@ vim.opt.indentkeys:remove("0#")
 
 vim.opt.modeline = false
 
+vim.opt.pumheight = 8
+vim.opt.pummaxwidth = 60
+vim.opt.pumborder = "single"
+vim.opt.completeopt = { "menu", "menuone", "popup", "noselect" }
+
 -- hide search hit bottom
 vim.opt.shortmess:append("Is")
 

@@ -1,7 +1,7 @@
 { pkgs, lib, ... }:
 
 {
-  environment.systemPackages = [ pkgs.sbctl ];
+  packages = [ pkgs.sbctl ];
 
   boot.loader.systemd-boot.enable = lib.mkForce false;
 

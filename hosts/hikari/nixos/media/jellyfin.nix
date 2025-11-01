@@ -8,7 +8,7 @@
     openFirewall = true;
   };
 
-  environment.systemPackages = with pkgs; [
+  packages = with pkgs; [
     auto.jellyfin-web
     auto.jellyfin-ffmpeg
   ];

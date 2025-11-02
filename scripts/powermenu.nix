@@ -28,7 +28,13 @@ pkgs.writeShellApplication {
       chosen="$(printf "%s\n" "''${options[@]}" | bemenu -p 'POWER')"
 
       case $chosen in
-        "kill") ps --no-headers -u "$USER" -o pid,comm,%mem,%cpu --sort=-%mem,-%cpu | awk '{$1=$1}1' | bemenu -i -p KILL | awk '{print $1}' | xargs -r kill ;;
+        "kill") ps --no-headers -u "$USER" -o comm,%mem,%cpu --sort=-%mem,-%cpu |\
+          awk '{$1=$1}1' |\
+          awk '!seen[$1]++' | \
+          bemenu -i -p KILL |\
+          awk '{print $1}' |\
+          xargs -r pkill
+        ;;
         "lock") lock ;;
         "logout") loginctl terminate-user ${toString config.me.uid} ;;
         "suspend") systemctl suspend && lock ;;

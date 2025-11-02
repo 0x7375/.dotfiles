@@ -38,12 +38,16 @@
       config.hj.xdg.config.files."grobi.conf".source
     ];
 
+    path = [
+      pkgs.xorg.xrandr
+      pkgs.bash
+    ];
+
     serviceConfig = {
       Type = "simple";
       ExecStart = "${lib.getExe pkgs.grobi} watch -v";
       Restart = "always";
       RestartSec = "2s";
-      Environment = [ "PATH=${pkgs.xorg.xrandr}/bin:${pkgs.bash}/bin" ];
     };
 
     wantedBy = [ "graphical-session.target" ];

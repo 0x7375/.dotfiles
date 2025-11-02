@@ -19,7 +19,7 @@ lib.mkIf (config.me.gui.displayServer == "xorg") {
     workspace "10" output "HDMI-0"
   '';
 
-  hj.xdg.config.files."grobi.conf".value.rules =
+  hj.xdg.config.files."grobi.conf".value.rules = [
     # rules are evaluted in order
     {
       name = "Left and right";

@@ -86,13 +86,6 @@ vim.api.nvim_create_autocmd({
     },
     {
         callback = function()
-            -- no winbar for floating windows
-            local win_config = vim.api.nvim_win_get_config(0)
-            if win_config.relative ~= "" then
-                vim.wo.winbar = ""
-                return
-            end
-
             require("util.bar").refresh()
         end
     })

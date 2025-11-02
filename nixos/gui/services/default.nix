@@ -13,20 +13,6 @@ lib.mkIf config.me.gui.enable {
     at-spi2-core
   ];
 
-  # make physical playback buttons work
-  systemd.user.services.mpris-proxy = {
-    description = "Proxy forwarding Bluetooth MIDI controls via MPRIS2 to control media players";
-    bindsTo = [ "bluetooth.target" ];
-    after = [ "bluetooth.target" ];
-
-    wantedBy = [ "bluetooth.target" ];
-
-    serviceConfig = {
-      Type = "simple";
-      ExecStart = lib.getExe' pkgs.bluez "mpris-proxy";
-    };
-  };
-
   systemd.user.services.playerctld = {
     description = "MPRIS media player daemon";
 
@@ -46,9 +32,7 @@ lib.mkIf config.me.gui.enable {
 
     wantedBy = [ "graphical-session.target" ];
 
-    serviceConfig = {
-      ExecStart = "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1";
-    };
+    serviceConfig.ExecStart = "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1";
   };
 
   hj.xdg.config.files = lib.mapAttrs' (

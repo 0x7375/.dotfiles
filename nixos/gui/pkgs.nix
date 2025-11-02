@@ -118,6 +118,7 @@ lib.mkIf config.me.gui.enable {
       clang-tools
       gcc
       bear
+      gdb
 
       texliveFull
       typst

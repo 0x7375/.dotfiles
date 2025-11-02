@@ -173,10 +173,12 @@ fi      00      # FILE
 *.xspf  00;36
 
 # compilation files
-*.aux   00;90
-*.log   00;90
-*.out   00;90
-*.toc   00;90
-*.class 00;90
-*.o     00;90
-*.pyc   00;90
+*.aux   00;31
+*.log   00;31
+*.out   00;31
+*.toc   00;31
+*.class 00;31
+*.o     00;31
+*.pyc   00;31
+*.bak   00;31
+*.old   00;31

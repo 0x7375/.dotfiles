@@ -59,8 +59,29 @@ M.build_bar = function()
     }, "")
 end
 
+local filetype_exclude = {
+    "fugitive",
+    "dap-view",
+    "dap-repl",
+}
+
+local function validate_buffer()
+    -- no winbar for floating windows or excluded filetypes
+    local win_config = vim.api.nvim_win_get_config(0)
+    if vim.tbl_contains(filetype_exclude, vim.bo.filetype) or win_config.relative ~= "" then
+        return false
+    end
+    return true
+end
+
 M.refresh = function()
+    if not validate_buffer() then return end
     vim.wo.winbar = M.build_bar()
+end
+
+M.init = function()
+    if not validate_buffer() then return end
+    vim.opt.winbar = M.build_bar()
 end
 
 return M

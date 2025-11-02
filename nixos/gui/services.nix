@@ -12,10 +12,10 @@ lib.mkIf config.me.gui.enable {
       let
         mount = "/run/media/ayko";
       in
-      lib.mkForce ''
-        theme=$(< "$HOME"/.local/state/current_theme)
-        ${lib.getExe' pkgs.udevil "devmon"} --exec-on-remove "notify-send 'Device %%f unmounted from ${mount}' -i disk-$theme -r 9998" --exec-on-drive "notify-send 'Device %%f mounted at ${mount}' -i disk-$theme -r 9999"
-      '';
+      lib.mkForce "${pkgs.writeShellScript "devmon" ''
+        theme=$(< "$HOME"/.local/state/current_theme); \
+        ${lib.getExe' pkgs.udevil "devmon"} --exec-on-remove "notify-send 'Device %f unmounted from ${mount}' -i disk-$theme -r 9998" --exec-on-drive "notify-send 'Device %f mounted at ${mount}' -i disk-$theme -r 9999"
+      ''}";
   };
 
   services = {

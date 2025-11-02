@@ -15,13 +15,11 @@
   };
 
   systemd.services.battery-timer = {
-    serviceConfig = {
-      Type = "oneshot";
-      ExecStart = ''
-        ${lib.getExe' pkgs.systemd "systemctl"} start battery-notify
-        ${lib.getExe' pkgs.systemd "systemctl"} start battery-check
-      '';
-    };
+    script = ''
+      ${lib.getExe' pkgs.systemd "systemctl"} start battery-notify
+      ${lib.getExe' pkgs.systemd "systemctl"} start battery-check
+    '';
+    serviceConfig.Type = "oneshot";
     wantedBy = [ "multi-user.target" ];
   };
 

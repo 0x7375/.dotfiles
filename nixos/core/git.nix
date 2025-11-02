@@ -110,7 +110,8 @@ in
   systemd.user.services.ssh-add = lib.mkIf config.me.secrets.enable {
     description = "Add keys to SSH agent";
     after = [ "ssh-agent.service" ];
-    requires = [ "ssh-agent.service" ];
+    bindsTo = [ "ssh-agent.service" ];
+    upheldBy = [ "ssh-agent.service" ];
 
     serviceConfig = {
       Type = "oneshot";
@@ -120,6 +121,5 @@ in
       ExecStart = "${lib.getExe' pkgs.openssh "ssh-add"} %h/.ssh/id_ed25519";
       RemainAfterExit = "yes";
     };
-    wantedBy = [ "default.target" ];
   };
 }

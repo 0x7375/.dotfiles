@@ -1,6 +1,25 @@
 return {
     "mfussenegger/nvim-dap",
-    lazy = false,
+    keys = {
+        { "<leader>dc", function() require 'dap'.continue() end,          desc = "DAP Continue" },
+        { "<leader>db", function() require 'dap'.toggle_breakpoint() end, desc = "DAP Toggle Breakpoint" },
+        { "<leader>di", function() require 'dap'.step_into() end,         desc = "DAP Step Into" },
+        { "<leader>do", function() require 'dap'.step_over() end,         desc = "DAP Step Over" },
+        { "<leader>dO", function() require 'dap'.step_out() end,          desc = "DAP Step Out" },
+        { "<leader>dr", function() require 'dap'.repl.open() end,         desc = "DAP Open REPL" },
+        { "<leader>dl", function() require 'dap'.run_last() end,          desc = "DAP Run Last" },
+    },
+    dependencies = {
+        {
+            "igorlfs/nvim-dap-view",
+            ---@module 'dap-view'
+            ---@type dapview.Config
+            opts = {},
+            keys = {
+                { "<leader>du", vim.cmd.DapViewToggle, desc = "DAP View Toggle" },
+            },
+        },
+    },
     config = function()
         local dap = require("dap")
         dap.adapters.gdb = {
@@ -45,7 +64,5 @@ return {
                 cwd = '${workspaceFolder}'
             }
         }
-
-        -- dap.setup()
     end,
 }

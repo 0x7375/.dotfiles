@@ -282,7 +282,7 @@ pkgs.writeShellApplication {
           *) ;;
         esac
 
-        echo -n " [y/N]$hide_cursor"
+        echo -n " [Y/n]$hide_cursor"
         if [[ $auto_accept -eq 1 ]]; then
           answer=y
         else
@@ -290,7 +290,7 @@ pkgs.writeShellApplication {
         fi
         echo "$show_cursor"
 
-        if [[ $answer == "y" ]]; then
+        if [[ -z $answer || $answer == "y" || $answer == "Y" ]]; then
           echo "yes"
           [[ $action != "boot" ]] && log "Switching to configuration"
           switch_configuration "$action" "$result"

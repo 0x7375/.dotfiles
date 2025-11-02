@@ -225,6 +225,7 @@ lib.mkIf (gui.displayServer == "xorg") {
 
   # user needs to be in the input group
   systemd.user.services.libinput-gestures = {
+    path = [ pkgs.i3 ];
     partOf = [ "graphical-session.target" ];
 
     serviceConfig.ExecStart = "${pkgs.libinput-gestures}/bin/libinput-gestures";

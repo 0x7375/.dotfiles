@@ -82,7 +82,7 @@ vim.opt.cursorline = true
 -- fix ^^ chars in statusline
 -- vim.opt.fillchars:append("stl: ,stlnc: ")
 
-vim.opt.winbar = require("util.bar").build_bar()
+require("util.bar").init()
 
 vim.opt.laststatus = 0
 vim.opt.cmdheight = 0

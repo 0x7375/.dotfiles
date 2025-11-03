@@ -6,18 +6,18 @@
 }:
 
 lib.mkIf config.me.gui.bundles.gaming.enable {
+  unfree-packages = [ "steam" "steam-unwrapped" ];
+
   programs.steam = {
     enable = true;
     dedicatedServer.openFirewall = false; # Open ports in the firewall for Source Dedicated Server
   };
 
-  powerManagement.cpuFreqGovernor = "performance";
-
   packages = with pkgs; [
     protontricks
     # winetricks
     # wine
-    protonup
+    protonup-ng
     heroic
     steamtinkerlaunch
     # modrinth-app

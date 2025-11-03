@@ -5,6 +5,9 @@
   ...
 }:
 
+let
+  inherit (lib) getExe getExe';
+in
 {
   nixpkgs.overlays = [
     (final: prev: {
@@ -36,9 +39,9 @@
       let
         clip =
           if config.me.gui.displayServer == "wayland" then
-            "${lib.getExe' pkgs.wl-clipboard "wl-copy"}"
+            "${getExe' pkgs.wl-clipboard "wl-copy"}"
           else
-            "${lib.getExe pkgs.xsel} -i";
+            "${getExe pkgs.xsel} -i";
       in
       ''
         set -g @plugin 'wfxr/tmux-fzf-url'
@@ -110,8 +113,8 @@
 
         unbind t
 
-        bind k run-shell "tmux popup -E ${lib.getExe pkgs.scripts.tmux-sessionizer} || true"
-        bind M new-window "man -k . | ${lib.getExe pkgs.fzf} --reverse --padding 1 | ${lib.getExe pkgs.gawk} '{print $1}' | xargs man"
+        bind k run-shell "tmux popup -E ${getExe pkgs.scripts.tmux-sessionizer} || true"
+        bind M new-window "man -k . | ${getExe pkgs.fzf} --reverse --padding 1 | ${getExe pkgs.gawk} '{print $1}' | xargs man"
 
         # navigate prompts
         bind -n M-p copy-mode \; \

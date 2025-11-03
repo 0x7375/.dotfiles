@@ -6,6 +6,8 @@
 }:
 
 lib.mkIf config.me.gui.enable {
+  unfree-packages = [ "via" ];
+
   packages = with pkgs; [
     via
     vial

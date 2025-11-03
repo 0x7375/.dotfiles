@@ -9,18 +9,17 @@ lib.mkIf config.me.gui.enable {
   nixpkgs.overlays = [
     (
       final: prev:
-      let
-        auto = import inputs.auto-update {
-          system = final.system;
-          config.allowUnfree = true;
-        };
-      in
       {
-        _1password-cli = auto._1password-cli;
-        _1password-gui = auto._1password-gui;
-        _1password = auto._1password-gui;
+        _1password-cli = final.auto._1password-cli;
+        _1password-gui = final.auto._1password-gui;
+        _1password = final.auto._1password-gui;
       }
     )
+  ];
+
+  unfree-packages = [
+    "1password"
+    "1password-cli"
   ];
 
   programs = {

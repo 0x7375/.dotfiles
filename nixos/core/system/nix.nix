@@ -1,11 +1,12 @@
 {
-  lib,
   config,
   inputs,
   ...
 }:
 
 {
+  imports = [ inputs.determinate.nixosModules.default ];
+
   nix = {
     extraOptions = ''
       warn-dirty = false
@@ -14,17 +15,18 @@
     nixPath = [ "nixpkgs=${inputs.nixpkgs}" ];
     channel.enable = false;
     settings = {
-      experimental-features = [ "nix-command flakes pipe-operators" ];
+      lazy-trees = true;
+      experimental-features = [ "nix-command flakes" "pipe-operators" ];
       use-xdg-base-directories = true;
       substituters = [
         "https://nix-community.cachix.org"
         "https://ayko.cachix.org"
-        # "https://hyprland.cachix.org"
+        "https://install.determinate.systems"
       ];
       trusted-public-keys = [
         "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
         "ayko.cachix.org-1:pglseKMD4PGHDRvF4LzDJKXOo0gSj3yWZU6QXI6YkBs="
-        # "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
+        "cache.flakehub.com-3:hJuILl5sVK4iKm86JzgdXW12Y2Hwd5G07qKtHTOcDCM="
       ];
       auto-optimise-store = true;
     };
@@ -32,7 +34,6 @@
       nixpkgs.flake = inputs.nixpkgs;
       stable.flake = inputs.nixpkgs-stable;
       n.flake = inputs.nixpkgs;
-      nur.flake = inputs.nur;
     };
   };
 

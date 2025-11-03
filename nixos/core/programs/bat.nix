@@ -1,6 +1,7 @@
 {
   pkgs,
   myLib,
+  lib,
   ...
 }:
 let
@@ -8,6 +9,11 @@ let
 in
 {
   packages = [ pkgs.bat ];
+
+  system.userActivationScripts.bat-build-cache.text = ''
+    export XDG_CACHE_HOME=$HOME/.cache
+    ${lib.getExe pkgs.bat} cache --build > /dev/null 2>&1 
+  '';
 
   hj.xdg.config.files."bat/config".text = ''
     --style=header,grid

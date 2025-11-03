@@ -21,6 +21,7 @@ lib.mkIf (config.me.gui.displayServer == "xorg") {
 
   hj.xdg.config.files."grobi.conf".value.rules =
     let
+      inherit (lib) getExe';
       HDMI =
         {
           name,
@@ -40,8 +41,8 @@ lib.mkIf (config.me.gui.displayServer == "xorg") {
           atomic = true;
           primary = "HDMI-1";
           execute_after = [
-            "${lib.getExe' pkgs.i3 "i3-msg"} restart"
-            "${lib.getExe' pkgs.xorg.xset "xset"} s off -dpms"
+            "${getExe' pkgs.i3 "i3-msg"} restart"
+            "${getExe' pkgs.xorg.xset "xset"} s off -dpms"
           ];
         };
     in
@@ -65,8 +66,8 @@ lib.mkIf (config.me.gui.displayServer == "xorg") {
         primary = true;
         atomic = true;
         execute_after = [
-          "${lib.getExe' pkgs.i3 "i3-msg"} restart"
-          "${lib.getExe' pkgs.xorg.xset "xset"} s on -dpms"
+          "${getExe' pkgs.i3 "i3-msg"} restart"
+          "${getExe' pkgs.xorg.xset "xset"} s on -dpms"
         ];
       }
       {

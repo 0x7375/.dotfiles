@@ -43,6 +43,8 @@ in
     )
   ];
 
+  unfree-packages = [ "ouch" ];
+
   packages = [
     pkgs.lf
     pkgs.ouch
@@ -51,7 +53,7 @@ in
     ctpv
     pkgs.ueberzugpp
     # pkgs.pistol
-    pkgs.poppler_utils
+    pkgs.poppler-utils
     pkgs.libreoffice
   ];
 
@@ -73,6 +75,7 @@ in
   hj.xdg.config.files."lf/lfrc".text =
     let
       inherit (config.me) user uid;
+      inherit (lib) getExe getExe';
       confirm-key = "s";
       no-confirm =
         keys: lib.concatStringsSep "\n" (map (key: "vmap ${key} push ${confirm-key}${key}") keys);
@@ -93,17 +96,17 @@ in
       set tabstop 4
 
       cmd bulkrename ''${{
-        export VIMV=1; ${lib.getExe' pkgs.vimv-rs "vimv"} -- $fs
+        export VIMV=1; ${getExe' pkgs.vimv-rs "vimv"} -- $fs
 
-        ${lib.getExe pkgs.lf} -remote "send $id load"
-        ${lib.getExe pkgs.lf} -remote "send $id unselect"
+        ${getExe pkgs.lf} -remote "send $id load"
+        ${getExe pkgs.lf} -remote "send $id unselect"
       }}
 
       cmd calc-all-dirsize ''${{
-          ${lib.getExe pkgs.lf} -remote "send $id invert"
-          ${lib.getExe pkgs.lf} -remote "send $id calcdirsize"
-          ${lib.getExe pkgs.lf} -remote "send $id unselect"
-          ${lib.getExe pkgs.lf} -remote "send $id show-size"
+          ${getExe pkgs.lf} -remote "send $id invert"
+          ${getExe pkgs.lf} -remote "send $id calcdirsize"
+          ${getExe pkgs.lf} -remote "send $id unselect"
+          ${getExe pkgs.lf} -remote "send $id show-size"
         }}
 
       cmd compress %{{
@@ -116,20 +119,20 @@ in
           new_name=$default_name
         fi
 
-        ${lib.getExe pkgs.ouch} compress $(realpath --relative-to="$(pwd)" $fx) $new_name 
+        ${getExe pkgs.ouch} compress $(realpath --relative-to="$(pwd)" $fx) $new_name 
 
-        ${lib.getExe pkgs.lf} -remote "send $id unselect"
-        ${lib.getExe pkgs.lf} -remote "send $id select \"$new_name\""
+        ${getExe pkgs.lf} -remote "send $id unselect"
+        ${getExe pkgs.lf} -remote "send $id select \"$new_name\""
       }}
       cmd copy-path ''${{
-        echo -en "$fx" | tr ' ' '\n' | ${lib.getExe pkgs.xsel} -ib
-        ${lib.getExe pkgs.lf} -remote 'send unselect'
-        ${lib.getExe pkgs.lf} -remote 'send echo "Path copied to clipboard"'
+        echo -en "$fx" | tr ' ' '\n' | ${getExe pkgs.xsel} -ib
+        ${getExe pkgs.lf} -remote 'send unselect'
+        ${getExe pkgs.lf} -remote 'send echo "Path copied to clipboard"'
       }}
 
       cmd edit ''${{
         if [[ ''${NVIM:-} ]]; then
-          ${lib.getExe pkgs.lf} -remote "send $id open"
+          ${getExe pkgs.lf} -remote "send $id open"
         else
           $EDITOR $f
         fi
@@ -139,28 +142,28 @@ in
         printf "File name: "
         read newf
         if [[ -z $newf ]]; then
-          ${lib.getExe pkgs.lf} -remote "send $id reload"
+          ${getExe pkgs.lf} -remote "send $id reload"
           return;
         fi
 
-        ${lib.getExe pkgs.lf} -remote "send $id \$touch \"$newf\""
-        ${lib.getExe pkgs.lf} -remote "send $id $\$EDITOR \"$newf\""
+        ${getExe pkgs.lf} -remote "send $id \$touch \"$newf\""
+        ${getExe pkgs.lf} -remote "send $id $\$EDITOR \"$newf\""
       }}
 
       cmd external-copy ''${{
-        echo -en "$fx" | sed 's|^|file://|' | tr ' ' '\n' | ${lib.getExe pkgs.xclip} -i -sel clip -t text/uri-list
-        ${lib.getExe pkgs.lf} -remote 'send unselect'
-        ${lib.getExe pkgs.lf} -remote 'send echo "Files copied to clipboard"'
+        echo -en "$fx" | sed 's|^|file://|' | tr ' ' '\n' | ${getExe pkgs.xclip} -i -sel clip -t text/uri-list
+        ${getExe pkgs.lf} -remote 'send unselect'
+        ${getExe pkgs.lf} -remote 'send echo "Files copied to clipboard"'
       }}
 
       cmd extract ''${{
         set -f
-        ${lib.getExe pkgs.ouch} decompress $fx
-        ${lib.getExe' pkgs.trash-cli "trash"} $f
+        ${getExe pkgs.ouch} decompress $fx
+        ${getExe' pkgs.trash-cli "trash"} $f
       }}
 
       cmd follow_link %{{
-        ${lib.getExe pkgs.lf} -remote "send $id select '$(readlink $f)'"
+        ${getExe pkgs.lf} -remote "send $id select '$(readlink $f)'"
       }}
 
       cmd local-share ''${{
@@ -169,28 +172,28 @@ in
         device=$(echo "$out" | head -n 1 | cut -d\  -f3)
         count=$(echo "$out" | tail -n +2 | wc -l)
 
-        ${lib.getExe pkgs.lf} -remote 'send unselect'
-        ${lib.getExe pkgs.lf} -remote "send echo '$count Files sent to $device'"
+        ${getExe pkgs.lf} -remote 'send unselect'
+        ${getExe pkgs.lf} -remote "send echo '$count Files sent to $device'"
       }}
 
       cmd mkdir %{{
         printf "Directory name: "
         read newd
         if [[ -z $newd ]]; then
-          ${lib.getExe pkgs.lf} -remote "send $id reload"
+          ${getExe pkgs.lf} -remote "send $id reload"
           return;
         fi
 
         mkdir -p "$newd"
-        ${lib.getExe pkgs.lf} -remote "send $id select \"$newd\""
+        ${getExe pkgs.lf} -remote "send $id select \"$newd\""
       }}
 
       cmd mount-archive ''${{
-        if ${lib.getExe pkgs.file} --mime-type "$f" | grep -qE 'application/zip|application/x-tar|application/x-7z-compressed|application/octet-stream|application/gzip'; then
+        if ${getExe pkgs.file} --mime-type "$f" | grep -qE 'application/zip|application/x-tar|application/x-7z-compressed|application/octet-stream|application/gzip'; then
           mntdir="''${f}.mnt"
           mkdir -p "$mntdir"
-          ${lib.getExe pkgs.archivemount} "$f" "$mntdir"
-          ${lib.getExe pkgs.lf} -remote "send $id cd $mntdir"
+          ${getExe pkgs.archivemount} "$f" "$mntdir"
+          ${getExe pkgs.lf} -remote "send $id cd $mntdir"
         fi
       }}
 
@@ -198,7 +201,7 @@ in
         printf "Directory name: "
         read newd
         if [[ -z $newd ]]; then
-          ${lib.getExe pkgs.lf} -remote "send $id reload"
+          ${getExe pkgs.lf} -remote "send $id reload"
           return;
         fi
 
@@ -213,7 +216,7 @@ in
         else
             fmt="\033[34;1m%d\033[0m\033[1m%f\033[0m"
         fi
-        ${lib.getExe pkgs.lf} -remote "send $id set promptfmt \"$fmt\""
+        ${getExe pkgs.lf} -remote "send $id set promptfmt \"$fmt\""
       }}
       cmd on-focus-gained :{{
         set cursorparentfmt "\033[7m"
@@ -226,19 +229,19 @@ in
         set cursorpreviewfmt ""
       }}
 
-      cmd online-share $${lib.getExe curl} -F"file=@$f" https://0x0.st | ${lib.getExe pkgs.xsel} -ib
+      cmd online-share $${getExe curl} -F"file=@$f" https://0x0.st | ${getExe pkgs.xsel} -ib
       cmd open &mimeopen "$f" > /dev/null 2>&1
       cmd paste-overwrite %{{
           mode=$(head -1 ~/.local/share/lf/files)
-          list=$(${lib.getExe' pkgs.gnused "sed"} 1d ~/.local/share/lf/files)
+          list=$(${getExe' pkgs.gnused "sed"} 1d ~/.local/share/lf/files)
           if [[ $mode == "copy" ]]; then
               cp -r $list .
           elif [[ $mode == "move" ]]; then
               mv $list .
           fi
-          ${lib.getExe pkgs.lf} -remote 'send load'
-          ${lib.getExe pkgs.lf} -remote 'send clear'
-          ${lib.getExe pkgs.lf} -remote "send $id reload"
+          ${getExe pkgs.lf} -remote 'send load'
+          ${getExe pkgs.lf} -remote 'send clear'
+          ${getExe pkgs.lf} -remote "send $id reload"
       }}
 
       cmd quit-and-cd ''${{
@@ -248,34 +251,34 @@ in
         
         # make sure we are not in a mount point
         while [[ $path == *".mnt"* ]]; do
-          path=$(${lib.getExe' pkgs.coreutils "dirname"} "$path")
+          path=$(${getExe' pkgs.coreutils "dirname"} "$path")
         done
         
         echo "$path" > "$LF_CD_FILE"
-        ${lib.getExe pkgs.lf} -remote "send $id quit"
+        ${getExe pkgs.lf} -remote "send $id quit"
       }}
 
       cmd show-size :set sortby size; set info size; set reverse
       cmd su ''${{
-        ${lib.getExe pkgs.lf} -remote "send $id quit"
+        ${getExe pkgs.lf} -remote "send $id quit"
         sudo lf
       }}
 
       cmd toggle-executable ''${{
         [[ -x $f ]] && chmod -x "$f" || chmod +x "$f"
-        ${lib.getExe pkgs.lf} -remote 'send reload'
+        ${getExe pkgs.lf} -remote 'send reload'
       }}
 
       cmd touch %{{
         printf "File name: "
         read newf
         if [[ -z $newf ]]; then
-          ${lib.getExe pkgs.lf} -remote "send $id reload"
+          ${getExe pkgs.lf} -remote "send $id reload"
           return;
         fi
 
         touch "$newf"
-        ${lib.getExe pkgs.lf} -remote "send $id select \"$newf\""
+        ${getExe pkgs.lf} -remote "send $id select \"$newf\""
       }}
 
 
@@ -311,7 +314,7 @@ in
       map L
       map M
       map N search-prev
-      map O &${lib.getExe pkgs.dragon-drop} $fx
+      map O &${getExe pkgs.dragon-drop} $fx
       map P paste-overwrite
       map Q quit-and-cd
       map R :source /home/${user}/.config/lf/lfrc; reload
@@ -385,12 +388,12 @@ in
       map zt
       map ~ cd /home/${user}
 
-      set previewer ${lib.getExe' ctpv "ctpv"}
-      map <c-p> $${lib.getExe' ctpv "ctpv"} "$f" | less -R
+      set previewer ${getExe' ctpv "ctpv"}
+      map <c-p> ''$${getExe' ctpv "ctpv"} "$f" | less -R
 
-      &${lib.getExe' ctpv "ctpv"} -s $id
-      cmd on-quit %${lib.getExe' ctpv "ctpv"} -e $id
-      set cleaner ${lib.getExe' ctpv "ctpvclear"}
+      &${getExe' ctpv "ctpv"} -s $id
+      cmd on-quit %${getExe' ctpv "ctpv"} -e $id
+      set cleaner ${getExe' ctpv "ctpvclear"}
       setlocal ~/pictures/ info time
       setlocal ~/pictures/ sortby time
       setlocal ~/pictures/ reverse
@@ -414,7 +417,7 @@ in
         "<c-n>"
       ]}
 
-      &[ "$LF_LEVEL" -eq 1 ] || ${lib.getExe pkgs.lf} -remote "send $id echoerr \"Warning: You're in a nested lf instance!\""
+      &[ "$LF_LEVEL" -eq 1 ] || ${getExe pkgs.lf} -remote "send $id echoerr \"Warning: You're in a nested lf instance!\""
     '';
 
   hj.xdg.config.files."lf/colors".text = builtins.readFile ./colors;

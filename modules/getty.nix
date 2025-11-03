@@ -43,7 +43,7 @@ let
 in
 
 {
-
+  disabledModules = [ "services/ttys/getty.nix" ];
   ###### interface
 
   imports = [

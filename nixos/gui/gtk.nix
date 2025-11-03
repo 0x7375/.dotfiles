@@ -92,7 +92,7 @@ lib.mkIf config.me.gui.enable {
   hj.xdg.data.files."icons/default/index.theme".text = # toml
     ''
       [Icon Theme]
-      Inherits = ${iconTheme.name}
+      Inherits = ${cursorTheme.name}
     '';
 
   packages = with pkgs; [

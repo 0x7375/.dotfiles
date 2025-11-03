@@ -6,8 +6,6 @@
 }:
 
 {
-  disabledModules = [ "services/ttys/getty.nix" ];
-
   config = lib.mkIf config.me.gui.enable {
     nixpkgs.overlays = [
       (final: prev: {

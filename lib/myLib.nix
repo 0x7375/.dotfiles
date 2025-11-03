@@ -5,16 +5,18 @@ let
     inherit inputs myLib;
     inherit (inputs) secrets;
   };
-  lib = inputs.nixpkgs.lib;
+  inherit (inputs.nixpkgs) lib;
 in
 {
   pkgsFor = system: inputs.nixpkgs.legacyPackages.${system};
 
   filesIn =
     let
-      filter = file: (lib.hasSuffix ".nix" file.name && !lib.hasPrefix "_" file.name);
+      inherit (lib) fileset hasInfix hasSuffix filter;
+      ignoreFilter = path: !hasInfix "/_" (toString path);
+      nixFilter = file: hasSuffix ".nix" file.name;
     in
-    dir: (lib.fileset.fileFilter filter dir) |> lib.fileset.toList;
+    dir: filter ignoreFilter (fileset.toList (fileset.fileFilter nixFilter dir));
 
   mkSystem =
     hostname: system:
@@ -23,9 +25,7 @@ in
       #   inherit inputs;
       #   nixpkgs = inputs.nixpkgs-unstable;
       # };
-      specialArgs = specialArgs // {
-        inherit system;
-      };
+      inherit specialArgs;
       modules = [
         ../hosts/${hostname}/configuration.nix
       ];

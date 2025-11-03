@@ -1,18 +1,16 @@
 {
-  pkgs,
   config,
   myLib,
   ...
 }:
 
 {
-  imports =
-    [
-      ./hardware.nix
-      ./options.nix
-    ]
-    ++ (myLib.filesIn ../../nixos)
-    ++ (myLib.filesIn ./nixos);
+  imports = [
+    ./hardware.nix
+    ./options.nix
+  ]
+  ++ (myLib.filesIn ../../nixos)
+  ++ (myLib.filesIn ./nixos);
 
   networking.hostName = config.me.hostname;
 
@@ -31,6 +29,11 @@
   boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
 
   services.xserver.videoDrivers = [ "nvidia" ];
+  unfree-packages = [ "nvidia-x11" "nvidia-settings" ];
+
+  # wayland.windowManager.hyprland.settings.input = {
+  #   accel_profile = "flat";
+  # };
 
   # do not change
   # For more information, see `man configuration.nix` or https://nixos.org/manual/nixos/stable/options#opt-system.stateVersion .

@@ -8,17 +8,17 @@
 }:
 
 {
-  nixpkgs.config.allowUnfree = true;
+  nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) config.unfree-packages;
 
   nixpkgs.overlays = [
     (final: prev: {
       stable = import inputs.nixpkgs-stable {
-        system = final.system;
-        config.allowUnfree = true;
+        system = final.stdenv.hostPlatform.system;
+        config.allowUnfreePredicate = config.nixpkgs.config.allowUnfreePredicate;
       };
       auto = import inputs.auto-update {
-        system = final.system;
-        config.allowUnfree = true;
+        system = final.stdenv.hostPlatform.system;
+        config.allowUnfreePredicate = config.nixpkgs.config.allowUnfreePredicate;
       };
 
       # ffmpeg = prev.ffmpeg.override { withFullDeps = true; };
@@ -119,6 +119,5 @@
         }) (myLib.filesIn ../scripts)
       );
     })
-  ]
-  ++ [ inputs.nur.overlays.default ];
+  ];
 }

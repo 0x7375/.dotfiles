@@ -19,6 +19,8 @@ lib.mkIf config.me.gui.enable {
     })
   ];
 
+  unfree-packages = [ "discord" "omnissa-horizon-client" "android-studio-stable" ];
+
   packages =
     with pkgs;
     let
@@ -68,7 +70,6 @@ lib.mkIf config.me.gui.enable {
 
       mimeo
       blueberry
-      dia
       stable.gaphor
       gnome-calculator
       melonDS
@@ -78,8 +79,6 @@ lib.mkIf config.me.gui.enable {
       qbittorrent
       scrcpy
       omnissa-horizon-client
-      nur.repos.Ev357.helium
-      auto.mullvad-browser
       auto.signal-desktop
       # st
     ]

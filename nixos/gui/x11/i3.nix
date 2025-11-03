@@ -7,6 +7,7 @@
 
 let
   inherit (config.me) gui;
+  inherit (lib) getExe getExe';
 in
 lib.mkIf (gui.displayServer == "xorg") {
   hj.xdg.config.files."i3/config".text =
@@ -18,8 +19,8 @@ lib.mkIf (gui.displayServer == "xorg") {
       dir = "$HOME/notes";
     in
     ''
-      set $tmux ${lib.getExe pkgs.${gui.terminal}} -e ${lib.getExe pkgs.tmux} new-session
-      set $term ${lib.getExe pkgs.${gui.terminal}} -e
+      set $tmux ${getExe pkgs.${gui.terminal}} -e ${getExe pkgs.tmux} new-session
+      set $term ${getExe pkgs.${gui.terminal}} -e
       set $browser ${config.me.browser}
       set $exec exec --no-startup-id
       set $exec_always exec_always --no-startup-id
@@ -63,56 +64,56 @@ lib.mkIf (gui.displayServer == "xorg") {
       client.placeholder $unfocused_bg $focused_fg $unfocused_bg $unfocused_bg $unfocused_bg
       client.background #ffffff
 
-      bindsym $win+t $exec $term ${lib.getExe pkgs.scripts.tmux-sessionizer} ~/
-      bindsym $win+s $exec $term ${lib.getExe pkgs.scripts.tmux-sshr}
-      bindsym $win+Shift+s $exec ${lib.getExe pkgs.scripts.swap-theme}
+      bindsym $win+t $exec $term ${getExe pkgs.scripts.tmux-sessionizer} ~/
+      bindsym $win+s $exec $term ${getExe pkgs.scripts.tmux-sshr}
+      bindsym $win+Shift+s $exec ${getExe pkgs.scripts.swap-theme}
       bindsym $win+Shift+t $exec $tmux
-      bindsym $win+e $exec $term ${lib.getExe pkgs.lf}
-      bindsym $win+Shift+e $exec $term sudo ${lib.getExe pkgs.lf}
+      bindsym $win+e $exec $term ${getExe pkgs.lf}
+      bindsym $win+Shift+e $exec $term sudo ${getExe pkgs.lf}
       bindsym $win+m $exec $term $(${pkgs.writeShellScript "open-note" ''
         note=$(ls ${dir} | sed 's/\.md$//' | bemenu -p "NOTE")
         [ -n "$note" ] && echo $EDITOR "${dir}/$note.md"
       ''})
-      bindsym $win+n $exec $term ${lib.getExe pkgs.zsh} -c '${lib.getExe' pkgs.networkmanager "nmcli"} device wifi rescan && unset COLORTERM && TERM=xterm-old ${lib.getExe' pkgs.networkmanager "nmtui'"}"}
-      bindsym $win+b $exec $term ${lib.getExe pkgs.bluetuith} --no-warning
+      bindsym $win+n $exec $term ${getExe pkgs.zsh} -c '${getExe' pkgs.networkmanager "nmcli"} device wifi rescan && unset COLORTERM && TERM=xterm-old ${getExe' pkgs.networkmanager "nmtui'"}"}
+      bindsym $win+b $exec $term ${getExe pkgs.bluetuith} --no-warning
       bindsym $win+Shift+b $exec ${pkgs.writeShellScript "bluetooth-toogle" ''
-        if ${lib.getExe' pkgs.bluez "bluetoothctl"} info ${airpods} | grep -q "Connected: yes"; then
-          echo -e "disconnect ${airpods}\nquit" | ${lib.getExe' pkgs.bluez "bluetoothctl"}
+        if ${getExe' pkgs.bluez "bluetoothctl"} info ${airpods} | grep -q "Connected: yes"; then
+          echo -e "disconnect ${airpods}\nquit" | ${getExe' pkgs.bluez "bluetoothctl"}
         else
-          echo -e "connect ${airpods}\nquit" | ${lib.getExe' pkgs.bluez "bluetoothctl"}
+          echo -e "connect ${airpods}\nquit" | ${getExe' pkgs.bluez "bluetoothctl"}
         fi
       ''}
-      bindsym $win+Shift+n $exec ${lib.getExe' pkgs.networkmanager "nmcli"} device wifi rescan
+      bindsym $win+Shift+n $exec ${getExe' pkgs.networkmanager "nmcli"} device wifi rescan
       bindsym $win+w $exec $browser
-      bindsym $win+Shift+p $exec ${lib.getExe pkgs.copyq} show
-      bindsym $win+u $exec ${lib.getExe' pkgs._1password-gui "1password"} --quick-access
-      bindsym $win+d $exec ${lib.getExe j4-dmenu-desktop} --no-generic -d '${lib.getExe pkgs.bemenu} -p "DESKTOP"'
+      bindsym $win+Shift+p $exec ${getExe pkgs.copyq} show
+      bindsym $win+u $exec ${getExe' pkgs._1password-gui "1password"} --quick-access
+      bindsym $win+d $exec ${getExe j4-dmenu-desktop} --no-generic -d '${getExe pkgs.bemenu} -p "DESKTOP"'
 
-      bindsym $win+i $exec ${lib.getExe' pkgs.polybar "polybar-msg"} cmd toggle
-      bindsym $win+x $exec ${lib.getExe' pkgs.dunst "dunstctl"} close-all
-      bindsym $win+r $exec ${lib.getExe' pkgs.dunst "dunstctl"} history-pop
-      bindsym $win+a $exec ${lib.getExe' pkgs.dunst "dunstctl"} action
+      bindsym $win+i $exec ${getExe' pkgs.polybar "polybar-msg"} cmd toggle
+      bindsym $win+x $exec ${getExe' pkgs.dunst "dunstctl"} close-all
+      bindsym $win+r $exec ${getExe' pkgs.dunst "dunstctl"} history-pop
+      bindsym $win+a $exec ${getExe' pkgs.dunst "dunstctl"} action
 
-      bindsym $win+o $exec ${lib.getExe pkgs.gromit-mpx} --toggle
-      bindsym F9 $exec ${lib.getExe pkgs.gromit-mpx} --toggle
-      bindsym $win+Shift+o $exec ${lib.getExe pkgs.gromit-mpx} --clear
+      bindsym $win+o $exec ${getExe pkgs.gromit-mpx} --toggle
+      bindsym F9 $exec ${getExe pkgs.gromit-mpx} --toggle
+      bindsym $win+Shift+o $exec ${getExe pkgs.gromit-mpx} --clear
 
-      bindsym $win+p $exec ${lib.getExe pkgs.scripts.powermenu}
-      bindsym --release $win+Shift+c exec ${lib.getExe pkgs.scripts.color-picker}
-      bindsym --release $win+Shift+m exec $tmux -s 'xprop' '${lib.getExe' pkgs.xorg.xprop "xprop"} exec $SHELL'
+      bindsym $win+p $exec ${getExe pkgs.scripts.powermenu}
+      bindsym --release $win+Shift+c exec ${getExe pkgs.scripts.color-picker}
+      bindsym --release $win+Shift+m exec $tmux -s 'xprop' '${getExe' pkgs.xorg.xprop "xprop"} exec $SHELL'
 
-      bindsym Print $exec ${lib.getExe pkgs.scripts.screenshot} region
-      bindsym $alt+Sys_Req $exec ${lib.getExe pkgs.scripts.screenshot} window
-      bindsym Shift+Print $exec ${lib.getExe pkgs.scripts.screenshot} monitor
+      bindsym Print $exec ${getExe pkgs.scripts.screenshot} region
+      bindsym $alt+Sys_Req $exec ${getExe pkgs.scripts.screenshot} window
+      bindsym Shift+Print $exec ${getExe pkgs.scripts.screenshot} monitor
 
-      bindsym XF86AudioRaiseVolume $exec ${lib.getExe pkgs.scripts.change-volume} up
-      bindsym XF86AudioLowerVolume $exec ${lib.getExe pkgs.scripts.change-volume} down
-      bindsym XF86AudioMute $exec ${lib.getExe pkgs.scripts.change-volume} mute
-      bindsym XF86AudioNext $exec ${lib.getExe pkgs.playerctl} next
-      bindsym XF86AudioPrev $exec ${lib.getExe pkgs.playerctl} previous
-      bindsym XF86AudioPlay $exec ${lib.getExe pkgs.playerctl} play-pause
-      bindsym XF86MonBrightnessDown $exec ${lib.getExe pkgs.scripts.change-brightness} down
-      bindsym XF86MonBrightnessUp $exec ${lib.getExe pkgs.scripts.change-brightness} up
+      bindsym XF86AudioRaiseVolume $exec ${getExe pkgs.scripts.change-volume} up
+      bindsym XF86AudioLowerVolume $exec ${getExe pkgs.scripts.change-volume} down
+      bindsym XF86AudioMute $exec ${getExe pkgs.scripts.change-volume} mute
+      bindsym XF86AudioNext $exec ${getExe pkgs.playerctl} next
+      bindsym XF86AudioPrev $exec ${getExe pkgs.playerctl} previous
+      bindsym XF86AudioPlay $exec ${getExe pkgs.playerctl} play-pause
+      bindsym XF86MonBrightnessDown $exec ${getExe pkgs.scripts.change-brightness} down
+      bindsym XF86MonBrightnessUp $exec ${getExe pkgs.scripts.change-brightness} up
 
       bindsym $win+Shift+r restart
       bindsym $win+h focus left
@@ -192,25 +193,25 @@ lib.mkIf (gui.displayServer == "xorg") {
       for_window [floating] move position center
       for_window [window_role="Popup"] border pixel 0
 
-      $exec ${lib.getExe' pkgs.dbus "dbus-update-activation-environment"} --systemd --all
-      $exec ${lib.getExe pkgs.gromit-mpx}
-      $exec ${lib.getExe pkgs.polybar}
-      $exec ${lib.getExe' pkgs.i3 "i3-msg"} workspace 1
+      $exec ${getExe' pkgs.dbus "dbus-update-activation-environment"} --systemd --all
+      $exec ${getExe pkgs.gromit-mpx}
+      $exec ${getExe pkgs.polybar}
+      $exec ${getExe' pkgs.i3 "i3-msg"} workspace 1
       $exec kdeconnect-cli --refresh
-      $exec ${lib.getExe pkgs.xorg.xset} s off -dpms
+      $exec ${getExe pkgs.xorg.xset} s off -dpms
 
       $exec_always ${pkgs.writeShellScript "set-wallpaper" ''
         wallpapers="$HOME/pictures/wallpapers/$(< ~/.local/state/current_theme)"
         if [[ -d $wallpapers ]]; then
           shuf -e -n1 --random-source=<(date +%Y%m%d | md5sum) \
             ''${wallpapers}/* | \
-            ${lib.getExe' pkgs.findutils "xargs"} ${lib.getExe pkgs.feh} --no-fehbg --bg-fill
+            ${getExe' pkgs.findutils "xargs"} ${getExe pkgs.feh} --no-fehbg --bg-fill
         else
-          ${lib.getExe pkgs.feh} --no-fehbg --bg-fill ${config.me.flakeDir}/assets/wallpaper.jpg
+          ${getExe pkgs.feh} --no-fehbg --bg-fill ${config.me.flakeDir}/assets/wallpaper.jpg
         fi
       ''}
-      $exec_always ${lib.getExe pkgs.i3altlayout}
-      $exec_always ${lib.getExe' pkgs.polybar "polybar-msg"} cmd restart
+      $exec_always ${getExe pkgs.i3altlayout}
+      $exec_always ${getExe' pkgs.polybar "polybar-msg"} cmd restart
 
     '';
 

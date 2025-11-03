@@ -6,6 +6,10 @@
 }:
 
 lib.mkIf config.me.gui.enable {
+  unfree-packages = [
+    "hplip"
+  ];
+
   services = {
     printing = {
       enable = true;

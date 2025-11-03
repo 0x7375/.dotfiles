@@ -5,6 +5,9 @@
   ...
 }:
 
+let
+  inherit (lib) getExe getExe';
+in
 {
   hj.xdg.config.files."zsh/longcmd-notify.zsh" = {
     enable = config.me.gui.displayServer == "xorg";
@@ -20,20 +23,20 @@
         start_window_id=""
 
         long_command_alert_start() {
-          time_taken=$(${lib.getExe' pkgs.coreutils "date"} +%s)
+          time_taken=$(${getExe' pkgs.coreutils "date"} +%s)
           cmd="$1"
-          start_window_id=$(${lib.getExe pkgs.xdotool} getactivewindow)
+          start_window_id=$(${getExe pkgs.xdotool} getactivewindow)
         }
 
         theme=$(< $HOME/.local/state/current_theme)
 
         long_command_alert_end() {
           if [[ $time_taken -gt 0 ]]; then
-            local duration=$(($(${lib.getExe' pkgs.coreutils "date"} +%s) - $time_taken))
+            local duration=$(($(${getExe' pkgs.coreutils "date"} +%s) - $time_taken))
             if [[ $duration -gt $time_threshold ]]; then
               if ! original_window_is_focused; then
                 duration=$(get_duration "$duration")
-                ${lib.getExe' pkgs.libnotify "notify-send"} -i "cli-$theme" "Command done: ''${duration}" "$cmd"
+                ${getExe' pkgs.libnotify "notify-send"} -i "cli-$theme" "Command done: ''${duration}" "$cmd"
               fi
             fi
             time_taken=0
@@ -57,7 +60,7 @@
         }
 
         original_window_is_focused() {
-          local current_window_id=$(${lib.getExe pkgs.xdotool} getactivewindow)
+          local current_window_id=$(${getExe pkgs.xdotool} getactivewindow)
           [[ $current_window_id == $start_window_id ]]
         }
 

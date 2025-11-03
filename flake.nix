@@ -4,7 +4,6 @@
   inputs = {
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
     nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-24.11";
-
     nixpkgs.follows = "nixpkgs-unstable";
     # nixpkgs-patcher.url = "github:gepbird/nixpkgs-patcher";
 
@@ -18,13 +17,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # flake-parts.url = "github:hercules-ci/flake-parts";
-    # import-tree.url = "github:vic/import-tree";
-
-    nur = {
-      url = "github:nix-community/NUR";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    determinate.url = "https://flakehub.com/f/DeterminateSystems/determinate/*";
 
     auto-update.url = "github:nixos/nixpkgs/nixos-unstable";
 
@@ -64,10 +57,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    nixos-wsl = {
-      url = "github:nix-community/NixOS-WSL";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    # nixos-wsl = {
+    #   url = "github:nix-community/NixOS-WSL";
+    #   inputs.nixpkgs.follows = "nixpkgs";
+    # };
 
     lanzaboote = {
       url = "github:nix-community/lanzaboote/v0.4.2";
@@ -88,7 +81,7 @@
         ryusei = mkSystem "ryusei" x86;
         tenkuu = mkSystem "tenkuu" x86;
         hikari = mkSystem "hikari" aarch;
-        kumo = mkSystem "kumo" x86;
+        # kumo = mkSystem "kumo" x86;
         isoImg = mkSystem "isoImg" x86;
       };
     };

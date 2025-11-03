@@ -1,19 +1,12 @@
 {
   pkgs,
   lib,
-  system,
   inputs,
   ...
 }:
 
 let
-  hjemOptions = inputs.hjem.packages.${system}.docs-json;
-  spicetifyOptions =
-    inputs.spicetify-nix.legacyPackages.${system}.docs.optionsJSON
-    + /share/doc/nixos/options.json;
-  wslOptions =
-    inputs.nixos-wsl.packages.${system}.docs.optionsDoc.optionsJSON
-    + /share/doc/nixos/options.json;
+  inherit (pkgs.stdenv.hostPlatform) system;
   nst = (pkgs.writeShellScriptBin "nst" (builtins.readFile ./nix-search-fzf.sh));
 in
 {
@@ -26,9 +19,7 @@ in
     generator = lib.generators.toJSON { };
     value = {
       experimental.options_file = {
-        spicetify = "${spicetifyOptions}";
-        wsl = "${wslOptions}";
-        hjem = "${hjemOptions}";
+        hjem = inputs.hjem.packages.${system}.docs-json;
       };
     };
   };

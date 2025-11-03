@@ -29,7 +29,7 @@
 
   nixpkgs.hostPlatform = "x86_64-linux";
 
-  hardware.enableAllFirmware = true;
+  hardware.enableRedistributableFirmware = true;
   networking.hostName = config.me.hostname;
 
   networking.wireless.enable = false;

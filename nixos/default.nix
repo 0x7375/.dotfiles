@@ -15,14 +15,15 @@
   ]
   ++ myLib.filesIn ../modules;
 
+   options = {
+    unfree-packages = lib.mkOption {
+      type = lib.types.listOf lib.types.str;
+      default = [ ];
+      description = "List of unfree packages to allow installing.";
+    };
+  };
+  config = {
   environment.etc.nixcfg.source = pkgs.lib.cleanSource inputs.self;
-
-  hj.xdg.config.files."nixpkgs/config.nix".text = # nix
-    ''
-      {
-        allowUnfree = true;
-      }
-    '';
 
   systemd.user.services.dotfiles-setup = {
     description = "Clone dotfiles repository";
@@ -39,4 +40,5 @@
     };
     wantedBy = [ "default.target" ];
   };
+};
 }

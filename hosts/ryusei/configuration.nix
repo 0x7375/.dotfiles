@@ -6,6 +6,9 @@
   ...
 }:
 
+let
+  inherit (lib) getExe getExe';
+in
 {
   imports = [
     ./hardware.nix
@@ -36,8 +39,8 @@
       ACTION=="add", \
       SUBSYSTEM=="backlight", \
       KERNEL=="amdgpu_bl0", \
-      RUN+="${lib.getExe' pkgs.coreutils "chgrp"} video /sys/class/backlight/%k/brightness", \
-      RUN+="${lib.getExe' pkgs.coreutils "chmod"} g+w /sys/class/backlight/%k/brightness"
+      RUN+="${getExe' pkgs.coreutils "chgrp"} video /sys/class/backlight/%k/brightness", \
+      RUN+="${getExe' pkgs.coreutils "chmod"} g+w /sys/class/backlight/%k/brightness"
 
       # Notifications on power plug/unplug
       ACTION=="change", \
@@ -46,7 +49,7 @@
       ATTR{online}=="0", \
       ENV{DISPLAY}=":0", \
       ENV{XAUTHORITY}="/run/user/${toString config.me.uid}/Xauthority", \
-      RUN+="${lib.getExe' pkgs.su "su"} ${config.me.user} -c '${lib.getExe pkgs.scripts.charging-notify} 0'"
+      RUN+="${getExe' pkgs.su "su"} ${config.me.user} -c '${getExe pkgs.scripts.charging-notify} 0'"
 
       ACTION=="change", \
       SUBSYSTEM=="power_supply", \
@@ -54,7 +57,7 @@
       ATTR{online}=="1", \
       ENV{DISPLAY}=":0", \
       ENV{XAUTHORITY}="/run/user/${toString config.me.uid}/Xauthority", \
-      RUN+="${lib.getExe' pkgs.su "su"} ${config.me.user} -c '${lib.getExe pkgs.scripts.charging-notify} 1'"
+      RUN+="${getExe' pkgs.su "su"} ${config.me.user} -c '${getExe pkgs.scripts.charging-notify} 1'"
     '';
 
   programs.i3lock.enable = true;
@@ -74,7 +77,7 @@
     after = [ "multi-user.target" ];
     serviceConfig = {
       Type = "oneshot";
-      ExecStart = "${lib.getExe pkgs.bash} -c 'echo LID > /proc/acpi/wakeup'";
+      ExecStart = "${getExe pkgs.bash} -c 'echo LID > /proc/acpi/wakeup'";
       RemainAfterExit = true;
     };
   };

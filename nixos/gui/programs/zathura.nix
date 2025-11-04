@@ -35,7 +35,7 @@ let
       set completion-highlight-bg	"${p.blue}"
       set completion-highlight-fg	"${color.alt-bg}"
 
-      set default-bg	"${p.bg0_dark}"
+      set default-bg	"${color.bg}"
       set default-fg	"${color.fg}"
 
       set highlight-active-color	"rgba(254,128,25,0.5)"

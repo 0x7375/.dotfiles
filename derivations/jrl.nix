@@ -10,7 +10,7 @@ buildGoModule rec {
     owner = "0x7E";
     repo = "jrl";
     rev = version;
-    sha256 = "ktyvmibbhxvpM6faaCRI2nxBqo+x0k82c6nFMU/mad0=";
+    sha256 = "+fY8jrVDpzDXdWBD2J4Fi6DyWQ3WaCaPyqIx9Oe7qWQ=";
   };
   vendorHash = "sha256-ctK4o9Kf2qlxXvmMKzuFQWiMSrgwNub2lmVbvYH4/hE=";
   meta.mainProgram = "jrl";

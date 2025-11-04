@@ -10,7 +10,6 @@
   imports = [
     (modulesPath + "/installer/scan/not-detected.nix")
     ./disko.nix
-    inputs.lanzaboote.nixosModules.lanzaboote
   ];
 
   boot.blacklistedKernelModules = [ "pcspkr" ];

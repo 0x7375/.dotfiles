@@ -200,16 +200,18 @@ lib.mkIf (gui.displayServer == "xorg") {
       $exec kdeconnect-cli --refresh
       $exec ${getExe pkgs.xorg.xset} s off -dpms
 
-      $exec_always ${pkgs.writeShellScript "set-wallpaper" ''
-        wallpapers="$HOME/pictures/wallpapers/$(< ~/.local/state/current_theme)"
-        if [[ -d $wallpapers ]]; then
-          shuf -e -n1 --random-source=<(date +%Y%m%d | md5sum) \
-            ''${wallpapers}/* | \
-            ${getExe' pkgs.findutils "xargs"} ${getExe pkgs.feh} --no-fehbg --bg-fill
-        else
-          ${getExe pkgs.feh} --no-fehbg --bg-fill ${config.me.flakeDir}/assets/wallpaper.jpg
-        fi
-      ''}
+      # $exec_always ${pkgs.writeShellScript "set-wallpaper" ''
+          # wallpapers="$HOME/pictures/wallpapers/$(< ~/.local/state/current_theme)"
+          # if [[ -d $wallpapers ]]; then
+          #   shuf -e -n1 --random-source=<(date +%Y%m%d | md5sum) \
+          #     ''${wallpapers}/* | \
+          #     ${getExe' pkgs.findutils "xargs"} ${getExe pkgs.feh} --no-fehbg --bg-fill
+          # else
+          #   ${getExe pkgs.feh} --no-fehbg --bg-fill ${config.me.flakeDir}/assets/wallpaper.jpg
+          # fi
+        # ''}
+
+      $exec_always ${getExe' pkgs.hsetroot "hsetroot"} -solid "$(xrdb -query | grep 'bg0:' | cut -f2)"
       $exec_always ${getExe pkgs.i3altlayout}
       $exec_always ${getExe' pkgs.polybar "polybar-msg"} cmd restart
 

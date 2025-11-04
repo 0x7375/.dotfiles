@@ -12,7 +12,6 @@ vim.opt.completeopt = { "menu", "menuone", "popup", "noselect" }
 
 -- hide search hit bottom
 vim.opt.shortmess:append("Is")
-
 vim.opt.sessionoptions:remove("folds")
 
 vim.opt.nu = true

@@ -19,8 +19,8 @@
 
       mkdir -p "$XDG_STATE_HOME"/zsh > /dev/null
       export HISTFILE="$XDG_STATE_HOME"/zsh/history 
-      HISTSIZE=50000
-      SAVEHIST=50000
+      HISTSIZE=5000000
+      SAVEHIST=5000000
 
       # only add valid commands to history
       zshaddhistory() { whence ''${''${(z)1}[1]} >| /dev/null || return 1 }

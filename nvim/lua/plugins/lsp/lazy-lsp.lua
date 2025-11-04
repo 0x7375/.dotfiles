@@ -212,7 +212,7 @@ return {
                             "efm-langserver",
                             "shellcheck",
                             "nixfmt-rfc-style",
-                            "php81Packages.php-codesniffer",
+                            "php84Packages.php-codesniffer",
                             "deno",
                             "typstyle",
                             "libxml2",

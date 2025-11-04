@@ -11,7 +11,7 @@ lib.mkIf config.me.gui.enable {
       enable = true;
       defaultFonts = {
         monospace = [ "${config.me.gui.font} Nerd Font" ];
-        sansSerif = [ "Ubuntu Nerd Font" ];
+        sansSerif = [ "Lexend" ];
       };
     };
 
@@ -22,7 +22,7 @@ lib.mkIf config.me.gui.enable {
       nerd-fonts.mononoki
       nerd-fonts._0xproto
       nerd-fonts.jetbrains-mono
-      nerd-fonts.ubuntu
+      lexend
       nerd-fonts.fira-code
       nerd-fonts.terminess-ttf
       noto-fonts

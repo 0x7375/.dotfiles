@@ -201,7 +201,7 @@ lib.mkIf (gui.displayServer == "xorg") {
       $exec ${getExe pkgs.xorg.xset} s off -dpms
 
       # $exec_always ${pkgs.writeShellScript "set-wallpaper" ''
-          # wallpapers="$HOME/pictures/wallpapers/$(< ~/.local/state/current_theme)"
+          # wallpapers="$HOME/pictures/wallpapers/$(< $TINTED_FILE)"
           # if [[ -d $wallpapers ]]; then
           #   shuf -e -n1 --random-source=<(date +%Y%m%d | md5sum) \
           #     ''${wallpapers}/* | \
@@ -222,8 +222,8 @@ lib.mkIf (gui.displayServer == "xorg") {
   hj.xdg.config.files."libinput-gestures.conf".text = ''
     gesture swipe left 3 i3-msg workspace next
     gesture swipe right 3 i3-msg workspace prev
-    gesture swipe down 3 i3-msg fullscreen
-    gesture swipe up 3 i3-msg fullscreen
+    gesture swipe down 3 xdotool key super+f
+    gesture swipe up 3 xdotool key super+f
   '';
 
   # user needs to be in the input group

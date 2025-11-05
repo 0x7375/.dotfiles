@@ -6,24 +6,6 @@
   ...
 }:
 
-let
-  colors = theme: palette: ''
-    [global]
-    background="#${palette.bg0}"
-    foreground="#${palette.fg0}"
-    highlight="#${palette.fg0}"
-    frame_color="#${palette.bg1}"
-
-    [urgency_critical]
-    frame_color="#${palette.red}"
-    foreground="#${palette.red}"
-
-    [charged]
-    body="*fully*"
-    frame_color="#${palette.green}"
-    foreground="#${palette.green}"
-  '';
-in
 lib.mkIf config.me.gui.enable {
   packages = with pkgs; [
     libnotify
@@ -37,7 +19,7 @@ lib.mkIf config.me.gui.enable {
     description = "Dunst notification daemon";
     after = [ "graphical-session.target" ];
     partOf = [ "graphical-session.target" ];
-    reloadTriggers = [ "${config.hj.xdg.config.files."dunst/dunstrc".source}" ];
+    reloadTriggers = [ "${config.hj.files.".config/dunst/dunstrc".source}" ];
 
     serviceConfig = {
       Type = "dbus";
@@ -49,7 +31,7 @@ lib.mkIf config.me.gui.enable {
     };
   };
 
-  hj.xdg.config.files."dunst/dunstrc" = {
+  tinted.files.".config/dunst/dunstrc" = {
     generator = (
       lib.generators.toINI {
         mkKeyValue =
@@ -66,9 +48,14 @@ lib.mkIf config.me.gui.enable {
           "${key}=${value'}";
       }
     );
-    value = rec {
+    value = palette: rec {
       global = {
-        icon_path = "${config.me.flakeDir}/assets/dunst/output";
+        background = palette.bg0;
+        foreground = palette.fg0;
+        highlight = palette.fg0;
+        frame_color = palette.bg1;
+
+        icon_path = "${config.me.flakeDir}/assets/dunst/output/${palette._theme}";
         monitor = 0;
         follow = "none";
         width = 400;
@@ -137,6 +124,8 @@ lib.mkIf config.me.gui.enable {
         timeout = 3;
       };
       urgency_critical = {
+        frame_color = palette.red;
+        foreground = palette.red;
         timeout = 0;
       };
       experimental = {
@@ -146,22 +135,15 @@ lib.mkIf config.me.gui.enable {
         appname = "charging";
         history_ignore = true;
       };
+      charged = {
+        body = "*fully*";
+        frame_color = palette.green;
+        foreground = palette.green;
+      };
       volume = {
         appname = "volume";
         history_ignore = true;
       };
     };
   };
-
-  hj.xdg.config.files."dunst/dunstrc.d/dark".text = colors "dark" myLib.hex;
-  hj.xdg.config.files."dunst/dunstrc.d/light".text = colors "light" myLib.light_hex;
-
-  systemd.user.tmpfiles.rules =
-    let
-      dunst = "/home/${config.me.user}/.config/dunst/dunstrc.d";
-    in
-    [
-      "d ${dunst} 0755 ${config.me.user} users - -"
-      "L ${dunst}/theme.conf - - - - ${dunst}/dark"
-    ];
 }

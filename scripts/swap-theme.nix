@@ -11,26 +11,26 @@ pkgs.writeShellApplication {
     systemd
   ];
   text = ''
-    theme_file=~/.local/state/current_theme
+    themes_dir=~/.local/state/tinted
+    theme_file="''${themes_dir}/theme"
 
+    theme=
     if [[ $(< $theme_file) == "dark" ]]; then
-      echo "light" > $theme_file
+      theme=light
     else
-      echo "dark" > $theme_file
+      theme=dark
     fi
 
-    theme=$(< $theme_file)
+    echo "$theme" > "$theme_file"
 
-    ln -s -f "$HOME/.config/alacritty/''${theme}.toml" "$HOME/.config/alacritty/theme.toml"
-    ln -s -f "$HOME/.config/waybar/''${theme}.css" "$HOME/.config/waybar/theme.css"
-    ln -s -f "$HOME/.config/X11/''${theme}" "$HOME/.config/X11/xresources"
-    ln -s -f "$HOME/.config/gtk-4.0/''${theme}.css" "$HOME/.config/gtk-4.0/gtk.css"
-    ln -s -f "$HOME/.config/dunst/dunstrc.d/''${theme}" "$HOME/.config/dunst/dunstrc.d/theme.conf"
+    fd --hidden ".*-dark" "$themes_dir" | while read -r dark_file; do
+      base_path="''${dark_file%-dark}"
+      config_path="''${base_path#"$themes_dir"/}"
+      ln -sf "''${base_path}-''${theme}" "$HOME/$config_path"
+    done
 
     xrdb -load "$HOME/.config/X11/xresources"
-
     dconf write /org/gnome/desktop/interface/color-scheme "'prefer-''${theme}'"
-
     dunstctl reload
     i3-msg restart
     pkill nautilus

@@ -27,10 +27,4 @@ lib.mkIf config.me.gui.enable {
   };
 
   packages = [ pkgs.gparted ];
-
-  hj.xdg.state.files."current_theme" = {
-    text = "dark";
-    type = "copy";
-    permissions = "0644";
-  };
 }

@@ -12,7 +12,12 @@ in
 
   filesIn =
     let
-      inherit (lib) fileset hasInfix hasSuffix filter;
+      inherit (lib)
+        fileset
+        hasInfix
+        hasSuffix
+        filter
+        ;
       ignoreFilter = path: !hasInfix "/_" (toString path);
       nixFilter = file: hasSuffix ".nix" file.name;
     in
@@ -67,6 +72,7 @@ in
   light_hex = lib.mapAttrs (name: value: lib.removePrefix "#" value) myLib.light_palette;
 
   palette = {
+    _theme = "dark";
     bg0_dark = "#000000";
 
     bg0 = "#000000";
@@ -89,6 +95,7 @@ in
   };
 
   light_palette = {
+    _theme = "light";
     bg0_dark = "#FFFFFF";
 
     bg0 = "#FFFFFF";

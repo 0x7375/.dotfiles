@@ -10,6 +10,7 @@ lib.mkIf config.me.gui.enable {
   packages = with pkgs; [
     zen-browser
     auto.librewolf
+    speechd-minimal
   ];
 
   hj.files.".zen/native-messaging-hosts/com.1password.1password.json".text = # json

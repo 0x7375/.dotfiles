@@ -1,5 +1,5 @@
 {
-  "CopilotChat.nvim": { "branch": "main", "commit": "77397697d731211520ddfbaee9ba97e9d142f87e" },
+  "CopilotChat.nvim": { "branch": "main", "commit": "db56110b19c702053e86d54b48d8d570c59d0b6b" },
   "LuaSnip": { "branch": "master", "commit": "c9b9a22904c97d0eb69ccb9bab76037838326817" },
   "ReplaceWithRegister": { "branch": "master", "commit": "832efc23111d19591d495dc72286de2fb0b09345" },
   "auto-session": { "branch": "main", "commit": "095b0b54d40c8cc7fe37f2ae4d948ec3069bb1c2" },
@@ -11,7 +11,7 @@
   "cmp-nvim-lsp": { "branch": "main", "commit": "bd5a7d6db125d4654b50eeae9f5217f24bb22fd3" },
   "cmp-nvim-lua": { "branch": "main", "commit": "f12408bdb54c39c23e67cab726264c10db33ada8" },
   "cmp_luasnip": { "branch": "master", "commit": "98d9cb5c2c38532bd9bdb481067b20fea8f32e90" },
-  "copilot.lua": { "branch": "master", "commit": "c62a2a7616a9789a7676b6b7a8d9263b1082cdc8" },
+  "copilot.lua": { "branch": "master", "commit": "389cfc58122b076e2aad1f9f34d1dfdd5a5bfd0e" },
   "dial.nvim": { "branch": "master", "commit": "2c7e2750372918f072a20f3cf754d845e143d7c9" },
   "diffview.nvim": { "branch": "main", "commit": "4516612fe98ff56ae0415a259ff6361a89419b0a" },
   "efmls-configs-nvim": { "branch": "main", "commit": "8d7ede48afa7d0344fa62fefb95132c0dad41e97" },

@@ -103,61 +103,53 @@ lib.mkIf config.me.gui.enable {
     theme.package
   ];
 
-  hj.xdg.config.files =
-    let
-      gtkCss = version: colorScheme: {
-        "gtk-${version}.0/${colorScheme}.css".text = cssContent {
-          inherit colorScheme;
-          inherit version;
+  hj.xdg.config.files = {
+    "gtk-2.0/gtkrc".text = ''
+      gtk-cursor-theme-name = "${cursorTheme.name}"
+      gtk-cursor-theme-size = ${toString config.me.cursorSize}
+      gtk-font-name = "${font.name}"
+      gtk-icon-theme-name = "${iconTheme.name}"
+      gtk-theme-name = "${theme.name}"
+      gtk-enable-primary-paste = false
+      gtk-decoration-layout =
+
+    '';
+    "gtk-3.0/settings.ini".text = ''
+      [Settings]
+      gtk-recent-files-enabled=false
+      gtk-cursor-theme-name=${cursorTheme.name}
+      gtk-cursor-theme-size=${toString config.me.cursorSize}
+      gtk-font-name=${font.name}
+      gtk-icon-theme-name=${iconTheme.name}
+      gtk-theme-name=${theme.name}
+      gtk-enable-primary-paste=false
+      gtk-decoration-layout=
+    '';
+    "gtk-3.0/bookmarks".text = ''
+      file:///home/${config.me.user}/.config
+      file:///home/${config.me.user}/uni
+      file:///home/${config.me.user}/repos
+    '';
+    "gtk-4.0/settings.ini".source = config.hj.xdg.config.files."gtk-3.0/settings.ini".source;
+
+  };
+
+  tinted.files = {
+    ".config/gtk-3.0/gtk.css" = {
+      text =
+        palette:
+        cssContent {
+          colorScheme = palette._theme;
+          version = "3";
         };
-      };
-    in
-    {
-      "gtk-2.0/gtkrc".text = ''
-        gtk-cursor-theme-name = "${cursorTheme.name}"
-        gtk-cursor-theme-size = ${toString config.me.cursorSize}
-        gtk-font-name = "${font.name}"
-        gtk-icon-theme-name = "${iconTheme.name}"
-        gtk-theme-name = "${theme.name}"
-        gtk-enable-primary-paste = false
-        gtk-decoration-layout =
-
-      '';
-
-      "gtk-3.0/settings.ini".text = ''
-        [Settings]
-        gtk-recent-files-enabled=false
-        gtk-cursor-theme-name=${cursorTheme.name}
-        gtk-cursor-theme-size=${toString config.me.cursorSize}
-        gtk-font-name=${font.name}
-        gtk-icon-theme-name=${iconTheme.name}
-        gtk-theme-name=${theme.name}
-        gtk-enable-primary-paste=false
-        gtk-decoration-layout=
-      '';
-      "gtk-3.0/gtk.css".enable = lib.mkForce false;
-      "gtk-3.0/bookmarks".text = ''
-        file:///home/${config.me.user}/.config
-        file:///home/${config.me.user}/uni
-        file:///home/${config.me.user}/repos
-      '';
-
-      "gtk-4.0/settings.ini".source = config.hj.xdg.config.files."gtk-3.0/settings.ini".source;
-      "gtk-4.0/gtk.css".enable = lib.mkForce false;
-
-    }
-    // gtkCss "3" "dark"
-    // gtkCss "3" "light"
-    // gtkCss "4" "dark"
-    // gtkCss "4" "light";
-
-  systemd.user.tmpfiles.rules =
-    let
-      gtk4 = "/home/${config.me.user}/.config/gtk-4.0";
-      gtk3 = "/home/${config.me.user}/.config/gtk-3.0";
-    in
-    [
-      "L ${gtk4}/gtk.css - - - - ${gtk4}/dark.css"
-      "L ${gtk3}/gtk.css - - - - ${gtk3}/dark.css"
-    ];
+    };
+    ".config/gtk-4.0/gtk.css" = {
+      text =
+        palette:
+        cssContent {
+          colorScheme = palette._theme;
+          version = "4";
+        };
+    };
+  };
 }

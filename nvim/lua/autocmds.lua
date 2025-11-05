@@ -106,17 +106,7 @@ vim.api.nvim_create_autocmd("VimEnter", {
 vim.api.nvim_create_autocmd("Signal", {
     pattern = "SIGUSR1",
     group = vim.api.nvim_create_augroup("reload_theme_on_SIGUSR1", {}),
-    callback = function()
-        local f = io.open(vim.fn.expand("~/.local/state/current_theme"), "r")
-        if not f then
-            return
-        end
-
-        local theme = f:read("*all"):gsub("%s+", "")
-        f:close()
-        vim.o.background = theme
-    end,
-
+    callback = function() require("util.theme").update() end,
     nested = true,
 })
 

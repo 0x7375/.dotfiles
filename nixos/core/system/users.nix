@@ -28,8 +28,9 @@
   };
 
   hjem = {
-    linker = inputs.hjem.packages.${pkgs.stdenv.hostPlatform.system}.smfh;
+    # linker = inputs.hjem.packages.${pkgs.stdenv.hostPlatform.system}.smfh;
     users.${config.me.user}.enable = true;
+    clobberByDefault = true;
   };
 
   users.users.root = {

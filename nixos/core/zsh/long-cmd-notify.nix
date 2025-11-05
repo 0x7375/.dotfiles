@@ -28,15 +28,13 @@ in
           start_window_id=$(${getExe pkgs.xdotool} getactivewindow)
         }
 
-        theme=$(< $HOME/.local/state/current_theme)
-
         long_command_alert_end() {
           if [[ $time_taken -gt 0 ]]; then
             local duration=$(($(${getExe' pkgs.coreutils "date"} +%s) - $time_taken))
             if [[ $duration -gt $time_threshold ]]; then
               if ! original_window_is_focused; then
                 duration=$(get_duration "$duration")
-                ${getExe' pkgs.libnotify "notify-send"} -i "cli-$theme" "Command done: ''${duration}" "$cmd"
+                ${getExe' pkgs.libnotify "notify-send"} -i "cli" "Command done: ''${duration}" "$cmd"
               fi
             fi
             time_taken=0

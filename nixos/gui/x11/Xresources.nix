@@ -6,7 +6,9 @@
 }:
 
 let
-  colors = palette: ''
+in
+lib.mkIf (config.me.gui.displayServer == "xorg") {
+  tinted.files.".config/X11/xresources".text = palette: ''
     *font: ${config.me.gui.font} Nerd Font:size=18
     *font2: ${config.me.gui.font} Nerd Font:size=18
     *padding: 20
@@ -29,16 +31,4 @@ let
     *magenta: ${palette.magenta}
     *orange: ${palette.orange}
   '';
-in
-lib.mkIf (config.me.gui.displayServer == "xorg") {
-  hj.xdg.config.files."X11/dark".text = colors myLib.palette;
-  hj.xdg.config.files."X11/light".text = colors myLib.light_palette;
-
-  systemd.user.tmpfiles.rules =
-    let
-      xresources = "/home/${config.me.user}/.config/X11";
-    in
-    [
-      "L ${xresources}/xresources - - - - ${xresources}/dark"
-    ];
 }

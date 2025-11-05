@@ -19,7 +19,8 @@ pkgs.writeShellApplication {
     icons_dir="${config.me.flakeDir}/assets/dunst/output"
     source_dir="${config.me.flakeDir}/assets/dunst/source"
 
-    mkdir -p "$icons_dir"
+    rm -rf "$icons_dir"
+    mkdir -p "$icons_dir/dark" "$icons_dir/light"
 
     primary=${palette.fg0}
     green=${palette.green}
@@ -27,8 +28,6 @@ pkgs.writeShellApplication {
     light_primary=${light_palette.fg0}
     light_green=${light_palette.green}
     light_red=${light_palette.red}
-
-    rm -f "$icons_dir"/*
 
     for file in "$source_dir"/*.png; do
       filename=$(basename -- "$file")
@@ -49,8 +48,8 @@ pkgs.writeShellApplication {
           ;;
       esac
       
-      magick "$file" -fill "$dark_color" -colorize 100% "$icons_dir/$base_name-dark.png"
-      magick "$file" -fill "$light_color" -colorize 100% "$icons_dir/$base_name-light.png"
+      magick "$file" -fill "$dark_color" -colorize 100% "$icons_dir/dark/$base_name.png"
+      magick "$file" -fill "$light_color" -colorize 100% "$icons_dir/light/$base_name.png"
     done
 
     dunstctl reload

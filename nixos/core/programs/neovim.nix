@@ -9,26 +9,22 @@
 
 lib.mkMerge [
   {
-    packages = with pkgs; [
-      inputs.neovim-nightly-overlay.packages.${pkgs.stdenv.hostPlatform.system}.default
+    programs.neovim = {
+      enable = true;
+      package = inputs.neovim-nightly-overlay.packages.${pkgs.stdenv.hostPlatform.system}.default;
+      withNodeJs = true; # for copilot
+    };
 
+    packages = with pkgs; [
       tree-sitter
       gnumake
 
-      # copilot chat
       lua54Packages.tiktoken_core
       lynx
-
-      # copilot
-      nodejs
 
       # peek.nvim
       deno
     ];
-
-    # systemd.user.tmpfiles.rules = [
-    #   "L /home/${config.me.user}/.config/nvim - - - - ${config.me.flakeDir}/nvim"
-    # ];
 
     hj.xdg.config.files."nvim".source = "${config.me.flakeDir}/nvim";
   }

@@ -203,11 +203,21 @@ in
       }
 
       nhv() {
-        nix eval --json path:$FLAKE#nixosConfigurations.''${2:-$HOST}.config.hjem.users.$USER.$1 | jq -r
+        local result
+        if result=$(nix eval --json path:$FLAKE#nixosConfigurations.''${2:-$HOST}.config.hjem.users.$USER.$1 2>/dev/null); then
+            echo "$result" | jq -r
+        else
+            nix eval path:$FLAKE#nixosConfigurations.''${2:-$HOST}.config.hjem.users.$USER.$1
+        fi
       }
 
-      nv() {
-        nix eval --json path:$FLAKE#nixosConfigurations.''${2:-$HOST}.config.$1 | jq -r
+      nv () {
+          local result
+          if result=$(nix eval --json path:$FLAKE#nixosConfigurations.''${2:-$HOST}.config.$1 2>/dev/null); then
+              echo "$result" | jq -r
+          else
+              nix eval path:$FLAKE#nixosConfigurations.''${2:-$HOST}.config.$1
+          fi
       }
 
       suv() {

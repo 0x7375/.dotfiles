@@ -17,7 +17,7 @@ in
       curtime=$(date +%s)
       echo "$curtime $1" >> /tmp/autohibernate.log
       echo "$curtime" > $HIBERNATE_LOCK
-      ${lib.getExe' pkgs.utillinux "rtcwake"} -m no -s $HIBERNATE_SECONDS
+      ${lib.getExe' pkgs.util-linux "rtcwake"} -m no -s $HIBERNATE_SECONDS
     '';
 
     serviceConfig.Type = "simple";
@@ -35,7 +35,7 @@ in
       if [ $(($curtime - $sustime)) -ge $HIBERNATE_SECONDS ] ; then
         systemctl hibernate
       else
-        ${lib.getExe' pkgs.utillinux "rtcwake"} -m no -s 1
+        ${lib.getExe' pkgs.util-linux "rtcwake"} -m no -s 1
       fi
     '';
 

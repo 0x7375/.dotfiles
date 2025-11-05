@@ -127,8 +127,8 @@ in
         bind / copy-mode \; send-keys /
         bind ? copy-mode \; send-keys ?
 
-        bind , swap-window -t -1
-        bind . swap-window -t +1
+        bind , swap-window -t -1\; select-window -t -1
+        bind . swap-window -t +1\; select-window -t +1
 
         bind + select-window -t :=1
         bind [ select-window -t :=2

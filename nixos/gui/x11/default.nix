@@ -16,6 +16,9 @@ lib.mkIf (config.me.gui.displayServer == "xorg") {
       fade = false;
       vSync = true;
       backend = "glx";
+      settings = {
+        unredir-if-possible = true;
+      };
     };
 
     xbanish.enable = true; # hide mouse cursor when typing

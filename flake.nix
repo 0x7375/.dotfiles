@@ -17,8 +17,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    determinate.url = "https://flakehub.com/f/DeterminateSystems/determinate/*";
-
     auto-update.url = "github:nixos/nixpkgs/nixos-unstable";
 
     zen-browser = {

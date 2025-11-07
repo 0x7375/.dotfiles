@@ -179,7 +179,6 @@ lib.mkIf (gui.displayServer == "xorg") {
       for_window [window_role="webconsole"] floating enable
       for_window [window_type="dialog"] floating enable
       for_window [window_type="menu"] floating enable
-      for_window [title="Steam - Update News"] floating enable
       for_window [title="^Friends List$"] floating enable
       for_window [title="^filechooser$"] floating enable
       for_window [class="Pqiv"] floating enable
@@ -192,6 +191,9 @@ lib.mkIf (gui.displayServer == "xorg") {
       for_window [class=".*"] border pixel 1
       for_window [floating] move position center
       for_window [window_role="Popup"] border pixel 0
+
+      for_window [title="Steam - Update News"] floating enable
+      assign [class="^.gamescope-wrapped$"] 6
 
       $exec ${getExe' pkgs.dbus "dbus-update-activation-environment"} --systemd --all
       $exec ${getExe pkgs.gromit-mpx}

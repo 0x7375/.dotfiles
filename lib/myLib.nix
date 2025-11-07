@@ -68,53 +68,56 @@ in
   };
 
   bar.font-size = 13;
-  hex = lib.mapAttrs (name: value: lib.removePrefix "#" value) myLib.palette;
-  light_hex = lib.mapAttrs (name: value: lib.removePrefix "#" value) myLib.light_palette;
-
-  palette = {
-    _theme = "dark";
-    bg0_dark = "#000000";
-
-    bg0 = "#000000";
-    bg1 = "#202020";
-    bg2 = "#404040";
-    bg3 = "#606060";
-    fg4 = "#808080";
-    fg3 = "#808080";
-    fg2 = "#A0A0A0";
-    fg1 = "#A0A0A0";
-    fg0 = "#A0A0A0";
-
-    red = "#d4726f";
-    green = "#7eb882";
-    yellow = "#606060";
-    cyan = "#404040";
-    blue = "#A0A0A0";
-    magenta = "#808080";
-    orange = "#606060";
+  hex = {
+    dark = lib.mapAttrs (name: value: lib.removePrefix "#" value) myLib.palette.dark;
+    light = lib.mapAttrs (name: value: lib.removePrefix "#" value) myLib.palette.light;
   };
 
-  light_palette = {
-    _theme = "light";
-    bg0_dark = "#FFFFFF";
+  palette = {
+    dark = {
+      _theme = "dark";
+      bg0_dark = "#000000";
 
-    bg0 = "#FFFFFF";
-    bg1 = "#BFBFBF";
-    bg2 = "#9F9F9F";
-    bg3 = "#9F9F9F";
-    fg4 = "#7F7F7F";
-    fg3 = "#7F7F7F";
-    fg2 = "#5F5F5F";
-    fg1 = "#5F5F5F";
-    fg0 = "#5F5F5F";
+      bg0 = "#000000";
+      bg1 = "#202020";
+      bg2 = "#404040";
+      bg3 = "#606060";
+      fg4 = "#808080";
+      fg3 = "#808080";
+      fg2 = "#A0A0A0";
+      fg1 = "#A0A0A0";
+      fg0 = "#A0A0A0";
 
-    red = "#a8423f";
-    yellow = "#9F9F9F";
-    green = "#4a7c4e";
-    cyan = "#7F7F7F";
-    blue = "#5F5F5F";
-    magenta = "#7F7F7F";
-    orange = "#9F9F9F";
+      red = "#d4726f";
+      green = "#7eb882";
+      yellow = "#606060";
+      cyan = "#404040";
+      blue = "#A0A0A0";
+      magenta = "#808080";
+      orange = "#606060";
+    };
+    light = {
+      _theme = "light";
+      bg0_dark = "#FFFFFF";
+
+      bg0 = "#FFFFFF";
+      bg1 = "#BFBFBF";
+      bg2 = "#9F9F9F";
+      bg3 = "#9F9F9F";
+      fg4 = "#7F7F7F";
+      fg3 = "#7F7F7F";
+      fg2 = "#5F5F5F";
+      fg1 = "#5F5F5F";
+      fg0 = "#5F5F5F";
+
+      red = "#a8423f";
+      yellow = "#9F9F9F";
+      green = "#4a7c4e";
+      cyan = "#7F7F7F";
+      blue = "#5F5F5F";
+      magenta = "#7F7F7F";
+      orange = "#9F9F9F";
+    };
   };
 
   # gruvbox

@@ -7,7 +7,10 @@
 }:
 
 lib.mkIf config.me.gui.enable {
-  packages = with pkgs; [ zathura ];
+  packages = with pkgs; [
+    zathura
+    scripts.zaread
+  ];
 
   xdg.desktopEntries.zaread = {
     name = "Zaread";

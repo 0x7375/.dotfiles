@@ -34,24 +34,24 @@
     useXkbConfig = true;
     colors =
       let
-        hex = myLib.hex;
+        palette = myLib.hex.dark;
       in
       [
         "000000"
-        hex.red
-        hex.green
-        hex.yellow
-        hex.blue
-        hex.magenta
-        hex.cyan
+        palette.red
+        palette.green
+        palette.yellow
+        palette.blue
+        palette.magenta
+        palette.cyan
         "ffffff"
-        hex.bg3
-        hex.red
-        hex.green
-        hex.magenta
-        hex.blue
-        hex.magenta
-        hex.cyan
+        palette.bg3
+        palette.red
+        palette.green
+        palette.magenta
+        palette.blue
+        palette.magenta
+        palette.cyan
         "ffffff"
       ];
   };

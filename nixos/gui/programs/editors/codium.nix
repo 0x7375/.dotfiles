@@ -1,17 +1,13 @@
 {
-  myLib,
   lib,
   config,
   ...
 }:
 
-let
-  palette = myLib.palette;
-in
 lib.mkIf config.me.gui.enable {
   hj.xdg.config.files."VSCodium/User/keybindings.json" = {
     type = "copy";
-    clobber = true;
+    uid = config.me.uid;
     permissions = "0644";
     text = # jsonc
       ''
@@ -72,7 +68,7 @@ lib.mkIf config.me.gui.enable {
 
   hj.xdg.config.files."VSCodium/User/settings.json" = {
     type = "copy";
-    clobber = true;
+    uid = config.me.uid;
     permissions = "0644";
     text = # json
       ''
@@ -149,26 +145,6 @@ lib.mkIf config.me.gui.enable {
             "workbench.activityBar.location": "hidden",
             "terminal.external.linuxExec": "${config.me.gui.terminal} -e tmux",
             "explorer.confirmDelete": false,
-            "workbench.colorCustomizations": {
-                "[Gruvbox Dark Hard]": {
-                    "editor.background": "${palette.bg0}",
-                    "activityBar.background": "${palette.bg0}",
-                    "statusBar.background": "${palette.bg0}",
-                    "statusBar.noFolderBackground": "${palette.bg0}",
-                    "sideBar.background": "${palette.bg0}",
-                    "commandCenter.background": "${palette.bg0}",
-                    "editorSuggestWidget.background": "${palette.bg0}",
-                    "editorSuggestWidget.selectedBackground": "${palette.bg1}",
-                    "editorSuggestWidget.selectedForeground": "${palette.fg0}",
-                    "terminal.background": "${palette.bg0}",
-                    "quickInput.background": "${palette.bg0}",
-                    "editorHoverWidget.background": "${palette.bg0}",
-                    "editorPane.background": "${palette.bg0}",
-                    "editorWidget.background": "${palette.bg0}",
-                    "notifications.background": "${palette.bg0}",
-                    "editorGroupHeader.noTabsBackground": "${palette.bg0}"
-                }
-            },
             "breadcrumbs.enabled": false,
             "editor.scrollbar.verticalScrollbarSize": 0,
             "editor.autoClosingBrackets": "never",

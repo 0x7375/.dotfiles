@@ -1,13 +1,9 @@
 {
   config,
-  myLib,
   pkgs,
   ...
 }:
 
-let
-  hex = myLib.hex;
-in
 pkgs.writeShellApplication {
   name = "lock";
   runtimeInputs =

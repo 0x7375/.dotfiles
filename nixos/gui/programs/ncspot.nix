@@ -1,14 +1,10 @@
 {
-  myLib,
   pkgs,
   config,
   lib,
   ...
 }:
 
-let
-  palette = myLib.palette;
-in
 lib.mkIf config.me.gui.enable {
   nixpkgs.overlays = [
     (final: prev: {
@@ -19,9 +15,9 @@ lib.mkIf config.me.gui.enable {
     })
   ];
 
-  hj.xdg.config.files."ncspot/config.toml" = {
+  tinted.files.".config/ncspot/config.toml" = {
     generator = (pkgs.formats.toml { }).generate "config.toml";
-    value = {
+    value = palette: {
       shuffle = true;
       notify = true;
       repeat = "playlist";

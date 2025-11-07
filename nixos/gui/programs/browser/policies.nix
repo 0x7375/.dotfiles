@@ -159,7 +159,7 @@ lib.mkIf config.me.gui.enable {
                 "uBlock0@raymondhill.net".adminSettings = {
                   userSettings = {
                     uiAccentCustom = true;
-                    uiAccentCustom0 = myLib.palette.cyan;
+                    uiAccentCustom0 = myLib.palette.dark.cyan;
                     cloudStorageEnabled = lib.mkForce false;
                     importedLists = [ ];
                     advancedUserEnabled = true;

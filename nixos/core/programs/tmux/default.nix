@@ -91,7 +91,7 @@ in
 
         setw -g mode-keys vi
 
-        bind R source-file ~/.config/tmux/tmux.conf \; \
+        bind R source-file /etc/tmux.conf \; \
           display "Reloaded tmux.conf"
         bind N neww -c "#{pane_current_path}"
 

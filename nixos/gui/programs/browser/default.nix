@@ -6,6 +6,9 @@
   ...
 }:
 
+let
+  inherit (myLib.palette) dark;
+in
 lib.mkIf config.me.gui.enable {
   packages = with pkgs; [
     zen-browser
@@ -60,7 +63,7 @@ lib.mkIf config.me.gui.enable {
       /* .urlbarView-row { */
       /*   &[selected] { */
       /*     & * { */
-      /*       color: ${myLib.palette.fg0} !important; */
+      /*       color: ${dark.fg0} !important; */
       /*     } */
       /*   } */
       /* } */
@@ -138,7 +141,7 @@ lib.mkIf config.me.gui.enable {
         "zen.theme.content-element-separation" = 1;
         "zen.glance.activation-method" = "ctrl";
         "zen.theme.color-prefs.use-workspace-colors" = false;
-        "zen.theme.accent-color" = myLib.palette.fg0;
+        "zen.theme.accent-color" = dark.fg0;
         "zen.welcome-screen.seen" = true;
         "zen.view.experimental-no-window-controls" = true;
         "zen.tabs.vertical.right-side" = true;
@@ -281,7 +284,7 @@ lib.mkIf config.me.gui.enable {
         "network.http.max-persistent-connections-per-server" = 10;
 
         # change blank pages background color
-        "browser.display.background_color.dark" = "${myLib.palette.bg0}";
+        "browser.display.background_color.dark" = dark.bg0;
 
         # middlemouse paste
         "middlemouse.paste" = false;

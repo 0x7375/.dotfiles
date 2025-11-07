@@ -15,9 +15,8 @@ let
     theme: prefix:
     let
       base = if prefix then "palette" else "hex";
-      key = if theme == "dark" then base else "light_${base}";
     in
-    myLib.${key};
+    myLib.${base}.${theme};
 
   mkThemeFile =
     fileCfg: themePalette:
@@ -118,7 +117,7 @@ in
         example = {
           ".Xresources" = {
             text = palette: ''
-              *bg0: ${palette.hex}
+              *bg0: ${palette.bg0}
               *fg0: ${palette.fg0}
               *red: ${palette.red}
               *green: ${palette.green}

@@ -1,12 +1,16 @@
 { config, lib, ... }:
 
 lib.mkIf config.me.gui.enable {
+  security.rtkit.enable = true;
   services.pipewire = {
     enable = true;
     extraConfig.pipewire = {
-      "99-disable-bell" = {
+      "99-custom" = {
         "context.properties" = {
           "module.x11.bell" = false;
+          "default.clock.rate" = 48000;
+          "default.clock.quantum" = 1024;
+          "default.clock.min-quantum" = 1024;
         };
       };
     };

@@ -1,12 +1,10 @@
 {
   lib,
   pkgs,
-  myLib,
   ...
 }:
 
 let
-  palette = myLib.palette;
   toKeyValue = lib.generators.toKeyValue {
     mkKeyValue = lib.generators.mkKeyValueDefault {
       mkValueString =
@@ -31,7 +29,7 @@ in
     shown_boxes = "proc";
   };
 
-  hj.xdg.config.files."btop/themes/custom.theme".text = ''
+  tinted.files.".config/btop/themes/custom.theme".text = palette: ''
     # All graphs and meters can be gradients
     # For single color graphs leave "mid" and "end" variable empty.
     # Use "start" and "end" variables for two color gradient

@@ -5,7 +5,7 @@
   ...
 }:
 let
-  inherit (myLib) palette light_palette;
+  inherit (myLib.palette) dark light;
 in
 pkgs.writeShellApplication {
   name = "generate-icons";
@@ -22,12 +22,12 @@ pkgs.writeShellApplication {
     rm -rf "$icons_dir"
     mkdir -p "$icons_dir/dark" "$icons_dir/light"
 
-    primary=${palette.fg0}
-    green=${palette.green}
-    red=${palette.red}
-    light_primary=${light_palette.fg0}
-    light_green=${light_palette.green}
-    light_red=${light_palette.red}
+    primary=${dark.fg0}
+    green=${dark.green}
+    red=${dark.red}
+    light_primary=${light.fg0}
+    light_green=${light.green}
+    light_red=${light.red}
 
     for file in "$source_dir"/*.png; do
       filename=$(basename -- "$file")

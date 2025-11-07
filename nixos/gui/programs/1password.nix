@@ -64,9 +64,9 @@ lib.mkIf config.me.gui.enable {
           '';
     in
     [
-      "d /home/${config.me.user}/.config 0755 ${config.me.user} users - -"
-      "d /home/${config.me.user}/.config/1Password 0700 ${config.me.user} users - -"
-      "d /home/${config.me.user}/.config/1Password/settings 0700 ${config.me.user} users - -"
-      "f /home/${config.me.user}/.config/1Password/settings/settings.json 0600 ${config.me.user} users - ${content}"
+      "d ${config.me.home}/.config 0755 ${config.me.user} users - -"
+      "d ${config.me.home}/.config/1Password 0700 ${config.me.user} users - -"
+      "d ${config.me.home}/.config/1Password/settings 0700 ${config.me.user} users - -"
+      "f ${config.me.home}/.config/1Password/settings/settings.json 0600 ${config.me.user} users - ${content}"
     ];
 }

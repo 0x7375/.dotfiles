@@ -25,6 +25,12 @@ in
       description = "Path to the nixos flake directory";
     };
 
+    home = lib.mkOption {
+      type = lib.types.str;
+      default = "/home/${cfg.user}";
+      description = "Home directory";
+    };
+
     user = lib.mkOption {
       type = lib.types.str;
       default = "ayko";

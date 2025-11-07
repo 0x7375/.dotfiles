@@ -6,7 +6,7 @@
 }:
 let
   cfg = config.tinted;
-  home = "/home/${config.me.user}";
+  home = config.me.home;
   tintedDir = ".local/state/tinted";
 
   applyIfFn = f: arg: if lib.isFunction f then f arg else f;
@@ -54,19 +54,19 @@ let
           {
             dark = null;
             light = null;
-          }
-        // {
-          "${targetPath}" = {
-            type = "symlink";
-            clobber = false;
-            source = "${home}/${sourcePath}-${cfg.defaultTheme}";
           };
-        };
+      # // {
+      #   "${targetPath}" = {
+      #     type = "symlink";
+      #     clobber = false;
+      #     source = "${home}/${sourcePath}-${cfg.defaultTheme}";
+      # };
+      # };
 
       tmpfiles = [
         "d ${home}/${dir} 0755 ${config.me.user} users - -"
         "d ${home}/${sourceDir} 0755 ${config.me.user} users - -"
-        # "L ${home}/${targetPath} - - - - ${home}/${sourcePath}-${cfg.defaultTheme}" # when using smfh linker
+        "L ${home}/${targetPath} - - - - ${home}/${sourcePath}-${cfg.defaultTheme}" # when using smfh linker
       ];
     };
 

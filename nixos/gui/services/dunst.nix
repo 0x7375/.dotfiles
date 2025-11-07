@@ -19,7 +19,7 @@ lib.mkIf config.me.gui.enable {
     description = "Dunst notification daemon";
     after = [ "graphical-session.target" ];
     partOf = [ "graphical-session.target" ];
-    reloadTriggers = [ "${config.hj.files.".config/dunst/dunstrc".source}" ];
+    # reloadTriggers = [ "${config.hj.files.".config/dunst/dunstrc".source}" ];
 
     serviceConfig = {
       Type = "dbus";
@@ -136,7 +136,7 @@ lib.mkIf config.me.gui.enable {
         history_ignore = true;
       };
       charged = {
-        body = "*fully*";
+        appname = "charged";
         frame_color = palette.green;
         foreground = palette.green;
       };

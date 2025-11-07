@@ -24,17 +24,17 @@
     };
 
     sops.defaultSopsFile = "${secrets}/default.yaml";
-    sops.age.sshKeyPaths = [ "/home/${config.me.user}/.ssh/id_ed25519" ];
+    sops.age.sshKeyPaths = [ "${config.me.home}/.ssh/id_ed25519" ];
     sops.gnupg.sshKeyPaths = [ ];
 
     sops.secrets.cachix = { };
 
     system.activationScripts.generateSopsKey.text = # bash
       ''
-        [[ ! -e /home/${config.me.user}/.config/sops/age/keys.txt ]] && {
-          mkdir -p /home/${config.me.user}/.config/sops/age
+        [[ ! -e ${config.me.home}/.config/sops/age/keys.txt ]] && {
+          mkdir -p ${config.me.home}/.config/sops/age
           ${lib.getExe pkgs.ssh-to-age} -private-key -i ${builtins.head config.sops.age.sshKeyPaths} \
-            -o /home/${config.me.user}/.config/sops/age/keys.txt
+            -o ${config.me.home}/.config/sops/age/keys.txt
         }
       '';
   };

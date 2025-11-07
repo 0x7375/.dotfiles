@@ -7,11 +7,11 @@
 
 lib.mkIf config.me.secrets.enable {
   sops.secrets."atuin/key" = {
-    path = "/home/${config.me.user}/.local/share/atuin/key";
+    path = "${config.me.home}/.local/share/atuin/key";
     owner = config.me.user;
   };
   sops.secrets."atuin/session" = {
-    path = "/home/${config.me.user}/.local/share/atuin/session";
+    path = "${config.me.home}/.local/share/atuin/session";
     owner = config.me.user;
   };
 

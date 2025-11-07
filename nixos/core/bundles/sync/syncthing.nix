@@ -6,7 +6,7 @@
 }:
 
 let
-  user = config.me.user;
+  inherit (config.me) user home;
 in
 {
   config = lib.mkIf (config.me.syncthing.enable && config.me.secrets.enable) {
@@ -20,7 +20,7 @@ in
       enable = true;
       inherit user;
       package = pkgs.auto.syncthing;
-      dataDir = "/home/${user}";
+      dataDir = home;
       overrideDevices = true;
       overrideFolders = true;
       guiPasswordFile = config.sops.secrets.syncthing_pw.path;

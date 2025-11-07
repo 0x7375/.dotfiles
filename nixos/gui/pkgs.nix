@@ -19,7 +19,11 @@ lib.mkIf config.me.gui.enable {
     })
   ];
 
-  unfree-packages = [ "discord" "omnissa-horizon-client" "android-studio-stable" ];
+  unfree-packages = [
+    "discord"
+    "omnissa-horizon-client"
+    "android-studio-stable"
+  ];
 
   packages =
     with pkgs;
@@ -127,38 +131,5 @@ lib.mkIf config.me.gui.enable {
 
       android-studio
       # stable.jetbrains.idea-community
-
-      # codium
-      (vscode-with-extensions.override {
-        vscode = vscodium;
-        vscodeExtensions =
-          with vscode-extensions;
-          [
-            jnoortheen.nix-ide
-            jdinhlife.gruvbox
-            haskell.haskell
-            justusadam.language-haskell
-            asvetliakov.vscode-neovim
-            ms-python.python
-            redhat.java
-            mkhl.direnv
-            golang.go
-            llvm-vs-code-extensions.vscode-clangd
-          ]
-          ++ vscode-utils.extensionsFromVscodeMarketplace [
-            # {
-            #   name = "everforest";
-            #   publisher = "sainnhe";
-            #   version = "0.3.0";
-            #   sha256 = "nZirzVvM160ZTpBLTimL2X35sIGy5j2LQOok7a2Yc7U=";
-            # }
-            {
-              name = "debug";
-              publisher = "webfreak";
-              version = "0.27.0";
-              sha256 = "p/k5UcXldXKFKbPbnW603Jsut53n01azeDhWMDSd4nw=";
-            }
-          ];
-      })
     ]);
 }

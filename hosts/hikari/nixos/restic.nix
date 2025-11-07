@@ -24,7 +24,7 @@ lib.mkIf config.me.secrets.enable {
 
   services.restic.backups =
     let
-      syncthingDirs = map (path: "/home/${config.me.user}/${path}") [
+      syncthingDirs = map (path: "${config.me.home}/${path}") [
         "documents"
         "games/ds"
         "perso"
@@ -47,7 +47,7 @@ lib.mkIf config.me.secrets.enable {
       ];
 
       gitRepos = [
-        "/home/${config.me.user}/git"
+        "${config.me.home}/git"
       ];
 
       backupConfig =

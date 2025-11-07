@@ -66,7 +66,7 @@ in
 lib.mkIf config.me.gui.enable {
   vars = {
     GTK_THEME = theme.name;
-    GTK2_RC_FILES = "/home/${config.me.user}/.config/gtk-2.0/gtkrc";
+    GTK2_RC_FILES = "${config.me.home}/.config/gtk-2.0/gtkrc";
   };
 
   programs.dconf.profiles = {
@@ -126,9 +126,9 @@ lib.mkIf config.me.gui.enable {
       gtk-decoration-layout=
     '';
     "gtk-3.0/bookmarks".text = ''
-      file:///home/${config.me.user}/.config
-      file:///home/${config.me.user}/uni
-      file:///home/${config.me.user}/repos
+      file://${config.me.home}/.config
+      file://${config.me.home}/uni
+      file://${config.me.home}/repos
     '';
     "gtk-4.0/settings.ini".source = config.hj.xdg.config.files."gtk-3.0/settings.ini".source;
 

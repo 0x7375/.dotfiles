@@ -2,10 +2,10 @@
 
 {
   systemd.tmpfiles.rules = [
-    "d /home/${config.me.user}/.local 0755 ${config.me.user} users -"
-    "d /home/${config.me.user}/.local/share 0755 ${config.me.user} users -"
-    "d /home/${config.me.user}/.local/share/gnupg 0700 ${config.me.user} users -"
-    "d /home/${config.me.user}/.local/share/android 0755 ${config.me.user} users -"
+    "d ${config.me.home}/.local 0755 ${config.me.user} users -"
+    "d ${config.me.home}/.local/share 0755 ${config.me.user} users -"
+    "d ${config.me.home}/.local/share/gnupg 0700 ${config.me.user} users -"
+    "d ${config.me.home}/.local/share/android 0755 ${config.me.user} users -"
   ];
 
   vars =

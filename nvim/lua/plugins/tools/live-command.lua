@@ -1,11 +1,13 @@
 return {
     'smjonas/live-command.nvim',
-    cmd = { "Norm", "G", "S" },
+    cmd = { "Norm" },
+    init = function()
+        vim.cmd("cnoreabbrev norm Norm")
+    end,
     opts = {
+        inline_highlighting = false,
         commands = {
             Norm = { cmd = "norm" },
-            G = { cmd = "g" },
-            S = { cmd = "s" },
         }
     },
     config = function(_, opts)

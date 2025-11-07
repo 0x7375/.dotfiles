@@ -8,14 +8,14 @@ lib.mkIf config.me.gui.enable {
     text =
       # toml
       let
-        inherit (config.me) user;
+        inherit (config.me) home;
       in
       ''
         LastBIOSFolder = ""
-        LastROMFolder = "/home/${user}/games/ds/LaytonSpectresCall"
+        LastROMFolder = "${home}/games/ds/LaytonSpectresCall"
         UITheme = ""
         RecentROM = [
-            "/home/${user}/games/ds/LaytonSpectresCall/LaytonSpectresCall.nds",
+            "${home}/games/ds/LaytonSpectresCall/LaytonSpectresCall.nds",
         ]
         FastForwardFPS = 1000.0
         AudioSync = false

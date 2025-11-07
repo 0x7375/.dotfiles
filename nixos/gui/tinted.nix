@@ -1,14 +1,14 @@
 { config, ... }:
 
+let
+  path = "$HOME/.local/state/tinted/theme";
+in
 {
   tinted.enable = true;
 
-  hj.xdg.state.files."tinted/theme" = {
-    text = "dark";
-    type = "copy";
-    clobber = false;
-    permissions = "0644";
-  };
+  systemd.user.tmpfiles.rules = [
+    "f ${path} 0644 root root - dark"
+  ];
 
-  vars.TINTED_FILE = "$HOME/.local/state/tinted/theme";
+  vars.TINTED_FILE = path;
 }

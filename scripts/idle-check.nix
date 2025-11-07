@@ -38,7 +38,7 @@ pkgs.writeShellApplication {
           hyprctl dispatch dpms off
         fi
         ;;
-      "lock") pidof lock || lock ;;
+      "lock") lock ;;
       "hibernate") systemctl hibernate ;;
     esac
   '';

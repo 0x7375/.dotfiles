@@ -15,7 +15,7 @@
 
   users.users.${config.me.user} = {
     isNormalUser = true;
-    home = "/home/${config.me.user}";
+    home = config.me.home;
     initialPassword = "pw123";
     initialHashedPassword = lib.mkForce null;
     uid = config.me.uid;
@@ -28,7 +28,7 @@
   };
 
   hjem = {
-    # linker = inputs.hjem.packages.${pkgs.stdenv.hostPlatform.system}.smfh;
+    linker = inputs.hjem.packages.${pkgs.stdenv.hostPlatform.system}.smfh;
     users.${config.me.user}.enable = true;
     clobberByDefault = true;
   };

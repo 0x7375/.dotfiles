@@ -83,7 +83,7 @@ lib.mkIf config.me.gui.enable {
       }
 
       /* disable animations */
-      * { animation: none !important; }
+      * { animation: none !important; transition: none !important; }
     '';
 
   hj.files.".zen/default/zen-keyboard-shortcuts.json".text = (

@@ -20,7 +20,7 @@ lib.mkIf config.me.secrets.enable {
         remote_url="https://codeberg.org"
         user="0x7E"
         remote="''${remote_url}/''${user}"
-        backup_dir="/home/${config.me.user}/git"
+        backup_dir="${config.me.home}/git"
         mkdir -p "$backup_dir"
 
         repos=$(curl -s "''${remote_url}/api/v1/users/$user/repos" | jq -r '.[].clone_url')

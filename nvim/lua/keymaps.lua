@@ -28,7 +28,7 @@ map({ "n", "x" }, "s", "V")
 map("n", "<ESC>", vim.cmd.nohlsearch, { desc = "Clear search highlights" })
 
 -- easy renaming
-map("n", "<leader>r", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
+map("n", "<leader>r", [[:%s/\v<<C-r><C-w>>/<C-r><C-w>/gI<Left><Left><Left>]])
 
 local function toggle_quickfix()
     local windows = vim.fn.getwininfo()
@@ -70,6 +70,11 @@ map("n", "{", "{zz", { noremap = true })
 map("n", "<C-o>", "<C-o>zz", { noremap = true })
 map("n", "<C-i>", "<C-i>zz", { noremap = true })
 
+map("n", "/", "/\\v", { noremap = true })
+map("n", "?", "?\\v", { noremap = true })
+map("n", "<leader>s", ":%s#\\v", { noremap = true })
+map("n", "<leader>S", ":%g#\\v", { noremap = true })
+
 vim.keymap.set('c', '<CR>', function()
     local cmdtype = vim.fn.getcmdtype()
     -- center and refresh winbar on search commands
@@ -78,6 +83,10 @@ vim.keymap.set('c', '<CR>', function()
     else
         return '<CR>'
     end
+end, { expr = true })
+
+map('i', '<Esc>', function()
+    return vim.fn.pumvisible() == 1 and '<C-e>' or '<Esc>'
 end, { expr = true })
 
 -- Makes the file executable
@@ -107,31 +116,6 @@ map('c', '<C-h>', '<BS>')
 map('c', '<C-d>', '<Del>')
 map('c', '<C-f>', '<Right>')
 map('c', '<C-b>', '<Left>')
-
--- scroll noice doc if possible
-map("n", "<c-f>", function()
-    if not require("noice.lsp").scroll(4) then
-        return "<c-f>"
-    end
-end, { silent = true, expr = true })
-
-map("n", "<c-b>", function()
-    if not require("noice.lsp").scroll(-4) then
-        return "<c-b>"
-    end
-end, { silent = true, expr = true })
-
-map({ "i", "s" }, "<c-f>", function()
-    if not require("noice.lsp").scroll(4) then
-        return "<Right>"
-    end
-end, { silent = true, expr = true })
-
-map({ "i", "s" }, "<c-b>", function()
-    if not require("noice.lsp").scroll(-4) then
-        return "<Left>"
-    end
-end, { silent = true, expr = true })
 
 -- direction based window resizing
 local change_width = function(d)

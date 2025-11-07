@@ -6,6 +6,7 @@
 
 pkgs.writeShellApplication {
   name = "lock";
+  bashOptions = [ ];
   runtimeInputs =
     with pkgs;
     [
@@ -41,7 +42,7 @@ pkgs.writeShellApplication {
           --separator-color="''${fg}"ff --keyhl-color="''${bg}"ff --bshl-color="''${red}"ff \
           --insidever-color="''${yellow}"ff --insidewrong-color="''${red}"ff \
           --ringver-color="''${fg}"ff --ringwrong-color="''${fg}"ff --radius=60 \
-          --verif-text="" --wrong-text="" --noinput-text="" --lock-text=""
+          --verif-text="" --wrong-text="" --noinput-text="" --lock-text="" || i3lock
     else
       hyprlock
     fi

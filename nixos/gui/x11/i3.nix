@@ -224,8 +224,8 @@ lib.mkIf (gui.displayServer == "xorg") {
   hj.xdg.config.files."libinput-gestures.conf".text = ''
     gesture swipe left 3 i3-msg workspace next
     gesture swipe right 3 i3-msg workspace prev
-    gesture swipe down 3 xdotool key super+f
-    gesture swipe up 3 xdotool key super+f
+    gesture swipe down 3 bash -c "xdotool key super+f; xdotool key alt+c"
+    gesture swipe up 3 bash -c "xdotool key super+f; xdotool key alt+c"
   '';
 
   # user needs to be in the input group

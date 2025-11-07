@@ -74,7 +74,7 @@ in
 
   hj.xdg.config.files."lf/lfrc".text =
     let
-      inherit (config.me) user uid;
+      inherit (config.me) user uid home;
       inherit (lib) getExe getExe';
       confirm-key = "s";
       no-confirm =
@@ -317,7 +317,7 @@ in
       map O &${getExe pkgs.dragon-drop} $fx
       map P paste-overwrite
       map Q quit-and-cd
-      map R :source /home/${user}/.config/lf/lfrc; reload
+      map R :source ${home}/.config/lf/lfrc; reload
       map S su
       map V invert
       map W online-share
@@ -335,25 +335,25 @@ in
       map e edit
       map f find
       map g/ cd /
-      map gD cd /home/${user}/downloads
+      map gD cd ${home}/downloads
       map gL follow_link
       map gN cd /nix/store
-      map gP cd /home/${user}/pictures
+      map gP cd ${home}/pictures
       map gR cd /run/user/${toString uid}
       map ga cd /usr/share/applications
-      map gb cd /home/${user}/.local/bin
-      map gc cd /home/${user}/.config
-      map gd cd  /home/${user}/documents
+      map gb cd ${home}/.local/bin
+      map gc cd ${home}/.config
+      map gd cd  ${home}/documents
       map ge cd ${config.me.flakeDir}
       map gg top
-      map gl cd /home/${user}/.local
+      map gl cd ${home}/.local
       map gm cd /run/media/${user}
       map gn cd /run/current-system/
-      map gp cd /home/${user}/perso
-      map gr cd /home/${user}/repos
-      map gt cd /home/${user}/.local/share/Trash/files
-      map gu cd /home/${user}/uni
-      map gv cd /home/${user}/pictures/videos
+      map gp cd ${home}/perso
+      map gr cd ${home}/repos
+      map gt cd ${home}/.local/share/Trash/files
+      map gu cd ${home}/uni
+      map gv cd ${home}/pictures/videos
       map h updir
       map j down
       map k up
@@ -386,7 +386,7 @@ in
       map zr
       map zs
       map zt
-      map ~ cd /home/${user}
+      map ~ cd ${home}
 
       set previewer ${getExe' ctpv "ctpv"}
       map <c-p> ''$${getExe' ctpv "ctpv"} "$f" | less -R

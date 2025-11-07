@@ -17,9 +17,9 @@ lib.mkIf (config.me.syncthing-client.enable && config.me.secrets.enable) {
       '';
     in
     [
-      "d /home/${config.me.user}/.config 0755 ${config.me.user} users - -"
-      "d /home/${config.me.user}/.config/Ryujinx 0755 ${config.me.user} users - -"
-      "f /home/${config.me.user}/.config/Ryujinx/.stignore 0644 ${config.me.user} users - ${content}"
+      "d ${config.me.home}/.config 0755 ${config.me.user} users - -"
+      "d ${config.me.home}/.config/Ryujinx 0755 ${config.me.user} users - -"
+      "f ${config.me.home}/.config/Ryujinx/.stignore 0644 ${config.me.user} users - ${content}"
     ];
 
   services.syncthing = {

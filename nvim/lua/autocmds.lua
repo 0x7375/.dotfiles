@@ -83,6 +83,7 @@ vim.api.nvim_create_autocmd({
         "WinEnter",
         "TermEnter",
         "VimEnter",
+        "DirChanged",
     },
     {
         callback = function()

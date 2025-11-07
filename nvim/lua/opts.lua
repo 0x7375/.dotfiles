@@ -8,7 +8,7 @@ vim.opt.modeline = false
 vim.opt.pumheight = 8
 vim.opt.pummaxwidth = 60
 vim.opt.pumborder = "single"
-vim.opt.completeopt = { "menu", "menuone", "popup", "noselect" }
+vim.opt.completeopt = { "menu", "menuone", "popup", "nearest" }
 
 -- hide search hit bottom
 vim.opt.shortmess:append("Is")

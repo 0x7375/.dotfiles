@@ -34,7 +34,7 @@ lib.mkMerge [
       owner = config.me.user;
       format = "json";
       key = "";
-      path = "/home/${config.me.user}/.config/github-copilot/apps.json";
+      path = "${config.me.home}/.config/github-copilot/apps.json";
     };
   })
 ]

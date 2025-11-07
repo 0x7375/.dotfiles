@@ -5,6 +5,54 @@
 }:
 
 lib.mkIf config.me.gui.enable {
+  packages = with pkgs; [
+    # codium
+    (vscode-with-extensions.override {
+      vscode = vscodium;
+      vscodeExtensions =
+        with vscode-extensions;
+        [
+          jnoortheen.nix-ide
+          haskell.haskell
+          justusadam.language-haskell
+          asvetliakov.vscode-neovim
+          ms-python.python
+          redhat.java
+          mkhl.direnv
+          golang.go
+          llvm-vs-code-extensions.vscode-clangd
+        ]
+        ++ vscode-utils.extensionsFromVscodeMarketplace [
+          # {
+          #   name = "everforest";
+          #   publisher = "sainnhe";
+          #   version = "0.3.0";
+          #   sha256 = "nZirzVvM160ZTpBLTimL2X35sIGy5j2LQOok7a2Yc7U=";
+          # }
+          {
+            name = "debug";
+            publisher = "webfreak";
+            version = "0.27.0";
+            sha256 = "p/k5UcXldXKFKbPbnW603Jsut53n01azeDhWMDSd4nw=";
+          }
+        ]
+        ++ [
+          (pkgs.vscode-utils.buildVscodeMarketplaceExtension {
+            mktplcRef = {
+              name = "monochromator";
+              publisher = "beem";
+              version = "0.28.0";
+            };
+            vsix = pkgs.fetchurl {
+              name = "beem.monochromator-0.28.0.vsix.zip";
+              url = "https://open-vsx.org/api/beem/monochromator/0.28.0/file/beem.monochromator-0.28.0.vsix";
+              sha256 = "sha256-UaH7+qc9ytvEW9WjjN2lRbHMuzwxEDF4lh+SRn7lesY=";
+            };
+          })
+        ];
+    })
+  ];
+
   hj.xdg.config.files."VSCodium/User/keybindings.json" = {
     type = "copy";
     uid = config.me.uid;
@@ -141,7 +189,6 @@ lib.mkIf config.me.gui.enable {
             "window.menuBarVisibility": "toggle",
             "security.workspace.trust.startupPrompt": "never",
             "security.workspace.trust.enabled": false,
-            "workbench.colorTheme": "Gruvbox Dark Hard",
             "workbench.activityBar.location": "hidden",
             "terminal.external.linuxExec": "${config.me.gui.terminal} -e tmux",
             "explorer.confirmDelete": false,
@@ -174,7 +221,11 @@ lib.mkIf config.me.gui.enable {
             "editor.hover.enabled": false,
             "editor.wordWrap": "on",
             "editor.inlayHints.enabled": "on",
-            "redhat.telemetry.enabled": false
+            "redhat.telemetry.enabled": false,
+            "window.autoDetectColorScheme": true,
+            "workbench.preferredDarkColorTheme": "Monochromator Dark Amber",
+            "workbench.preferredHighContrastColorTheme": "Monochromator Light Amber",
+            "workbench.preferredLightColorTheme": "Monochromator Light Amber"
         }
       '';
   };

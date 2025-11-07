@@ -16,8 +16,8 @@ lib.mkIf config.me.gui.enable {
           '';
     in
     [
-      "d /home/${config.me.user}/.local/share/keyrings 0700 ${config.me.user} users - -"
-      "f /home/${config.me.user}/.local/share/keyrings/login.keyring 0600 ${config.me.user} users - ${content}"
+      "d ${config.me.home}/.local/share/keyrings 0700 ${config.me.user} users - -"
+      "f ${config.me.home}/.local/share/keyrings/login.keyring 0600 ${config.me.user} users - ${content}"
     ];
 
   hj.xdg.data.files."keyrings/default".text = "login";

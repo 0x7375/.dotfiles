@@ -34,7 +34,7 @@ pkgs.writeShellApplication {
         notify-send "Battery Charged" "Battery is fully charged." -i "battery-full" -a "charged" -r 9991
         touch $full_file
     elif [[ $battery_level -le $warning_level ]] && [[ $battery_discharging -eq 1 ]] && [[ ! -f $empty_file ]]; then
-        notify-send "Low Battery" "$battery_level% of battery remaining." -u critical -i "battery-low" -a "alert" -r 9991
+        notify-send "Low Battery" "$battery_level% of battery remaining." -u critical -i "battery-low" -r 9991
         touch $empty_file
     fi
   '';

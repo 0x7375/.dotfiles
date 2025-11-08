@@ -221,12 +221,16 @@ lib.mkIf (gui.displayServer == "xorg") {
 
   packages = [ pkgs.libinput-gestures ];
 
-  hj.xdg.config.files."libinput-gestures.conf".text = ''
-    gesture swipe left 3 i3-msg workspace next
-    gesture swipe right 3 i3-msg workspace prev
-    gesture swipe down 3 bash -c "xdotool key super+f; xdotool key alt+c"
-    gesture swipe up 3 bash -c "xdotool key super+f; xdotool key alt+c"
-  '';
+  hj.xdg.config.files."libinput-gestures.conf".text =
+    let
+      xdo = getExe pkgs.xdotool;
+    in
+    ''
+      gesture swipe left 3 i3-msg workspace next
+      gesture swipe right 3 i3-msg workspace prev
+      gesture swipe down 3 ${getExe pkgs.bash} -c "${xdo} key super+f; ${xdo} key alt+c"
+      gesture swipe up 3 ${getExe pkgs.bash} -c "${xdo} key super+f; ${xdo} key alt+c"
+    '';
 
   # user needs to be in the input group
   systemd.user.services.libinput-gestures = {

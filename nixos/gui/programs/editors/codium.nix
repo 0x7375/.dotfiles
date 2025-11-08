@@ -1,4 +1,5 @@
 {
+  pkgs,
   lib,
   config,
   ...
@@ -55,7 +56,6 @@ lib.mkIf config.me.gui.enable {
 
   hj.xdg.config.files."VSCodium/User/keybindings.json" = {
     type = "copy";
-    uid = config.me.uid;
     permissions = "0644";
     text = # jsonc
       ''
@@ -116,7 +116,6 @@ lib.mkIf config.me.gui.enable {
 
   hj.xdg.config.files."VSCodium/User/settings.json" = {
     type = "copy";
-    uid = config.me.uid;
     permissions = "0644";
     text = # json
       ''
@@ -214,7 +213,7 @@ lib.mkIf config.me.gui.enable {
             "workbench.tree.indent": 20,
             "explorer.confirmDragAndDrop": false,
             "terminal.integrated.sendKeybindingsToShell": true,
-            "editor.lightbulb.enabled": false,
+            "editor.lightbulb.enabled": "off",
             "nix.enableLanguageServer": true,
             "nix.serverPath": "nixd",
             "editor.fontWeight": "bold",

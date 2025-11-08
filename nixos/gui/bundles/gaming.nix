@@ -35,3 +35,4 @@ lib.mkIf config.me.gui.bundles.gaming.enable {
     STEAM_EXTRA_COMPAT_TOOLS_PATHS = "${config.me.home}/.steam/root/compatibilitytools.d";
     __GL_SYNC_DISPLAY_DEVICE = "HDMI-1"; # prevent gamescope for instance from locking fps to second monitor refresh rate
   };
+}

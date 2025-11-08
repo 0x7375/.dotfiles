@@ -64,7 +64,7 @@ lib.mkIf config.me.secrets.enable {
     ''
       source $ZDOTDIR/atuin-history-arrow.zsh
 
-      export ATUIN_NOBIND="true"
+      export ATUIN_NOBIND=true
       eval "$(atuin init zsh)"
     '';
 
@@ -108,10 +108,8 @@ lib.mkIf config.me.secrets.enable {
       # bash
       ''
         if atuin doctor 2>&1 | grep -q '"sync": null'; then
-          bindkey '^R' fzf-atuin-history-widget
+          bindkey '^T' fzf-atuin-history-widget
 
-          bindkey '^[[A' atuin-history-up
-          bindkey '^[[B' atuin-history-down
           bindkey '^P' atuin-history-up
           bindkey '^N' atuin-history-down
         fi

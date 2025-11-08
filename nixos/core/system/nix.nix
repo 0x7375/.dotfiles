@@ -32,6 +32,12 @@
       nixpkgs.flake = inputs.nixpkgs;
       stable.flake = inputs.nixpkgs-stable;
       n.flake = inputs.nixpkgs;
+      t = {
+        from.type = "indirect";
+        from.id = "tmpl";
+        to.type = "git";
+        to.url = "https://codeberg.org/0x7E/templates";
+      };
     };
   };
 

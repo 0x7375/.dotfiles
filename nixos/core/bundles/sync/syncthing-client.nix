@@ -14,10 +14,6 @@ lib.mkIf (config.me.syncthing-client.enable && config.me.secrets.enable) {
     **
   '';
 
-  hj.xdg.state.files."zsh/.stignore".text = ''
-    .hist-sync.lock
-  '';
-
   services.syncthing = {
     settings = {
       devices = {
@@ -75,7 +71,7 @@ lib.mkIf (config.me.syncthing-client.enable && config.me.secrets.enable) {
           ];
         };
         arbtt = syncthingDirConfig {
-          path = ".local/share/arbtt";
+          path = ".local/state/arbtt";
           devices = [
             "server"
           ];

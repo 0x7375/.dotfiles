@@ -103,7 +103,7 @@ lib.mkIf config.me.secrets.enable {
             ];
           };
           arbtt = syncthingDirConfig {
-            path = ".local/share/arbtt";
+            path = ".local/state/arbtt";
             devices = [
               "yugen"
               "ryusei"

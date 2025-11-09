@@ -1,4 +1,5 @@
 {
+  pkgs,
   myLib,
   lib,
   config,
@@ -6,10 +7,12 @@
 }:
 
 {
+  packages = [ pkgs.arbtt-stats ];
+
   services = {
     arbtt = {
       enable = true;
-      logFile = "%h/.local/share/arbtt/arbtt.log";
+      logFile = "%h/.local/state/arbtt/capture.log";
     };
 
     earlyoom.enable = true;

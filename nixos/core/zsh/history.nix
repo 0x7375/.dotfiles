@@ -1,4 +1,8 @@
 {
+  hj.xdg.state.files."zsh/.stignore".text = ''
+    .hist-sync.lock
+  '';
+
   hj.xdg.config.files."zsh/history.zsh".text = # bash
     ''
       hist_dir="$XDG_STATE_HOME"/zsh

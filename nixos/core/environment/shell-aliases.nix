@@ -143,7 +143,23 @@ in
       }
 
       dotu() {
-        ${cdDotfiles "${git} pull --rebase --autostash"}
+        ${cdDotfiles ''
+          if ! ${git} pull --rebase --autostash; then
+            if ${git} diff --name-only --diff-filter=U | grep -q "flake.lock"; then
+              local_time=$(${git} log -1 --format=%ct HEAD -- flake.lock 2>/dev/null || echo 0)
+              remote_time=$(${git} log -1 --format=%ct REBASE_HEAD -- flake.lock 2>/dev/null || echo 0)
+              
+              if [[ $remote_time -gt $local_time ]]; then
+                ${git} checkout REBASE_HEAD -- flake.lock
+              else
+                ${git} checkout HEAD -- flake.lock
+              fi
+              
+              ${git} add flake.lock
+              ${git} rebase --continue
+            fi
+          fi
+        ''}
       }
 
       dotf() {

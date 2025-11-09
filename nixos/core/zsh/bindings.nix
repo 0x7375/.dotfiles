@@ -5,7 +5,7 @@
 
       bindkey '\ev' edit-command-line
 
-      bindkey '^R' fzf-history-widget
+      bindkey '^T' fzf-history-widget
 
       bindkey -s '^O' "lf^M"
 

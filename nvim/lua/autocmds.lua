@@ -84,12 +84,20 @@ vim.api.nvim_create_autocmd({
         "TermEnter",
         "VimEnter",
         "DirChanged",
+        "RecordingEnter",
     },
     {
         callback = function()
             require("util.bar").refresh()
         end
     })
+vim.api.nvim_create_autocmd("RecordingLeave", {
+    callback = function()
+        vim.schedule(function()
+            require("util.bar").refresh()
+        end)
+    end
+})
 
 -- set pwd to first argument if said argument is a directory
 vim.api.nvim_create_autocmd("VimEnter", {

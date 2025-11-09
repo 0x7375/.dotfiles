@@ -12,6 +12,13 @@ return {
         { mode = "i", "<M-CR>", desc = "Copilot: open suggestions panel" },
     },
     opts = {
+        server_opts_overrides = {
+            settings = {
+                telemetry = {
+                    telemetryLevel = "off",
+                },
+            },
+        },
         panel = {
             enabled = true,
             auto_refresh = true,

@@ -54,7 +54,7 @@ in
 
         unbind C-b
         set -g prefix C-s
-        bind -n -N "Send the prefix key through to the application" \
+        bind -N "Send the prefix key through to the application" \
           C-s send-prefix
 
         set -g mouse on

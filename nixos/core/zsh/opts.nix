@@ -12,7 +12,6 @@
       setopt histignorespace
       setopt histignoredups
       setopt banghist
-      setopt extendedhistory
       setopt histexpiredupsfirst
       setopt histignoredups
       setopt histignorealldups
@@ -23,5 +22,6 @@
       setopt prompt_subst
       setopt no_nomatch
       unsetopt share_history
+      unsetopt extended_history
     '';
 }

@@ -103,7 +103,14 @@ lib.mkIf config.me.secrets.enable {
             ];
           };
           arbtt = syncthingDirConfig {
-            path = ".local/share/arbtt.log";
+            path = ".local/share/arbtt";
+            devices = [
+              "yugen"
+              "ryusei"
+            ];
+          };
+          zsh_history = syncthingDirConfig {
+            path = ".local/state/zsh";
             devices = [
               "yugen"
               "ryusei"

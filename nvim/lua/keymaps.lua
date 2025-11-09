@@ -1,11 +1,11 @@
 local map = vim.keymap.set
 local bar = require("util.bar")
 
-map("n", "q", function()
-    local char = vim.fn.getcharstr()
-    vim.cmd("normal! q" .. char)
-    vim.schedule(bar.refresh)
-end)
+-- map("n", "q", function()
+--     local char = vim.fn.getcharstr()
+--     vim.cmd("normal! q" .. char)
+--     vim.schedule(bar.refresh)
+-- end)
 
 map({ "n", "x", "v" }, ":", ";")
 map({ "n", "x", "v" }, ";", ":")
@@ -70,8 +70,6 @@ map("n", "{", "{zz", { noremap = true })
 map("n", "<C-o>", "<C-o>zz", { noremap = true })
 map("n", "<C-i>", "<C-i>zz", { noremap = true })
 
-map("n", "/", "/\\v", { noremap = true })
-map("n", "?", "?\\v", { noremap = true })
 map("n", "<leader>s", ":%s#\\v", { noremap = true })
 map("n", "<leader>S", ":%g#\\v", { noremap = true })
 

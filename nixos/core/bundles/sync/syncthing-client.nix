@@ -8,19 +8,15 @@
 lib.mkIf (config.me.syncthing-client.enable && config.me.secrets.enable) {
   programs.fuse.userAllowOther = true;
 
-  systemd.tmpfiles.rules =
-    let
-      content = builtins.replaceStrings [ "\n" ] [ "\\n" ] ''
-        !/bis/user
-        !/bis/system/save
-        **
-      '';
-    in
-    [
-      "d ${config.me.home}/.config 0755 ${config.me.user} users - -"
-      "d ${config.me.home}/.config/Ryujinx 0755 ${config.me.user} users - -"
-      "f ${config.me.home}/.config/Ryujinx/.stignore 0644 ${config.me.user} users - ${content}"
-    ];
+  hj.xdg.config.files."Ryujinx/.stignore".text = ''
+    !/bis/user
+    !/bis/system/save
+    **
+  '';
+
+  hj.xdg.state.files."zsh/.stignore".text = ''
+    .hist-sync.lock
+  '';
 
   services.syncthing = {
     settings = {
@@ -79,7 +75,13 @@ lib.mkIf (config.me.syncthing-client.enable && config.me.secrets.enable) {
           ];
         };
         arbtt = syncthingDirConfig {
-          path = ".local/share/arbtt.log";
+          path = ".local/share/arbtt";
+          devices = [
+            "server"
+          ];
+        };
+        zsh_history = syncthingDirConfig {
+          path = ".local/state/zsh";
           devices = [
             "server"
           ];

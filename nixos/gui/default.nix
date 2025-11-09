@@ -27,4 +27,6 @@ lib.mkIf config.me.gui.enable {
   };
 
   packages = [ pkgs.gparted ];
+
+  system.userActivationScripts.generateDunstIcons.text = lib.getExe pkgs.scripts.generate-icons;
 }

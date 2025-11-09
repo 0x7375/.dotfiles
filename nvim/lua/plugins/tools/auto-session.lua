@@ -24,8 +24,11 @@ return {
                 local alternate_buf = vim.fn.bufnr("#")
 
                 for _, buf in ipairs(vim.api.nvim_list_bufs()) do
-                    if vim.fn.buflisted(buf) ~= 0 and buf ~= current_buf and buf ~= alternate_buf then
-                        vim.api.nvim_buf_delete(buf, { force = true }) -- Delete the buffer
+                    local lines = vim.api.nvim_buf_get_lines(buf, 0, -1, false)
+                    local is_empty = #lines == 1 and lines[1] == ""
+
+                    if is_empty or (vim.fn.buflisted(buf) ~= 0 and buf ~= current_buf and buf ~= alternate_buf) then
+                        vim.api.nvim_buf_delete(buf, { force = true })
                     end
                 end
             end

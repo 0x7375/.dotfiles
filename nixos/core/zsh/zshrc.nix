@@ -16,14 +16,7 @@
       source $ZDOTDIR/set-prompt.sh
       source $ZDOTDIR/global-aliases.zsh
       source $ZDOTDIR/longcmd-notify.zsh 2>/dev/null
-
-      mkdir -p "$XDG_STATE_HOME"/zsh > /dev/null
-      export HISTFILE="$XDG_STATE_HOME"/zsh/history 
-      HISTSIZE=5000000
-      SAVEHIST=5000000
-
-      # only add valid commands to history
-      zshaddhistory() { whence ''${''${(z)1}[1]} >| /dev/null || return 1 }
+      source $ZDOTDIR/history.zsh
 
       zle_highlight=('paste:none')
 

@@ -93,4 +93,4 @@ require("lazy").setup({
 }, opts)
 
 -- experimental ui that avoid hit-enter prompts g< to open buffer
-require('vim._extui').enable({})
+-- require('vim._extui').enable({})

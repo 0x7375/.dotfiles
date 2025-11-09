@@ -52,7 +52,7 @@ return {
         error_header = ' ~ Error ',
         show_folds = false,
 
-        model = 'claude-sonnet-4.5',
+        model = 'gpt-5-codex',
         show_help = false,
         auto_follow_cursor = false,
         log_level = "warn",

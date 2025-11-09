@@ -5,6 +5,7 @@ vim.opt.indentkeys:remove("0#")
 
 vim.opt.modeline = false
 
+vim.opt.winborder = "single";
 vim.opt.pumheight = 8
 vim.opt.pummaxwidth = 60
 vim.opt.pumborder = "single"
@@ -70,9 +71,7 @@ vim.opt.grepprg = 'rg --vimgrep'
 vim.opt.grepformat = '%f:%l:%c:%m'
 
 -- Number of recent files
-vim.opt.shada = "!,'1000,<50,s10,h"
-
-vim.opt.viminfofile = nil
+vim.opt.shada = "!,'1000,<50,s10,h,:10000"
 
 -- Block in insert mode
 vim.opt.guicursor = ""

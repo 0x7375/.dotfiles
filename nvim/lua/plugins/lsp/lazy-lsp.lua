@@ -16,7 +16,7 @@ end
 
 return {
     "dundalek/lazy-lsp.nvim",
-    event = { "BufReadPost", "BufWritePost", "BufNewFile" },
+    -- event = { "BufReadPost", "BufWritePost", "BufNewFile" },
     cond = is_nixos(),
     dependencies = {
         {
@@ -32,7 +32,10 @@ return {
             version = 'v1.x.x',
             dependencies = { 'neovim/nvim-lspconfig' },
         },
-        "folke/neodev.nvim",
+        {
+            "folke/lazydev.nvim",
+            ft = "lua",
+        },
     },
 
     config = function()
@@ -43,8 +46,8 @@ return {
         vim.cmd [[cabbrev wq execute "Format sync" <bar> wq]]
         vim.cmd [[cabbrev x execute "Format sync" <bar> x]]
 
-        require("neodev").setup()
         require("lazy-lsp").setup({
+            use_vim_lsp_config = true,
             excluded_servers = {
                 "jedi_language_server",            -- exec not found
                 "ccls",                            -- prefer clangd

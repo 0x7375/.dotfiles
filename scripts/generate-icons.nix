@@ -4,8 +4,15 @@
   pkgs,
   ...
 }:
+
 let
   inherit (myLib.palette) dark light;
+  paletteHash = builtins.hashString "sha256" (
+    builtins.toJSON {
+      inherit dark;
+      inherit light;
+    }
+  );
 in
 pkgs.writeShellApplication {
   name = "generate-icons";
@@ -19,6 +26,12 @@ pkgs.writeShellApplication {
     icons_dir="${config.me.flakeDir}/assets/dunst/output"
     source_dir="${config.me.flakeDir}/assets/dunst/source"
 
+    hash_file="$icons_dir/.palette-hash"
+    current_hash="${paletteHash}"
+
+    [ -f "$hash_file" ] && [ "$(< "$hash_file")" = "$current_hash" ] && exit 0
+
+    echo "Palette changed, generating icons..."
     rm -rf "$icons_dir"
     mkdir -p "$icons_dir/dark" "$icons_dir/light"
 
@@ -52,6 +65,7 @@ pkgs.writeShellApplication {
       magick "$file" -fill "$light_color" -colorize 100% "$icons_dir/light/$base_name.png"
     done
 
+    echo "$current_hash" > "$hash_file"
     dunstctl reload
   '';
 }

@@ -1,5 +1,6 @@
 return {
     "nvim-telescope/telescope.nvim",
+    cond = false,
     keys = {
         { "<leader>pu", function() vim.cmd.Telescope("undo") end, desc = "Search undo tree" },
         { "<leader>`",  function() vim.cmd.Telescope("lazy") end, desc = "Search lazy plugins" },

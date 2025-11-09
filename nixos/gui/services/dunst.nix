@@ -128,14 +128,15 @@ lib.mkIf config.me.gui.enable {
         foreground = palette.red;
         timeout = 0;
       };
-      experimental = {
+      # z_ is necessary to force the rule to be at the end of the file
+      z_experimental = {
         per_monitor_dpi = false;
       };
-      charging = {
+      z_charging = {
         appname = "charging";
         history_ignore = true;
       };
-      charged = {
+      z_charged = {
         appname = "charged";
         frame_color = palette.green;
         foreground = palette.green;

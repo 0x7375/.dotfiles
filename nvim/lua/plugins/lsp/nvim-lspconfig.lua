@@ -70,7 +70,6 @@ return {
                 vim.keymap.set('n', 'gI', vim.lsp.buf.implementation, opts)
                 vim.keymap.set('n', 'gn', vim.lsp.buf.references, opts)
                 vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
-                vim.keymap.set("i", "<C-k>", vim.lsp.buf.signature_help, opts)
                 -- vim.keymap.set("n", "<leader>cr", vim.lsp.buf.rename, opts)
                 vim.keymap.set("n", "<leader>cr", function()
                     local current_iskeyword = vim.opt.iskeyword:get()

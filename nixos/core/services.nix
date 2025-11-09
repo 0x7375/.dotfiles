@@ -9,7 +9,7 @@
   services = {
     arbtt = {
       enable = true;
-      logFile = "%h/.local/share/arbtt.log";
+      logFile = "%h/.local/share/arbtt/arbtt.log";
     };
 
     earlyoom.enable = true;

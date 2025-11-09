@@ -7,14 +7,7 @@
 }:
 
 {
-  packages = [ pkgs.arbtt-stats ];
-
   services = {
-    arbtt = {
-      enable = true;
-      logFile = "%h/.local/state/arbtt/capture.log";
-    };
-
     earlyoom.enable = true;
 
     locate.enable = true;

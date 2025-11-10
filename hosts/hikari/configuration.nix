@@ -1,7 +1,6 @@
 {
   pkgs,
   config,
-  myLib,
   lib,
   ...
 }:
@@ -11,22 +10,19 @@
     ./hardware.nix
     ./options.nix
   ]
-  ++ (myLib.filesIn ./nixos)
-  ++ (myLib.filesIn ../../nixos);
-
-  networking.hostName = config.me.hostname;
+  ++ (lib.my.filesIn ./modules);
 
   documentation.man.generateCaches = lib.mkForce false;
 
   users.users.${config.me.user} = {
     openssh.authorizedKeys.keys =
       let
-        inherit (myLib) ssh-keys;
+        inherit (config.me) sshKeys;
       in
       [
-        ssh-keys.yugen
-        ssh-keys.ryusei
-        ssh-keys.kumo
+        sshKeys.yugen
+        sshKeys.ryusei
+        sshKeys.kumo
       ];
   };
 
@@ -44,7 +40,7 @@
     description = "Send notification when a service fails";
     serviceConfig = {
       Type = "oneshot";
-      ExecStart = "${lib.getExe pkgs.curl} -d \"Service %i failed\" http://${myLib.network.lan.addr.server}:8719/status";
+      ExecStart = "${lib.getExe pkgs.curl} -d \"Service %i failed\" http://${config.me.networkIps.lan.addr.server}:8719/status";
     };
   };
 

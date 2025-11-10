@@ -68,10 +68,35 @@
   outputs =
     { ... }@inputs:
     let
-      myLib = import ./lib/myLib.nix { inherit inputs; };
+      lib = inputs.nixpkgs.lib.extend (
+        self: super: {
+          my = import ./lib { lib = self; };
+        }
+      );
+
       aarch = "aarch64-linux";
       x86 = "x86_64-linux";
-      inherit (myLib) mkSystem;
+
+      mkSystem =
+        hostname: system:
+        inputs.nixpkgs.lib.nixosSystem {
+          # nixpkgsPatcher = {
+          #   inherit inputs;
+          #   nixpkgs = inputs.nixpkgs-unstable;
+          # };
+          inherit lib;
+          specialArgs = {
+            inherit (inputs) secrets;
+            inherit inputs;
+          };
+          modules = [
+            ./hosts/${hostname}/configuration.nix
+            {
+              imports = lib.my.filesIn ./modules;
+              networking.hostName = hostname;
+            }
+          ];
+        };
     in
     {
       nixosConfigurations = {

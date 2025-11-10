@@ -4,7 +4,6 @@
   config,
   inputs,
   lib,
-  myLib,
   pkgs,
   ...
 }:
@@ -13,10 +12,7 @@
   imports = [
     ./options.nix
     inputs.nixos-wsl.nixosModules.wsl
-  ]
-  ++ (myLib.filesIn ../../nixos);
-
-  networking.hostName = config.me.hostname;
+  ];
 
   packages = with pkgs; [
     xsel
@@ -24,7 +20,7 @@
 
   wsl.enable = true;
   wsl.defaultUser = config.me.user;
-  wsl.wslConf.network.hostname = "kumo";
+  wsl.wslConf.network.hostname = config.me.hostname;
   wsl.interop.register = true;
 
   hj.xdg.config.files."lf/lfrc".text = ''

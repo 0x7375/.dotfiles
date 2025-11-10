@@ -5,10 +5,10 @@
     syncthing-client.enable = true;
     boot.debug.enable = false;
     btrfs.enable = true;
-    gui = {
+    desktop = {
       enable = true;
       displayServer = "xorg";
-      bundles = {
+      optional = {
         virtualBox.enable = true;
         gaming.enable = true;
       };

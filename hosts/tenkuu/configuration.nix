@@ -1,7 +1,6 @@
 {
   pkgs,
   config,
-  myLib,
   lib,
   ...
 }:
@@ -10,20 +9,17 @@
   imports = [
     ./hardware.nix
     ./options.nix
-  ]
-  ++ (myLib.filesIn ../../nixos);
-
-  networking.hostName = config.me.hostname;
+  ];
 
   users.users.${config.me.user} = {
     openssh.authorizedKeys.keys =
       let
-        inherit (myLib) ssh-keys;
+        inherit (config.me) sshKeys;
       in
       [
-        ssh-keys.yugen
-        ssh-keys.ryusei
-        ssh-keys.kumo
+        sshKeys.yugen
+        sshKeys.ryusei
+        sshKeys.kumo
       ];
   };
 

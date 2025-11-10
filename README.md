@@ -1,7 +1,7 @@
 # Dotfiles
 
 NixOS configuration for an nvidia desktop, thinkpad laptop, a raspberry pi and
-wsl. Flake uses [home-manager](https://github.com/nix-community/home-manager) as a nixos module,
+wsl. Flake uses [hjem](https://github.com/feel-co/hjem) for user file management
 and [sops-nix](https://github.com/Mic92/sops-nix) for secrets.
 
 ## Nixos-anywhere installation

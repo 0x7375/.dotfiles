@@ -1,25 +1,25 @@
 {
   config,
-  myLib,
+  lib,
   ...
 }:
 
+let
+  inherit (config.me) sshKeys;
+in
 {
   imports = [
     ./hardware.nix
     ./options.nix
   ]
-  ++ (myLib.filesIn ../../nixos)
-  ++ (myLib.filesIn ./nixos);
-
-  networking.hostName = config.me.hostname;
+  ++ (lib.my.filesIn ./modules);
 
   users.users.${config.me.user}.openssh.authorizedKeys.keys = [
-    myLib.ssh-keys.ryusei
+    sshKeys.ryusei
   ];
 
   users.users.root.openssh.authorizedKeys.keys = [
-    myLib.ssh-keys.ryusei
+    sshKeys.ryusei
   ];
 
   powerManagement.cpuFreqGovernor = "performance";
@@ -29,7 +29,10 @@
   boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
 
   services.xserver.videoDrivers = [ "nvidia" ];
-  unfree-packages = [ "nvidia-x11" "nvidia-settings" ];
+  unfree-packages = [
+    "nvidia-x11"
+    "nvidia-settings"
+  ];
 
   # wayland.windowManager.hyprland.settings.input = {
   #   accel_profile = "flat";

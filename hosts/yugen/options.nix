@@ -6,10 +6,10 @@
     syncthing-client.enable = true;
     # boot.debug.enable = false;
     btrfs.enable = true;
-    gui = {
+    desktop = {
       enable = true;
       displayServer = "xorg";
-      bundles = {
+      optional = {
         postgresql.enable = false;
         neo4j.enable = false;
         gaming.enable = true;

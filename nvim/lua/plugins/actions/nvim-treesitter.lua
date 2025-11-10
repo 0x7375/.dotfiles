@@ -1,6 +1,6 @@
 return {
     'nvim-treesitter/nvim-treesitter',
-    cond = vim.g.rpi,
+    cond = not vim.g.rpi,
     build = ":TSUpdate",
     cmd = { "TSUpdateSync", "TSUpdate", "TSInstall" },
     event = { "BufReadPost", "BufWritePost", "BufNewFile", "CmdlineEnter" },

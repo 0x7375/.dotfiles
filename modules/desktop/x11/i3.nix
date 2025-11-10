@@ -199,8 +199,11 @@ lib.mkIf (desktop.displayServer == "xorg") {
       $exec ${getExe pkgs.gromit-mpx}
       $exec ${getExe pkgs.polybar}
       $exec ${getExe' pkgs.i3 "i3-msg"} workspace 1
-      $exec kdeconnect-cli --refresh
+      $exec ${getExe pkgs.kdePackages.kdeconnect-kde} --refresh
       $exec ${getExe pkgs.xorg.xset} s off -dpms
+
+      # makes arbtt work properly
+      $exec ${getExe' pkgs.xorg.xprop "xprop"} -root -f _NET_CLIENT_LIST 32a -set _NET_CLIENT_LIST 0
 
       # $exec_always ${pkgs.writeShellScript "set-wallpaper" ''
           # wallpapers="$HOME/pictures/wallpapers/$(< $TINTED_FILE)"

@@ -199,7 +199,7 @@ lib.mkIf (desktop.displayServer == "xorg") {
       $exec ${getExe pkgs.gromit-mpx}
       $exec ${getExe pkgs.polybar}
       $exec ${getExe' pkgs.i3 "i3-msg"} workspace 1
-      $exec ${getExe pkgs.kdePackages.kdeconnect-kde} --refresh
+      $exec ${getExe' pkgs.kdePackages.kdeconnect-kde "kdeconnect-cli"} --refresh
       $exec ${getExe pkgs.xorg.xset} s off -dpms
 
       # makes arbtt work properly

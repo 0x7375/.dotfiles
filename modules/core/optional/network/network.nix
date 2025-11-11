@@ -45,5 +45,7 @@ lib.mkIf config.me.network.enable {
 
   users.users.${config.me.user}.extraGroups = [ "networkmanager" ];
 
+  # don't wait for network on boot
+  systemd.services.NetworkManager-wait-online.wantedBy = lib.mkForce [ ];
   networking.firewall.enable = true;
 }

@@ -7,7 +7,7 @@
 {
   vars.DIRENV_WARN_TIMEOUT = 0;
 
-  environment.shellAliases.direnvrc = "echo 'use_flake' > .envrc && direnv allow";
+  aliases.direnvrc = "echo 'use_flake' > .envrc && direnv allow";
 
   hj.xdg.config.files."zsh/.zshrc".text =
     lib.mkAfter "command -v direnv &> /dev/null && eval \"$(direnv hook zsh)\"";

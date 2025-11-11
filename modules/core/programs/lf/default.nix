@@ -12,7 +12,7 @@ let
       bat = pkgs.bat;
     }
   );
-  desktop = config.me.desktop.enable;
+  desktop = config.me.wm.enable;
 in
 {
   nixpkgs.overlays = [
@@ -48,6 +48,7 @@ in
   packages = [
     pkgs.lf
     pkgs.ouch
+    pkgs.perl540Packages.FileMimeInfo
   ]
   ++ lib.optionals desktop [
     ctpv

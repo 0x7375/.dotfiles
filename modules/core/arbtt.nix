@@ -14,7 +14,7 @@
     capture.log.lck
   '';
 
-  environment.shellAliases.arbtt = ''
+  aliases.arbtt = ''
     ${lib.getExe' pkgs.haskellPackages.arbtt "arbtt-stats"} --logfile=$HOME/.local/state/arbtt/capture.log \
       --categorizefile=$HOME/.config/arbtt/categorize.cfg
   '';

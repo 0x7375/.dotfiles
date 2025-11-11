@@ -23,6 +23,7 @@ pkgs.writeShellApplication {
       green=$(tput setaf 2)
       reset=$(tput sgr0)
       tmp_dir=$(mktemp -d)
+      sudo_password=""
 
       doc() {
           echo "Usage:
@@ -45,12 +46,21 @@ pkgs.writeShellApplication {
       log() {
           local -r dots="''${green}::''${reset}"
           local nonewline=""
+          local stderr=""
           
+          while true; do
+            case ''${1:-} in
+              -n) nonewline="-n"; shift ;;
+              --stderr) stderr=">&2"; shift ;;
+              *) break ;;
+            esac
+          done
+
           if [[ $1 == "-n" ]]; then
               nonewline="-n"
               shift
           fi
-          echo $nonewline "$dots $1"
+          echo $nonewline "$dots $1" $stderr
       }
 
       error() {
@@ -65,17 +75,54 @@ pkgs.writeShellApplication {
       }
 
       ssh_run() {
-        ssh -q "''${ssh_opts[@]}" "$user@$host" -t TERM="$TERM" "$*"
+        local use_sudo=0
+        local use_tty=0
+        
+        while true; do
+          case ''${1:-} in
+            --sudo) use_sudo=1; shift ;;
+            --tty) use_tty=1; shift ;;
+            *) break ;;
+          esac
+        done
+        
+        local -a ssh_args=(-q "''${ssh_opts[@]}")
+        [[ $use_tty -eq 1 ]] && ssh_args+=(-t)
+        
+        if [[ $use_sudo -eq 1 ]]; then
+          ssh "''${ssh_args[@]}" "$host" sudo --stdin --prompt= -- "$@" <<<"$sudo_password"
+        else
+          ssh "''${ssh_args[@]}" "$host" -- "$@"
+        fi
       }
 
-      try_ssh() {
-        local -r user="$1"
-        local -r host="$2"
+      setup_ssh() {
+        local -r host="$1"
 
-        log "Testing SSH connection to ''${user}@''${host}"
+        log "Setting up SSH connection to ''${host}"
 
-        if ! silent ssh "''${ssh_opts[@]}" "$user@$host" -o ConnectTimeout=5 true; then
-          error "Cannot establish SSH connection to $user@$host"
+        silent ssh "-MNf" \
+          -o ControlMaster=yes \
+          -o ControlPath="$tmp_dir/ssh-nd-$host" \
+          -o ControlPersist=60 \
+          -o ConnectTimeout=5 \
+          "$host" || error "Cannot establish SSH connection to $host"
+      }
+
+      ask_sudo_password() {
+        local -r host="$1"
+        local password
+
+        read -s -r password
+        
+        echo "$password"
+      }
+
+      verify_sudo() {
+        local -r host="$1"
+        
+        if ! echo "$sudo_password" | ssh -q "''${ssh_opts[@]}" "$host" "sudo --prompt= --stdin true" 2>/dev/null; then
+          error "Sudo authentication failed"
         fi
       }
 
@@ -96,7 +143,7 @@ pkgs.writeShellApplication {
 
         for cmd in "''${commands[@]}"; do
           if [[ -n $remote_build ]]; then
-            ssh_run "$cmd"
+            ssh_run --sudo "$cmd"
           else
             sudo bash -c "$cmd"
           fi
@@ -134,7 +181,7 @@ pkgs.writeShellApplication {
         local -r cmd="dix /run/current-system $result || nix run nixpkgs#dix /run/current-system $result"
 
         if [[ -n $remote_build ]]; then
-          ssh_run "$cmd"
+          ssh_run --tty "$cmd"
         else
           eval "$cmd"
         fi
@@ -199,7 +246,6 @@ pkgs.writeShellApplication {
 
         silent pushd ${config.me.flakeDir}
 
-        local user; user=$(whoami)
         local host=''${HOST:-$(hostname)}
         local remote_build=
 
@@ -207,13 +253,18 @@ pkgs.writeShellApplication {
           [[ $action == "iso" || $action == "iso-vm" || $action == "build" ]] && error "$action doesn't take a host"
 
           host=''${nd_args[1]}
-          user="root"
           remote_build=1
 
-          local -r user host remote_build
+          local -r host remote_build
 
-          ssh_opts=("-o" "ControlMaster=auto" "-o" "ControlPath=$tmp_dir/ssh-nd-$host" "-o" "ControlPersist=60")
-          try_ssh "$user" "$host"
+          ssh_opts=("-S" "$tmp_dir/ssh-nd-$host")
+          setup_ssh "$host"
+          
+          log -n "Password for ''${host}: "
+          sudo_password=$(ask_sudo_password "$host")
+           echo 
+
+          verify_sudo "$host"
         fi
 
 
@@ -261,7 +312,7 @@ pkgs.writeShellApplication {
           silent sudo nix-store --realise "$result" --add-root "/nix/var/nix/gcroot/$host-nixos"
 
           log "Copying closure to $host"
-          env "NIX_SSHOPTS=-q ''${ssh_opts[*]}" nix-copy-closure --to "$user"@"$host" "$result"
+          env "NIX_SSHOPTS=-q ''${ssh_opts[*]}" nix-copy-closure --to "$host" "$result"
         fi
 
         if [[ $changing_generation -eq 1 ]]; then

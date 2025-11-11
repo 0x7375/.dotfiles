@@ -5,7 +5,7 @@
   ...
 }:
 
-lib.mkIf (config.me.desktop.displayServer == "xorg") {
+lib.mkIf (config.me.wm.displayServer == "xorg") {
   systemd.user.services.xidlehook = {
     description = "xidlehook service";
     partOf = [ "graphical-session.target" ];

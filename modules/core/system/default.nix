@@ -26,6 +26,7 @@
   };
 
   services.fstrim.enable = true;
+  services.earlyoom.enable = true;
 
   console = {
     earlySetup = true;

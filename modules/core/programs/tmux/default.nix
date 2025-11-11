@@ -38,7 +38,7 @@ in
     extraConfig = # tmux
       let
         clip =
-          if config.me.desktop.displayServer == "wayland" then
+          if config.me.wm.displayServer == "wayland" then
             "${getExe' pkgs.wl-clipboard "wl-copy"}"
           else
             "${getExe pkgs.xsel} -i";
@@ -50,7 +50,7 @@ in
 
         set -g @plugin 'tmux-plugins/tmux-yank'
 
-        set -ga terminal-overrides ",${config.me.desktop.terminal}:RGB" # support for undercurl
+        set -ga terminal-overrides ",${config.me.wm.terminal}:RGB" # support for undercurl
 
         unbind C-b
         set -g prefix C-s

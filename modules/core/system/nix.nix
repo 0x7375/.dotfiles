@@ -13,19 +13,14 @@
     nixPath = [ "nixpkgs=${inputs.nixpkgs}" ];
     channel.enable = false;
     settings = {
+      flake-registry = "";
       experimental-features = [
         "nix-command flakes"
         "pipe-operators"
       ];
       use-xdg-base-directories = true;
-      substituters = [
-        "https://nix-community.cachix.org"
-        "https://ayko.cachix.org"
-      ];
-      trusted-public-keys = [
-        "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
-        "ayko.cachix.org-1:pglseKMD4PGHDRvF4LzDJKXOo0gSj3yWZU6QXI6YkBs="
-      ];
+      substituters = [ "https://nix-community.cachix.org" ];
+      trusted-public-keys = [ "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs=" ];
       auto-optimise-store = true;
     };
     registry = {
@@ -39,6 +34,13 @@
         to.url = "https://codeberg.org/0x7E/templates";
       };
     };
+  };
+
+  programs.nh = {
+    enable = true;
+    clean.enable = true;
+    clean.extraArgs = "--keep 5 --keep-since 7d";
+    flake = config.me.flakeDir;
   };
 
   system.activationScripts.cleanup-channels.text = # bash

@@ -85,6 +85,8 @@ lib.mkIf config.me.keyd.enable {
     AttrKeyboardIntegration=internal
   '';
 
+  packages = [ pkgs.keyd ];
+
   users.users.${config.me.user}.extraGroups = [ "keyd" ];
   users.groups.keyd = { };
 

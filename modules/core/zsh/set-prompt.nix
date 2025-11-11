@@ -28,7 +28,7 @@
           if [[ $SHLVL -gt 1 || -n ''${DIRENV_LOADED-} ]]; then
               echo "::"
           else
-              echo "$"
+              echo "%%"
           fi
       }
 

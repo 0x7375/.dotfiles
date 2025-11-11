@@ -21,7 +21,7 @@ pkgs.writeShellApplication {
       imagemagick
     ]
     ++ (
-      if config.me.desktop.displayServer == "wayland" then
+      if config.me.wm.displayServer == "wayland" then
         [
           hyprpicker
         ]

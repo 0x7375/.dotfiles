@@ -5,7 +5,7 @@
   ...
 }:
 
-lib.mkIf (config.me.desktop.displayServer == "wayland") {
+lib.mkIf (config.me.wm.displayServer == "wayland") {
   services.hypridle = {
     enable = true;
     settings = {

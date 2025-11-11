@@ -5,7 +5,7 @@
   ...
 }:
 
-lib.mkIf (config.me.desktop.enable && true) {
+lib.mkIf (config.me.wm.enable && true) {
   systemd.timers.look-away = {
     wantedBy = [ "timers.target" ];
     timerConfig = {

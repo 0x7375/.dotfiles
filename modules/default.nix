@@ -10,6 +10,7 @@
   imports = [
     (lib.mkAliasOptionModule [ "packages" ] [ "environment" "systemPackages" ])
     (lib.mkAliasOptionModule [ "vars" ] [ "environment" "variables" ])
+    (lib.mkAliasOptionModule [ "aliases" ] [ "environment" "shellAliases" ])
   ];
 
   options = {
@@ -43,7 +44,7 @@
     # https://github.com/sharkdp/bat/issues/1726
     system.userActivationScripts.batCache = ''
       (
-        export XDG_CACHE_HOME=${config.environment.variables.XDG_CACHE_HOME}
+        export XDG_CACHE_HOME=${config.vars.XDG_CACHE_HOME}
         cd "${pkgs.emptyDirectory}"
         ${lib.getExe pkgs.bat} cache --build
       )

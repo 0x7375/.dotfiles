@@ -14,7 +14,7 @@ pkgs.writeShellApplication {
       _1password-cli
     ]
     ++ (
-      if config.me.desktop.displayServer == "wayland" then
+      if config.me.wm.displayServer == "wayland" then
         [
           hyprlock
         ]

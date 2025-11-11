@@ -16,6 +16,9 @@ lib.mkMerge [
     };
 
     packages = with pkgs; [
+      nixd
+      nixpkgs-fmt
+
       tree-sitter
       gnumake
 

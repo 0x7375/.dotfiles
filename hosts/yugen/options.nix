@@ -6,7 +6,7 @@
     syncthing-client.enable = true;
     # boot.debug.enable = false;
     btrfs.enable = true;
-    desktop = {
+    wm = {
       enable = true;
       displayServer = "xorg";
       optional = {
@@ -15,6 +15,6 @@
         gaming.enable = true;
       };
     };
-    devPkgs.enable = true;
+    dev.enable = true;
   };
 }

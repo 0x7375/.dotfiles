@@ -10,7 +10,7 @@ let
 in
 {
   hj.xdg.config.files."zsh/longcmd-notify.zsh" = {
-    enable = config.me.desktop.displayServer == "xorg";
+    enable = config.me.wm.displayServer == "xorg";
     text = # bash
       ''
         if [[ -z $DISPLAY ]]; then

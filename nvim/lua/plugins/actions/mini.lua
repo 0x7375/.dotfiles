@@ -19,10 +19,5 @@ return {
                 reindent_linewise = false,
             },
         })
-
-        require("mini.jump").setup({
-            mappings = { repeat_jump = ":" },
-            delay = { highlight = 0 },
-        })
     end,
 }

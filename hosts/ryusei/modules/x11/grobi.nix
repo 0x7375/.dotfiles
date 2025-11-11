@@ -5,7 +5,7 @@
   ...
 }:
 
-lib.mkIf (config.me.desktop.displayServer == "xorg") {
+lib.mkIf (config.me.wm.displayServer == "xorg") {
   hj.xdg.config.files."i3/config".text = ''
     workspace "1" output "HDMI-1"
     workspace "2" output "HDMI-1"

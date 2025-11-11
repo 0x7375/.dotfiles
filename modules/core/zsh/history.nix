@@ -1,6 +1,5 @@
 {
   hj.xdg.state.files."zsh/.stignore".text = ''
-    .hist-sync.lock
     history
   '';
 
@@ -8,26 +7,17 @@
     ''
       hist_dir="$XDG_STATE_HOME"/zsh
       mkdir -p "$hist_dir" > /dev/null
+
       export HISTFILE="$hist_dir"/history 
+      HOSTFILE="$hist_dir/$(hostname)_history"
+      touch "$HISTFILE" "$HOSTFILE"
+
       HISTSIZE=5000000
       SAVEHIST=5000000
 
       merge_histories() {
-        tac "$hist_dir"/*_history @nerr | awk '!seen[$0]++' | tac > "$HISTFILE"
+        awk '{lines[NR]=$0; seen[$0]=NR} END{for(i=1;i<=NR;i++) if(seen[lines[i]]==i) print lines[i]}' "$hist_dir"/*_history 2>/dev/null > "$HISTFILE"
       }
-
-      merge_histories
-
-      ( 
-        (
-          flock -n 9 || exit 0
-          while true; do
-            cp "$HISTFILE" "$hist_dir/$(hostname)_history" @null
-            sleep 300
-            merge_histories
-          done
-        ) 9>"$hist_dir/.hist-sync.lock" &
-      )
 
       # do not add failed commands to history
       zshaddhistory() {
@@ -39,10 +29,18 @@
       precmd() {
         local -i rc=$?
         emulate -L zsh
-        if (( $rc == 0 && $+_HISTLINE && $#_HISTLINE )); then
-          builtin print -rs -- $_HISTLINE
-          unset _HISTLINE
+
+        # command did not fail, is not empty, does not start with space, is not a single word
+        if (( rc == 0 && ''${+_HISTLINE} && $#_HISTLINE )) \
+          && [[ ! $_HISTLINE =~ '^ ' ]] \
+          && [[ ! $_HISTLINE =~ '^[a-zA-Z0-9_-]+$' ]]; then
+            builtin print -rs -- "$_HISTLINE"
+            builtin print -r -- "$_HISTLINE" >> "$HOSTFILE"
         fi
+        
+        merge_histories
+
+        unset _HISTLINE
       }
     '';
 }

@@ -8,7 +8,7 @@ pkgs.writeShellApplication {
       scripts.lock
     ]
     ++ (
-      if config.me.desktop.displayServer == "wayland" then
+      if config.me.wm.displayServer == "wayland" then
         [ hyprland ]
       else
         [

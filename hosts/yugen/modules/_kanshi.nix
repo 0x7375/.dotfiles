@@ -4,7 +4,7 @@
   lib,
   ...
 }:
-lib.mkIf (config.me.desktop.displayServer == "wayland") {
+lib.mkIf (config.me.wm.displayServer == "wayland") {
   wayland.windowManager.hyprland.settings.workspace = lib.mkBefore [
     "1, monitor:HDMI-A-2, default:true"
     "2, monitor:HDMI-A-2"

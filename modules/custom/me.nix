@@ -11,8 +11,8 @@ in
   config = {
     assertions = [
       {
-        assertion = cfg.desktop.displayServer == null || cfg.desktop.enable;
-        message = "Display server '${cfg.desktop.displayServer}' requires desktop.enable to be true";
+        assertion = cfg.wm.displayServer == null || cfg.wm.enable;
+        message = "Display server '${cfg.wm.displayServer}' requires wm.enable to be true";
       }
     ];
   };
@@ -235,12 +235,12 @@ in
     };
     syncthing-client.enable = lib.mkEnableOption "Enable syncthing client and setup directories";
 
-    devPkgs.enable = lib.mkEnableOption "Install development packages";
+    dev.enable = lib.mkEnableOption "Install development packages";
     minecraft.enable = lib.mkEnableOption "Create minecraft server";
     capsLockRemap.enable = lib.mkEnableOption "Remap caps lock to control/esc using interception-tools";
     btrfs.enable = lib.mkEnableOption "Enable autoscrub and automatic home snapshots";
 
-    desktop = {
+    wm = {
       enable = lib.mkEnableOption "Enable graphical config";
 
       displayServer = lib.mkOption {
@@ -250,13 +250,13 @@ in
             "wayland"
           ]
         );
-        default = if cfg.desktop.enable then "xorg" else null;
+        default = if cfg.wm.enable then "xorg" else null;
         description = "Display server to use";
       };
 
       terminal = lib.mkOption {
         type = lib.types.str;
-        default = if cfg.desktop.displayServer == "xorg" then "alacritty" else "foot";
+        default = if cfg.wm.displayServer == "xorg" then "alacritty" else "foot";
         description = "Default terminal emulator (needs to be valid pkg aswell)";
       };
 

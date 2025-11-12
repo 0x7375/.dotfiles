@@ -22,7 +22,6 @@ in
       in
       [
         sshKeys.yugen
-        sshKeys.kumo
       ];
   };
 

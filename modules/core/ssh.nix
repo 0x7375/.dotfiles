@@ -16,12 +16,9 @@ lib.mkMerge [
       openssh = {
         enable = true;
         settings = {
-          PermitRootLogin = lib.mkDefault "prohibit-password";
+          PermitRootLogin = "no";
           KbdInteractiveAuthentication = false;
-          AllowUsers = [
-            config.me.user
-            "root"
-          ];
+          AllowUsers = [ config.me.user ];
         };
         extraConfig = ''
           Match Address ${config.me.networkIps.lan.subnet},${config.me.networkIps.vpn.subnet}

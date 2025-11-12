@@ -18,10 +18,6 @@ in
     sshKeys.ryusei
   ];
 
-  users.users.root.openssh.authorizedKeys.keys = [
-    sshKeys.ryusei
-  ];
-
   powerManagement.cpuFreqGovernor = "performance";
 
   boot.supportedFilesystems = [ "ntfs" ];

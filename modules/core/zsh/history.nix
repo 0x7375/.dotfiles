@@ -31,7 +31,7 @@
         emulate -L zsh
 
         # command did not fail, is not empty, does not start with space, is not a single word
-        if (( rc == 0 && ''${+_HISTLINE} && $#_HISTLINE )) \
+        if (( (rc == 0 || rc == 130 || rc == 3 || rc == 4) && ''${+_HISTLINE} && $#_HISTLINE )) \
           && [[ ! $_HISTLINE =~ '^ ' ]] \
           && [[ ! $_HISTLINE =~ '^[a-zA-Z0-9_-]+$' ]]; then
             builtin print -rs -- "$_HISTLINE"

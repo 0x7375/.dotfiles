@@ -35,10 +35,6 @@
   users.users.root = {
     initialPassword = "root";
     initialHashedPassword = lib.mkForce null;
-    openssh.authorizedKeys.keys = with config.me; [
-      sshKeys.yugen
-      sshKeys.ryusei
-    ];
   };
 
   users.users.nixosvmtest.isSystemUser = true;

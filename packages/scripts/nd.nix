@@ -257,7 +257,7 @@ pkgs.writeShellApplication {
 
           local -r host remote_build
 
-          ssh_opts=("-S" "$tmp_dir/ssh-nd-$host")
+          ssh_opts=("-S" "$tmp_dir/ssh-nd-$host" "-o" "ControlMaster=no")
           setup_ssh "$host"
           
           log -n "Password for ''${host}: "

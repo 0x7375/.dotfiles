@@ -6,19 +6,8 @@
 }:
 
 lib.mkIf config.me.wm.enable {
-  security.polkit.enable = true;
-
-  systemd.user.services.polkit-gnome = {
-    description = "GNOME PolicyKit Agent";
-    after = [ "graphical-session.target" ];
-    partOf = [ "graphical-session.target" ];
-
-    wantedBy = [ "graphical-session.target" ];
-
-    serviceConfig.ExecStart = "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1";
-  };
-
   services.gnome.gnome-keyring.enable = true;
+  programs.seahorse.enable = true;
 
   packages = with pkgs; [
     polkit_gnome

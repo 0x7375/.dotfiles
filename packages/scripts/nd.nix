@@ -46,21 +46,12 @@ pkgs.writeShellApplication {
       log() {
           local -r dots="''${green}::''${reset}"
           local nonewline=""
-          local stderr=""
           
-          while true; do
-            case ''${1:-} in
-              -n) nonewline="-n"; shift ;;
-              --stderr) stderr=">&2"; shift ;;
-              *) break ;;
-            esac
-          done
-
           if [[ $1 == "-n" ]]; then
               nonewline="-n"
               shift
           fi
-          echo $nonewline "$dots $1" $stderr
+          echo $nonewline "$dots $1"
       }
 
       error() {
@@ -104,7 +95,7 @@ pkgs.writeShellApplication {
         silent ssh "-MNf" \
           -o ControlMaster=yes \
           -o ControlPath="$tmp_dir/ssh-nd-$host" \
-          -o ControlPersist=60 \
+          -o ControlPersist=360 \
           -o ConnectTimeout=5 \
           "$host" || error "Cannot establish SSH connection to $host"
       }
@@ -312,7 +303,7 @@ pkgs.writeShellApplication {
           silent sudo nix-store --realise "$result" --add-root "/nix/var/nix/gcroot/$host-nixos"
 
           log "Copying closure to $host"
-          env "NIX_SSHOPTS=-q ''${ssh_opts[*]}" nix-copy-closure --to "$host" "$result"
+          env "NIX_SSHOPTS=-q ''${ssh_opts[*]}" nix copy --to "ssh://$host" "$result" --no-check-sigs
         fi
 
         if [[ $changing_generation -eq 1 ]]; then

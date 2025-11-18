@@ -84,6 +84,11 @@ lib.mkIf config.me.secrets.enable {
               "ryusei"
               "tsuno"
             ];
+            ignorePatterns = [
+              "!/bis/user"
+              "!/bis/system/save"
+              "**"
+            ];
           };
           gamecube = syncthingDirConfig {
             path = "games/gamecube";
@@ -106,6 +111,9 @@ lib.mkIf config.me.secrets.enable {
             devices = [
               "yugen"
               "ryusei"
+            ];
+            ignorePatterns = [
+              "capture.log.lck"
             ];
           };
           zsh_history = syncthingDirConfig {

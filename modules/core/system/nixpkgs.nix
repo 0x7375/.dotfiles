@@ -104,7 +104,6 @@ in
       };
 
       apache-hop = prev.callPackage (pkgs-path + /derivations/apache-hop.nix) { };
-      jrl = prev.callPackage (pkgs-path + /derivations/jrl.nix) { };
 
       # namespace for scripts: e.g. "scripts.tmux-sessionizer"
       scripts = builtins.listToAttrs (

@@ -19,12 +19,25 @@
       path,
       devices,
       type ? "sendreceive",
+      ignorePatterns ? [
+        ".cache"
+        "bin"
+        "node_modules"
+        ".expo"
+        "*.class"
+        "*.o"
+        "*.toc"
+        "*.aux"
+        "*.log"
+        "*.out"
+      ],
       extraConfig ? { },
     }:
     {
       path = "~/" + path;
       inherit type;
       inherit devices;
+      inherit ignorePatterns;
       versioning =
         if type != "sendonly" then
           {

@@ -19,11 +19,11 @@
     trash-cli
     tree
     termdown
-    jrl
 
     nix-melt
     nix-output-monitor
     scripts.nd
+    scripts.nlink
     dix
   ];
 }

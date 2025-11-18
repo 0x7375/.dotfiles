@@ -7,12 +7,6 @@
 lib.mkIf (config.me.syncthing-client.enable && config.me.secrets.enable) {
   programs.fuse.userAllowOther = true;
 
-  hj.xdg.config.files."Ryujinx/.stignore".text = ''
-    !/bis/user
-    !/bis/system/save
-    **
-  '';
-
   services.syncthing = {
     settings = {
       devices = {
@@ -74,11 +68,17 @@ lib.mkIf (config.me.syncthing-client.enable && config.me.secrets.enable) {
           devices = [
             "server"
           ];
+          ignorePatterns = [
+            "capture.log.lck"
+          ];
         };
         zsh_history = syncthingDirConfig {
           path = ".local/state/zsh";
           devices = [
             "server"
+          ];
+          ignorePatterns = [
+            "history"
           ];
         };
         notes = syncthingDirConfig {

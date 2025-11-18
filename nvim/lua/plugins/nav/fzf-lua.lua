@@ -91,6 +91,20 @@ return {
         oldfiles = {
             include_current_session = true,
         },
-        file_ignore_patterns = { "%.o", "/.cache/", "/bin/", "%.jar", "%.class$", "%.out$", "%.log$", "%.aux$", "%.toc$", "/node_modules/", "/.expo/", "%.env$", "/doc/" },
+        file_ignore_patterns = {
+            "%.o",
+            "%.jar",
+            "%.class$",
+            "%.out$",
+            "%.log$",
+            "%.aux$",
+            "%.toc$",
+            "%.env$",
+            "node_modules/",
+            ".expo/",
+            "doc/",
+            ".cache/",
+            "bin/",
+        },
     }
 }

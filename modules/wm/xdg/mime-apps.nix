@@ -102,9 +102,25 @@ lib.mkIf config.me.wm.enable {
       ] "file-roller")
 
       // (mapEntries [
+        "audio/vnd.wave"
+        "audio/midi"
+        "audio/x-wav"
+        "audio/x-flac"
+        "audio/flac"
+        "audio/mpeg"
+        "audio/ogg"
+        "audio/x-musepack"
+        "audio/x-monkeysaudio"
+        "audio/aac"
+        "audio/x-aac"
+      ] "mpv")
+
+      // (mapEntries [
         "video/mp4"
         "video/x-matroska"
-      ] "io.github.celluloid_player.Celluloid");
+      ] "mpv");
+      # ] "io.github.celluloid_player.Celluloid");
+
       associations.added = {
         "image/png" = "imv-dir.desktop";
       }

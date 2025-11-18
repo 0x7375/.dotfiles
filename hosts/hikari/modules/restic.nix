@@ -56,6 +56,10 @@ lib.mkIf config.me.secrets.enable {
               time = "18:00:00";
               path = "/srv/backups/";
             };
+            proton = {
+              time = "20:00:00";
+              path = "rclone:proton:";
+            };
             backblaze = {
               time = "22:00:00";
               path = "rclone:backblaze:restic9678412/";
@@ -74,19 +78,6 @@ lib.mkIf config.me.secrets.enable {
           passwordFile = config.sops.secrets."hikari/restic_pw".path;
           rcloneConfigFile = config.sops.secrets.rclone_config.path;
           repository = remotes.${remote}.path + name;
-          # backupPrepareCommand =
-          #   # bash
-          #   ''
-          #     systemctl is-active --quiet wg-quick
-          #     echo $? > /tmp/restore-proton-vpn
-          #     ${lib.getExe' pkgs.systemd "systemctl"} stop wg-quick-proton
-          #   '';
-          # backupCleanupCommand =
-          #   # bash
-          #   ''
-          #     [[ $(< /tmp/restore-proton-vpn) -eq 0 ]] && ${lib.getExe' pkgs.systemd "systemctl"} start wg-quick-proton
-          #     rm -f /tmp/restore-proton-vpn
-          #   '';
           inherit paths;
           inherit exclude;
           pruneOpts = [

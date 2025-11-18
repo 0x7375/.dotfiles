@@ -34,9 +34,7 @@ lib.mkIf config.me.secrets.enable {
             QBITTORRENT_URL = "http://localhost:${toString config.services.qbittorrent.webuiPort}"
             QB_USERNAME = "admin"
             RESUME_DELAY_SECONDS = 120
-
             resume_timer = None
-            paused_by_us = set()
 
             with open(os.environ['CREDENTIALS_DIRECTORY'] + '/qb-password', 'r') as f:
                 QB_PASSWORD = f.read().strip()
@@ -51,29 +49,17 @@ lib.mkIf config.me.secrets.enable {
 
 
             def pause_torrents():
-                global paused_by_us
                 try:
-                    response = qb_request("torrents/info", {})
-                    active_hashes = [t['hash'] for t in response.json()
-                                     if t['state'] not in ['stoppedUP', 'stoppedDL']]
-
                     qb_request("torrents/stop", {"hashes": "all"})
-
-                    paused_by_us = set(active_hashes)
-                    print(f"Paused {len(active_hashes)} torrents")
+                    print("Torrents paused")
                 except Exception as e:
                     print(f"Error pausing: {e}")
 
 
             def resume_torrents():
-                global paused_by_us
                 try:
-                    if paused_by_us:
-                        hashes = "|".join(paused_by_us)
-                        qb_request("torrents/start", {"hashes": hashes})
-
-                        print(f"Resumed {len(paused_by_us)} torrents")
-                        paused_by_us = set()
+                    qb_request("torrents/start", {"hashes": "all"})
+                    print("Torrents resumed")
                 except Exception as e:
                     print(f"Error resuming: {e}")
 

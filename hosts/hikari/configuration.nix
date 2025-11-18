@@ -29,6 +29,7 @@
   packages = [
     pkgs.ncdu
     pkgs.xsel
+    pkgs.scripts.pw-backup
   ];
 
   services.journald.extraConfig = ''

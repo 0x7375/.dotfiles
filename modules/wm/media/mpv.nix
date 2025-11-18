@@ -20,4 +20,16 @@ lib.mkIf config.me.wm.enable {
       sub-shadow-color=%7%#000000
       sub-shadow-offset=%1%0
     '';
+
+  hj.xdg.config.files."mpv/input.conf".text = ''
+    h seek -5
+    l seek 5
+    H seek -1 exact
+    L seek 1 exact
+
+    j multiply speed 0.9
+    k multiply speed 1.1
+
+    p cycle pause
+  '';
 }

@@ -67,18 +67,13 @@ pkgs.writeShellApplication {
 
       ssh_run() {
         local use_sudo=0
-        local use_tty=0
         
-        while true; do
-          case ''${1:-} in
-            --sudo) use_sudo=1; shift ;;
-            --tty) use_tty=1; shift ;;
-            *) break ;;
-          esac
-        done
-        
+        [[ $1 == "--sudo" ]] && {
+          use_sudo=1
+          shift
+        }
+
         local -a ssh_args=(-q "''${ssh_opts[@]}")
-        [[ $use_tty -eq 1 ]] && ssh_args+=(-t)
         
         if [[ $use_sudo -eq 1 ]]; then
           ssh "''${ssh_args[@]}" "$host" sudo --stdin --prompt= -- "$@" <<<"$sudo_password"
@@ -172,7 +167,7 @@ pkgs.writeShellApplication {
         local -r cmd="dix /run/current-system $result || nix run nixpkgs#dix /run/current-system $result"
 
         if [[ -n $remote_build ]]; then
-          ssh_run --tty "$cmd"
+          ssh_run "$cmd"
         else
           eval "$cmd"
         fi

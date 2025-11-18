@@ -1,18 +1,15 @@
 {
   lib,
+  config,
   pkgs,
   ...
 }:
 
-{
+lib.mkIf config.me.wm.enable {
   services.arbtt = {
     enable = true;
     logFile = "%h/.local/state/arbtt/capture.log";
   };
-
-  hj.xdg.state.files."arbtt/.stignore".text = ''
-    capture.log.lck
-  '';
 
   aliases.arbtt = ''
     ${lib.getExe' pkgs.haskellPackages.arbtt "arbtt-stats"} --logfile=$HOME/.local/state/arbtt/capture.log \

@@ -19,7 +19,7 @@ lib.mkIf (wm.displayServer == "xorg") {
       dir = "$HOME/notes";
     in
     ''
-      set $tmux ${getExe pkgs.${wm.terminal}} -e ${getExe pkgs.tmux} new-session
+      set $tmux ${getExe pkgs.${wm.terminal}} -e
       set $term ${getExe pkgs.${wm.terminal}} -e
       set $browser ${config.me.browser}
       set $exec exec --no-startup-id
@@ -67,7 +67,7 @@ lib.mkIf (wm.displayServer == "xorg") {
       bindsym $win+t $exec $term ${getExe pkgs.scripts.tmux-sessionizer} ~/
       bindsym $win+s $exec $term ${getExe pkgs.scripts.tmux-sshr}
       bindsym $win+Shift+s $exec ${getExe pkgs.scripts.swap-theme}
-      bindsym $win+Shift+t $exec $tmux
+      bindsym $win+Shift+t $exec ${getExe pkgs.tmux} new-session
       bindsym $win+e $exec $term ${getExe pkgs.lf}
       bindsym $win+Shift+e $exec $term sudo ${getExe pkgs.lf}
       bindsym $win+m $exec $term $(${pkgs.writeShellScript "open-note" ''
@@ -100,7 +100,7 @@ lib.mkIf (wm.displayServer == "xorg") {
 
       bindsym $win+p $exec ${getExe pkgs.scripts.powermenu}
       bindsym --release $win+Shift+c exec ${getExe pkgs.scripts.color-picker}
-      bindsym --release $win+Shift+m exec $tmux -s 'xprop' '${getExe' pkgs.xorg.xprop "xprop"} exec $SHELL'
+      bindsym --release $win+Shift+m exec "$term sh -c '${getExe' pkgs.xorg.xprop "xprop"}; exec $SHELL'"
 
       bindsym Print $exec ${getExe pkgs.scripts.screenshot} region
       bindsym $alt+Sys_Req $exec ${getExe pkgs.scripts.screenshot} window
@@ -165,8 +165,10 @@ lib.mkIf (wm.displayServer == "xorg") {
       bindsym $win+9 move container to workspace $ws9
       bindsym $win+0 move container to workspace $ws10
 
+      assign [class="^zen-beta$"] 3
       assign [class="^spotify$"] 4
       assign [title="^ncspot$"] 4
+      assign [class="^discord$"] 4
 
       for_window [window_role="About"] floating enable
       for_window [window_role="Organizer"] floating enable

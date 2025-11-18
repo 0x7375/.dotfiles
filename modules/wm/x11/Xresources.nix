@@ -8,8 +8,9 @@ let
 in
 lib.mkIf (config.me.wm.displayServer == "xorg") {
   tinted.files.".config/X11/xresources".text = palette: ''
-    *font: ${config.me.wm.font} Nerd Font:size=18
-    *font2: ${config.me.wm.font} Nerd Font:size=18
+    // matplotlib fails because there's a whitespace in the font
+    // *font: ${config.me.wm.font} Nerd Font:size=18
+    // *font2: ${config.me.wm.font} Nerd Font:size=18
     *padding: 20
 
     *bg0_dark: ${palette.bg0_dark}

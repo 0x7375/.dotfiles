@@ -13,7 +13,7 @@
         gaming.enable = true;
       };
     };
-    devPkgs.enable = true;
+    dev.enable = true;
     minecraft.enable = false;
   };
 }

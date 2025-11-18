@@ -6,8 +6,6 @@
   ...
 }:
 
-let
-in
 lib.mkIf config.me.wm.enable {
   nixpkgs.overlays = [
     (final: prev: {
@@ -141,7 +139,6 @@ lib.mkIf config.me.wm.enable {
                 (extension "vimium-ff" "{d7742d87-e61d-4b78-b8a1-b469842139fa}")
                 (extension "1password-x-password-manager" "{d634138d-c276-4fc8-924b-40a0ea21d284}")
                 (extension "buster-captcha-solver" "{e58d3966-3d76-4cd9-8552-1582fbc800c1}")
-                (extension "detach-tab" "claymont@mail.com_detach-tab")
                 (extension "sponsorblock" "sponsorBlocker@ajay.app")
                 (extension "remove-youtube-s-suggestions" "{21f1ba12-47e1-4a9b-ad4e-3a0260bbeb26}")
                 (extension "dearrow" "deArrow@ajay.app")

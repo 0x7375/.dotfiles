@@ -42,6 +42,7 @@ lib.mkIf config.me.wm.enable {
     set statusbar-v-padding	"0"
 
     map <C-N> exec 'zathura "$FILE"'
+    map <C-P> feedkeys ":exec sh -c \"pdftotext \\\"$FILE\\\" - | xsel -ib\"<Return>"
     map <C-j> navigate next
     map <C-k> navigate previous
     map <C-p> print

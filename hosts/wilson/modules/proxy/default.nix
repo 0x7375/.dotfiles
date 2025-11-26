@@ -6,8 +6,9 @@
 }:
 
 let
+  inherit (config.me) hosts hostname;
   url = "0xaa.me";
-  ip = config.me.networkIps.lan.addr.server;
+  ip = hosts.${hostname}.ips.lan;
   mkSubDomain =
     {
       port,
@@ -54,7 +55,7 @@ in
       "torrent.${url}" = mkSubDomain { port = 8080; };
       "indexer.${url}" = mkSubDomain { port = 9696; };
       "movies.${url}" = mkSubDomain { port = 7878; };
-      "series.${url}" = mkSubDomain { port = 8989; };
+      "shows.${url}" = mkSubDomain { port = 8989; };
       "subtitles.${url}" = mkSubDomain { port = 6767; };
       "notify.${url}" = mkSubDomain {
         port = 8719;

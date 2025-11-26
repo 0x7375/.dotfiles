@@ -15,13 +15,7 @@
   config = lib.mkIf config.me.secrets.enable {
     packages = [ pkgs.sops ];
 
-    sops.secrets.server_vpn_endpoint = {
-      owner = config.me.user;
-    };
-
-    sops.secrets.laptop_vpn_psk = {
-      owner = config.me.user;
-    };
+    sops.secrets.server_vpn_endpoint.owner = config.me.user;
 
     sops.defaultSopsFile = "${secrets}/default.yaml";
     sops.age.sshKeyPaths = [ "${config.me.home}/.ssh/id_ed25519" ];

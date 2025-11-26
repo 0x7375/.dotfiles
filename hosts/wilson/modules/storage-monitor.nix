@@ -4,6 +4,9 @@
   ...
 }:
 
+let
+  inherit (config.me) hosts hostname;
+in
 {
   systemd.services.storage-monitor = {
     description = "Monitor storage usage";
@@ -35,7 +38,7 @@
 
       if [[ -n $message ]]; then
         if [[ ! -f $lockfile ]]; then
-          curl -d "$message" http://${config.me.networkIps.lan.addr.server}:8719/status
+          curl -d "$message" http://${hosts.${hostname}.ips.lan}:8719/status
           touch "$lockfile"
         fi
       fi

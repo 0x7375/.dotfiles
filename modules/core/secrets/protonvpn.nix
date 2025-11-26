@@ -8,13 +8,13 @@
 let
   inherit (lib) getExe getExe';
   gw-ip = "10.2.0.1";
-  server = config.me.hostname == "hikari";
+  server = config.me.hostname == "wilson";
 in
 lib.mkIf config.me.secrets.enable {
   sops.secrets."proton_vpn/endpoint" = { };
   sops.secrets."proton_vpn/pk" = { };
   sops.secrets."proton_vpn/sk" = { };
-  sops.secrets."hikari/qbittorrent_pw" = { };
+  sops.secrets."wilson/qbittorrent/pw" = { };
 
   sops.templates."proton-vpn.conf".content =
     let
@@ -83,12 +83,22 @@ lib.mkIf config.me.secrets.enable {
   networking.firewall.trustedInterfaces = [ "proton" ];
 
   systemd.services."proton-portforward" = lib.mkIf server {
-    requires = [ "network-online.target" ];
-    after = [ "network-online.target" ];
+    after = [
+      "network-online.target"
+      "wg-quick-proton.service"
+      "qbittorrent.service"
+    ];
+    wants = [
+      "network-online.target"
+      "qbittorrent.service"
+    ];
     bindsTo = [ "wg-quick-proton.service" ];
+    wantedBy = [ "wg-quick-proton.service" ];
 
     serviceConfig = {
-      LoadCredential = [ "password:${config.sops.secrets."hikari/qbittorrent_pw".path}" ];
+      Restart = "on-failure";
+      RestartSec = "5s";
+      LoadCredential = [ "password:${config.sops.secrets."wilson/qbittorrent/pw".path}" ];
       ExecStartPre = pkgs.writeShellScript "get-proton-port" ''
         OUTPUT=$(${getExe' pkgs.libnatpmp "natpmpc"} -g ${gw-ip} -a 1 0 tcp 60 2>/dev/null)
         PORT=$(echo "$OUTPUT" | ${getExe' pkgs.gawk "awk"} '/Mapped public port/ {print $4}')

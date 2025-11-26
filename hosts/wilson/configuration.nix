@@ -5,6 +5,10 @@
   ...
 }:
 
+let
+  inherit (config.me) hosts hostname;
+
+in
 {
   imports = [
     ./hardware.nix
@@ -16,13 +20,11 @@
 
   users.users.${config.me.user} = {
     openssh.authorizedKeys.keys =
-      let
-        inherit (config.me) sshKeys;
-      in
-      [
-        sshKeys.yugen
-        sshKeys.ryusei
-        sshKeys.kumo
+      with config.me.hosts;
+      map (h: h.sshPublicKey) [
+        cray
+        naitoh
+        julliard
       ];
   };
 
@@ -41,7 +43,7 @@
     description = "Send notification when a service fails";
     serviceConfig = {
       Type = "oneshot";
-      ExecStart = "${lib.getExe pkgs.curl} -d \"Service %i failed\" http://${config.me.networkIps.lan.addr.server}:8719/status";
+      ExecStart = "${lib.getExe pkgs.curl} -d \"Service %i failed\" http://${hosts.${hostname}.ips.lan}:8719/status";
     };
   };
 

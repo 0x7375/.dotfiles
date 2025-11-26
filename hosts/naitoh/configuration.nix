@@ -17,11 +17,9 @@ in
 
   users.users.${config.me.user} = {
     openssh.authorizedKeys.keys =
-      let
-        inherit (config.me) sshKeys;
-      in
-      [
-        sshKeys.yugen
+      with config.me.hosts;
+      map (h: h.sshPublicKey) [
+        cray
       ];
   };
 

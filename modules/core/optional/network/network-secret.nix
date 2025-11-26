@@ -44,7 +44,7 @@ lib.mkIf (config.me.secrets.enable && config.me.network.enable) {
     owner = config.me.user;
   };
 
-  networking.networkmanager.ensureProfiles = lib.mkIf (config.me.hostname != "hikari") {
+  networking.networkmanager.ensureProfiles = lib.mkIf (config.me.hostname != "wilson") {
     environmentFiles = [ config.sops.secrets.networkingEnvironment.path ];
     profiles = {
       Home = {

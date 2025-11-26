@@ -71,7 +71,7 @@ lib.mkIf (config.me.wm.displayServer == "wayland") {
           "custom/separator"
         ]
         ++ (
-          if config.me.hostname == "ryusei" then
+          if config.me.hostname == "naitoh" then
             [
               "battery"
               "custom/separator"

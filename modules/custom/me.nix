@@ -6,6 +6,34 @@
 
 let
   cfg = config.me;
+  inherit (lib) mkOption types mkEnableOption;
+
+  hostSubmodule = {
+    options = {
+      sshPublicKey = mkOption {
+        type = types.nullOr types.str;
+        default = null;
+        description = "SSH public key (null for devices like phones)";
+      };
+      syncthingId = mkOption {
+        type = types.nullOr types.str;
+        default = null;
+        description = "Syncthing Device ID";
+      };
+      ips = {
+        lan = mkOption {
+          type = types.nullOr types.str;
+          default = null;
+          description = "Local Network IP";
+        };
+        vpn = mkOption {
+          type = types.nullOr types.str;
+          default = null;
+          description = "Wireguard/VPN IP";
+        };
+      };
+    };
+  };
 in
 {
   config = {
@@ -18,90 +46,119 @@ in
   };
 
   options.me = {
-    flakeDir = lib.mkOption {
-      type = lib.types.str;
+    flakeDir = mkOption {
+      type = types.str;
       default = "/home/${cfg.user}/.config/nixcfg";
       description = "Path to the nixos flake directory";
     };
 
-    home = lib.mkOption {
-      type = lib.types.str;
+    home = mkOption {
+      type = types.str;
       default = "/home/${cfg.user}";
       description = "Home directory";
     };
 
-    user = lib.mkOption {
-      type = lib.types.str;
+    user = mkOption {
+      type = types.str;
       default = "ayko";
       description = "User name";
     };
 
-    browser = lib.mkOption {
-      type = lib.types.str;
+    browser = mkOption {
+      type = types.str;
       default = "zen-beta";
       description = "Default browser";
     };
 
-    uid = lib.mkOption {
-      type = lib.types.int;
+    uid = mkOption {
+      type = types.int;
       default = 1000;
       description = "User id";
     };
 
-    mediaGroup = lib.mkOption {
-      type = lib.types.str;
+    mediaGroup = mkOption {
+      type = types.str;
       default = "media";
       description = "Media group name";
       internal = true;
     };
 
-    barFontSize = lib.mkOption {
-      type = lib.types.int;
+    barFontSize = mkOption {
+      type = types.int;
       default = 13;
       description = "Top bar font size";
       internal = true;
     };
 
-    sshKeys = lib.mkOption {
-      type = lib.types.attrsOf lib.types.str;
+    hosts = mkOption {
+      description = "Central infrastructure definition";
+      internal = true;
+      type = types.attrsOf (types.submodule hostSubmodule);
+
       default = {
-        yugen = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJahc82zjVv6+UDKi3eN9oZRfGRE7zhBivo5TYtDLe53 yugen";
-        ryusei = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIH9wtfhfEPZ6GVA4FWRUk5KXtTttn6Q4qjxO1apMc7RK ryusei";
-        kumo = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOcGpmfziJoYbPbfdZi/REVStrNgl+F8lwVf1t2oLdaZ kumo";
-        hikari = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHVezt2Z6LhXPzAMhn6nJ0zXbrWXd93+QKmBqJ+8uE+s hikari";
+        cray = {
+          sshPublicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJahc82zjVv6+UDKi3eN9oZRfGRE7zhBivo5TYtDLe53 cray";
+          syncthingId = "E5O7YJW-QG5GRP2-GTOIL44-GARB6IA-KVLTV4L-PNELNSW-U54NY7P-N3R5NQW";
+          ips.lan = "192.168.1.120";
+        };
+        naitoh = {
+          sshPublicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIH9wtfhfEPZ6GVA4FWRUk5KXtTttn6Q4qjxO1apMc7RK naitoh";
+          syncthingId = "VQTBWUL-XN5DIYJ-2FVH2L5-METP43G-QGVR6HG-4E5TGBC-3G6MUN4-EEUHGQB";
+          ips = {
+            lan = "192.168.1.198";
+            vpn = "10.0.0.2";
+          };
+        };
+        cutler.syncthingId = "XAFE3W3-FG4XVNB-GCPR4CU-XAYED7H-AISJHBI-JREWBFT-CLUTRPZ-EVYV5AH";
+        julliard.sshPublicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOcGpmfziJoYbPbfdZi/REVStrNgl+F8lwVf1t2oLdaZ julliard";
+        wilson = {
+          syncthingId = "A4SN3P4-3UDLBHB-X3IG2A3-AZCXD5S-SQ6CTOY-SN3STI2-LVUGEP7-VT4X7A4";
+          sshPublicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHVezt2Z6LhXPzAMhn6nJ0zXbrWXd93+QKmBqJ+8uE+s wilson";
+          ips = {
+            lan = "192.168.1.95";
+            vpn = "10.0.0.1";
+          };
+        };
+        shannon = {
+          syncthingId = "JJ62FKA-U5HTR5S-NJ7A4EJ-TMO66SZ-QNUOYUA-CCQMUIB-STDX4RE-VCGEKAB";
+          ips.vpn = "10.0.0.3";
+        };
+        lamarr = {
+          syncthingId = "ZMUWGAS-D7ETM4C-77LZJQD-T3VBPZS-UWXFTVN-K32GD5G-XKCP4UG-OMRG4AA";
+          ips.vpn = "10.0.0.4";
+        };
+        yoshino.syncthingId = "4J5QS3L-TBUVQNM-RID2OP7-RTQG4GA-NWRB2E5-HXMTK7R-4C4QBFL-7M3RDAU";
       };
-      description = "SSH public keys";
+    };
+
+    host = mkOption {
+      type = types.submodule hostSubmodule;
+      default = cfg.hosts.${cfg.hostname};
       internal = true;
     };
 
-    networkIps = lib.mkOption {
-      type = lib.types.attrsOf (
-        lib.types.attrsOf (lib.types.either lib.types.str (lib.types.attrsOf lib.types.str))
-      );
+    hostname = mkOption {
+      type = types.str;
+      default = config.networking.hostName;
+      description = "System hostname";
+    };
+
+    networkIps = mkOption {
+      type = types.attrsOf (types.attrsOf (types.either types.str (types.attrsOf types.str)));
       default = {
         lan = {
           subnet = "192.168.1.0/24";
           gateway = "192.168.1.254";
-          addr = {
-            server = "192.168.1.95";
-            desktop = "192.168.1.120";
-            laptop = "192.168.1.198";
-          };
         };
         vpn = {
           subnet = "10.0.0.0/24";
-          addr = {
-            server = "10.0.0.1";
-            laptop = "10.0.0.2";
-            phone = "10.0.0.3";
-          };
         };
       };
       internal = true;
     };
 
-    palette = lib.mkOption {
-      type = lib.types.attrsOf (lib.types.attrsOf lib.types.str);
+    palette = mkOption {
+      type = types.attrsOf (types.attrsOf types.str);
       default = {
         dark = {
           _theme = "dark";
@@ -152,8 +209,8 @@ in
       internal = true;
     };
 
-    hex = lib.mkOption {
-      type = lib.types.attrsOf (lib.types.attrsOf lib.types.str);
+    hex = mkOption {
+      type = types.attrsOf (types.attrsOf types.str);
       default =
         let
           map = lib.mapAttrs (name: value: lib.removePrefix "#" value);
@@ -166,86 +223,74 @@ in
       internal = true;
     };
 
-    hostname = lib.mkOption {
-      type = lib.types.str;
-      default = "hostname";
-      description = "System hostname";
-    };
-
-    publicKey = lib.mkOption {
-      type = lib.types.str;
-      default = cfg.sshKeys.${cfg.hostname} or "";
-      description = "Public key used for commit signing";
-    };
-
-    barHeight = lib.mkOption {
-      type = lib.types.int;
+    barHeight = mkOption {
+      type = types.int;
       default = 35;
       description = "Top bar height";
     };
 
-    cursorSize = lib.mkOption {
-      type = lib.types.int;
+    cursorSize = mkOption {
+      type = types.int;
       default = 24;
       description = "Cursor size";
     };
 
-    refreshRate = lib.mkOption {
-      type = lib.types.int;
+    refreshRate = mkOption {
+      type = types.int;
       default = 60;
       description = "Refresh rate (used to choose the right config for firefox)";
     };
 
     boot = {
-      enable = lib.mkOption {
-        type = lib.types.bool;
+      enable = mkOption {
+        type = types.bool;
         default = true;
         description = "Setup systemd boot with plymouth";
       };
-      silent.enable = lib.mkOption {
-        type = lib.types.bool;
+      silent.enable = mkOption {
+        type = types.bool;
         default = (!cfg.boot.debug.enable && cfg.boot.enable);
         description = "Enable silent boot";
       };
-      debug.enable = lib.mkEnableOption "Make boot verbose";
+      debug.enable = mkEnableOption "Make boot verbose";
     };
 
-    network.enable = lib.mkOption {
-      type = lib.types.bool;
+    network.enable = mkOption {
+      type = types.bool;
       default = true;
       description = "Use nextdns and create NetworkManager profiles";
     };
 
-    secrets.enable = lib.mkOption {
-      type = lib.types.bool;
+    secrets.enable = mkOption {
+      type = types.bool;
       default = true;
       description = "Deploy secrets using sops-nix";
     };
 
-    keyd.enable = lib.mkOption {
-      type = lib.types.bool;
+    keyd.enable = mkOption {
+      type = types.bool;
       default = true;
       description = "Remap keys using keyd and keyd-application-mapper";
     };
 
-    syncthing.enable = lib.mkOption {
-      type = lib.types.bool;
+    syncthing.enable = mkOption {
+      type = types.bool;
       default = cfg.syncthing-client.enable;
       description = "Setup syncthing";
     };
-    syncthing-client.enable = lib.mkEnableOption "Enable syncthing client and setup directories";
+    syncthing-client.enable = mkEnableOption "Enable syncthing client and setup directories";
 
-    dev.enable = lib.mkEnableOption "Install development packages";
-    minecraft.enable = lib.mkEnableOption "Create minecraft server";
-    capsLockRemap.enable = lib.mkEnableOption "Remap caps lock to control/esc using interception-tools";
-    btrfs.enable = lib.mkEnableOption "Enable autoscrub and automatic home snapshots";
+    dev.enable = mkEnableOption "Install development packages";
+    minecraft.enable = mkEnableOption "Create minecraft server";
+    capsLockRemap.enable = mkEnableOption "Remap caps lock to control/esc using interception-tools";
+    btrfs.enable = mkEnableOption "Enable autoscrub and automatic home snapshots";
 
     wm = {
-      enable = lib.mkEnableOption "Enable graphical config";
+      enable = mkEnableOption "Enable graphical config";
 
-      displayServer = lib.mkOption {
-        type = lib.types.nullOr (
-          lib.types.enum [
+      displayServer = mkOption {
+        type = types.nullOr (
+          types.enum [
             "xorg"
             "wayland"
           ]
@@ -254,23 +299,23 @@ in
         description = "Display server to use";
       };
 
-      terminal = lib.mkOption {
-        type = lib.types.str;
+      terminal = mkOption {
+        type = types.str;
         default = if cfg.wm.displayServer == "xorg" then "alacritty" else "foot";
         description = "Default terminal emulator (needs to be valid pkg aswell)";
       };
 
-      font = lib.mkOption {
-        type = lib.types.str;
+      font = mkOption {
+        type = types.str;
         default = "Terminess";
         description = "Default font";
       };
 
       optional = {
-        gaming.enable = lib.mkEnableOption "Install steam and other game launchers";
-        postgresql.enable = lib.mkEnableOption "Run a postgresql server";
-        virtualBox.enable = lib.mkEnableOption "Enable virtual box";
-        neo4j.enable = lib.mkEnableOption "Run a neo4j server";
+        gaming.enable = mkEnableOption "Install steam and other game launchers";
+        postgresql.enable = mkEnableOption "Run a postgresql server";
+        virtualBox.enable = mkEnableOption "Enable virtual box";
+        neo4j.enable = mkEnableOption "Run a neo4j server";
       };
     };
   };

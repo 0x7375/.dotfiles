@@ -1,12 +1,6 @@
 local map = vim.keymap.set
 local bar = require("util.bar")
 
--- map("n", "q", function()
---     local char = vim.fn.getcharstr()
---     vim.cmd("normal! q" .. char)
---     vim.schedule(bar.refresh)
--- end)
-
 map({ "n", "x", "v" }, ":", ";")
 map({ "n", "x", "v" }, ";", ":")
 
@@ -90,8 +84,8 @@ end, { expr = true })
 -- Makes the file executable
 map("n", "<leader>xm", function() vim.cmd("!chmod +x %") end, { silent = true, desc = "Make file executable" })
 
--- Alternate file
-map("n", "<S-Tab>", "<C-^>zz", { desc = "Alternate file" })
+-- Alternate file (silent, no error if no alternate file)
+vim.keymap.set("n", "<S-Tab>", "<Cmd>silent! b #<CR>zz", { desc = "Alternate file" })
 
 -- Indent whole file
 map("n", "<leader>=", "mzgg=G`zzz", { desc = "Indent whole file" })
@@ -153,6 +147,7 @@ map({ "x", "n" }, "+", "\"+", { desc = "+ for system clipboard register" })
 map({ "x", "n" }, "_", "\"_", { desc = "_ for void register" })
 map("x", "P", "pgv=", { desc = "Paste and indent in visual mode" })
 map("n", "gp", "`[v`]", { desc = "Select last pasted text" })
+map("n", "<leader>y", "goVG\"+y", { desc = "Copy entire file content" })
 
 map("n", "<leader>'", vim.cmd.Lazy, { desc = "Open Lazy UI" })
 

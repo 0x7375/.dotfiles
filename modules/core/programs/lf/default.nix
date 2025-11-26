@@ -30,7 +30,7 @@ in
           vendorHash = "sha256-ZShpWCfEVPLafrn3MvtxkRsBvwUEOiLBs1gZhKSBrsQ=";
         });
       }
-      // (lib.optionalAttrs (config.me.hostname != "hikari") {
+      // (lib.optionalAttrs (config.me.hostname != "wilson") {
         ouch = prev.ouch.override {
           enableUnfree = true;
         };

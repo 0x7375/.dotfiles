@@ -10,8 +10,6 @@
   i18n.supportedLocales = options.i18n.supportedLocales.default ++ [ "fr_FR.UTF-8/UTF-8" ];
   location.provider = "manual";
 
-  hardware.i2c.enable = true;
-
   # documentation.man.generateCaches = true;
   # documentation.dev.enable = true;
 

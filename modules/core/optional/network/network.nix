@@ -5,15 +5,17 @@
 }:
 
 lib.mkIf config.me.network.enable {
-  networking.extraHosts =
+  networking.hosts =
     let
-      inherit (config.me) networkIps;
+      validHosts = lib.filterAttrs (n: v: v.ips.lan != null) config.me.hosts;
     in
-    ''
-      ${networkIps.lan.addr.laptop} ryusei ryusei.local
-      ${networkIps.lan.addr.desktop} yugen yugen.local
-      ${networkIps.lan.addr.server} hikari hikari.local
-    '';
+    lib.mapAttrs' (name: host: {
+      name = host.ips.lan;
+      value = [
+        name
+        "${name}.local"
+      ];
+    }) validHosts;
 
   # Configure network proxy if necessary
   # networking.proxy.default = "http://user:password@proxy:port/";

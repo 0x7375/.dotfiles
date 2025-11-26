@@ -74,11 +74,8 @@
         }
       );
 
-      aarch = "aarch64-linux";
-      x86 = "x86_64-linux";
-
       mkSystem =
-        hostname: system:
+        name:
         inputs.nixpkgs.lib.nixosSystem {
           # nixpkgsPatcher = {
           #   inherit inputs;
@@ -90,22 +87,22 @@
             inherit inputs;
           };
           modules = [
-            ./hosts/${hostname}/configuration.nix
+            ./hosts/${name}/configuration.nix
             {
               imports = lib.my.filesIn ./modules;
-              networking.hostName = hostname;
+              networking.hostName = name;
             }
           ];
         };
     in
     {
-      nixosConfigurations = {
-        yugen = mkSystem "yugen" x86;
-        ryusei = mkSystem "ryusei" x86;
-        tenkuu = mkSystem "tenkuu" x86;
-        hikari = mkSystem "hikari" aarch;
-        # kumo = mkSystem "kumo" x86;
-        isoImg = mkSystem "isoImg" x86;
-      };
+      nixosConfigurations = inputs.nixpkgs.lib.genAttrs [
+        "cray"
+        "naitoh"
+        "wilson"
+        "isoImg"
+        # "julliard"
+        # "perlman"
+      ] mkSystem;
     };
 }

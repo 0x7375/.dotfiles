@@ -1,7 +1,6 @@
 {
   me = {
     secrets.enable = true;
-    hostname = "ryusei";
     syncthing-client.enable = true;
     boot.debug.enable = false;
     btrfs.enable = true;

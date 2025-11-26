@@ -22,8 +22,8 @@ in
 
     v = "$EDITOR";
 
-    e = "${getExe' pkgs.atool "aunpack"}";
-    c = "${getExe' pkgs.atool "apack"}";
+    extract = "${getExe' pkgs.atool "aunpack"}";
+    compress = "${getExe' pkgs.atool "apack"}";
 
     mkdir = "mkdir -vp";
     rm = "rm -v";

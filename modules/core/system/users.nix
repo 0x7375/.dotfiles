@@ -21,7 +21,6 @@
     shell = pkgs.zsh;
     extraGroups = [
       "wheel"
-      "video"
       "input"
     ];
   };

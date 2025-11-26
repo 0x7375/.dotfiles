@@ -6,6 +6,13 @@
 }:
 
 lib.mkIf (config.me.wm.displayServer == "xorg") {
+  hardware.i2c.enable = true;
+
+  users.users.${config.me.user}.extraGroups = [
+    "i2c"
+    "video"
+  ];
+
   hj.xdg.config.files."redshift/hooks/brightness.sh" = {
     enable = true;
     executable = true;

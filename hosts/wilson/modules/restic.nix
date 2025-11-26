@@ -6,15 +6,18 @@
   ...
 }:
 
+let
+  inherit (config.me) hostname home;
+in
 lib.mkIf config.me.secrets.enable {
   packages = with pkgs; [
     rclone
     restic
   ];
 
-  vars.RESTIC_PASSWORD_FILE = config.sops.secrets."hikari/restic_pw".path;
+  vars.RESTIC_PASSWORD_FILE = config.sops.secrets."${hostname}/restic_pw".path;
 
-  sops.secrets."hikari/restic_pw" = { };
+  sops.secrets."${hostname}/restic_pw" = { };
 
   sops.secrets.rclone_config = {
     sopsFile = "${secrets}/rclone-config.ini";
@@ -23,7 +26,7 @@ lib.mkIf config.me.secrets.enable {
 
   services.restic.backups =
     let
-      syncthingDirs = map (path: "${config.me.home}/${path}") [
+      syncthingDirs = map (path: "${home}/${path}") [
         "documents"
         "games/ds"
         "perso"
@@ -45,9 +48,7 @@ lib.mkIf config.me.secrets.enable {
         "/var/lib/cleanuparr"
       ];
 
-      gitRepos = [
-        "${config.me.home}/git"
-      ];
+      gitRepos = [ "${home}/git" ];
 
       backupConfig =
         let
@@ -75,7 +76,7 @@ lib.mkIf config.me.secrets.enable {
         }:
         {
           initialize = true;
-          passwordFile = config.sops.secrets."hikari/restic_pw".path;
+          passwordFile = config.sops.secrets."${hostname}/restic_pw".path;
           rcloneConfigFile = config.sops.secrets.rclone_config.path;
           repository = remotes.${remote}.path + name;
           inherit paths;

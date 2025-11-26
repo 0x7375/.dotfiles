@@ -13,13 +13,11 @@
 
   users.users.${config.me.user} = {
     openssh.authorizedKeys.keys =
-      let
-        inherit (config.me) sshKeys;
-      in
-      [
-        sshKeys.yugen
-        sshKeys.ryusei
-        sshKeys.kumo
+      with config.me.hosts;
+      map (h: h.sshPublicKey) [
+        cray
+        naitoh
+        julliard
       ];
   };
 

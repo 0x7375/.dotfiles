@@ -8,9 +8,10 @@
 let
   template = "@guiPassword@";
   portTemplate = "@port@";
+  inherit (config.me) hostname;
 in
 lib.mkIf config.me.secrets.enable {
-  sops.secrets."hikari/qbittorrent_pw_hash" = {
+  sops.secrets."${hostname}/qbittorrent/pw_hash" = {
     owner = config.services.qbittorrent.user;
   };
 
@@ -25,7 +26,7 @@ lib.mkIf config.me.secrets.enable {
       ];
     };
     preStart = ''
-      secret=$(cat "${config.sops.secrets."hikari/qbittorrent_pw_hash".path}")
+      secret=$(cat "${config.sops.secrets."${hostname}/qbittorrent/pw_hash".path}")
       port=00000
       [ -f /var/lib/proton-vpn-port ] && port=$(< /var/lib/proton-vpn-port)
       configFile=${config.services.qbittorrent.profileDir}/qBittorrent/config/qBittorrent.conf

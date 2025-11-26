@@ -12,7 +12,7 @@ Store password for disk encryption in a file, and create the structure for the
 ssh key to be passed to nixos-anywhere
 
 ```bash
-host=ryusei
+host=naitoh
 user=ayko
 
  echo -n "luksPassword" > /tmp/secret.key

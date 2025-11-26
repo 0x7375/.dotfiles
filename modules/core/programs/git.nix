@@ -7,7 +7,8 @@
 }:
 
 let
-  pk = config.me.publicKey;
+  inherit (config.me) hosts hostname;
+  pubkey = hosts.${hostname}.sshPublicKey;
   github = pkgs.writeText "github" ''
     [user]
       email = "github.little@0xaa.me"
@@ -75,7 +76,7 @@ lib.mkMerge [
           insteadOf = "forge:"
 
         [user]
-          signingkey = "${pk}"
+          signingkey = "${pubkey}"
 
         [includeIf "hasconfig:remote.*.url:github:*/**"]
           path = "${github}"
@@ -96,7 +97,7 @@ lib.mkMerge [
           path = "${codeberg}"
       '';
 
-    hj.files.".ssh/allowed_signers".text = "* ${pk}";
+    hj.files.".ssh/allowed_signers".text = "* ${pubkey}";
 
     systemd.user.services.ssh-agent = {
       wantedBy = [ "default.target" ];

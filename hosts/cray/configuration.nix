@@ -4,9 +4,6 @@
   ...
 }:
 
-let
-  inherit (config.me) sshKeys;
-in
 {
   imports = [
     ./hardware.nix
@@ -14,9 +11,11 @@ in
   ]
   ++ (lib.my.filesIn ./modules);
 
-  users.users.${config.me.user}.openssh.authorizedKeys.keys = [
-    sshKeys.ryusei
-  ];
+  users.users.${config.me.user}.openssh.authorizedKeys.keys =
+    with config.me.hosts;
+    map (h: h.sshPublicKey) [
+      naitoh
+    ];
 
   powerManagement.cpuFreqGovernor = "performance";
 

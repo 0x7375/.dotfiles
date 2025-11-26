@@ -238,7 +238,7 @@ pkgs.writeShellApplication {
         if [[ ''${#nd_args[@]} -eq 2 ]]; then
           [[ $action == "iso" || $action == "iso-vm" || $action == "build" ]] && error "$action doesn't take a host"
 
-          host=''${nd_args[1]}
+          host=''${HOST:-nd_args[1]}
           remote_build=1
 
           local -r host remote_build

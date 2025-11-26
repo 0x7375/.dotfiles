@@ -1,0 +1,33 @@
+{
+  lib,
+  config,
+  ...
+}:
+
+let
+  inherit (config.me) hostname hosts;
+in
+lib.mkIf config.me.secrets.enable {
+  sops.secrets."${hostname}/vpn/pk".owner = config.me.user;
+
+  sops.templates."home-vpn-laptop.conf".content =
+    let
+      inherit (config.me) networkIps;
+    in
+    ''
+      [Interface]
+      Address = ${hosts.${hostname}.ips.vpn}/24
+      PrivateKey = ${config.sops.placeholder."${hostname}/vpn/pk"}
+
+      [Peer]
+      PublicKey = PpCxUOTz7Heh3B29OnI3XNZAKJ8abUETMzFNj3gpTyo=
+      PresharedKey = ${config.sops.placeholder."${hostname}/vpn/psk"}
+      AllowedIPs = ${networkIps.vpn.subnet},${networkIps.lan.subnet}
+      Endpoint = ${config.sops.placeholder.server_vpn_endpoint}
+    '';
+
+  networking.wg-quick.interfaces.home = {
+    autostart = false;
+    configFile = config.sops.templates."home-vpn-laptop.conf".path;
+  };
+}

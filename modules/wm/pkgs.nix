@@ -27,6 +27,7 @@ lib.mkIf config.me.wm.enable {
     [
       gnome-text-editor
       calibre
+      ungoogled-chromium
 
       (auto.discord.override {
         # withOpenASAR = true;

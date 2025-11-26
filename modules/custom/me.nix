@@ -181,6 +181,8 @@ in
           blue = "#A0A0A0";
           magenta = "#808080";
           orange = "#606060";
+
+          sleep = "#DDA0DD";
         };
         light = {
           _theme = "light";
@@ -203,6 +205,8 @@ in
           blue = "#5F5F5F";
           magenta = "#7F7F7F";
           orange = "#9F9F9F";
+
+          sleep = "#8F4D8F";
         };
       };
       description = "Color palette";
@@ -271,6 +275,12 @@ in
       type = types.bool;
       default = true;
       description = "Remap keys using keyd and keyd-application-mapper";
+    };
+
+    sleep.enable = mkOption {
+      type = types.bool;
+      default = true;
+      description = "Sleep reminders";
     };
 
     syncthing.enable = mkOption {

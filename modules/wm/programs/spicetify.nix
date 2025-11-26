@@ -24,34 +24,46 @@
           with spicePkgs.extensions;
           [
             shuffle
-            betterGenres
             adblock
           ]
           ++ [
-            {
-              src =
-                pkgs.fetchFromGitHub {
-                  owner = "Resxt";
-                  repo = "Spicetify-Extensions";
-                  rev = "main";
-                  sha256 = "sha256-+Th5o00c3Y8U+Y/RGmRSkWWp97YCoCJmoESFLZf9dwM=";
-                }
-                + "/startup-page/dist";
-              name = "startup-page.js";
-            }
+            # {
+            #   src =
+            #     pkgs.fetchFromGitHub {
+            #       owner = "Resxt";
+            #       repo = "Spicetify-Extensions";
+            #       rev = "main";
+            #       sha256 = "sha256-+Th5o00c3Y8U+Y/RGmRSkWWp97YCoCJmoESFLZf9dwM=";
+            #     }
+            #     + "/startup-page/dist";
+            #   name = "startup-page.js";
+            # }
           ];
         enabledCustomApps = with spicePkgs.apps; [ marketplace ];
         enabledSnippets = with spicePkgs.snippets; [
-          removePopular
+          disableRecommendations
           hideFriendActivityButton
+          hideMadeForYou
+          hideMiniPlayerButton
+          hideNowPlayingViewButton
           hidePlayingGif
           hideRecentlyPlayed
           hideRecentSearches
           hideWhatsNewButton
-          hideMadeForYou
+          removePopular
           removeRecentlyPlayed
-          hideNowPlayingViewButton
-          hideMiniPlayerButton
+          removePlaylistCover
+
+          # hide useless message from betterLibrary
+          ''
+            .betterLibText { 
+              display: none !important; 
+            }
+          ''
+          # hide "scroll through previews"
+          ''
+            .main-actionBar-exploreButton { display: none !important; }
+          ''
         ];
         wayland = config.me.wm.displayServer == "wayland";
         theme = {

@@ -37,9 +37,11 @@ pkgs.writeShellApplication {
     primary=${dark.fg0}
     green=${dark.green}
     red=${dark.red}
+    sleep=${dark.sleep}
     light_primary=${light.fg0}
     light_green=${light.green}
     light_red=${light.red}
+    light_sleep=${light.sleep}
 
     for file in "$source_dir"/*.png; do
       filename=$(basename -- "$file")
@@ -53,6 +55,10 @@ pkgs.writeShellApplication {
         battery-low.png)
           dark_color="$red"
           light_color="$light_red"
+          ;;
+        moon.png)
+          dark_color="$sleep"
+          light_color="$light_sleep"
           ;;
         *)
           dark_color="$primary"

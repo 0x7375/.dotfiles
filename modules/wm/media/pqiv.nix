@@ -34,6 +34,8 @@ lib.mkIf config.me.wm.enable {
       j { shift_y(-25) }
       k { shift_y(25) }
       l { shift_x(-25) }
+      r { rotate_right() }
+      <Shift>r { rotate_left() }
     ''
   ];
 }

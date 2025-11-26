@@ -144,6 +144,7 @@ lib.mkIf config.me.wm.enable {
         appname = "sleep";
         frame_color = palette.sleep;
         foreground = palette.sleep;
+        timeout = 0;
       };
       volume = {
         appname = "volume";

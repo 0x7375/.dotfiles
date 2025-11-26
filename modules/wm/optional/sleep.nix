@@ -74,7 +74,7 @@ let
         description = "Sleep reminder for ${time}";
         serviceConfig = {
           Type = "oneshot";
-          ExecStart = "${pkgs.libnotify}/bin/notify-send -u critical 'Faut dormir' ${lib.escapeShellArg message}";
+          ExecStart = "${pkgs.libnotify}/bin/notify-send -a sleep -i moon 'Faut dormir' ${lib.escapeShellArg message}";
         };
       };
 

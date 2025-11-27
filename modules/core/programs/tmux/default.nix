@@ -62,7 +62,7 @@ in
         set -g detach-on-destroy off
 
         set -g set-titles on
-        set -g set-titles-string '#{s|${config.me.home}|~|:pane_current_path}'
+        set -g set-titles-string '#S'
         set -g window-status-current-format '#W*'
         set -g window-status-format '#W'
         set -g window-status-separator ' '

@@ -71,22 +71,23 @@ let
     { time, message }:
     {
       systemd.user.services."sleep-reminder-${safeId time}" = {
+        path = [ pkgs.libnotify ];
         description = "Sleep reminder for ${time}";
         serviceConfig = {
           Type = "oneshot";
-          ExecStart = "${pkgs.libnotify}/bin/notify-send -a sleep -i moon 'Faut dormir' ${lib.escapeShellArg message}";
+          ExecStart = "notify-send -a sleep -i moon 'Faut dormir' ${lib.escapeShellArg message}";
         };
       };
 
       systemd.user.timers."sleep-reminder-${safeId time}" = {
         wantedBy = [ "timers.target" ];
-        partOf = [ "sleep-reminder-${safeId time}.service" ];
         timerConfig = {
           OnCalendar = "*-*-* ${time}";
           Persistent = false;
         };
       };
     };
+
   cfg = config.me;
 in
 lib.mkIf (cfg.wm.enable && cfg.sleep.enable) (lib.mkMerge (map mkReminder reminders))

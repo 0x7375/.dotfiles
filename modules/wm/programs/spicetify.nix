@@ -54,6 +54,12 @@
           removeRecentlyPlayed
           removePlaylistCover
 
+          ''
+            div.main-coverSlotCollapsed-container.main-coverSlotCollapsed-navAltContainer {
+              display: None !important;
+            }
+          ''
+
           # hide useless message from betterLibrary
           ''
             .betterLibText { 

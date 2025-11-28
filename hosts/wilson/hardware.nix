@@ -26,6 +26,10 @@
   ];
   boot.initrd.kernelModules = [ ];
   boot.kernelModules = [ ];
+
+  # disable UAS, use usb-storage
+  boot.kernelParams = [ "usb-storage.quirks=0bda:9201:u" ];
+
   boot.extraModulePackages = [ ];
   boot.kernelPackages = pkgs.linuxKernel.packages.linux_rpi4;
 

@@ -8,6 +8,8 @@
 {
   packages = [ pkgs.bat ];
 
+  aliases.l = "${lib.getExe pkgs.bat} --style=plain --paging=always";
+
   # NOTE: run `bat cache --build` in an empty directory to work
   # around failure when ~/cache exists
   # https://github.com/sharkdp/bat/issues/1726

@@ -41,7 +41,7 @@ in
     ll = "${getExe' pkgs.coreutils "ls"} -lha --color --group-directories-first";
     lsblk = "${getExe' pkgs.util-linux "lsblk"} -o NAME,FSTYPE,SIZE,MOUNTPOINTS";
     tree = "${getExe pkgs.tree} -L 4";
-    diff = "${getExe' pkgs.diffutils "diff"} --color";
+    difff = "${getExe' pkgs.diffutils "diff"} --color";
     bc = "${getExe pkgs.bc} -l";
 
     so = "exec $SHELL";
@@ -51,11 +51,6 @@ in
 
     open = "${getExe' pkgs.xdg-utils "xdg-open"}";
 
-    gd = "${git} diff";
-    gs = "${git} status";
-    ga = "${git} add";
-    gc = "${git} commit";
-
     py = "python";
 
     tm = "${getExe pkgs.scripts.tmux-sessionizer}";
@@ -64,7 +59,25 @@ in
     ".." = "cd ..";
     "..." = "cd ../..";
     "...." = "cd ../../..";
-  };
+  }
+  // (lib.genAttrs [
+    "diff"
+    "status"
+    "add"
+    "commit"
+    "push"
+    "pull"
+    "clone"
+    "log"
+    "branch"
+    "remote"
+    "reset"
+    "revert"
+    "restore"
+    "stash"
+    "switch"
+    "worktree"
+  ] (name: "${git} ${name}"));
 
   environment.shellInit =
     let

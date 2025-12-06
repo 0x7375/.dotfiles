@@ -10,6 +10,7 @@ return {
         { "<leader>dl", function() require 'dap'.run_last() end,          desc = "DAP Run Last" },
     },
     dependencies = {
+        "mfussenegger/nvim-dap-python",
         {
             "igorlfs/nvim-dap-view",
             ---@module 'dap-view'
@@ -64,5 +65,19 @@ return {
                 cwd = '${workspaceFolder}'
             }
         }
+
+        require("dap-python").setup("python3")
+
+        -- dap.configurations.python = {
+        --     {
+        --         type = 'python',
+        --         request = 'launch',
+        --         name = "Launch file",
+        --         program = "${file}",
+        --         pythonPath = function()
+        --             return 'python'
+        --         end,
+        --     },
+        -- }
     end,
 }

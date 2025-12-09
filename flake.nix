@@ -7,6 +7,11 @@
     nixpkgs.follows = "nixpkgs-unstable";
     # nixpkgs-patcher.url = "github:gepbird/nixpkgs-patcher";
 
+    nur = {
+      url = "github:nix-community/NUR";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     hjem = {
       url = "github:feel-co/hjem";
       inputs.nixpkgs.follows = "nixpkgs";

@@ -120,5 +120,6 @@ in
         }) (lib.my.filesIn (pkgs-path + /scripts))
       );
     })
-  ];
+  ]
+  ++ [ inputs.nur.overlays.default ];
 }

@@ -8,7 +8,7 @@
 {
   packages = [ pkgs.bat ];
 
-  aliases.l = "${lib.getExe pkgs.bat} --style=plain --paging=always";
+  aliases.l = "${lib.getExe pkgs.bat} --style=plain --paging=always --pager='less -CR'";
 
   # NOTE: run `bat cache --build` in an empty directory to work
   # around failure when ~/cache exists

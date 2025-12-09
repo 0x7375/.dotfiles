@@ -167,6 +167,7 @@ lib.mkIf (wm.displayServer == "xorg") {
 
       assign [class="^zen-beta$"] 3
       assign [class="^spotify$"] 4
+      assign [class="^SimpMusic$"] 4
       assign [title="^ncspot$"] 4
       assign [class="^discord$"] 4
 
@@ -190,6 +191,7 @@ lib.mkIf (wm.displayServer == "xorg") {
       for_window [class="Matplotlib"] floating enable
       for_window [class="gnome-calculator"] floating enable
       for_window [class="Ryujinx"] floating enable
+      for_window [class="SimpMusic"] floating disable
       for_window [class=".*"] border pixel 1
       for_window [floating] move position center
       for_window [window_role="Popup"] border pixel 0

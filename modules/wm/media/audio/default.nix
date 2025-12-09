@@ -8,10 +8,23 @@
 lib.mkIf config.me.wm.enable (
   lib.mkMerge [
     {
+      nixpkgs.overlays = [
+        (final: prev: {
+          pear-desktop = final.nur.repos.lonerOrz.pear-desktop.overrideAttrs (oldAttrs: {
+            installPhase = ''
+              find dist -type f -name "*.js" -exec sed -i 's/openDevTools()/closeDevTools()/g' {} +
+
+              ${oldAttrs.installPhase}
+            '';
+          });
+        })
+      ];
+
       packages = with pkgs; [
         playerctl
         pavucontrol
         pamixer
+        pear-desktop
       ];
 
       services.udev.extraRules = # bash

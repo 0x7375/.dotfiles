@@ -5,7 +5,7 @@
   ...
 }:
 
-lib.mkIf config.me.wm.enable {
+lib.mkIf (config.me.wm.enable && false) {
   nixpkgs.overlays = [
     (final: prev: {
       ncspot = prev.ncspot.override {

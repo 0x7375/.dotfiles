@@ -26,7 +26,6 @@ lib.mkIf config.me.wm.enable {
     in
     [
       gnome-text-editor
-      calibre
       ungoogled-chromium
 
       (auto.discord.override {

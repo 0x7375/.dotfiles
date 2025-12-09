@@ -10,7 +10,10 @@ return {
         { "<leader>dl", function() require 'dap'.run_last() end,          desc = "DAP Run Last" },
     },
     dependencies = {
-        "mfussenegger/nvim-dap-python",
+        {
+            "mfussenegger/nvim-dap-python",
+            cond = false,
+        },
         {
             "igorlfs/nvim-dap-view",
             ---@module 'dap-view'

@@ -15,6 +15,8 @@ lib.mkIf config.me.dev.enable {
 
     # nodePackages.eas-cli
 
+    nodejs_24
+
     # haskell
     # ghc
 

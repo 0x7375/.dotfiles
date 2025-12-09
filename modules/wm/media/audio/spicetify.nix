@@ -11,7 +11,7 @@
     inputs.spicetify-nix.nixosModules.default
   ];
 
-  config = lib.mkIf config.me.wm.enable {
+  config = lib.mkIf (config.me.wm.enable && false) {
     unfree-packages = [ "spotify" ];
 
     programs.spicetify =

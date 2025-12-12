@@ -25,7 +25,7 @@ lib.mkIf config.me.wm.enable {
     set guioptions "none"
 
     # dark mode by default
-    set recolor "true"
+    set recolor "false"
 
     # keep images/graphes default color
     # set recolor-keephue "true"

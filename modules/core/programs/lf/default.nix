@@ -395,6 +395,9 @@ in
       &${getExe' ctpv "ctpv"} -s $id
       cmd on-quit %${getExe' ctpv "ctpv"} -e $id
       set cleaner ${getExe' ctpv "ctpvclear"}
+      setlocal ~/photos/ info time
+      setlocal ~/photos/ sortby time
+      setlocal ~/photos/ reverse
       setlocal ~/pictures/ info time
       setlocal ~/pictures/ sortby time
       setlocal ~/pictures/ reverse

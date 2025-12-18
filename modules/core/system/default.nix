@@ -18,6 +18,9 @@
     environment.TMPDIR = "/var/tmp";
   };
 
+  systemd.coredump.enable = false;
+  systemd.extraConfig = "DefaultLimitCORE=0";
+
   zramSwap = {
     enable = true;
     memoryPercent = lib.mkDefault 25;

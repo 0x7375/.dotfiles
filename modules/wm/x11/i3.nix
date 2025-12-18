@@ -219,8 +219,8 @@ lib.mkIf (wm.displayServer == "xorg") {
         #   ${getExe pkgs.feh} --no-fehbg --bg-fill ${config.me.flakeDir}/.assets/wallpaper.png
         # fi
 
-        ${getExe pkgs.feh} --no-fehbg --bg-fill "$HOME/pictures/wallpapers/$(< $TINTED_FILE)_nixos.png" ||
-          ${getExe' pkgs.hsetroot "hsetroot"} -solid "$(xrdb -query | grep 'bg0:' | cut -f2)"
+        # ${getExe pkgs.feh} --no-fehbg --bg-fill "$HOME/pictures/wallpapers/$(< $TINTED_FILE)_nixos.png" ||
+        #   ${getExe' pkgs.hsetroot "hsetroot"} -solid "$(xrdb -query | grep 'bg0:' | cut -f2)"
       ''}
 
       $exec_always ${getExe' pkgs.hsetroot "hsetroot"} -solid "$(xrdb -query | grep 'bg0:' | cut -f2)"

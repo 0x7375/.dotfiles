@@ -13,9 +13,6 @@ lib.mkIf (wm.displayServer == "xorg") {
   hj.xdg.config.files."i3/config".text =
     let
       airpods = "D4:68:AA:88:8E:32";
-      j4-dmenu-desktop = pkgs.j4-dmenu-desktop.override {
-        dmenu = pkgs.bemenu;
-      };
       dir = "$HOME/notes";
     in
     ''
@@ -87,7 +84,7 @@ lib.mkIf (wm.displayServer == "xorg") {
       bindsym $win+w $exec $browser
       bindsym $win+Shift+p $exec ${getExe pkgs.copyq} show
       bindsym $win+u $exec ${getExe' pkgs._1password-gui "1password"} --quick-access
-      bindsym $win+d $exec ${getExe j4-dmenu-desktop} --no-generic -d '${getExe pkgs.bemenu} -p "DESKTOP"'
+      bindsym $win+d $exec ${getExe pkgs.j4-dmenu-desktop} --no-generic -d '${getExe pkgs.bemenu} -p "DESKTOP"'
 
       bindsym $win+i $exec ${getExe' pkgs.polybar "polybar-msg"} cmd toggle
       bindsym $win+x $exec ${getExe' pkgs.dunst "dunstctl"} close-all

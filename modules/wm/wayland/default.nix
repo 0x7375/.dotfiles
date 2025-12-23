@@ -5,7 +5,7 @@
 }:
 
 lib.mkIf (config.me.wm.displayServer == "wayland") {
-  services.kanshi.enable = true;
+  # services.kanshi.enable = true;
 
   vars = {
     NIXOS_OZONE_WL = "1";

@@ -62,10 +62,7 @@ lib.mkIf config.me.wm.enable {
         origin = "top-center";
         offset = "0x${
           toString (
-            if config.me.wm.displayServer == "xorg" then
-              config.me.barHeight + 10
-            else
-              config.programs.waybar.settings.primary.height
+            if config.me.wm.displayServer == "xorg" then config.me.barHeight + 10 else config.me.barHeight
           )
         }";
         scale = 0;

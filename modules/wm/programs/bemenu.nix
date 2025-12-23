@@ -6,8 +6,11 @@
   ...
 }:
 
-lib.mkIf config.me.wm.enable {
-  nixpkgs.overlays = [
+let
+  cfg = config.me;
+in
+lib.mkIf cfg.wm.enable {
+  nixpkgs.overlays = lib.mkIf (cfg.wm.displayServer != "wayland") [
     (final: prev: {
       bemenu = inputs.wrappers.lib.wrapPackage {
         pkgs = prev;

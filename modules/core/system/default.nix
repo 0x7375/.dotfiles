@@ -19,7 +19,7 @@
   };
 
   systemd.coredump.enable = false;
-  systemd.extraConfig = "DefaultLimitCORE=0";
+  systemd.settings.Manager.DefaultLimitCORE = 0;
 
   zramSwap = {
     enable = true;

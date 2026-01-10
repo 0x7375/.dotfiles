@@ -17,6 +17,8 @@
       naitoh
     ];
 
+  services.picom.enable = lib.mkForce false;
+
   powerManagement.cpuFreqGovernor = "performance";
 
   boot.supportedFilesystems = [ "ntfs" ];

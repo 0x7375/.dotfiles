@@ -140,27 +140,27 @@ lib.mkIf (wm.displayServer == "xorg") {
       bindsym $win+Shift+k resize shrink height 30 px or 30 ppt
       bindsym $win+Shift+l resize grow width 30 px or 30 ppt
 
-      bindsym $win+Shift+equal workspace $ws1
-      bindsym $win+bracketleft workspace $ws2
-      bindsym $win+Shift+bracketleft workspace $ws3
-      bindsym $win+Shift+9 workspace $ws4
-      bindsym $win+Shift+7 workspace $ws5
-      bindsym $win+equal workspace $ws6
-      bindsym $win+Shift+0 workspace $ws7
-      bindsym $win+Shift+bracketright workspace $ws8
-      bindsym $win+bracketright workspace $ws9
-      bindsym $win+Shift+5 workspace $ws10
+      bindsym $win+1 workspace $ws1
+      bindsym $win+2 workspace $ws2
+      bindsym $win+3 workspace $ws3
+      bindsym $win+4 workspace $ws4
+      bindsym $win+5 workspace $ws5
+      bindsym $win+6 workspace $ws6
+      bindsym $win+7 workspace $ws7
+      bindsym $win+8 workspace $ws8
+      bindsym $win+9 workspace $ws9
+      bindsym $win+0 workspace $ws10
 
-      bindsym $win+1 move container to workspace $ws1
-      bindsym $win+2 move container to workspace $ws2
-      bindsym $win+3 move container to workspace $ws3
-      bindsym $win+4 move container to workspace $ws4
-      bindsym $win+5 move container to workspace $ws5
-      bindsym $win+6 move container to workspace $ws6
-      bindsym $win+7 move container to workspace $ws7
-      bindsym $win+8 move container to workspace $ws8
-      bindsym $win+9 move container to workspace $ws9
-      bindsym $win+0 move container to workspace $ws10
+      bindsym $win+Shift+1 move container to workspace $ws1
+      bindsym $win+Shift+2 move container to workspace $ws2
+      bindsym $win+Shift+3 move container to workspace $ws3
+      bindsym $win+Shift+4 move container to workspace $ws4
+      bindsym $win+Shift+5 move container to workspace $ws5
+      bindsym $win+Shift+6 move container to workspace $ws6
+      bindsym $win+Shift+7 move container to workspace $ws7
+      bindsym $win+Shift+8 move container to workspace $ws8
+      bindsym $win+Shift+9 move container to workspace $ws9
+      bindsym $win+Shift+0 move container to workspace $ws10
 
       assign [class="^zen-beta$"] 3
       assign [class="^spotify$"] 4
@@ -194,7 +194,7 @@ lib.mkIf (wm.displayServer == "xorg") {
       for_window [window_role="Popup"] border pixel 0
 
       for_window [title="Steam - Update News"] floating enable
-      assign [class="^.gamescope-wrapped$"] 6
+      # assign [class="^.gamescope-wrapped$"] 6
 
       $exec ${getExe' pkgs.dbus "dbus-update-activation-environment"} --systemd --all
       $exec ${getExe pkgs.gromit-mpx}

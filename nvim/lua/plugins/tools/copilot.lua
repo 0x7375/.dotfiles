@@ -1,6 +1,6 @@
 return {
     "zbirenbaum/copilot.lua",
-    cond = true,
+    cond = false,
     event = "VeryLazy",
     keys = {
         { mode = "i", "<M-k>",  desc = "Copilot: next suggestion" },

@@ -76,12 +76,17 @@ lib.mkIf config.me.wm.enable {
       /* } */
 
       /* hide workspace indicator */
-      #zen-current-workspace-indicator-container {
-        display: none;
-      }
+      /* #zen-current-workspace-indicator-container { */
+      /*   display: none; */
+      /* } */
 
       /* disable animations */
-      * { animation: none !important; transition: none !important; }
+      * {
+        animation: none !important;
+
+        /* breaks popups and other stuff
+        /* transition: none !important; */
+      }
     '';
 
   hj.files.".zen/default/zen-keyboard-shortcuts.json".text = (

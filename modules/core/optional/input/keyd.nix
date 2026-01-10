@@ -13,6 +13,7 @@ lib.mkIf config.me.keyd.enable {
         corne = "4653:0004";
         keychron = "3434:0321";
         thinkpad = "0001:0001";
+        mapNumbers = modifier: lib.genAttrs (map toString (lib.range 0 9)) (x: "${modifier}-${x}");
         pwerty = {
           main = {
             "`" = "^";
@@ -48,6 +49,10 @@ lib.mkIf config.me.keyd.enable {
             "[" = "_";
             "]" = "#";
           };
+          alt = mapNumbers "A";
+          meta = mapNumbers "M";
+          "alt+shift" = mapNumbers "A-S";
+          "meta+shift" = mapNumbers "M-S";
         };
         qol = {
           main = {

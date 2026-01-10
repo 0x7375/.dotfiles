@@ -55,6 +55,13 @@ lib.mkIf (config.me.wm.enable && config.me.keyd.enable) {
     in
     # toml
     ''
+      # arc raiders
+      [steam-app-1808500]
+      1 = 1
+      2 = 2
+      3 = 3
+      4 = 4
+
       [librewolf]
       ${defaultWithEnter}
       control.e = f6

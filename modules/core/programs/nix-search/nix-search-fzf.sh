@@ -77,7 +77,7 @@ if [ -n "$TMUX" ]; then
     NIX_SHELL_CMD="tmux new-window -n nix-shell-$PACKAGE_NAME -c \$PWD \"$NIX_SHELL_CMD\""
 fi
 
-NIX_PROFILE_CMD="nix profile install nixpkgs#$PACKAGE_NAME"
+NIX_PROFILE_CMD="nix profile add nixpkgs#$PACKAGE_NAME"
 
 GET_SOURCE_URL="$CMD source \$(cat $STATE_FILE) {} | sed 's|nixos/modules/nixos/modules/|nixos/modules/|g'"
 

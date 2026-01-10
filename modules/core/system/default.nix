@@ -23,7 +23,7 @@
 
   zramSwap = {
     enable = true;
-    memoryPercent = lib.mkDefault 25;
+    memoryPercent = 100;
   };
 
   services.fstrim.enable = true;

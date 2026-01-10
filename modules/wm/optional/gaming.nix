@@ -18,7 +18,14 @@ lib.mkIf config.me.wm.optional.gaming.enable {
     gamescopeSession.enable = true;
   };
 
-  programs.gamemode.enable = true;
+  programs.gamemode = {
+    enable = true;
+    settings = {
+      general = {
+        renice = 10;
+      };
+    };
+  };
 
   packages = with pkgs; [
     winetricks
@@ -35,4 +42,9 @@ lib.mkIf config.me.wm.optional.gaming.enable {
     STEAM_EXTRA_COMPAT_TOOLS_PATHS = "${config.me.home}/.steam/root/compatibilitytools.d";
     __GL_SYNC_DISPLAY_DEVICE = "HDMI-1"; # prevent gamescope for instance from locking fps to second monitor refresh rate
   };
+
+  # prevent arc raiders from crashing mid loading
+  boot.kernelParams = [
+    "vsyscall=emulate"
+  ];
 }

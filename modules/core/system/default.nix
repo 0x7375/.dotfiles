@@ -19,7 +19,7 @@
   };
 
   systemd.coredump.enable = false;
-  systemd.settings.Manager.DefaultLimitCORE = 0;
+  boot.kernel.sysctl."kernel.core_pattern" = "|/bin/false";
 
   zramSwap = {
     enable = true;

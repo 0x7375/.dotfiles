@@ -13,9 +13,13 @@ lib.mkIf config.me.keyd.enable {
         corne = "4653:0004";
         keychron = "3434:0321";
         thinkpad = "0001:0001";
-        mapNumbers = modifier: lib.genAttrs (map toString (lib.range 0 9)) (x: "${modifier}-${x}");
-        pwerty = {
+
+        mapModNumbers = mod: lib.genAttrs (map toString (lib.range 0 9)) (x: "${mod}-${x}");
+        mapNumbers = lib.genAttrs (map toString (lib.range 0 9)) (x: x);
+
+        settings = {
           main = {
+            shift = "layer(pwerty_shift)";
             "`" = "^";
             "1" = "+";
             "2" = "[";
@@ -32,39 +36,82 @@ lib.mkIf config.me.keyd.enable {
             "[" = "-";
             "]" = "`";
           };
-          shift = {
+
+          "pwerty_shift:S" = mapNumbers // {
             "`" = "!";
-            "1" = "1";
-            "2" = "2";
-            "3" = "3";
-            "4" = "4";
-            "5" = "5";
-            "6" = "6";
-            "7" = "7";
-            "8" = "8";
-            "9" = "9";
-            "0" = "0";
             "-" = "*";
             "equal" = "@";
             "[" = "_";
             "]" = "#";
           };
-          alt = mapNumbers "A";
-          meta = mapNumbers "M";
-          "alt+shift" = mapNumbers "A-S";
-          "meta+shift" = mapNumbers "M-S";
+
+          "qwerty_shift:S" = {
+            "`" = "~";
+            "1" = "!";
+            "2" = "@";
+            "3" = "#";
+            "4" = "$";
+            "5" = "%";
+            "6" = "^";
+            "7" = "&";
+            "8" = "*";
+            "9" = "(";
+            "0" = ")";
+            "-" = "_";
+            "equal" = "+";
+            "[" = "{";
+            "]" = "}";
+          };
+
+          "qwerty:layout" = mapNumbers // {
+            shift = "layer(qwerty_shift)";
+
+            "leftalt+leftshift+space" = "setlayout(main)";
+            "leftmeta+leftshift+space" = "setlayout(main)";
+
+            "`" = "`";
+            "-" = "-";
+            "equal" = "=";
+            "[" = "[";
+            "]" = "]";
+          };
+
+          alt = mapModNumbers "A";
+          meta = mapModNumbers "M";
         };
+
         qol = {
           main = {
             capslock = "overload(control, esc)";
-            alt = "layer(meta)";
-            meta = "layer(alt)";
+            leftalt = "layer(meta)";
+            leftmeta = "layer(alt)";
           };
           global = {
             # ignores tap behaviour if no key was pressed and time is over timeout
             overload_tap_timeout = 250;
           };
         };
+
+        extraConfig =
+          let
+            range = fn: lib.concatMapStringsSep "\n" fn (lib.range 0 9);
+            mapModifier = mod: range (i: "${toString i} = ${mod}-S-${toString i}");
+          in
+          ''
+            [alt+pwerty_shift]
+            space = setlayout(qwerty)
+            ${mapModifier "A"}
+
+            [meta+pwerty_shift]
+            space = setlayout(qwerty)
+            ${mapModifier "M"}
+
+            [alt+qwerty_shift]
+            space = setlayout(main)
+
+            [meta+qwerty_shift]
+            space = setlayout(main)
+          '';
       in
       {
         external = {
@@ -72,11 +119,12 @@ lib.mkIf config.me.keyd.enable {
             keychron
             corne
           ];
-          settings = pwerty;
+          inherit settings extraConfig;
         };
         laptop = {
           ids = [ thinkpad ];
-          settings = lib.recursiveUpdate qol pwerty;
+          settings = lib.recursiveUpdate settings qol;
+          inherit extraConfig;
         };
       };
   };

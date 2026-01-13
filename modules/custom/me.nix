@@ -119,6 +119,10 @@ in
             vpn = "10.0.0.1";
           };
         };
+        mach = {
+          syncthingId = "32SVOZP-RJL755K-D7ZTMRL-7FOTZZF-V7W5V5J-2JOIMCG-W6MRDGK-AO4D4AC";
+          # ips.vpn = "10.0.0.5";
+        };
         shannon = {
           syncthingId = "JJ62FKA-U5HTR5S-NJ7A4EJ-TMO66SZ-QNUOYUA-CCQMUIB-STDX4RE-VCGEKAB";
           ips.vpn = "10.0.0.3";

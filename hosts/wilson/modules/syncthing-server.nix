@@ -12,15 +12,18 @@ let
   shannon = "shannon";
   lamarr = "lamarr";
   yoshino = "yoshino";
+  mach = "mach";
   groups = {
     desktops = [
       cray
       naitoh
       cutler
+      mach
     ];
     linux = [
       cray
       naitoh
+      mach
     ];
     phones = [
       shannon

@@ -53,6 +53,7 @@ in
       "request.${url}" = mkSubDomain { port = 5055; };
       "sync.${url}" = mkSubDomain { port = 8384; };
       "torrent.${url}" = mkSubDomain { port = 8080; };
+      "file.${url}" = mkSubDomain { port = 8081; };
       "indexer.${url}" = mkSubDomain { port = 9696; };
       "movies.${url}" = mkSubDomain { port = 7878; };
       "shows.${url}" = mkSubDomain { port = 8989; };

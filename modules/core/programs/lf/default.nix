@@ -6,12 +6,6 @@
 }:
 
 let
-  ctpv = (
-    pkgs.ctpv.override {
-      ueberzug = pkgs.ueberzugpp;
-      bat = pkgs.bat;
-    }
-  );
   desktop = config.me.wm.enable;
 in
 {
@@ -28,6 +22,9 @@ in
             sha256 = "sLv2dUdRs65GYEpq3yrmktdV9QwZiCO/8dwEeq4nEhk=";
           };
           vendorHash = "sha256-ZShpWCfEVPLafrn3MvtxkRsBvwUEOiLBs1gZhKSBrsQ=";
+
+          doCheck = false;
+          doInstallCheck = false;
         });
       }
       // (lib.optionalAttrs (config.me.hostname != "wilson") {
@@ -48,30 +45,16 @@ in
   packages = [
     pkgs.lf
     pkgs.ouch
-    pkgs.perl540Packages.FileMimeInfo
+    pkgs.perl5Packages.FileMimeInfo
   ]
   ++ lib.optionals desktop [
-    ctpv
     pkgs.ueberzugpp
     # pkgs.pistol
     pkgs.poppler-utils
+  ]
+  ++ lib.optionals (!pkgs.stdenv.isDarwin) [
     pkgs.libreoffice
   ];
-
-  hj.xdg.config.files."ctpv/config" = {
-    enable = desktop;
-    text = ''
-      # set chafasixel
-
-      preview null .env .git-credentials .keyring {{
-          echo "preview disabled"
-      }}
-
-      # preview image image/* {{
-      #   chafa -s "''${w}x''${h}" -f sixels --polite on "$f"
-      # }}
-    '';
-  };
 
   hj.xdg.config.files."lf/lfrc".text =
     let
@@ -315,7 +298,7 @@ in
       map L
       map M
       map N search-prev
-      map O &${getExe pkgs.dragon-drop} $fx
+      map O &${getExe pkgs.ripdrag} $fx
       map P paste-overwrite
       map Q quit-and-cd
       map R :source ${home}/.config/lf/lfrc; reload
@@ -389,19 +372,12 @@ in
       map zt
       map ~ cd ${home}
 
-      set previewer ${getExe' ctpv "ctpv"}
-      map <c-p> ''$${getExe' ctpv "ctpv"} "$f" | less -R
-
-      &${getExe' ctpv "ctpv"} -s $id
-      cmd on-quit %${getExe' ctpv "ctpv"} -e $id
-      set cleaner ${getExe' ctpv "ctpvclear"}
       setlocal ~/photos/ info time
       setlocal ~/photos/ sortby time
       setlocal ~/photos/ reverse
       setlocal ~/pictures/ info time
       setlocal ~/pictures/ sortby time
       setlocal ~/pictures/ reverse
-      # set sixel true
 
       on-focus-gained
 

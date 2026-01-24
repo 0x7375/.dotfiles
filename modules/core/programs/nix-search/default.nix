@@ -26,7 +26,6 @@ in
 
   programs.tmux.extraConfig = # tmux
     ''
-      # bind-key m run-shell "tmux popup -E -w 80% -h 80% ${lib.getExe nst} || true"
       bind-key m new-window ${lib.getExe nst}
     '';
 }

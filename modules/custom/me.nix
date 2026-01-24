@@ -121,7 +121,8 @@ in
         };
         mach = {
           syncthingId = "32SVOZP-RJL755K-D7ZTMRL-7FOTZZF-V7W5V5J-2JOIMCG-W6MRDGK-AO4D4AC";
-          # ips.vpn = "10.0.0.5";
+          sshPublicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPf1snOTuk99EWDE7c2YJPQC9utOyiOAeRTskCjGBclG";
+          ips.vpn = "10.0.0.5";
         };
         shannon = {
           syncthingId = "JJ62FKA-U5HTR5S-NJ7A4EJ-TMO66SZ-QNUOYUA-CCQMUIB-STDX4RE-VCGEKAB";
@@ -307,6 +308,7 @@ in
           types.enum [
             "xorg"
             "wayland"
+            "macos"
           ]
         );
         default = if cfg.wm.enable then "xorg" else null;
@@ -314,9 +316,15 @@ in
       };
 
       terminal = mkOption {
-        type = types.str;
-        default = if cfg.wm.displayServer == "xorg" then "alacritty" else "foot";
-        description = "Default terminal emulator (needs to be valid pkg aswell)";
+        type = types.nullOr types.str;
+        default =
+          if cfg.wm.displayServer == "xorg" then
+            "alacritty"
+          else if cfg.wm.displayServer == "wayland" then
+            "foot"
+          else
+            null;
+        description = "Default terminal emulator";
       };
 
       font = mkOption {

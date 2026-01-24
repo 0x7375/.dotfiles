@@ -5,7 +5,10 @@
   ...
 }:
 
-lib.mkIf (config.me.wm.displayServer == "xorg") {
+let
+  inherit (pkgs.stdenv) isDarwin;
+in
+lib.mkIf (config.me.wm.terminal == "alacritty") {
   packages = [ pkgs.alacritty ];
 
   tinted.files.".config/alacritty/alacritty.toml" = {
@@ -51,16 +54,6 @@ lib.mkIf (config.me.wm.displayServer == "xorg") {
         ];
         keyboard.bindings = [
           {
-            key = "v";
-            mods = "Alt";
-            action = "Paste";
-          }
-          {
-            key = "c";
-            mods = "Alt";
-            action = "Copy";
-          }
-          {
             key = "u";
             mods = "Alt|Shift";
             action = "IncreaseFontSize";
@@ -85,8 +78,22 @@ lib.mkIf (config.me.wm.displayServer == "xorg") {
             mods = "Control";
             action = "ReceiveChar";
           }
-        ];
+        ]
+        ++ (lib.optionals (!isDarwin) [
+          {
+            key = "v";
+            mods = "Alt";
+            action = "Paste";
+          }
+          {
+            key = "c";
+            mods = "Alt";
+            action = "Copy";
+          }
+        ]);
         window = {
+          option_as_alt = "Both";
+          decorations = if isDarwin then "None" else "Full";
           dynamic_padding = true;
           padding = rec {
             x = 20;
@@ -98,7 +105,7 @@ lib.mkIf (config.me.wm.displayServer == "xorg") {
           normal = {
             family = "${config.me.wm.font} Nerd Font";
           };
-          size = 18;
+          size = 22;
           offset.y = 0;
         };
       };

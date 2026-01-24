@@ -7,34 +7,37 @@
 
 let
   inherit (lib) getExe getExe';
+  plugins = with pkgs.tmuxPlugins; [
+    fzf-tmux-url
+    yank
+  ];
 in
 {
-  nixpkgs.overlays = [
-    (final: prev: {
-      tmux = prev.tmux.overrideAttrs (old: {
-        patches = (old.patches or [ ]) ++ [
-          ./tmux_bigger_input_buffer.patch
-        ];
-      });
-    })
-  ];
+  # nixpkgs.overlays = [
+  #   (final: prev: {
+  #     tmux = prev.tmux.overrideAttrs (old: {
+  #       patches = (old.patches or [ ]) ++ [
+  #         ./tmux_bigger_input_buffer.patch
+  #       ];
+  #     });
+  #   })
+  # ];
 
-  packages = with pkgs; [
-    scripts.tmux-sessionizer
-    scripts.tmux-sshr
-    wl-clipboard
-  ];
+  packages =
+    with pkgs;
+    [
+      scripts.tmux-sessionizer
+      scripts.tmux-sshr
+      less
+      fzf
+      coreutils
+    ]
+    ++ lib.optionals pkgs.stdenv.isLinux [
+      wl-clipboard
+    ];
 
   programs.tmux = {
     enable = true;
-    baseIndex = 1;
-    escapeTime = 0;
-    terminal = "tmux-256color";
-    plugins = with pkgs.tmuxPlugins; [
-      fzf-tmux-url
-      yank
-    ];
-    historyLimit = 50000;
     extraConfig = # tmux
       let
         clip =
@@ -50,6 +53,7 @@ in
 
         set -g @plugin 'tmux-plugins/tmux-yank'
 
+        set  -g default-terminal "tmux-256color"
         set -ga terminal-overrides ",${config.me.wm.terminal}:RGB" # support for undercurl
 
         unbind C-b
@@ -72,7 +76,10 @@ in
         set -g status-left-length 120
         set -g status-right '''
 
+        set  -s escape-time 0
         set -g display-time 2000
+        set -g base-index 1
+        set -g history-limit 50000
         set -g status-interval 1
 
         set -g status on
@@ -118,7 +125,7 @@ in
         unbind t
 
         bind k run-shell "tmux popup -E ${getExe pkgs.scripts.tmux-sessionizer} || true"
-        bind M new-window "man -k . | ${getExe pkgs.fzf} --reverse --padding 1 | ${getExe pkgs.gawk} '{print $1}' | xargs man"
+        bind M new-window "man -k . | ${getExe pkgs.fzf} --reverse --padding 1 | ${getExe pkgs.gawk} '{print $1}' ${lib.optionalString pkgs.stdenv.isDarwin "| tr -d '()0-9' "}| xargs man"
 
         # navigate prompts
         bind -n M-p copy-mode \; \
@@ -164,6 +171,8 @@ in
 
         bind -T copy-mode-vi 'y' \
           send -X copy-pipe-and-cancel "${clip}"
+
+        ${lib.concatMapStringsSep "\n" (x: "run-shell ${x.rtp}") plugins}
       '';
   };
 }

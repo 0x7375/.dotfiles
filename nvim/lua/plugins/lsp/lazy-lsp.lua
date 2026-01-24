@@ -1,23 +1,11 @@
-local function is_nixos()
-    if vim.fn.has('unix') ~= 1 then
-        return false
-    end
-
-    local handle = io.popen("grep '^ID=' /etc/os-release | cut -d'=' -f2")
-    local result
-    if handle ~= nil then
-        result = handle:read("*a")
-        handle:close()
-    end
-
-    result = result:gsub("%s+", "") -- Remove any trailing/leading spaces or newlines
-    return result == "nixos"
+local function has_nix()
+    return vim.fn.executable('nix') == 1
 end
 
 return {
     "dundalek/lazy-lsp.nvim",
     -- event = { "BufReadPost", "BufWritePost", "BufNewFile" },
-    cond = is_nixos(),
+    cond = has_nix(),
     dependencies = {
         {
             "jfly/lsp-format.nvim",
@@ -83,7 +71,13 @@ return {
                     cmd = { "nixd", "--semantic-tokens=true", "--inlay-hints=true" },
                     settings = {
                         nixd = (function()
-                            local flake = "(builtins.getFlake \"" .. os.getenv("FLAKE") .. "\")"
+                            local flake = os.getenv("FLAKE")
+                            if not flake then
+                                return
+                            end
+
+                            flake = "(builtins.getFlake \"" .. flake .. "\")"
+
                             local host = os.getenv("HOSTNAME")
 
                             return {
@@ -215,7 +209,7 @@ return {
                             "efm-langserver",
                             "shellcheck",
                             "nixfmt-rfc-style",
-                            "php84Packages.php-codesniffer",
+                            -- "php84Packages.php-codesniffer",
                             "deno",
                             "typstyle",
                             "libxml2",

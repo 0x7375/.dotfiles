@@ -20,6 +20,7 @@ let
         "*.aux"
         "*.log"
         "*.out"
+        ".DS_Store"
       ],
       extraConfig ? { },
     }:

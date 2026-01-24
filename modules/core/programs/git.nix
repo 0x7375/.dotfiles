@@ -27,78 +27,100 @@ let
 in
 lib.mkMerge [
   {
-    programs.git.enable = true;
-
     packages = [ pkgs.git ];
 
-    hj.xdg.config.files."git/config".text = # toml
-      ''
-        [commit]
-          gpgsign = true
+    hj.xdg.config.files."git/ignore".text = ''
+      .DS_Store
+    '';
 
-        [credential]
-          helper = "store"
+    hj.xdg.config.files."git/config".text = ''
+      [commit]
+        gpgsign = true
 
-        [gpg]
-          format = "ssh"
+      [credential]
+        helper = "store"
 
-        [gpg "openpgp"]
-          program = "${lib.getExe' pkgs.gnupg "gpg"}"
+      [gpg]
+        format = "ssh"
 
-        [gpg "ssh"]
-          allowedSignersFile = "~/.ssh/allowed_signers"
+      [gpg "openpgp"]
+        program = "${lib.getExe' pkgs.gnupg "gpg"}"
 
-        [init]
-          defaultBranch = "main"
+      [gpg "ssh"]
+        allowedSignersFile = "~/.ssh/allowed_signers"
 
-        [url "git@codeberg.org:"]
-          insteadOf = "codeberg:"
+      [init]
+        defaultBranch = "main"
 
-        [url "git@git.sr.ht:"]
-          insteadOf = "sourcehut:"
+      [url "git@codeberg.org:"]
+        insteadOf = "codeberg:"
 
-        [url "git@git.unicaen.fr:"]
-          insteadOf = "uni:"
+      [url "git@git.sr.ht:"]
+        insteadOf = "sourcehut:"
 
-        [url "git@github.com:"]
-          insteadOf = "github:"
+      [url "git@git.unicaen.fr:"]
+        insteadOf = "uni:"
 
-        [url "https://codeberg.org/"]
-          insteadOf = "cb:"
+      [url "git@github.com:"]
+        insteadOf = "github:"
 
-        [url "https://git.sr.ht/"]
-          insteadOf = "sh:"
+      [url "https://codeberg.org/"]
+        insteadOf = "cb:"
 
-        [url "https://github.com/"]
-          insteadOf = "gh:"
+      [url "https://git.sr.ht/"]
+        insteadOf = "sh:"
 
-        [url "https://redmine-etu.unicaen.fr/git/"]
-          insteadOf = "forge:"
+      [url "https://github.com/"]
+        insteadOf = "gh:"
 
-        [user]
-          signingkey = "${pubkey}"
+      [url "https://redmine-etu.unicaen.fr/git/"]
+        insteadOf = "forge:"
 
-        [includeIf "hasconfig:remote.*.url:github:*/**"]
-          path = "${github}"
+      [user]
+        signingkey = "${pubkey}"
 
-        [includeIf "hasconfig:remote.*.url:gh:*/**"]
-          path = "${github}"
+      [includeIf "hasconfig:remote.*.url:github:*/**"]
+        path = "${github}"
 
-        [includeIf "hasconfig:remote.*.url:sourcehut:*/**"]
-          path = "${sourcehut}"
+      [includeIf "hasconfig:remote.*.url:gh:*/**"]
+        path = "${github}"
 
-        [includeIf "hasconfig:remote.*.url:sh:*/**"]
-          path = "${sourcehut}"
+      [includeIf "hasconfig:remote.*.url:sourcehut:*/**"]
+        path = "${sourcehut}"
 
-        [includeIf "hasconfig:remote.*.url:codeberg:*/**"]
-          path = "${codeberg}"
+      [includeIf "hasconfig:remote.*.url:sh:*/**"]
+        path = "${sourcehut}"
 
-        [includeIf "hasconfig:remote.*.url:cb:*/**"]
-          path = "${codeberg}"
-      '';
+      [includeIf "hasconfig:remote.*.url:codeberg:*/**"]
+        path = "${codeberg}"
+
+      [includeIf "hasconfig:remote.*.url:cb:*/**"]
+        path = "${codeberg}"
+    '';
 
     hj.files.".ssh/allowed_signers".text = "* ${pubkey}";
+  }
+  (lib.mkIf pkgs.stdenv.isDarwin {
+    hj.xdg.config.files."ssh/config".text = ''
+      Host *
+        AddKeysToAgent yes
+        UseKeychain yes
+        IdentityFile ~/.ssh/id_ed25519
+    '';
 
+    launchd.agents.ssh-add = lib.mkIf config.me.secrets.enable {
+      serviceConfig = {
+        ProgramArguments = [
+          "${pkgs.openssh}/bin/ssh-add"
+          "--apple-use-keychain"
+          "${config.me.home}/.ssh/id_ed25519"
+        ];
+        RunAtLoad = true;
+      };
+    };
+  })
+
+  (lib.mkIf pkgs.stdenv.isLinux {
     systemd.user.services.ssh-agent = {
       wantedBy = [ "default.target" ];
       description = "SSH authentication agent";
@@ -111,8 +133,10 @@ lib.mkMerge [
         export SSH_AUTH_SOCK=$XDG_RUNTIME_DIR/ssh-agent
       fi
     '';
+  })
 
-    systemd.user.services.ssh-add = lib.mkIf config.me.secrets.enable {
+  (lib.mkIf (config.me.secrets.enable && pkgs.stdenv.isLinux) {
+    systemd.user.services.ssh-add = {
       description = "Add keys to SSH agent";
       after = [ "ssh-agent.service" ];
       bindsTo = [ "ssh-agent.service" ];
@@ -120,14 +144,14 @@ lib.mkMerge [
 
       serviceConfig = {
         Type = "oneshot";
-        # Wait a bit for the socket to be ready
         ExecStartPre = "${lib.getExe' pkgs.coreutils "sleep"} 1";
         Environment = "SSH_AUTH_SOCK=%t/ssh-agent";
         ExecStart = "${lib.getExe' pkgs.openssh "ssh-add"} %h/.ssh/id_ed25519";
         RemainAfterExit = "yes";
       };
     };
-  }
+  })
+
   (lib.mkIf config.me.secrets.enable {
     sops.secrets.git-config = {
       sopsFile = "${secrets}/uni-git-config.ini";
@@ -135,21 +159,11 @@ lib.mkMerge [
       owner = config.me.user;
     };
 
-    programs.git = {
-      config =
-        let
-          path = config.sops.secrets.git-config.path;
-        in
-        [
-          {
-            "includeIf \"hasconfig:remote.*.url:uni:*/**\"" = {
-              inherit path;
-            };
-            "includeIf \"hasconfig:remote.*.url:forge:**\"" = {
-              inherit path;
-            };
-          }
-        ];
-    };
+    hj.xdg.config.files."git/config".text = lib.mkAfter ''
+      [includeIf "hasconfig:remote.*.url:uni:*/**"]
+        path = ${config.sops.secrets.git-config.path}
+      [includeIf "hasconfig:remote.*.url:forge:**"]
+        path = ${config.sops.secrets.git-config.path}
+    '';
   })
 ]

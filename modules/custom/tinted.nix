@@ -1,6 +1,7 @@
 {
   lib,
   config,
+  pkgs,
   ...
 }:
 let
@@ -42,6 +43,13 @@ let
       dirParts = lib.splitString "/" targetPath;
       dir = lib.concatStringsSep "/" (lib.init dirParts);
       sourceDir = lib.concatStringsSep "/" (lib.init (lib.splitString "/" sourcePath));
+
+      absTarget = "${home}/${targetPath}";
+      absSource = "${home}/${sourcePath}-${cfg.defaultTheme}";
+      absDirs = [
+        "${home}/${dir}"
+        "${home}/${sourceDir}"
+      ];
     in
     {
       files =
@@ -54,19 +62,14 @@ let
             dark = null;
             light = null;
           };
-      # // {
-      #   "${targetPath}" = {
-      #     type = "symlink";
-      #     clobber = false;
-      #     source = "${home}/${sourcePath}-${cfg.defaultTheme}";
-      # };
-      # };
 
-      tmpfiles = [
-        "d ${home}/${dir} 0755 ${config.me.user} users - -"
-        "d ${home}/${sourceDir} 0755 ${config.me.user} users - -"
-        "L ${home}/${targetPath} - - - - ${home}/${sourcePath}-${cfg.defaultTheme}" # when using smfh linker
-      ];
+      activation = {
+        dirs = absDirs;
+        link = {
+          source = absSource;
+          target = absTarget;
+        };
+      };
     };
 
   processed = lib.mapAttrs mkTintedFile cfg.files;
@@ -117,23 +120,33 @@ in
           ".Xresources" = {
             text = palette: ''
               *bg0: ${palette.bg0}
-              *fg0: ${palette.fg0}
-              *red: ${palette.red}
-              *green: ${palette.green}
-              *yellow: ${palette.yellow}
-              *blue: ${palette.blue}
-              *magenta: ${palette.magenta}
-              *cyan: ${palette.cyan}
             '';
           };
         };
       };
   };
 
-  config = lib.mkIf cfg.enable {
-    hj.files = lib.mergeAttrsList (lib.attrValues (lib.mapAttrs (_: v: v.files) processed));
-    systemd.user.tmpfiles.rules = lib.concatLists (
-      lib.attrValues (lib.mapAttrs (_: v: v.tmpfiles) processed)
-    );
-  };
+  config = lib.mkIf cfg.enable (
+    lib.mkMerge [
+      {
+        hj.files = lib.mergeAttrsList (lib.attrValues (lib.mapAttrs (_: v: v.files) processed));
+      }
+      (lib.mkIf pkgs.stdenv.isLinux {
+        systemd.user.tmpfiles.rules = lib.concatMap (
+          v:
+          (map (d: "d ${d} 0755 ${config.me.user} users - -") v.activation.dirs)
+          ++ [ "L ${v.activation.link.target} - - - - ${v.activation.link.source}" ]
+        ) (lib.attrValues processed);
+      })
+      (lib.mkIf pkgs.stdenv.isDarwin {
+        system.activationScripts.tinted-files.text = ''
+          ${lib.concatMapStringsSep "\n" (v: ''
+            ${lib.concatMapStringsSep "\n" (d: "mkdir -p ${d}") v.activation.dirs}
+            ln -sf ${v.activation.link.source} ${v.activation.link.target}
+            chown -h ${config.me.user} ${v.activation.link.target}
+          '') (lib.attrValues processed)}
+        '';
+      })
+    ]
+  );
 }

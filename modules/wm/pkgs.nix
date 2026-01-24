@@ -26,34 +26,25 @@ lib.mkIf config.me.wm.enable {
     in
     [
       gnome-text-editor
-      ungoogled-chromium
 
+      texliveFull
+      typst
+      gnome-calculator
+      qbittorrent
+      # st
+    ]
+    ++ (lib.optionals pkgs.stdenv.isLinux [
       (auto.discord.override {
         # withOpenASAR = true;
         withVencord = true;
       })
-
+      ungoogled-chromium
       scripts.generate-icons
-
-      gnome-calculator
-      qbittorrent
       omnissa-horizon-client
       auto.signal-desktop
-      # st
-    ]
-    ++ [
-    ]
-    ++ (lib.optionals config.me.dev.enable [
-      apache-hop
-
-      # php
-      nodePackages.browser-sync
-
-      texliveFull
-      typst
-
-      # stable.jetbrains.idea-community
-
       stable.gaphor
+      # stable.jetbrains.idea-community
+    ])
+    ++ (lib.optionals config.me.dev.enable [
     ]);
 }

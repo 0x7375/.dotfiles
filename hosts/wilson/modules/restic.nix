@@ -137,6 +137,7 @@ lib.mkIf config.me.secrets.enable {
       paths = gitRepos;
       day = "Mon";
       exclude = [
+        ".DS_Store"
         "node_modules"
       ];
     });

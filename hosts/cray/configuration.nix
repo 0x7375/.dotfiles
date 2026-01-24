@@ -15,6 +15,7 @@
     with config.me.hosts;
     map (h: h.sshPublicKey) [
       naitoh
+      mach
     ];
 
   services.picom.enable = lib.mkForce false;

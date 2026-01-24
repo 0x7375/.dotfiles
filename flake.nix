@@ -7,6 +7,11 @@
     nixpkgs.follows = "nixpkgs-unstable";
     # nixpkgs-patcher.url = "github:gepbird/nixpkgs-patcher";
 
+    nix-darwin = {
+      url = "github:nix-darwin/nix-darwin/master";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     nur = {
       url = "github:nix-community/NUR";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -109,5 +114,19 @@
         # "julliard"
         # "perlman"
       ] mkSystem;
+      darwinConfigurations."mach" = inputs.nix-darwin.lib.darwinSystem {
+        inherit lib;
+        specialArgs = {
+          inherit (inputs) secrets;
+          inherit inputs;
+        };
+        modules = [
+          inputs.hjem.darwinModules.default
+          ./hosts/mach/configuration.nix
+          {
+            networking.hostName = "mach";
+          }
+        ];
+      };
     };
 }

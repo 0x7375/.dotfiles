@@ -42,7 +42,7 @@ return {
         -- end }
     },
     init = function()
-        require("fzf-lua").register_ui_select()
+        -- require("fzf-lua").register_ui_select()
     end,
     opts = {
         fzf_opts = {
@@ -102,6 +102,7 @@ return {
             "%.env$",
             "node_modules/",
             ".expo/",
+            ".DS_Store",
             "doc/",
             ".cache/",
             "bin/",

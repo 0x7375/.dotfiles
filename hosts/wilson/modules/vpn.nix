@@ -12,6 +12,7 @@ in
 lib.mkIf config.me.secrets.enable {
   sops.secrets."${hostname}/vpn/pk".owner = config.me.user;
 
+  sops.secrets."mach/vpn/psk".owner = config.me.user;
   sops.secrets."naitoh/vpn/psk".owner = config.me.user;
   sops.secrets."shannon/vpn/psk".owner = config.me.user;
   sops.secrets."lamarr/vpn/psk".owner = config.me.user;
@@ -32,7 +33,12 @@ lib.mkIf config.me.secrets.enable {
 
     peers =
       let
-        inherit (hosts) naitoh shannon lamarr;
+        inherit (hosts)
+          naitoh
+          shannon
+          lamarr
+          mach
+          ;
       in
       [
         {
@@ -49,6 +55,11 @@ lib.mkIf config.me.secrets.enable {
           publicKey = "vEKQ3Lpxn8JScQRMS8t6lq6dGWXiB9oyBgr2gSTfvxA=";
           presharedKeyFile = config.sops.secrets."lamarr/vpn/psk".path;
           allowedIPs = [ "${lamarr.ips.vpn}/32" ];
+        }
+        {
+          publicKey = "z2/QJTGzNBiq4MKPqFDtuPJsCE1Tb/7VG6oYCExeYVg=";
+          presharedKeyFile = config.sops.secrets."mach/vpn/psk".path;
+          allowedIPs = [ "${mach.ips.vpn}/32" ];
         }
       ];
   };

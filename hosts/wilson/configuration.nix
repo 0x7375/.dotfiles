@@ -24,6 +24,7 @@ in
       map (h: h.sshPublicKey) [
         cray
         naitoh
+        mach
         julliard
       ];
   };

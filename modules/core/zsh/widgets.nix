@@ -9,10 +9,14 @@
           command ${lib.getExe pkgs.lf} "$@"
 
           # remove mounted archives
-          ${lib.getExe' pkgs.gawk "awk"} '$1 == "archivemount" { print $2 }' /etc/mtab | while read -r mntdir
+          mount | ${lib.getExe' pkgs.gawk "awk"} '/archivemount/ { print $3 }' | while read -r mntdir
           do
-            umount "$mntdir" -l
-            rmdir "$mntdir"
+              if [[ "$OSTYPE" == "darwin"* ]]; then
+                  umount "$mntdir"
+              else
+                  umount "$mntdir" -l
+              fi
+              rmdir "$mntdir" 2>/dev/null
           done
 
           # handle cd to last directory

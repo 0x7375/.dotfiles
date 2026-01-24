@@ -127,3 +127,12 @@ chmod 600 ~/.ssh/id_ed25519
 install -Dm 600 -o $host -g users ~/.ssh/id_ed25519 /mnt/home/$user/.ssh/
 nixos-install --root /mnt --flake ~/.config/nixcfg#hostname
 ```
+
+## Darwin
+
+- Install nix
+- Clone repo
+- Install homebrew
+`sudo mv /etc/bashrc{,.backup}`
+`sudo nix run --extra-experimental-features 'nix-command flakes' nix-darwin/master#darwin-rebuild -- switch --flake `
+`sudo darwin-rebuild switch`

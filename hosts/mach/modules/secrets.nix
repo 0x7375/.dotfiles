@@ -1,5 +1,6 @@
 {
   lib,
+  pkgs,
   config,
   ...
 }:
@@ -8,10 +9,11 @@ let
   inherit (config.me) hostname hosts;
 in
 lib.mkIf config.me.secrets.enable {
+  # TODO: Refactor laptops wireguard config
   sops.secrets."${hostname}/vpn/pk".owner = config.me.user;
   sops.secrets."${hostname}/vpn/psk".owner = config.me.user;
 
-  sops.templates."home-vpn-naitoh.conf".content =
+  sops.templates."home-vpn-mach.conf".content =
     let
       inherit (config.me) networkIps;
     in
@@ -21,14 +23,14 @@ lib.mkIf config.me.secrets.enable {
       PrivateKey = ${config.sops.placeholder."${hostname}/vpn/pk"}
 
       [Peer]
-      PublicKey = PpCxUOTz7Heh3B29OnI3XNZAKJ8abUETMzFNj3gpTyo=
+      PublicKey = z2/QJTGzNBiq4MKPqFDtuPJsCE1Tb/7VG6oYCExeYVg=
       PresharedKey = ${config.sops.placeholder."${hostname}/vpn/psk"}
       AllowedIPs = ${networkIps.vpn.subnet},${networkIps.lan.subnet}
       Endpoint = ${config.sops.placeholder.server_vpn_endpoint}
     '';
 
-  networking.wg-quick.interfaces.home = {
-    autostart = false;
-    configFile = config.sops.templates."home-vpn-naitoh.conf".path;
-  };
+  packages = [ pkgs.wireguard-tools ];
+
+  # TODO: world readable mon gars
+  # environment.etc."wireguard/home.conf".source = config.sops.templates."home-vpn-mach.conf".path;
 }

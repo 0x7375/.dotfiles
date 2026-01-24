@@ -1,27 +1,33 @@
 {
+  lib,
   pkgs,
   ...
 }:
 
+let
+  inherit (pkgs.stdenv) isDarwin;
+in
 pkgs.writeShellApplication {
   name = "swap-theme";
   bashOptions = [ "nounset" ];
   runtimeInputs = with pkgs; [
     procps
-    systemd
+    fd
   ];
   text = ''
-    themes_dir=~/.local/state/tinted
+    themes_dir="$HOME/.local/state/tinted"
     theme_file="''${themes_dir}/theme"
 
-    theme=
-    if [[ $(< $theme_file) == "dark" ]]; then
-      theme=light
+    theme=light
+    theme_bool=false
+    if [[ $1 == "sync" ]]; then
+      if defaults read -g AppleInterfaceStyle &>/dev/null; then theme=dark; fi 
     else
-      theme=dark
+      [[ $(< "$theme_file") == "light" ]] && theme=dark
     fi
 
     echo "$theme" > "$theme_file"
+    [[ "$theme" == "dark" ]] && theme_bool="true"
 
     fd --hidden ".*-dark" "$themes_dir" | while read -r dark_file; do
       base_path="''${dark_file%-dark}"
@@ -29,11 +35,18 @@ pkgs.writeShellApplication {
       ln -sf "''${base_path}-''${theme}" "$HOME/$config_path"
     done
 
-    xrdb -load "$HOME/.config/X11/xresources"
-    dconf write /org/gnome/desktop/interface/color-scheme "'prefer-''${theme}'"
-    dunstctl reload
-    i3-msg restart
-    pkill nautilus
+    ${lib.optionalString (!isDarwin) ''
+      xrdb -load "$HOME/.config/X11/xresources"
+      dconf write /org/gnome/desktop/interface/color-scheme "'prefer-''${theme}'"
+      dunstctl reload
+      i3-msg restart
+      pkill nautilus
+    ''}
+
+    ${lib.optionalString isDarwin ''
+      osascript -e "tell app \"System Events\" to tell appearance preferences to set dark mode to ''${theme_bool}"
+    ''}
+
     pkill -USR1 nvim
   '';
 }

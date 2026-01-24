@@ -5,6 +5,7 @@ pkgs.writeShellApplication {
     procps
     tmux
     coreutils-full
+    findutils
     fzf
     gnused
   ];

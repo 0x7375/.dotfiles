@@ -37,7 +37,7 @@ in
     ffmpeg = "${getExe' pkgs.ffmpeg-full "ffmpeg"} -hide_banner";
 
     grep = "${getExe' pkgs.gnugrep "grep"} --color=always";
-    ls = "ls --color --group-directories-first -h";
+    ls = "${getExe' pkgs.coreutils "ls"} --color --group-directories-first -h";
     ll = "${getExe' pkgs.coreutils "ls"} -lha --color --group-directories-first";
     lsblk = "${getExe' pkgs.util-linux "lsblk"} -o NAME,FSTYPE,SIZE,MOUNTPOINTS";
     tree = "${getExe pkgs.tree} -L 4";
@@ -186,7 +186,7 @@ in
         }
       }
 
-      vpn () {
+      vpn() {
         if [[ $# -eq 0 ]]; then
           echo "Usage: vpn <start|stop|restart|show|list> [interface(s)]"
           return 1
@@ -195,6 +195,7 @@ in
         action="$1"
         shift
 
+        # TODO: support darwin
         case "$action" in
           start|stop|restart)
             if [[ $# -eq 0 ]]; then
@@ -202,7 +203,11 @@ in
               return 1
             fi
             for interface in "$@"; do
-              sudo systemctl "$action" wg-quick-$interface.service
+              if [[ $(uname) == "Darwin" ]]; then
+                echo yes
+              else
+                sudo systemctl "$action" wg-quick-$interface.service
+              fi
             done
             ;;
           show)
@@ -216,7 +221,11 @@ in
             ;;
           list)
             echo -n "Available WireGuard interfaces: "
-            systemctl list-unit-files 'wg-quick-*.service' | grep -v "static\|alias" | grep "wg-quick-" | awk '{print $1}' | sed 's/wg-quick-\(.*\).service/\1/' | tr '\n' ' ' | sed 's/ $/\n/'
+            if [[ $(uname) == "Darwin" ]]; then
+              echo yes
+            else
+              systemctl list-unit-files 'wg-quick-*.service' | grep -v "static\|alias" | grep "wg-quick-" | awk '{print $1}' | sed 's/wg-quick-\(.*\).service/\1/' | tr '\n' ' ' | sed 's/ $/\n/'
+            fi
             ;;
           *)
             echo "Invalid action. Use 'start', 'stop', 'restart', 'list' or 'show'."
@@ -238,12 +247,14 @@ in
         fi
       }
 
-      nv () {
+      nv() {
           local result
-          if result=$(nix eval --json path:$FLAKE#nixosConfigurations.''${2:-$HOST}.config.$1 2>/dev/null); then
+          local system=nixos
+          [[ $(uname) == "Darwin" ]] && system=darwin
+          if result=$(nix eval --json path:$FLAKE#''${system}Configurations.''${2:-$HOST}.config.$1 2>/dev/null); then
               echo "$result" | jq -r
           else
-              nix eval path:$FLAKE#nixosConfigurations.''${2:-$HOST}.config.$1
+              nix eval path:$FLAKE#''${system}Configurations.''${2:-$HOST}.config.$1
           fi
       }
     '';

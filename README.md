@@ -1,8 +1,8 @@
 # Dotfiles
 
-NixOS configuration for an nvidia desktop, thinkpad laptop, a raspberry pi and
-wsl. Flake uses [hjem](https://github.com/feel-co/hjem) for user file management
-and [sops-nix](https://github.com/Mic92/sops-nix) for secrets.
+NixOS configuration for an nvidia desktop, thinkpad laptop, a raspberry pi,
+wsl aswell as an M1 macbook (messy integration for now). Flake uses [hjem](https://github.com/feel-co/hjem) for user file management, 
+[sops-nix](https://github.com/Mic92/sops-nix) for secrets and [disko](https://github.com/nix-community/disko) for disk partitioning.
 
 ## Nixos-anywhere installation
 
@@ -133,6 +133,6 @@ nixos-install --root /mnt --flake ~/.config/nixcfg#hostname
 - Install nix
 - Clone repo
 - Install homebrew
-`sudo mv /etc/bashrc{,.backup}`
-`sudo nix run --extra-experimental-features 'nix-command flakes' nix-darwin/master#darwin-rebuild -- switch --flake `
-`sudo darwin-rebuild switch`
+- `sudo mv /etc/bashrc{,.backup}`
+- `sudo nix run --extra-experimental-features 'nix-command flakes' nix-darwin/master#darwin-rebuild -- switch --flake `
+- `sudo darwin-rebuild switch`

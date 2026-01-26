@@ -1,7 +1,6 @@
 { lib, config, ... }:
 
 {
-  EnterprisePoliciesEnabled = true;
   Cookies = {
     Allow = [
       "https://reddit.com"

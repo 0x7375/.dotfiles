@@ -16,14 +16,14 @@ lib.mkIf config.me.wm.enable (
     (lib.optionalAttrs (options ? homebrew) {
       homebrew.casks = [ "zen" ];
 
-      environment.etc."zen-policies.plist".text = lib.generators.toPlist { escape = true; } policies;
+      environment.etc."zen-policies.plist".text = lib.generators.toPlist { escape = true; } (policies // { EnterprisePoliciesEnabled = true; });
 
       system.activationScripts.postActivation.text = ''
         cp -f "/etc/zen-policies.plist" "/Library/Preferences/app.zen-browser.zen.plist"
       '';
     })
     (lib.mkIf pkgs.stdenv.isLinux {
-      packages = [ inputs.zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.beta ];
+      packages = [ pkgs.zen-browser ];
 
       hj.files.".zen/native-messaging-hosts/com.1password.1password.json".text = # json
         ''

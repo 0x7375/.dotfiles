@@ -78,6 +78,9 @@ return {
 
                             flake = "(builtins.getFlake \"" .. flake .. "\")"
 
+                            local uname = io.popen("uname"):read("*l")
+                            local sys = (uname == "Linux") and "nixos" or "darwin"
+
                             local host = os.getenv("HOSTNAME")
 
                             return {
@@ -85,21 +88,9 @@ return {
                                     expr = string.format("import %s.inputs.nixpkgs { }", flake),
                                 },
                                 options = {
-                                    nixos = {
-                                        expr = string.format('%s.nixosConfigurations.%s.options', flake, host),
+                                    [sys] = {
+                                        expr = string.format('%s.%sConfigurations.%s.options', flake, sys, host),
                                     },
-                                    -- home_manager = {
-                                    --     expr = string.format(
-                                    --         '%s.nixosConfigurations.%s.options.home-manager.users.type.getSubOptions []',
-                                    --         flake, host),
-                                    -- },
-                                    --
-                                    -- // For flake-parts options.
-                                    -- // Firstly read the docs here to enable "debugging", exposing declarations for nixd.
-                                    -- // https://flake.parts/debug
-                                    -- "flake-parts": {
-                                    --   "expr": "(builtins.getFlake \"/path/to/your/flake\").debug.options"
-                                    -- },
                                 },
                             }
                         end)(),

@@ -241,11 +241,11 @@
         "go-nixpkgs": "go-nixpkgs"
       },
       "locked": {
-        "lastModified": 1769395972,
-        "narHash": "sha256-EdSRIPk5rgyVmJGPlA3Tq/M1Ohw9DyTDaHg4bZOuy2s=",
+        "lastModified": 1769450374,
+        "narHash": "sha256-JBKMHSV9xn71P55M0sGxvu4i3GwVAxjXp/1r5yY07i8=",
         "ref": "refs/heads/main",
-        "rev": "50433f99d95f903c82cf5b1e86a2950c85008c57",
-        "revCount": 8,
+        "rev": "6aa99962a12218e247357767cc4f17f54fd232d7",
+        "revCount": 9,
         "type": "git",
         "url": "https://codeberg.org/0x7E/nd"
       },
@@ -648,7 +648,7 @@
       "inputs": {
         "home-manager": [],
         "nixpkgs": [
-          "nixpkgs"
+          "auto-update"
         ]
       },
       "locked": {

@@ -2,34 +2,33 @@
   lib,
   pkgs,
   config,
+  options,
   ...
 }:
 
 lib.mkMerge [
   {
-    services = {
-      fail2ban = {
+    services.openssh = {
+      enable = true;
+      extraConfig = ''
+        AllowUsers ${config.me.user}
+        PermitRootLogin no
+        KbdInteractiveAuthentication no
+
+        Match Address ${config.me.networkIps.lan.subnet},${config.me.networkIps.vpn.subnet}
+          AuthenticationMethods publickey
+
+        Match All
+          AuthenticationMethods "publickey,password"
+      '';
+    };
+  }
+  (lib.optionalAttrs (options ? services.fail2ban) {
+    services.fail2ban = {
         enable = true;
         maxretry = 10;
       };
-
-      openssh = {
-        enable = true;
-        settings = {
-          PermitRootLogin = "no";
-          KbdInteractiveAuthentication = false;
-          AllowUsers = [ config.me.user ];
-        };
-        extraConfig = ''
-          Match Address ${config.me.networkIps.lan.subnet},${config.me.networkIps.vpn.subnet}
-            AuthenticationMethods publickey
-
-          Match All
-            AuthenticationMethods "publickey,password"
-        '';
-      };
-    };
-  }
+  })
   (lib.mkIf config.me.secrets.enable {
     sops.secrets."server_uni/server" = { };
     sops.secrets."server_uni/user" = { };

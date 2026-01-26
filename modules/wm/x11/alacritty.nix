@@ -105,7 +105,7 @@ lib.mkIf (config.me.wm.terminal == "alacritty") {
           normal = {
             family = "${config.me.wm.font} Nerd Font";
           };
-          size = 22;
+          size = config.me.wm.fontSize;
           offset.y = 0;
         };
       };

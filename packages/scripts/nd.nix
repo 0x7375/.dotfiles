@@ -260,14 +260,15 @@ pkgs.writeShellApplication {
         local cache_action=$action
         [[ $action != iso && $action != iso-vm ]] && cache_action=nixos
 
-        local -r hash_file="''${state_dir}/''${host}-''${cache_action}-hash"
-        local -r result_file="''${state_dir}/''${host}-''${cache_action}-result"
+        local -r state_file="''${state_dir}/''${host}-''${cache_action}.json"
 
         local last_rebuild_hash=""
         local result=""
 
-        [[ -f $result_file ]] && result=$(< "$result_file")
-        [[ -f $hash_file ]] && last_rebuild_hash=$(< "$hash_file")
+        if [[ -f "$state_file" ]]; then
+          result=$(jq -r .result "$state_file")
+          last_rebuild_hash=$(jq -r .hash "$state_file")
+        fi
 
         local -ra exclusion_patterns=("result" "*.qcow2" "nvim" ".git")
         local -a excluded=()
@@ -287,8 +288,7 @@ pkgs.writeShellApplication {
           log "Building configuration";
           result=$(build_config "$host" "$action" "''${nix_build_flags[@]}")
 
-          echo "$result" > "$result_file"
-          echo "$current_hash" > "$hash_file"
+          jq -n --arg h "$current_hash" --arg r "$result" '{"hash": $h, "result": $r}' > "$state_file"
         else
           log "No changes detected, skipping build"
         fi

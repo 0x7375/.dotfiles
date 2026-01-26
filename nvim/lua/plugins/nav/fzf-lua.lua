@@ -6,7 +6,7 @@ return {
         { "<leader>pD",     function() vim.cmd.FzfLua("lsp_workspace_diagnostics") end, desc = "Search for workspace diagnostics" },
         { "<leader>pd",     function() vim.cmd.FzfLua("lsp_document_diagnostics") end,  desc = "Search file diagnostics" },
         { "<leader>pf",     function() vim.cmd.FzfLua("files") end,                     desc = "Search for file" },
-        { "<leader>pg",     function() vim.cmd.FzfLua("live_grep_glob") end,            desc = "Search for string" },
+        { "<leader>pg",     function() vim.cmd.FzfLua("live_grep") end,                 desc = "Search for string" },
         {
             mode = { "n", "x" },
             "<leader>pG",
@@ -42,7 +42,7 @@ return {
         -- end }
     },
     init = function()
-        -- require("fzf-lua").register_ui_select()
+        require("fzf-lua").register_ui_select()
     end,
     opts = {
         fzf_opts = {

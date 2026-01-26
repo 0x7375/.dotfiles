@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ lib, pkgs, ... }:
 
 {
   services.filebrowser = {
@@ -12,4 +12,7 @@
       root = "/data/";
     };
   };
+
+  systemd.tmpfiles.settings.filebrowser."/data/".d.mode = lib.mkForce "0770";
+  systemd.services.filebrowser.serviceConfig.UMask = lib.mkForce "0007";
 }

@@ -1,17 +1,11 @@
 {
   lib,
-  inputs,
   config,
   pkgs,
   ...
 }:
 
 {
-  imports = [
-    inputs.hjem.nixosModules.default
-    (lib.mkAliasOptionModule [ "hj" ] [ "hjem" "users" config.me.user ])
-  ];
-
   users.users.${config.me.user} = {
     isNormalUser = true;
     home = config.me.home;
@@ -23,12 +17,6 @@
       "wheel"
       "input"
     ];
-  };
-
-  hjem = {
-    linker = inputs.hjem.packages.${pkgs.stdenv.hostPlatform.system}.smfh;
-    users.${config.me.user}.enable = true;
-    clobberByDefault = true;
   };
 
   users.users.root = {

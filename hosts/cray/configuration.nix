@@ -32,6 +32,11 @@
     "nvidia-settings"
   ];
 
+  nix.settings = {
+    cores = 5;
+    max-jobs = 4;
+  };
+
   # wayland.windowManager.hyprland.settings.input = {
   #   accel_profile = "flat";
   # };

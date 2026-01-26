@@ -5,7 +5,7 @@ pkgs.writeShellApplication {
     with pkgs;
     [
       systemd
-      scripts.lock
+      my.lock
     ]
     ++ (
       if config.me.wm.displayServer == "wayland" then

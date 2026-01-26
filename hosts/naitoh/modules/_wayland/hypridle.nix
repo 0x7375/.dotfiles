@@ -11,7 +11,7 @@ lib.mkIf (config.me.wm.displayServer == "wayland") {
     settings = {
       listener =
         let
-          idle-check = lib.getExe pkgs.scripts.idle-check;
+          idle-check = lib.getExe pkgs.my.idle-check;
         in
         [
           {

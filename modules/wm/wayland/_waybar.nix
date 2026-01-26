@@ -41,7 +41,7 @@ lib.mkIf (config.me.wm.displayServer == "wayland") {
       X-SwitchMethod = "reload";
     };
     Service = {
-      ExecStartPre = "${lib.getExe pkgs.scripts.waybar-output}";
+      ExecStartPre = "${lib.getExe pkgs.my.waybar-output}";
     };
   };
 

@@ -141,10 +141,10 @@ lib.mkIf (config.me.wm.displayServer == "wayland") {
     windowrulev2 = bordersize 0, floating:0, onworkspace:f[1]
     windowrulev2 = rounding 0, floating:0, onworkspace:f[1]
 
-    bind = SUPER, t, exec, ${term} ${getExe pkgs.scripts.tmux-sessionizer} ~/
+    bind = SUPER, t, exec, ${term} ${getExe pkgs.my.tmux-sessionizer} ~/
     bind = SUPER SHIFT, t, exec, ${term} -e tmux new-session
-    bind = SUPER, s, exec, ${term} ${getExe pkgs.scripts.tmux-sshr}
-    bind = SUPER SHIFT, s, exec, ${getExe pkgs.scripts.swap-theme}
+    bind = SUPER, s, exec, ${term} ${getExe pkgs.my.tmux-sshr}
+    bind = SUPER SHIFT, s, exec, ${getExe pkgs.my.swap-theme}
 
     bind = SUPER, e, exec, ${term} ${getExe pkgs.lf}
     bind = SUPER SHIFT, e, exec, ${term} sudo ${getExe pkgs.lf}
@@ -180,8 +180,8 @@ lib.mkIf (config.me.wm.displayServer == "wayland") {
     bind = SUPER SHIFT, o, exec, ${getExe pkgs.gromit-mpx} --clear
     bind = ALT SHIFT, o, exec, ${getExe pkgs.gromit-mpx} --undo
 
-    bind = SUPER, p, exec, ${getExe pkgs.scripts.powermenu}
-    bind = SUPER SHIFT, c, exec, ${getExe pkgs.scripts.color-picker}
+    bind = SUPER, p, exec, ${getExe pkgs.my.powermenu}
+    bind = SUPER SHIFT, c, exec, ${getExe pkgs.my.color-picker}
 
     bind = SUPER, x, exec, ${getExe' pkgs.dunst "dunstctl"} close-all
     bind = SUPER, r, exec, ${getExe' pkgs.dunst "dunstctl"} history-pop
@@ -240,18 +240,18 @@ lib.mkIf (config.me.wm.displayServer == "wayland") {
     bindl = , XF86AudioNext, exec, ${getExe pkgs.playerctl} next
     bindl = , XF86AudioPrev, exec, ${getExe pkgs.playerctl} previous
     bindl = , XF86AudioPlay, exec, ${getExe pkgs.playerctl} play-pause
-    bindel = , XF86AudioRaiseVolume, exec, ${getExe pkgs.scripts.change-volume} up
-    bindel = , XF86AudioLowerVolume, exec, ${getExe pkgs.scripts.change-volume} down
-    bindel = , XF86AudioMute, exec, ${getExe pkgs.scripts.change-volume} mute
-    bindel = , XF86MonBrightnessUp, exec, ${getExe pkgs.scripts.change-brightness} up
-    bindel = , XF86MonBrightnessDown, exec, ${getExe pkgs.scripts.change-brightness} down
+    bindel = , XF86AudioRaiseVolume, exec, ${getExe pkgs.my.change-volume} up
+    bindel = , XF86AudioLowerVolume, exec, ${getExe pkgs.my.change-volume} down
+    bindel = , XF86AudioMute, exec, ${getExe pkgs.my.change-volume} mute
+    bindel = , XF86MonBrightnessUp, exec, ${getExe pkgs.my.change-brightness} up
+    bindel = , XF86MonBrightnessDown, exec, ${getExe pkgs.my.change-brightness} down
 
-    bindn = , Print, exec, ${getExe pkgs.scripts.screenshot} region
-    bindn = ALT, Sys_Req, exec, ${getExe pkgs.scripts.screenshot} window
-    bindn = SHIFT, Print, exec, ${getExe pkgs.scripts.screenshot} monitor
+    bindn = , Print, exec, ${getExe pkgs.my.screenshot} region
+    bindn = ALT, Sys_Req, exec, ${getExe pkgs.my.screenshot} window
+    bindn = SHIFT, Print, exec, ${getExe pkgs.my.screenshot} monitor
 
     exec-once = ${getExe' pkgs.dbus "dbus-update-activation-environment"} --systemd --all
-    exec-once = kdeconnect-cli --refresh
+    exec-once = ${getExe' pkgs.kdePackages.kdeconnect-kde "kdeconnect-indicator"}
     exec-once = ${getExe' pkgs.hyprland "hyprctl"} dispatch workspace 1
 
     exec = ${pkgs.writeShellScript "set-wallpaper" ''

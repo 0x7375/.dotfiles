@@ -2,6 +2,7 @@
   pkgs,
   lib,
   config,
+  options,
   ...
 }:
 
@@ -15,7 +16,7 @@ lib.mkIf config.me.wm.enable (
       tinted.enable = true;
       vars.TINTED_FILE = path;
     }
-    (lib.mkIf pkgs.stdenv.isLinux {
+    (lib.optionalAttrs (options ? systemd) {
       systemd.user.tmpfiles.rules = [
         "f ${path} 0644 ${user} users - dark"
       ];

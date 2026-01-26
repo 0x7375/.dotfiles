@@ -8,7 +8,7 @@ pkgs.writeShellApplication {
   name = "powermenu";
   runtimeInputs = with pkgs; [
     systemd
-    scripts.lock
+    my.lock
     bemenu
     procps
   ];

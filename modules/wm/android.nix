@@ -10,9 +10,8 @@ lib.mkIf config.me.wm.enable {
 
   users.users.${config.me.user}.extraGroups = [ "adbusers" ];
 
-  programs.adb.enable = true;
-
   packages = with pkgs; [
+    android-tools
     # android-studio
     scrcpy
   ];

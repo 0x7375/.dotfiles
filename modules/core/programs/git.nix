@@ -3,6 +3,7 @@
   lib,
   pkgs,
   config,
+  options,
   ...
 }:
 
@@ -100,7 +101,7 @@ lib.mkMerge [
 
     hj.files.".ssh/allowed_signers".text = "* ${pubkey}";
   }
-  (lib.mkIf pkgs.stdenv.isDarwin {
+  (lib.optionalAttrs (options ? launchd) {
     hj.xdg.config.files."ssh/config".text = ''
       Host *
         AddKeysToAgent yes
@@ -119,24 +120,8 @@ lib.mkMerge [
       };
     };
   })
-
-  (lib.mkIf pkgs.stdenv.isLinux {
-    systemd.user.services.ssh-agent = {
-      wantedBy = [ "default.target" ];
-      description = "SSH authentication agent";
-      documentation = [ "man:ssh-agent(1)" ];
-      serviceConfig.ExecStart = "${lib.getExe' pkgs.openssh "ssh-agent"} -D -a %t/ssh-agent";
-    };
-
-    environment.shellInit = ''
-      if [ -z "$SSH_AUTH_SOCK" ]; then
-        export SSH_AUTH_SOCK=$XDG_RUNTIME_DIR/ssh-agent
-      fi
-    '';
-  })
-
-  (lib.mkIf (config.me.secrets.enable && pkgs.stdenv.isLinux) {
-    systemd.user.services.ssh-add = {
+  (lib.optionalAttrs (options ? systemd) {
+    systemd.user.services.ssh-add = lib.mkIf config.me.secrets.enable {
       description = "Add keys to SSH agent";
       after = [ "ssh-agent.service" ];
       bindsTo = [ "ssh-agent.service" ];
@@ -150,8 +135,20 @@ lib.mkMerge [
         RemainAfterExit = "yes";
       };
     };
-  })
 
+    systemd.user.services.ssh-agent = lib.mkIf config.me.secrets.enable {
+      wantedBy = [ "default.target" ];
+      description = "SSH authentication agent";
+      documentation = [ "man:ssh-agent(1)" ];
+      serviceConfig.ExecStart = "${lib.getExe' pkgs.openssh "ssh-agent"} -D -a %t/ssh-agent";
+    };
+
+    environment.shellInit = ''
+      if [ -z "$SSH_AUTH_SOCK" ]; then
+        export SSH_AUTH_SOCK=$XDG_RUNTIME_DIR/ssh-agent
+      fi
+    '';
+  })
   (lib.mkIf config.me.secrets.enable {
     sops.secrets.git-config = {
       sopsFile = "${secrets}/uni-git-config.ini";

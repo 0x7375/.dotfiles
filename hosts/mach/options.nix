@@ -4,6 +4,7 @@
     wm = {
       terminal = "alacritty";
       enable = true;
+      fontSize = 22;
       displayServer = "macos";
     };
     home = "/Users/ayko";

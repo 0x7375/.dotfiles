@@ -33,18 +33,19 @@ lib.mkIf config.me.wm.enable {
       qbittorrent
       # st
     ]
-    ++ (lib.optionals pkgs.stdenv.isLinux [
-      (auto.discord.override {
-        # withOpenASAR = true;
-        withVencord = true;
-      })
-      ungoogled-chromium
-      scripts.generate-icons
-      omnissa-horizon-client
-      auto.signal-desktop
-      stable.gaphor
-      # stable.jetbrains.idea-community
-    ])
-    ++ (lib.optionals config.me.dev.enable [
-    ]);
+    ++ (lib.optionals pkgs.stdenv.isLinux (
+      with pkgs;
+      [
+        (auto.discord.override {
+          # withOpenASAR = true;
+          withVencord = true;
+        })
+        ungoogled-chromium
+        my.generate-icons
+        omnissa-horizon-client
+        auto.signal-desktop
+        stable.gaphor
+        # stable.jetbrains.idea-community
+      ]
+    ));
 }

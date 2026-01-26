@@ -61,9 +61,9 @@ lib.mkIf (wm.displayServer == "xorg") {
       client.placeholder $unfocused_bg $focused_fg $unfocused_bg $unfocused_bg $unfocused_bg
       client.background #ffffff
 
-      bindsym $win+t $exec $term ${getExe pkgs.scripts.tmux-sessionizer} ~/
-      bindsym $win+s $exec $term ${getExe pkgs.scripts.tmux-sshr}
-      bindsym $win+Shift+s $exec ${getExe pkgs.scripts.swap-theme}
+      bindsym $win+t $exec $term ${getExe pkgs.my.tmux-sessionizer} ~/
+      bindsym $win+s $exec $term ${getExe pkgs.my.tmux-sshr}
+      bindsym $win+Shift+s $exec ${getExe pkgs.my.swap-theme}
       bindsym $win+Shift+t $exec ${getExe pkgs.tmux} new-session
       bindsym $win+e $exec $term ${getExe pkgs.lf}
       bindsym $win+Shift+e $exec $term sudo ${getExe pkgs.lf}
@@ -95,22 +95,22 @@ lib.mkIf (wm.displayServer == "xorg") {
       bindsym F9 $exec ${getExe pkgs.gromit-mpx} --toggle
       bindsym $win+Shift+o $exec ${getExe pkgs.gromit-mpx} --clear
 
-      bindsym $win+p $exec ${getExe pkgs.scripts.powermenu}
-      bindsym --release $win+Shift+c exec ${getExe pkgs.scripts.color-picker}
+      bindsym $win+p $exec ${getExe pkgs.my.powermenu}
+      bindsym --release $win+Shift+c exec ${getExe pkgs.my.color-picker}
       bindsym --release $win+Shift+m exec "$term sh -c '${getExe' pkgs.xorg.xprop "xprop"}; exec $SHELL'"
 
-      bindsym Print $exec ${getExe pkgs.scripts.screenshot} region
-      bindsym $alt+Sys_Req $exec ${getExe pkgs.scripts.screenshot} window
-      bindsym Shift+Print $exec ${getExe pkgs.scripts.screenshot} monitor
+      bindsym Print $exec ${getExe pkgs.my.screenshot} region
+      bindsym $alt+Sys_Req $exec ${getExe pkgs.my.screenshot} window
+      bindsym Shift+Print $exec ${getExe pkgs.my.screenshot} monitor
 
-      bindsym XF86AudioRaiseVolume $exec ${getExe pkgs.scripts.change-volume} up
-      bindsym XF86AudioLowerVolume $exec ${getExe pkgs.scripts.change-volume} down
-      bindsym XF86AudioMute $exec ${getExe pkgs.scripts.change-volume} mute
+      bindsym XF86AudioRaiseVolume $exec ${getExe pkgs.my.change-volume} up
+      bindsym XF86AudioLowerVolume $exec ${getExe pkgs.my.change-volume} down
+      bindsym XF86AudioMute $exec ${getExe pkgs.my.change-volume} mute
       bindsym XF86AudioNext $exec ${getExe pkgs.playerctl} next
       bindsym XF86AudioPrev $exec ${getExe pkgs.playerctl} previous
       bindsym XF86AudioPlay $exec ${getExe pkgs.playerctl} play-pause
-      bindsym XF86MonBrightnessDown $exec ${getExe pkgs.scripts.change-brightness} down
-      bindsym XF86MonBrightnessUp $exec ${getExe pkgs.scripts.change-brightness} up
+      bindsym XF86MonBrightnessDown $exec ${getExe pkgs.my.change-brightness} down
+      bindsym XF86MonBrightnessUp $exec ${getExe pkgs.my.change-brightness} up
 
       bindsym $win+Shift+r restart
       bindsym $win+h focus left
@@ -200,7 +200,7 @@ lib.mkIf (wm.displayServer == "xorg") {
       $exec ${getExe pkgs.gromit-mpx}
       $exec ${getExe pkgs.polybar}
       $exec ${getExe' pkgs.i3 "i3-msg"} workspace 1
-      $exec ${getExe' pkgs.kdePackages.kdeconnect-kde "kdeconnect-cli"} --refresh
+      $exec ${getExe' pkgs.kdePackages.kdeconnect-kde "kdeconnect-indicator"}
       $exec ${getExe pkgs.xorg.xset} s off -dpms
 
       # makes arbtt work properly

@@ -52,7 +52,7 @@ in
     # pkgs.pistol
     pkgs.poppler-utils
   ]
-  ++ lib.optionals (!pkgs.stdenv.isDarwin) [
+  ++ lib.optionals (desktop && !pkgs.stdenv.isDarwin) [
     pkgs.libreoffice
   ];
 

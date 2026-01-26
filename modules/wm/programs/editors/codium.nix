@@ -45,7 +45,7 @@ lib.mkIf config.me.wm.enable {
               version = "0.28.0";
             };
             vsix = pkgs.fetchurl {
-              name = "beem.monochromator-0.28.0.vsix.zip";
+              name = "beem.monochromator-0.28.0.vsix";
               url = "https://open-vsx.org/api/beem/monochromator/0.28.0/file/beem.monochromator-0.28.0.vsix";
               sha256 = "sha256-UaH7+qc9ytvEW9WjjN2lRbHMuzwxEDF4lh+SRn7lesY=";
             };

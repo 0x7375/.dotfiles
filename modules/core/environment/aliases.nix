@@ -53,7 +53,7 @@ in
 
     py = "python";
 
-    tm = "${getExe pkgs.scripts.tmux-sessionizer}";
+    tm = "${getExe pkgs.my.tmux-sessionizer}";
 
     temp = "cd $(mktemp -d)";
     ".." = "cd ..";
@@ -249,7 +249,7 @@ in
 
       nv() {
           local result
-          local system=nixos
+          local system=''${SYSTEM:-nixos}
           [[ $(uname) == "Darwin" ]] && system=darwin
           if result=$(nix eval --json path:$FLAKE#''${system}Configurations.''${2:-$HOST}.config.$1 2>/dev/null); then
               echo "$result" | jq -r

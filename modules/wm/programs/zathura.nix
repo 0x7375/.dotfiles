@@ -8,7 +8,7 @@
 lib.mkIf config.me.wm.enable {
   packages = with pkgs; [
     zathura
-    scripts.zaread
+    my.zaread
   ];
 
   xdg.desktopEntries.zaread = {
@@ -42,7 +42,7 @@ lib.mkIf config.me.wm.enable {
     set statusbar-v-padding	"0"
 
     map <C-N> exec 'zathura "$FILE"'
-    map <C-P> feedkeys ":exec sh -c \"pdftotext \\\"$FILE\\\" - | xsel -ib\"<Return>"
+    map <C-P> feedkeys ":exec sh -c \"pdftotext \\\"$FILE\\\" - | xclip -sel clip\"<Return>"
     map <C-j> navigate next
     map <C-k> navigate previous
     map <C-p> print

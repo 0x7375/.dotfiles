@@ -4,7 +4,7 @@
   packages =
     with pkgs;
     [
-      scripts.dump-dotfiles
+      my.dump-dotfiles
       wireguard-tools
       gcc
       unzip
@@ -22,8 +22,8 @@
 
       nix-melt
       nix-output-monitor
-      scripts.nd
-      scripts.nlink
+      my.nd
+      my.nlink
       dix
     ]
     ++ (lib.optionals pkgs.stdenv.isLinux [

@@ -42,7 +42,7 @@ in
       ATTR{online}=="0", \
       ENV{DISPLAY}=":0", \
       ENV{XAUTHORITY}="/run/user/${toString config.me.uid}/Xauthority", \
-      RUN+="${getExe' pkgs.su "su"} ${config.me.user} -c '${getExe pkgs.scripts.charging-notify} 0'"
+      RUN+="${getExe' pkgs.su "su"} ${config.me.user} -c '${getExe pkgs.my.charging-notify} 0'"
 
       ACTION=="change", \
       SUBSYSTEM=="power_supply", \
@@ -50,16 +50,16 @@ in
       ATTR{online}=="1", \
       ENV{DISPLAY}=":0", \
       ENV{XAUTHORITY}="/run/user/${toString config.me.uid}/Xauthority", \
-      RUN+="${getExe' pkgs.su "su"} ${config.me.user} -c '${getExe pkgs.scripts.charging-notify} 1'"
+      RUN+="${getExe' pkgs.su "su"} ${config.me.user} -c '${getExe pkgs.my.charging-notify} 1'"
     '';
 
   programs.i3lock.enable = true;
 
   packages = with pkgs; [
     acpi
-    scripts.idle-check
-    scripts.lock
-    scripts.powermenu
+    my.idle-check
+    my.lock
+    my.powermenu
   ];
 
   services.logind.settings.Login.HandleLidSwitch = "ignore";

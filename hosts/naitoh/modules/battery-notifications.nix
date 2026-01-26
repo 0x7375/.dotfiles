@@ -26,11 +26,11 @@
   systemd.services.battery-notify.serviceConfig = {
     Type = "oneshot";
     User = config.me.user;
-    ExecStart = lib.getExe pkgs.scripts.battery-notify;
+    ExecStart = lib.getExe pkgs.my.battery-notify;
   };
 
   systemd.services."battery-check".serviceConfig = {
     Type = "oneshot";
-    ExecStart = lib.getExe pkgs.scripts.battery-check;
+    ExecStart = lib.getExe pkgs.my.battery-check;
   };
 }

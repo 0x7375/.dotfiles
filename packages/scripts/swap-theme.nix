@@ -10,6 +10,7 @@ in
 pkgs.writeShellApplication {
   name = "swap-theme";
   bashOptions = [ "nounset" ];
+  excludeShellChecks = [ "SC2034" ];
   runtimeInputs = with pkgs; [
     procps
     fd
@@ -20,7 +21,7 @@ pkgs.writeShellApplication {
 
     theme=light
     theme_bool=false
-    if [[ $1 == "sync" ]]; then
+    if [[ ''${1:-} == "sync" ]]; then
       if defaults read -g AppleInterfaceStyle &>/dev/null; then theme=dark; fi 
     else
       [[ $(< "$theme_file") == "light" ]] && theme=dark

@@ -1,12 +1,12 @@
 {
-  pkgs,
   lib,
   config,
+  options,
   ...
 }:
 
 lib.mkMerge [
-  (lib.mkIf pkgs.stdenv.isLinux {
+  (lib.optionalAttrs (options ? systemd) {
     systemd.tmpfiles.rules = [
       "d ${config.me.home}/.local 0755 ${config.me.user} users -"
       "d ${config.me.home}/.local/share 0755 ${config.me.user} users -"

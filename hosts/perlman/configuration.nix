@@ -23,9 +23,9 @@
 
   services.logind.settings.Login.HandleLidSwitch = "ignore";
 
-  packages = [
-    pkgs.ncdu
-    pkgs.xsel
+  packages = with pkgs; [
+    ncdu
+    xclip
   ];
 
   services.journald.extraConfig = ''

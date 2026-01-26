@@ -16,6 +16,6 @@ lib.mkIf config.me.wm.enable {
     };
   };
 
-  system.userActivationScripts.generateDunstIcons.text = lib.getExe pkgs.scripts.generate-icons;
+  system.userActivationScripts.generateDunstIcons.text = lib.getExe pkgs.my.generate-icons;
   services.dbus.enable = true;
 }

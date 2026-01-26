@@ -36,7 +36,7 @@ lib.mkIf (config.me.wm.displayServer == "wayland") {
           }
         ];
         exec = [
-          "${lib.getExe pkgs.scripts.waybar-output}"
+          "${lib.getExe pkgs.my.waybar-output}"
         ];
       };
     }
@@ -56,7 +56,7 @@ lib.mkIf (config.me.wm.displayServer == "wayland") {
           }
         ];
         exec = [
-          "${lib.getExe pkgs.scripts.waybar-output}"
+          "${lib.getExe pkgs.my.waybar-output}"
         ];
       };
     }
@@ -70,7 +70,7 @@ lib.mkIf (config.me.wm.displayServer == "wayland") {
           }
         ];
         exec = [
-          "${lib.getExe pkgs.scripts.waybar-output}"
+          "${lib.getExe pkgs.my.waybar-output}"
         ];
       };
     }

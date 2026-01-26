@@ -15,7 +15,7 @@ lib.mkIf (config.me.wm.displayServer == "xorg") {
       Type = "simple";
       ExecStart =
         let
-          idle-check = lib.getExe pkgs.scripts.idle-check;
+          idle-check = lib.getExe pkgs.my.idle-check;
         in
         ''
           ${pkgs.xidlehook}/bin/xidlehook --detect-sleep --not-when-audio \

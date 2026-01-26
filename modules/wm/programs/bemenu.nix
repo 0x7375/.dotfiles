@@ -32,7 +32,7 @@ lib.mkIf cfg.wm.enable {
     })
   ];
 
-  vars.BEMENU_OPTS = lib.cli.toGNUCommandLineShell { } {
+  vars.BEMENU_OPTS = lib.cli.toCommandLineShellGNU { } {
     border = 7;
     hp = 10;
     fn = "Mononoki Nerd Font ${toString config.me.barFontSize}";

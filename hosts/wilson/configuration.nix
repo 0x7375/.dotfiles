@@ -29,10 +29,10 @@ in
       ];
   };
 
-  packages = [
-    pkgs.ncdu
-    pkgs.xsel
-    pkgs.scripts.pw-backup
+  packages = with pkgs; [
+    ncdu
+    xclip
+    my.pw-backup
   ];
 
   services.journald.extraConfig = ''

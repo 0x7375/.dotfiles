@@ -33,7 +33,6 @@ lib.mkIf (config.me.wm.displayServer == "xorg") {
         extraPackages = with pkgs; [
           xdo
           xclip
-          xsel
           xdotool
         ];
       };

@@ -105,8 +105,8 @@ in
 
       apache-hop = prev.callPackage (pkgs-path + /derivations/apache-hop.nix) { };
 
-      # namespace for scripts: e.g. "scripts.tmux-sessionizer"
-      scripts = builtins.listToAttrs (
+      # namespace for scripts: e.g. "my.tmux-sessionizer"
+      my = builtins.listToAttrs (
         map (path: {
           name = (lib.removeSuffix ".nix" (baseNameOf path));
           value = import path {

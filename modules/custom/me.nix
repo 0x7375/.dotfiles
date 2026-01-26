@@ -323,8 +323,14 @@ in
           else if cfg.wm.displayServer == "wayland" then
             "foot"
           else
-            null;
+            "xterm-256color";
         description = "Default terminal emulator";
+      };
+
+      fontSize = mkOption {
+        type = types.int;
+        default = 18;
+        description = "Default font";
       };
 
       font = mkOption {

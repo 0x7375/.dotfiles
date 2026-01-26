@@ -2,6 +2,7 @@
   lib,
   config,
   pkgs,
+  options,
   ...
 }:
 let
@@ -131,7 +132,7 @@ in
       {
         hj.files = lib.mergeAttrsList (lib.attrValues (lib.mapAttrs (_: v: v.files) processed));
       }
-      (lib.mkIf pkgs.stdenv.isLinux {
+      (lib.optionalAttrs (options ? systemd) {
         systemd.user.tmpfiles.rules = lib.concatMap (
           v:
           (map (d: "d ${d} 0755 ${config.me.user} users - -") v.activation.dirs)

@@ -11,6 +11,7 @@ let
     fzf-tmux-url
     yank
   ];
+  cfg = config.me;
 in
 {
   # nixpkgs.overlays = [
@@ -26,8 +27,8 @@ in
   packages =
     with pkgs;
     [
-      scripts.tmux-sessionizer
-      scripts.tmux-sshr
+      my.tmux-sessionizer
+      my.tmux-sshr
       less
       fzf
       coreutils
@@ -54,7 +55,7 @@ in
         set -g @plugin 'tmux-plugins/tmux-yank'
 
         set  -g default-terminal "tmux-256color"
-        set -ga terminal-overrides ",${config.me.wm.terminal}:RGB" # support for undercurl
+        set -ga terminal-overrides ",${lib.optionalString (cfg.wm.terminal != null) cfg.wm.terminal}:RGB"
 
         unbind C-b
         set -g prefix C-s
@@ -124,7 +125,7 @@ in
 
         unbind t
 
-        bind k run-shell "tmux popup -E ${getExe pkgs.scripts.tmux-sessionizer} || true"
+        bind k run-shell "tmux popup -E ${getExe pkgs.my.tmux-sessionizer} || true"
         bind M new-window "man -k . | ${getExe pkgs.fzf} --reverse --padding 1 | ${getExe pkgs.gawk} '{print $1}' ${lib.optionalString pkgs.stdenv.isDarwin "| tr -d '()0-9' "}| xargs man"
 
         # navigate prompts

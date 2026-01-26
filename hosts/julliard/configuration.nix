@@ -15,7 +15,7 @@
   ];
 
   packages = with pkgs; [
-    xsel
+    xclip
   ];
 
   wsl.enable = true;

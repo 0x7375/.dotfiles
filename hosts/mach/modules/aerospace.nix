@@ -45,8 +45,8 @@ in
         "alt-q" = "close --quit-if-last-window";
         "alt-f" = "fullscreen";
 
-        "alt-t" = "exec-and-forget open -na Alacritty --args -e ${getExe pkgs.scripts.tmux-sessionizer} ~/";
-        "alt-s" = "exec-and-forget open -na Alacritty --args -e ${getExe pkgs.scripts.tmux-sshr}";
+        "alt-t" = "exec-and-forget open -na Alacritty --args -e ${getExe pkgs.my.tmux-sessionizer} ~/";
+        "alt-s" = "exec-and-forget open -na Alacritty --args -e ${getExe pkgs.my.tmux-sshr}";
         "alt-e" = "exec-and-forget open -na Alacritty --args -e ${getExe pkgs.lf}";
         # "alt-e" = "exec-and-forget osascript -e 'tell application \"Finder\" to make new Finder window to home'";
         "alt-shift-e" = "exec-and-forget open -na Alacritty --args -e sudo ${getExe pkgs.lf}";
@@ -58,7 +58,7 @@ in
         ''}";
 
         "alt-shift-t" = "exec-and-forget open -na Alacritty";
-        "alt-shift-s" = "exec-and-forget ${getExe pkgs.scripts.swap-theme}";
+        "alt-shift-s" = "exec-and-forget ${getExe pkgs.my.swap-theme}";
         "alt-w" = "exec-and-forget open -na Zen";
 
         "alt-h" = "focus left";

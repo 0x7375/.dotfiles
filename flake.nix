@@ -98,6 +98,9 @@
           };
           modules = [
             ./hosts/${name}/configuration.nix
+            inputs.sops-nix.nixosModules.sops
+            inputs.nix-index-database.nixosModules.nix-index
+            inputs.hjem.nixosModules.default
             {
               imports = lib.my.filesIn ./modules;
               networking.hostName = name;
@@ -121,8 +124,10 @@
           inherit inputs;
         };
         modules = [
-          inputs.hjem.darwinModules.default
           ./hosts/mach/configuration.nix
+          inputs.sops-nix.darwinModules.sops
+          inputs.nix-index-database.darwinModules.nix-index
+          inputs.hjem.darwinModules.default
           {
             networking.hostName = "mach";
           }

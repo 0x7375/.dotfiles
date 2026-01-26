@@ -12,6 +12,7 @@
     ../../modules/custom/tinted.nix
     ../../modules/core/system/nix.nix
     ../../modules/core/system/hjem.nix
+    ../../modules/core/optional/dev.nix
     ../../modules/core/programs/git.nix
     ../../modules/core/system/nixpkgs.nix
     ../../modules/core/secrets/default.nix
@@ -77,18 +78,8 @@
   };
 
   packages = with pkgs; [
-    python3
-    nixd
-    nixpkgs-fmt
-    deno
-    nodejs
     pear-desktop
-    ripgrep
-    tree-sitter
     wireguard-tools
-    my.nlink
-    my.nd
-    cowsay
     dark-mode-notify
   ];
 

@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ inputs, pkgs, ... }:
 
 {
   packages =
@@ -22,7 +22,8 @@
 
       nix-melt
       nix-output-monitor
-      my.nd
+      # my.nd
+      inputs.nd.packages.${pkgs.stdenv.hostPlatform.system}.default
       my.nlink
       dix
     ]

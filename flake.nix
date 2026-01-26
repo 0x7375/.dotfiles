@@ -65,6 +65,8 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    nd.url = "git+https://codeberg.org/0x7E/nd";
+
     # nixos-wsl = {
     #   url = "github:nix-community/NixOS-WSL";
     #   inputs.nixpkgs.follows = "nixpkgs";

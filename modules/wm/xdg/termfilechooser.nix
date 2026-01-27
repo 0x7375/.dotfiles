@@ -1,11 +1,12 @@
 {
+  mkNixos,
   pkgs,
   config,
   lib,
   ...
 }:
 
-lib.mkIf config.me.wm.enable {
+lib.mkIf config.me.wm.enable (mkNixos {
   nixpkgs.overlays = [
     (final: prev: {
       xdg-desktop-portal-termfilechooser =
@@ -112,4 +113,4 @@ lib.mkIf config.me.wm.enable {
       Name=org.freedesktop.FileManager1
       Exec=${lib.getExe pkgs.file-handler}
     '';
-}
+})

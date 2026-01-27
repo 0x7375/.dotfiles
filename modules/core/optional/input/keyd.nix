@@ -1,11 +1,12 @@
 {
+  mkNixos,
   config,
   lib,
   pkgs,
   ...
 }:
 
-lib.mkIf config.me.keyd.enable {
+lib.mkIf config.me.keyd.enable (mkNixos {
   services.keyd = {
     enable = true;
     keyboards =
@@ -154,4 +155,5 @@ lib.mkIf config.me.keyd.enable {
   systemd.services.keyd.serviceConfig = {
     Group = "keyd";
   };
-}
+})
+

@@ -44,8 +44,10 @@ in
         clip =
           if config.me.wm.displayServer == "wayland" then
             "${getExe' pkgs.wl-clipboard "wl-copy"}"
+          else if config.me.wm.displayServer == "x11" then
+            "${getExe pkgs.xsel} -i"
           else
-            "${getExe pkgs.xsel} -i";
+            "pbcopy";
       in
       ''
         set -g @plugin 'wfxr/tmux-fzf-url'

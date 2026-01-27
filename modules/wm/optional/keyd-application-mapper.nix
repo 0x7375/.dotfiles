@@ -1,11 +1,12 @@
 {
+  mkNixos,
   lib,
   config,
   pkgs,
   ...
 }:
 
-lib.mkIf (config.me.wm.enable && config.me.keyd.enable) {
+lib.mkIf config.me.wm.enable (mkNixos {
   hj.xdg.config.files."i3/config".text =
     "$exec_always ${lib.getExe' pkgs.systemd "systemctl"} --user restart keyd-application-mapper";
 
@@ -83,4 +84,4 @@ lib.mkIf (config.me.wm.enable && config.me.keyd.enable) {
 
       ${appConfigs}
     '';
-}
+})

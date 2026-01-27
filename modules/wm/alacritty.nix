@@ -2,14 +2,16 @@
   pkgs,
   lib,
   config,
+  mkBundle,
   ...
 }:
 
 let
   inherit (pkgs.stdenv) isDarwin;
 in
-lib.mkIf (config.me.wm.terminal == "alacritty") {
-  packages = [ pkgs.alacritty ];
+lib.mkIf (config.me.wm.terminal == "alacritty") (mkBundle {
+  nixos.packages = [ pkgs.alacritty ];
+  darwin.homebrew.casks = [ "alacritty" ];
 
   tinted.files.".config/alacritty/alacritty.toml" = {
     prefix = false;
@@ -78,8 +80,6 @@ lib.mkIf (config.me.wm.terminal == "alacritty") {
             mods = "Control";
             action = "ReceiveChar";
           }
-        ]
-        ++ (lib.optionals (!isDarwin) [
           {
             key = "v";
             mods = "Alt";
@@ -90,7 +90,7 @@ lib.mkIf (config.me.wm.terminal == "alacritty") {
             mods = "Alt";
             action = "Copy";
           }
-        ]);
+        ];
         window = {
           option_as_alt = "Both";
           decorations = if isDarwin then "None" else "Full";
@@ -110,4 +110,4 @@ lib.mkIf (config.me.wm.terminal == "alacritty") {
         };
       };
   };
-}
+})

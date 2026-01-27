@@ -1,6 +1,11 @@
-{ config, lib, ... }:
+{
+  mkNixos,
+  config,
+  lib,
+  ...
+}:
 
-lib.mkIf config.me.wm.optional.postgresql.enable {
+lib.mkIf config.me.wm.optional.postgresql.enable (mkNixos {
   services.postgresql = {
     enable = true;
     ensureUsers = [
@@ -11,4 +16,4 @@ lib.mkIf config.me.wm.optional.postgresql.enable {
     ];
     ensureDatabases = [ config.me.user ];
   };
-}
+})

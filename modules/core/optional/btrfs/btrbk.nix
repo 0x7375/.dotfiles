@@ -1,6 +1,12 @@
-{ lib, config, ... }:
+{
+  lib,
+  config,
+  options,
+  mkNixos,
+  ...
+}:
 
-lib.mkIf config.me.btrfs.enable {
+lib.mkIf config.me.btrfs.enable (mkNixos {
   services.btrbk.instances."home" = {
     onCalendar = "hourly";
     settings = {
@@ -17,4 +23,4 @@ lib.mkIf config.me.btrfs.enable {
   systemd.tmpfiles.rules = [
     "d /snapshots 0755 root root"
   ];
-}
+})

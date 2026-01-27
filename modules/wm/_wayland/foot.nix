@@ -1,13 +1,14 @@
 {
   lib,
   config,
+  mkNixos,
   ...
 }:
 let
   # inherit (myLib) hex light_hex;
   nocolor = "00ff00";
 in
-lib.mkIf (config.me.wm.displayServer == "wayland") {
+lib.mkIf (config.me.wm.displayServer == "wayland") (mkNixos {
   programs.foot = {
     enable = true;
     settings = {
@@ -101,4 +102,5 @@ lib.mkIf (config.me.wm.displayServer == "wayland") {
       # };
     };
   };
-}
+})
+

@@ -1,11 +1,12 @@
 {
+  mkNixos,
   lib,
   config,
   pkgs,
   ...
 }:
 
-lib.mkIf config.me.capsLockRemap.enable {
+lib.mkIf config.me.capsLockRemap.enable (mkNixos {
   environment.etc."dual-function-keys.yaml".text = ''
     MAPPINGS:
       - KEY: KEY_CAPSLOCK
@@ -22,4 +23,5 @@ lib.mkIf config.me.capsLockRemap.enable {
             EV_KEY: [KEY_CAPSLOCK, KEY_ESC]
     '';
   };
-}
+})
+

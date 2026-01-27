@@ -1,11 +1,12 @@
 {
   lib,
   config,
+  mkNixos,
   pkgs,
   ...
 }:
 
-lib.mkIf config.me.wm.enable {
+lib.mkIf config.me.wm.enable (mkNixos {
   services.arbtt = {
     enable = true;
     logFile = "%h/.local/state/arbtt/capture.log";
@@ -26,4 +27,5 @@ lib.mkIf config.me.wm.enable {
        tag Program:$current.program,
     }
   '';
-}
+})
+

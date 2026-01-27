@@ -1,10 +1,11 @@
 {
+  mkNixos,
   lib,
   config,
   ...
 }:
 
-lib.mkIf config.me.secrets.enable {
+lib.mkIf config.me.secrets.enable (mkNixos {
   users.mutableUsers = false;
 
   sops.secrets.user_pw.neededForUsers = true;
@@ -19,4 +20,5 @@ lib.mkIf config.me.secrets.enable {
     initialPassword = lib.mkForce null;
     hashedPasswordFile = config.sops.secrets.root_pw.path;
   };
-}
+})
+

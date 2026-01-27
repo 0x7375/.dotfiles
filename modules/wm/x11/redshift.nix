@@ -1,11 +1,12 @@
 {
   pkgs,
   config,
+  mkNixos,
   lib,
   ...
 }:
 
-lib.mkIf (config.me.wm.displayServer == "xorg" && config.me.secrets.enable) {
+lib.mkIf (config.me.wm.displayServer == "xorg" && config.me.secrets.enable) (mkNixos {
   sops.secrets.coordinates = {
     owner = config.me.user;
   };
@@ -26,4 +27,5 @@ lib.mkIf (config.me.wm.displayServer == "xorg" && config.me.secrets.enable) {
         -v
     ''
   );
-}
+})
+

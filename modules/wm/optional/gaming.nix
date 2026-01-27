@@ -1,11 +1,12 @@
 {
+  mkNixos,
   config,
   lib,
   pkgs,
   ...
 }:
 
-lib.mkIf config.me.wm.optional.gaming.enable {
+lib.mkIf config.me.wm.optional.gaming.enable (mkNixos {
   unfree-packages = [
     "steam"
     "steam-unwrapped"
@@ -47,4 +48,4 @@ lib.mkIf config.me.wm.optional.gaming.enable {
   boot.kernelParams = [
     "vsyscall=emulate"
   ];
-}
+})

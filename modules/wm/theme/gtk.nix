@@ -2,11 +2,11 @@
   lib,
   config,
   pkgs,
+  mkNixos,
   ...
 }:
 
 let
-  inherit (config.gtk) gtk4;
   pascal =
     string:
     let
@@ -63,7 +63,7 @@ let
       }
     '';
 in
-lib.mkIf config.me.wm.enable {
+lib.mkIf config.me.wm.enable (mkNixos {
   programs.dconf.enable = true;
 
   vars = {
@@ -154,4 +154,4 @@ lib.mkIf config.me.wm.enable {
         };
     };
   };
-}
+})

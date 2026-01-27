@@ -1,4 +1,9 @@
-{ config, lib, ... }:
+{
+  mkNixos,
+  config,
+  lib,
+  ...
+}:
 
 let
   cfg = config.me.syncthing;
@@ -85,7 +90,7 @@ in
     };
   };
 
-  config = mkIf cfg.enable {
+  config = mkIf cfg.enable (mkNixos {
     services.syncthing.settings.folders = lib.foldl' lib.mergeAttrs { } (
       lib.mapAttrsToList (
         name: f:
@@ -113,5 +118,5 @@ in
         }
       ) cfg.folders
     );
-  };
+  });
 }

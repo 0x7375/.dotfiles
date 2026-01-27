@@ -1,4 +1,11 @@
 {
+  mkNixos,
+  lib,
+  pkgs,
+  ...
+}:
+
+mkNixos {
   hj.files.".XCompose".text = # xcompose
     ''
       <Multi_key> <w> : "è"

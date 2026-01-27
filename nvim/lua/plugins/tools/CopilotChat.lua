@@ -1,6 +1,6 @@
 return {
     "CopilotC-Nvim/CopilotChat.nvim",
-    cond = false,
+    cond = true,
     build = "make tiktoken",
     dependencies = {
         { "nvim-lua/plenary.nvim", branch = "master" },
@@ -52,7 +52,7 @@ return {
         error_header = ' ~ Error ',
         show_folds = false,
 
-        model = 'gpt-5-codex',
+        model = 'gpt-5-mini',
         show_help = false,
         auto_follow_cursor = false,
         log_level = "warn",

@@ -1,11 +1,12 @@
 {
   config,
+  mkNixos,
   pkgs,
   lib,
   ...
 }:
 
-lib.mkIf config.me.wm.enable {
+lib.mkIf config.me.wm.enable (mkNixos {
   services.gnome.gnome-keyring.enable = true;
   programs.seahorse.enable = true;
 
@@ -35,4 +36,4 @@ lib.mkIf config.me.wm.enable {
     ];
 
   hj.xdg.data.files."keyrings/default".text = "login";
-}
+})

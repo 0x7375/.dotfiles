@@ -1,29 +1,63 @@
 {
-  pkgs,
   lib,
+  mkNixos,
+  pkgs,
   config,
+  options,
   ...
 }:
 
-lib.mkIf config.me.boot.enable {
-  boot.plymouth = {
-    enable = true;
-    theme = "spinner_alt";
-    themePackages = [
-      (pkgs.adi1090x-plymouth-themes.override {
-        selected_themes = [ "spinner_alt" ];
-      })
-    ];
+lib.mkIf config.me.boot.silent.enable (mkNixos {
+  i18n.supportedLocales = options.i18n.supportedLocales.default ++ [ "fr_FR.UTF-8/UTF-8" ];
+  location.provider = "manual";
+
+  # documentation.man.generateCaches = true;
+  # documentation.dev.enable = true;
+
+  boot.tmp.useTmpfs = true;
+  systemd.services.nix-daemon = {
+    environment.TMPDIR = "/var/tmp";
   };
 
-  boot.kernel.sysctl."kernel.sysrq" = 1;
+  systemd.coredump.enable = false;
+  boot.kernel.sysctl."kernel.core_pattern" = "|/bin/false";
 
-  systemd.settings.Manager.RebootWatchdogSec = "10s";
+  zramSwap = {
+    enable = true;
+    memoryPercent = 100;
+  };
 
-  boot.initrd.systemd.enable = true;
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.systemd-boot.editor = false;
-  boot.loader.systemd-boot.configurationLimit = 30;
-  boot.loader.timeout = 0;
-  boot.loader.efi.canTouchEfiVariables = true;
-}
+  services.fstrim.enable = true;
+  services.earlyoom.enable = true;
+
+  console = {
+    earlySetup = true;
+    packages = with pkgs; [ terminus_font ];
+    font = "${pkgs.terminus_font}/share/consolefonts/ter-132b.psf.gz";
+    useXkbConfig = true;
+    colors =
+      let
+        palette = config.me.hex.dark;
+      in
+      [
+        "000000"
+        palette.red
+        palette.green
+        palette.yellow
+        palette.blue
+        palette.magenta
+        palette.cyan
+        "ffffff"
+        palette.bg3
+        palette.red
+        palette.green
+        palette.magenta
+        palette.blue
+        palette.magenta
+        palette.cyan
+        "ffffff"
+      ];
+  };
+
+  time.timeZone = "Europe/Paris";
+})

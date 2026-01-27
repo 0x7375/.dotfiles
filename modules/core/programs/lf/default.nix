@@ -7,6 +7,7 @@
 
 let
   desktop = config.me.wm.enable;
+  isDarwin = pkgs.stdenv.isDarwin;
 in
 {
   nixpkgs.overlays = [
@@ -42,19 +43,27 @@ in
 
   unfree-packages = [ "ouch" ];
 
-  packages = [
-    pkgs.lf
-    pkgs.ouch
-    pkgs.perl5Packages.FileMimeInfo
-  ]
-  ++ lib.optionals desktop [
-    pkgs.ueberzugpp
-    # pkgs.pistol
-    pkgs.poppler-utils
-  ]
-  ++ lib.optionals (desktop && !pkgs.stdenv.isDarwin) [
-    pkgs.libreoffice
-  ];
+  packages =
+    (with pkgs; [
+      lf
+      ouch
+      perl5Packages.FileMimeInfo
+    ])
+    ++ lib.optionals desktop (
+      with pkgs;
+      [
+        ueberzugpp
+        # pistol
+        poppler-utils
+      ]
+    )
+    ++ lib.optionals (desktop && !pkgs.stdenv.isDarwin) (
+      with pkgs;
+      [
+        libreoffice
+        trash-cli
+      ]
+    );
 
   hj.xdg.config.files."lf/lfrc".text =
     let
@@ -63,6 +72,8 @@ in
       confirm-key = "s";
       no-confirm =
         keys: lib.concatStringsSep "\n" (map (key: "vmap ${key} push ${confirm-key}${key}") keys);
+      open = "${lib.optionalString (!isDarwin) "mime"}open";
+      copy = if isDarwin then "pbcopy" else "${getExe pkgs.xsel} -ib";
     in
     ''
       set filesep "\n"
@@ -109,7 +120,7 @@ in
         ${getExe pkgs.lf} -remote "send $id select \"$new_name\""
       }}
       cmd copy-path ''${{
-        echo -en "$fx" | tr ' ' '\n' | ${getExe pkgs.xsel} -ib
+        echo -en "$fx" | tr ' ' '\n' | ${copy}
         ${getExe pkgs.lf} -remote 'send unselect'
         ${getExe pkgs.lf} -remote 'send echo "Path copied to clipboard"'
       }}
@@ -135,7 +146,13 @@ in
       }}
 
       cmd external-copy ''${{
-        echo -en "$fx" | sed 's|^|file://|' | tr ' ' '\n' | ${getExe pkgs.xclip} -i -sel clip -t text/uri-list
+        if [[ $(uname) == "Darwin" ]]; then
+            osascript -e "set theFileList to {}" \
+                      $(printf " -e 'set end of theFileList to (POSIX file \"%s\") as alias'" $fx) \
+                      -e "set the clipboard to theFileList"
+        else
+          echo -en "$fx" | sed 's|^|file://|' | tr ' ' '\n' | ${getExe pkgs.xclip} -i -sel clip -t text/uri-list
+        fi
         ${getExe pkgs.lf} -remote 'send unselect'
         ${getExe pkgs.lf} -remote 'send echo "Files copied to clipboard"'
       }}
@@ -143,7 +160,7 @@ in
       cmd extract ''${{
         set -f
         ${getExe pkgs.ouch} decompress $fx
-        ${getExe' pkgs.trash-cli "trash"} $f
+        trash $f
       }}
 
       cmd follow_link %{{
@@ -213,8 +230,8 @@ in
         set cursorpreviewfmt ""
       }}
 
-      cmd online-share $${getExe curl} -F"file=@$f" https://0x0.st | ${getExe pkgs.xsel} -ib
-      cmd open &mimeopen "$f" > /dev/null 2>&1
+      cmd online-share $${getExe curl} -F"file=@$f" https://0x0.st | ${open}
+      cmd open &${open} "$f" > /dev/null 2>&1
       cmd paste-overwrite %{{
           mode=$(head -1 ~/.local/share/lf/files)
           list=$(${getExe' pkgs.gnused "sed"} 1d ~/.local/share/lf/files)
@@ -281,7 +298,7 @@ in
       map <enter> open
       map <pgdn>
       map <pgup>
-      map <space> $mimeopen --ask $f
+      map <space> $\${open} --ask $f
       map <tab> jump-next
       map = toggle-executable
       map ? search-back

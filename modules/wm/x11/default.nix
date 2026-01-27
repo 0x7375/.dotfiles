@@ -1,11 +1,12 @@
 {
+  mkNixos,
   config,
   lib,
   pkgs,
   ...
 }:
 
-lib.mkIf (config.me.wm.displayServer == "xorg") {
+lib.mkIf (config.me.wm.displayServer == "xorg") (mkNixos {
   hj.xdg.config.files."zsh/.zshrc".text =
     lib.mkBefore ''[[ $(tty) == "/dev/tty1" ]] && exec startx &> /dev/null'';
 
@@ -48,4 +49,4 @@ lib.mkIf (config.me.wm.displayServer == "xorg") {
       RemainAfterExit = "yes";
     };
   };
-}
+})

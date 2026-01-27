@@ -25,7 +25,7 @@
       }
 
       function get_prompt_symbol() {
-          if [[ $SHLVL -gt 1 || -n ''${DIRENV_LOADED-} ]]; then
+          if [[ $SHLVL -gt ${if pkgs.stdenv.isLinux then "1" else "2"} || -n ''${DIRENV_LOADED-} ]]; then
               echo " ::"
           else
               echo " %%"

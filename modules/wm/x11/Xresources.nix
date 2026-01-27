@@ -1,12 +1,11 @@
 {
+  mkNixos,
   lib,
   config,
   ...
 }:
 
-let
-in
-lib.mkIf (config.me.wm.displayServer == "xorg") {
+lib.mkIf (config.me.wm.displayServer == "xorg") (mkNixos {
   tinted.files.".config/X11/xresources".text = palette: ''
     // matplotlib fails because there's a whitespace in the font
     // *font: ${config.me.wm.font} Nerd Font:size=18
@@ -31,4 +30,4 @@ lib.mkIf (config.me.wm.displayServer == "xorg") {
     *magenta: ${palette.magenta}
     *orange: ${palette.orange}
   '';
-}
+})

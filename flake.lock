@@ -209,6 +209,24 @@
         "type": "github"
       }
     },
+    "karabiner-ts": {
+      "inputs": {
+        "nixpkgs": "nixpkgs"
+      },
+      "locked": {
+        "lastModified": 1769511584,
+        "narHash": "sha256-PzuqSfpCIiGR8/U+2R2Cpbz9bwKTFpl0m0Q3ez8Ez/8=",
+        "ref": "refs/heads/main",
+        "rev": "6c4795869e4d10797ca7a5849b860310ae45081e",
+        "revCount": 3,
+        "type": "git",
+        "url": "https://codeberg.org/0x7E/karabiner-ts"
+      },
+      "original": {
+        "type": "git",
+        "url": "https://codeberg.org/0x7E/karabiner-ts"
+      }
+    },
     "lanzaboote": {
       "inputs": {
         "crane": "crane",
@@ -241,11 +259,11 @@
         "go-nixpkgs": "go-nixpkgs"
       },
       "locked": {
-        "lastModified": 1769450374,
-        "narHash": "sha256-JBKMHSV9xn71P55M0sGxvu4i3GwVAxjXp/1r5yY07i8=",
+        "lastModified": 1769499925,
+        "narHash": "sha256-zxiqfPLilyft5erJpUHwHz8VI91i7TxPmYq/cjV6Uew=",
         "ref": "refs/heads/main",
-        "rev": "6aa99962a12218e247357767cc4f17f54fd232d7",
-        "revCount": 9,
+        "rev": "c787be97f11de3a9e559a361c02f451477130de3",
+        "revCount": 10,
         "type": "git",
         "url": "https://codeberg.org/0x7E/nd"
       },
@@ -354,6 +372,22 @@
         "type": "github"
       }
     },
+    "nixpkgs": {
+      "locked": {
+        "lastModified": 1769170682,
+        "narHash": "sha256-oMmN1lVQU0F0W2k6OI3bgdzp2YOHWYUAw79qzDSjenU=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "c5296fdd05cfa2c187990dd909864da9658df755",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "nixos-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
     "nixpkgs-stable": {
       "locked": {
         "lastModified": 1744168086,
@@ -438,6 +472,7 @@
         "auto-update": "auto-update",
         "disko": "disko",
         "hjem": "hjem",
+        "karabiner-ts": "karabiner-ts",
         "lanzaboote": "lanzaboote",
         "nd": "nd",
         "neovim-nightly-overlay": "neovim-nightly-overlay",

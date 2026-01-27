@@ -1,10 +1,11 @@
 {
   config,
   lib,
+  mkNixos,
   ...
 }:
 
-lib.mkIf config.me.secrets.enable {
+lib.mkIf config.me.secrets.enable (mkNixos {
   sops.secrets.cachix = { };
 
   services.cachix-watch-store = {
@@ -22,4 +23,4 @@ lib.mkIf config.me.secrets.enable {
     substituters = [ "https://ayko.cachix.org" ];
     trusted-public-keys = [ "ayko.cachix.org-1:pglseKMD4PGHDRvF4LzDJKXOo0gSj3yWZU6QXI6YkBs=" ];
   };
-}
+})

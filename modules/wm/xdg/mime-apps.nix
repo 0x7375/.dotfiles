@@ -1,6 +1,11 @@
-{ lib, config, ... }:
+{
+  mkNixos,
+  lib,
+  config,
+  ...
+}:
 
-lib.mkIf config.me.wm.enable {
+lib.mkIf config.me.wm.enable (mkNixos {
   xdg.mimeApps =
     let
       mapEntries =
@@ -142,4 +147,4 @@ lib.mkIf config.me.wm.enable {
         </mime-type>
       </mime-info>
     '';
-}
+})

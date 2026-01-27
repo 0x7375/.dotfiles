@@ -1,11 +1,12 @@
 {
   lib,
   config,
+  mkNixos,
   pkgs,
   ...
 }:
 
-lib.mkIf config.me.wm.enable {
+lib.mkIf config.me.wm.enable (mkNixos {
   packages = [ pkgs.blueberry ];
 
   hardware.bluetooth = {
@@ -21,4 +22,4 @@ lib.mkIf config.me.wm.enable {
       };
     };
   };
-}
+})

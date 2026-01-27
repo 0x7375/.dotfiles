@@ -32,71 +32,75 @@ in
         outer.right = 0;
       };
 
-      mode.main.binding = {
-        "alt-shift-esc" = [
-          "reload-config"
-          "mode main"
-        ];
-        "alt-enter" = [
-          "layout floating tiling"
-          "mode main"
-        ];
-        "alt-a" = "layout tiles accordion horizontal";
-        "alt-q" = "close --quit-if-last-window";
-        "alt-f" = "fullscreen";
+      mode.main.binding =
+        let
+          super = "alt-ctrl";
+        in
+        {
+          "${super}-shift-esc" = [
+            "reload-config"
+            "mode main"
+          ];
+          "${super}-enter" = [
+            "layout floating tiling"
+            "mode main"
+          ];
+          "${super}-a" = "layout tiles accordion horizontal";
+          "${super}-q" = "close --quit-if-last-window";
+          "${super}-f" = "fullscreen";
 
-        "alt-t" = "exec-and-forget open -na Alacritty --args -e ${getExe pkgs.my.tmux-sessionizer} ~/";
-        "alt-s" = "exec-and-forget open -na Alacritty --args -e ${getExe pkgs.my.tmux-sshr}";
-        "alt-e" = "exec-and-forget open -na Alacritty --args -e ${getExe pkgs.lf}";
-        # "alt-e" = "exec-and-forget osascript -e 'tell application \"Finder\" to make new Finder window to home'";
-        "alt-shift-e" = "exec-and-forget open -na Alacritty --args -e sudo ${getExe pkgs.lf}";
+          "${super}-t" = "exec-and-forget open -na Alacritty --args -e ${getExe pkgs.my.tmux-sessionizer} ~/";
+          "${super}-s" = "exec-and-forget open -na Alacritty --args -e ${getExe pkgs.my.tmux-sshr}";
+          "${super}-e" = "exec-and-forget open -na Alacritty --args -e ${getExe pkgs.lf}";
+          # "${super}-e" = "exec-and-forget osascript -e 'tell application \"Finder\" to make new Finder window to home'";
+          "${super}-shift-e" = "exec-and-forget open -na Alacritty --args -e sudo ${getExe pkgs.lf}";
 
-        "alt-m" = "exec-and-forget ${pkgs.writeShellScript "open-note" ''
-          cd ~/notes
-          note=$(ls *.md | sed 's/\.md$//' | ${lib.getExe pkgs.choose-gui})
-          [ -n "$note" ] && open -na Alacritty --args -e nvim "$HOME/notes/$note.md"
-        ''}";
+          "${super}-m" = "exec-and-forget ${pkgs.writeShellScript "open-note" ''
+            cd ~/notes
+            note=$(ls *.md | sed 's/\.md$//' | ${lib.getExe pkgs.choose-gui})
+            [ -n "$note" ] && open -na Alacritty --args -e nvim "$HOME/notes/$note.md"
+          ''}";
 
-        "alt-shift-t" = "exec-and-forget open -na Alacritty";
-        "alt-shift-s" = "exec-and-forget ${getExe pkgs.my.swap-theme}";
-        "alt-w" = "exec-and-forget open -na Zen";
+          "${super}-shift-t" = "exec-and-forget open -na Alacritty";
+          "${super}-shift-s" = "exec-and-forget ${getExe pkgs.my.swap-theme}";
+          "${super}-w" = "exec-and-forget open -na Zen";
 
-        "alt-h" = "focus left";
-        "alt-j" = "focus down";
-        "alt-k" = "focus up";
-        "alt-l" = "focus right";
+          "${super}-h" = "focus left";
+          "${super}-j" = "focus down";
+          "${super}-k" = "focus up";
+          "${super}-l" = "focus right";
 
-        "alt-shift-h" = "move left";
-        "alt-shift-j" = "move down";
-        "alt-shift-k" = "move up";
-        "alt-shift-l" = "move right";
+          "${super}-shift-h" = "move left";
+          "${super}-shift-j" = "move down";
+          "${super}-shift-k" = "move up";
+          "${super}-shift-l" = "move right";
 
-        "alt-minus" = "resize smart -50";
-        "alt-equal" = "resize smart +50";
+          "${super}-minus" = "resize smart -50";
+          "${super}-equal" = "resize smart +50";
 
-        "alt-1" = "workspace 1";
-        "alt-2" = "workspace 2";
-        "alt-3" = "workspace 3";
-        "alt-4" = "workspace 4";
-        "alt-5" = "workspace 5";
-        "alt-6" = "workspace 6";
-        "alt-7" = "workspace 7";
-        "alt-8" = "workspace 8";
-        "alt-9" = "workspace 9";
+          "${super}-1" = "workspace 1";
+          "${super}-2" = "workspace 2";
+          "${super}-3" = "workspace 3";
+          "${super}-4" = "workspace 4";
+          "${super}-5" = "workspace 5";
+          "${super}-6" = "workspace 6";
+          "${super}-7" = "workspace 7";
+          "${super}-8" = "workspace 8";
+          "${super}-9" = "workspace 9";
 
-        "alt-shift-1" = "move-node-to-workspace 1";
-        "alt-shift-2" = "move-node-to-workspace 2";
-        "alt-shift-3" = "move-node-to-workspace 3";
-        "alt-shift-4" = "move-node-to-workspace 4";
-        "alt-shift-5" = "move-node-to-workspace 5";
-        "alt-shift-6" = "move-node-to-workspace 6";
-        "alt-shift-7" = "move-node-to-workspace 7";
-        "alt-shift-8" = "move-node-to-workspace 8";
-        "alt-shift-9" = "move-node-to-workspace 9";
+          "${super}-shift-1" = "move-node-to-workspace 1";
+          "${super}-shift-2" = "move-node-to-workspace 2";
+          "${super}-shift-3" = "move-node-to-workspace 3";
+          "${super}-shift-4" = "move-node-to-workspace 4";
+          "${super}-shift-5" = "move-node-to-workspace 5";
+          "${super}-shift-6" = "move-node-to-workspace 6";
+          "${super}-shift-7" = "move-node-to-workspace 7";
+          "${super}-shift-8" = "move-node-to-workspace 8";
+          "${super}-shift-9" = "move-node-to-workspace 9";
 
-        "alt-tab" = "workspace-back-and-forth";
-        "alt-shift-tab" = "move-workspace-to-monitor --wrap-around next";
-      };
+          "${super}-tab" = "workspace-back-and-forth";
+          "${super}-shift-tab" = "move-workspace-to-monitor --wrap-around next";
+        };
 
       on-window-detected = [
         {

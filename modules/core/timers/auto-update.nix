@@ -1,11 +1,11 @@
 {
-  lib,
+  mkNixos,
   config,
   pkgs,
   ...
 }:
 
-{
+mkNixos {
   systemd.timers.auto-input = {
     wantedBy = [ "timers.target" ];
     timerConfig = {

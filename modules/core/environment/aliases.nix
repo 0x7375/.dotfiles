@@ -2,6 +2,7 @@
   lib,
   config,
   pkgs,
+  mkBundle,
   ...
 }:
 
@@ -10,7 +11,9 @@ let
   tput = "${getExe' pkgs.ncurses "tput"}";
   git = "${getExe' pkgs.git "git"}";
 in
-{
+mkBundle {
+  nixos.aliases.open = "${getExe' pkgs.xdg-utils "xdg-open"}";
+
   aliases = {
     np = "nix profile";
     ns = "nix shell";
@@ -48,8 +51,6 @@ in
 
     mount-web = "${getExe pkgs.sshfs} -o gid=1000,uid=1000,noauto,_netdev,reconnect,auto_cache,ServerAliveInterval=5,ServerAliveCountMax=3 web:/www-dev/ ~/uni/web";
     unmount-web = "${getExe' pkgs.fuse "fusermount"} -uz ~/uni/web";
-
-    open = "${getExe' pkgs.xdg-utils "xdg-open"}";
 
     py = "python";
 
@@ -252,7 +253,7 @@ in
           local system=''${SYSTEM:-nixos}
           [[ $(uname) == "Darwin" ]] && system=darwin
           if result=$(nix eval --json path:$FLAKE#''${system}Configurations.''${2:-$HOST}.config.$1 2>/dev/null); then
-              echo "$result" | jq -r
+              print -r "$result" | jq -r
           else
               nix eval path:$FLAKE#''${system}Configurations.''${2:-$HOST}.config.$1
           fi

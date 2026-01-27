@@ -1,5 +1,6 @@
 {
   lib,
+  mkNixos,
   config,
   secrets,
   pkgs,
@@ -9,7 +10,7 @@
 let
   template = "@nextdnsId@";
 in
-lib.mkIf (config.me.secrets.enable && config.me.network.enable) {
+lib.mkIf (config.me.secrets.enable && config.me.network.enable) (mkNixos {
   sops.secrets.nextdns_id = {
     owner = config.me.user;
     neededForUsers = true;
@@ -76,4 +77,5 @@ lib.mkIf (config.me.secrets.enable && config.me.network.enable) {
       };
     };
   };
-}
+})
+

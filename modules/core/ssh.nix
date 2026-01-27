@@ -3,11 +3,12 @@
   pkgs,
   config,
   options,
+  mkBundle,
   ...
 }:
 
 lib.mkMerge [
-  {
+  (mkBundle {
     services.openssh = {
       enable = true;
       extraConfig = ''
@@ -22,13 +23,23 @@ lib.mkMerge [
           AuthenticationMethods "publickey,password"
       '';
     };
-  }
-  (lib.optionalAttrs (options ? services.fail2ban) {
-    services.fail2ban = {
-        enable = true;
-        maxretry = 10;
-      };
+
+    darwin.programs.ssh.extraConfig =
+      let
+        validHosts = lib.filterAttrs (_: v: v.ips.lan != null) config.me.hosts;
+        hostEntries = lib.mapAttrsToList (h: v: ''
+          Host ${h}
+            HostName ${v.ips.lan}
+        '') validHosts;
+      in
+      builtins.concatStringsSep "\n" hostEntries;
+
+    nixos.services.fail2ban = {
+      enable = true;
+      maxretry = 10;
+    };
   })
+
   (lib.mkIf config.me.secrets.enable {
     sops.secrets."server_uni/server" = { };
     sops.secrets."server_uni/user" = { };

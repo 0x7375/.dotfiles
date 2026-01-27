@@ -1,6 +1,11 @@
-{ lib, config, ... }:
+{
+  lib,
+  config,
+  mkNixos,
+  ...
+}:
 
-lib.mkIf config.me.boot.debug.enable {
+lib.mkIf config.me.boot.debug.enable (mkNixos {
   boot.plymouth.enable = lib.mkForce false;
 
   boot.kernelParams = [
@@ -9,4 +14,4 @@ lib.mkIf config.me.boot.debug.enable {
     "systemd.log_target=kmsg"
     "log_buf_len=1M"
   ];
-}
+})

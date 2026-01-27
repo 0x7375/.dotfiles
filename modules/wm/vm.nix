@@ -1,10 +1,11 @@
 {
   config,
+  mkNixos,
   lib,
   ...
 }:
 
-lib.mkIf config.me.wm.enable {
+lib.mkIf config.me.wm.enable (mkNixos {
   virtualisation.libvirtd = {
     enable = true;
     shutdownTimeout = 1;
@@ -34,4 +35,5 @@ lib.mkIf config.me.wm.enable {
       }
     ];
   };
-}
+})
+

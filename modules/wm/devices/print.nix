@@ -2,10 +2,11 @@
   config,
   lib,
   pkgs,
+  mkNixos,
   ...
 }:
 
-lib.mkIf config.me.wm.enable {
+lib.mkIf config.me.wm.enable (mkNixos {
   unfree-packages = [
     "hplip"
   ];
@@ -37,4 +38,5 @@ lib.mkIf config.me.wm.enable {
       }
     ];
   };
-}
+})
+

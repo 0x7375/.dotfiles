@@ -1,4 +1,4 @@
-{ lib, ... }:
+{ mkNixos, lib, ... }:
 
 let
   directories = {
@@ -15,7 +15,7 @@ let
   # For some reason, these need to be wrapped with quotes to be valid.
   wrapped = lib.mapAttrs (_: value: ''"${value}"'') directories;
 in
-{
+mkNixos {
   hj.xdg.config.files."user-dirs.conf".text = "enabled=False";
   hj.xdg.config.files."user-dirs.dirs".text = lib.generators.toKeyValue { } wrapped;
 

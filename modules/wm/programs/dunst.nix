@@ -1,11 +1,12 @@
 {
+  mkNixos,
   config,
   pkgs,
   lib,
   ...
 }:
 
-lib.mkIf config.me.wm.enable {
+lib.mkIf config.me.wm.enable (mkNixos {
   packages = with pkgs; [
     libnotify
     dunst
@@ -149,4 +150,5 @@ lib.mkIf config.me.wm.enable {
       };
     };
   };
-}
+})
+

@@ -2,10 +2,11 @@
   lib,
   config,
   pkgs,
+  mkNixos,
   ...
 }:
 
-{
+mkNixos {
   users.users.${config.me.user} = {
     isNormalUser = true;
     home = config.me.home;

@@ -1,13 +1,14 @@
 {
   config,
   lib,
+  mkNixos,
   ...
 }:
 
 let
   server = "wilson";
 in
-lib.mkIf (config.me.syncthing-client.enable && config.me.secrets.enable) {
+lib.mkIf (config.me.syncthing-client.enable && config.me.secrets.enable) (mkNixos {
   programs.fuse.userAllowOther = true;
 
   services.syncthing.settings.devices.${server}.id = config.me.hosts.${server}.syncthingId;
@@ -39,4 +40,5 @@ lib.mkIf (config.me.syncthing-client.enable && config.me.secrets.enable) {
     notes.path = "notes";
     courses.path = "courses";
   };
-}
+})
+

@@ -1,15 +1,12 @@
 {
-  lib,
-  options,
+  mkBundle,
   ...
 }:
 
-lib.mkMerge [
-  (lib.optionalAttrs (options ? services.locate) {
-    services.locate.enable = true;
-  })
-  {
-    programs.nix-index-database.comma.enable = true;
-    programs.nix-index.enable = true;
-  }
-]
+mkBundle {
+  nixos.services.locate.enable = true;
+
+  programs.nix-index-database.comma.enable = true;
+  programs.nix-index.enable = true;
+}
+

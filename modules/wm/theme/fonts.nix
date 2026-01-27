@@ -2,10 +2,11 @@
   config,
   lib,
   pkgs,
+  mkNixos,
   ...
 }:
 
-lib.mkIf config.me.wm.enable {
+lib.mkIf config.me.wm.enable (mkNixos {
   fonts = {
     fontconfig = {
       enable = true;
@@ -17,17 +18,13 @@ lib.mkIf config.me.wm.enable {
 
     packages = with pkgs; [
       fonts.CartographCF
-      fonts.InconsolataNF
       font-awesome
       nerd-fonts.mononoki
-      nerd-fonts._0xproto
-      nerd-fonts.jetbrains-mono
       lexend
-      nerd-fonts.fira-code
       nerd-fonts.terminess-ttf
       noto-fonts
       noto-fonts-cjk-sans
       noto-fonts-color-emoji
     ];
   };
-}
+})

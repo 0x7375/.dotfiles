@@ -2,6 +2,7 @@
   lib,
   pkgs,
   config,
+  mkNixos,
   ...
 }:
 
@@ -10,7 +11,7 @@ let
   gw-ip = "10.2.0.1";
   server = config.me.hostname == "wilson";
 in
-lib.mkIf config.me.secrets.enable {
+lib.mkIf (config.me.secrets.enable) (mkNixos {
   sops.secrets."proton_vpn/endpoint" = { };
   sops.secrets."proton_vpn/pk" = { };
   sops.secrets."proton_vpn/sk" = { };
@@ -136,4 +137,4 @@ lib.mkIf config.me.secrets.enable {
       '';
     };
   };
-}
+})

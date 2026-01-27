@@ -19,6 +19,7 @@ NIX_SHELL_KEY="alt-S"
 NIX_PROFILE_KEY="alt-P"
 
 OPENER="xdg-open"
+[[ $OSTYPE == darwin* ]] && OPENER="open"
 
 # ========================================
 # for debug / development

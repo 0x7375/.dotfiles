@@ -1,11 +1,12 @@
 {
   pkgs,
+  mkNixos,
   config,
   lib,
   ...
 }:
 
-lib.mkIf (config.me.wm.displayServer == "xorg") {
+lib.mkIf (config.me.wm.displayServer == "xorg") (mkNixos {
   packages = [ pkgs.polybar ];
 
   hj.xdg.config.files."polybar/config.ini".text = ''
@@ -95,4 +96,4 @@ lib.mkIf (config.me.wm.displayServer == "xorg") {
     pseudo-transparency=true
     screenchange-reload=true
   '';
-}
+})

@@ -3,7 +3,7 @@
   lib,
   pkgs,
   config,
-  options,
+  mkBundle,
   ...
 }:
 
@@ -27,7 +27,7 @@ let
   '';
 in
 lib.mkMerge [
-  {
+  (mkBundle {
     packages = [ pkgs.git ];
 
     hj.xdg.config.files."git/ignore".text = ''
@@ -100,54 +100,57 @@ lib.mkMerge [
     '';
 
     hj.files.".ssh/allowed_signers".text = "* ${pubkey}";
-  }
-  (lib.optionalAttrs (options ? launchd) {
-    hj.xdg.config.files."ssh/config".text = ''
-      Host *
-        AddKeysToAgent yes
-        UseKeychain yes
-        IdentityFile ~/.ssh/id_ed25519
-    '';
 
-    launchd.agents.ssh-add = lib.mkIf config.me.secrets.enable {
-      serviceConfig = {
-        ProgramArguments = [
-          "${pkgs.openssh}/bin/ssh-add"
-          "--apple-use-keychain"
-          "${config.me.home}/.ssh/id_ed25519"
-        ];
-        RunAtLoad = true;
-      };
-    };
-  })
-  (lib.optionalAttrs (options ? systemd) {
-    systemd.user.services.ssh-add = lib.mkIf config.me.secrets.enable {
-      description = "Add keys to SSH agent";
-      after = [ "ssh-agent.service" ];
-      bindsTo = [ "ssh-agent.service" ];
-      upheldBy = [ "ssh-agent.service" ];
+    darwin = {
+      hj.xdg.config.files."ssh/config".text = ''
+        Host *
+          AddKeysToAgent yes
+          UseKeychain yes
+          IdentityFile ~/.ssh/id_ed25519
+      '';
 
-      serviceConfig = {
-        Type = "oneshot";
-        ExecStartPre = "${lib.getExe' pkgs.coreutils "sleep"} 1";
-        Environment = "SSH_AUTH_SOCK=%t/ssh-agent";
-        ExecStart = "${lib.getExe' pkgs.openssh "ssh-add"} %h/.ssh/id_ed25519";
-        RemainAfterExit = "yes";
+      # TODO: not working
+      launchd.agents.ssh-add = lib.mkIf config.me.secrets.enable {
+        serviceConfig = {
+          ProgramArguments = [
+            "${pkgs.openssh}/bin/ssh-add"
+            "--apple-use-keychain"
+            "${config.me.home}/.ssh/id_ed25519"
+          ];
+          RunAtLoad = true;
+        };
       };
     };
 
-    systemd.user.services.ssh-agent = lib.mkIf config.me.secrets.enable {
-      wantedBy = [ "default.target" ];
-      description = "SSH authentication agent";
-      documentation = [ "man:ssh-agent(1)" ];
-      serviceConfig.ExecStart = "${lib.getExe' pkgs.openssh "ssh-agent"} -D -a %t/ssh-agent";
-    };
+    nixos = {
+      systemd.user.services.ssh-add = lib.mkIf config.me.secrets.enable {
+        description = "Add keys to SSH agent";
+        after = [ "ssh-agent.service" ];
+        bindsTo = [ "ssh-agent.service" ];
+        upheldBy = [ "ssh-agent.service" ];
 
-    environment.shellInit = ''
-      if [ -z "$SSH_AUTH_SOCK" ]; then
-        export SSH_AUTH_SOCK=$XDG_RUNTIME_DIR/ssh-agent
-      fi
-    '';
+        serviceConfig = {
+          Type = "oneshot";
+          ExecStartPre = "${lib.getExe' pkgs.coreutils "sleep"} 1";
+          Environment = "SSH_AUTH_SOCK=%t/ssh-agent";
+          ExecStart = "${lib.getExe' pkgs.openssh "ssh-add"} %h/.ssh/id_ed25519";
+          RemainAfterExit = "yes";
+        };
+      };
+
+      systemd.user.services.ssh-agent = lib.mkIf config.me.secrets.enable {
+        wantedBy = [ "default.target" ];
+        description = "SSH authentication agent";
+        documentation = [ "man:ssh-agent(1)" ];
+        serviceConfig.ExecStart = "${lib.getExe' pkgs.openssh "ssh-agent"} -D -a %t/ssh-agent";
+      };
+
+      environment.shellInit = ''
+        if [ -z "$SSH_AUTH_SOCK" ]; then
+          export SSH_AUTH_SOCK=$XDG_RUNTIME_DIR/ssh-agent
+        fi
+      '';
+    };
   })
   (lib.mkIf config.me.secrets.enable {
     sops.secrets.git-config = {

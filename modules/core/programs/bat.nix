@@ -13,12 +13,12 @@
   # NOTE: run `bat cache --build` in an empty directory to work
   # around failure when ~/cache exists
   # https://github.com/sharkdp/bat/issues/1726
-  system.userActivationScripts.batCache.text = ''
-    (
-      export XDG_CACHE_HOME=${config.vars.XDG_CACHE_HOME}
+  system.activationScripts.batCache.text = ''
+    sudo -u ${config.me.user} ${pkgs.bash}/bin/bash -c '
+      export XDG_CACHE_HOME="${config.vars.XDG_CACHE_HOME}"
       cd "${pkgs.emptyDirectory}"
       ${lib.getExe pkgs.bat} cache --build
-    )
+    '
   '';
 
   hj.xdg.config.files."bat/config".text = ''

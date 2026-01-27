@@ -1,5 +1,6 @@
 {
   me = rec {
+    keyd.enable = false;
     secrets.enable = true;
     wm = {
       terminal = "alacritty";

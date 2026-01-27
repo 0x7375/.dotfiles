@@ -1,10 +1,11 @@
 {
+  mkNixos,
   lib,
   config,
   ...
 }:
 
-lib.mkIf config.me.wm.enable {
+lib.mkIf config.me.wm.enable (mkNixos {
   hj.xdg.config.files."gromit-mpx.ini" = {
     generator = lib.generators.toINI { };
     value = {
@@ -34,4 +35,4 @@ lib.mkIf config.me.wm.enable {
     "default"[ALT, Button2] = "green arrow";
     "default"[Button3] = "eraser";
   '';
-}
+})

@@ -1,11 +1,12 @@
 {
   lib,
   config,
+  mkNixos,
   pkgs,
   ...
 }:
 
-lib.mkIf config.me.wm.enable {
+lib.mkIf config.me.wm.enable (mkNixos {
   packages = with pkgs; [
     gparted
     nautilus
@@ -30,4 +31,4 @@ lib.mkIf config.me.wm.enable {
       terminal = config.me.wm.terminal;
     };
   };
-}
+})

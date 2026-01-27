@@ -1,11 +1,12 @@
 {
+  mkNixos,
   pkgs,
   lib,
   config,
   ...
 }:
 
-lib.mkIf config.me.wm.enable {
+lib.mkIf config.me.wm.enable (mkNixos {
   xdg.desktopEntries = {
     dofus =
       let
@@ -19,7 +20,7 @@ lib.mkIf config.me.wm.enable {
             in
             [
               "-H"
-              ''User-Agent: ${UA}''
+              "User-Agent: ${UA}"
             ];
         };
 
@@ -50,4 +51,5 @@ lib.mkIf config.me.wm.enable {
       categories = [ "Development" ];
     };
   };
-}
+})
+

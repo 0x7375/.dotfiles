@@ -1,11 +1,12 @@
 {
   config,
+  mkNixos,
   lib,
   pkgs,
   ...
 }:
 
-lib.mkIf config.me.wm.enable {
+lib.mkIf config.me.wm.enable (mkNixos {
   systemd.user.services.devmon = {
     path = [ pkgs.libnotify ];
     serviceConfig.ExecStart =
@@ -38,4 +39,5 @@ lib.mkIf config.me.wm.enable {
       RUN+="${lib.getExe' pkgs.kmod "modprobe"} xpad", \
       RUN+="/bin/sh -c 'echo 2dc8 3109 > /sys/bus/usb/drivers/xpad/new_id'"
     '';
-}
+})
+

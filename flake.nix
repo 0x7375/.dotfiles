@@ -66,6 +66,7 @@
     };
 
     nd.url = "git+https://codeberg.org/0x7E/nd";
+    karabiner-ts.url = "git+https://codeberg.org/0x7E/karabiner-ts";
 
     # nixos-wsl = {
     #   url = "github:nix-community/NixOS-WSL";
@@ -86,54 +87,52 @@
         }
       );
 
-      mkSystem =
-        name:
-        inputs.nixpkgs.lib.nixosSystem {
-          # nixpkgsPatcher = {
-          #   inherit inputs;
-          #   nixpkgs = inputs.nixpkgs-unstable;
-          # };
+      mkHost =
+        type: name:
+        let
+          isNixos = type == "nixos";
+          builder = if isNixos then lib.nixosSystem else inputs.nix-darwin.lib.darwinSystem;
+          pkgSet = if isNixos then "nixosModules" else "darwinModules";
+        in
+        builder {
           inherit lib;
           specialArgs = {
             inherit (inputs) secrets;
             inherit inputs;
+            mkNixos = if isNixos then (a: a) else (a: { });
+            mkDarwin = if !isNixos then (a: a) else (a: { });
+            mkBundle =
+              attrs:
+              lib.mkMerge [
+                (removeAttrs attrs [
+                  "nixos"
+                  "darwin"
+                ])
+                (attrs.${if isNixos then "nixos" else "darwin"} or { })
+              ];
           };
           modules = [
             ./hosts/${name}/configuration.nix
-            inputs.sops-nix.nixosModules.sops
-            inputs.nix-index-database.nixosModules.nix-index
-            inputs.hjem.nixosModules.default
+            inputs.sops-nix.${pkgSet}.sops
+            inputs.nix-index-database.${pkgSet}.nix-index
+            inputs.hjem.${pkgSet}.default
             {
               imports = lib.my.filesIn ./modules;
               networking.hostName = name;
             }
-          ];
+          ]
+          ++ lib.optionals isNixos [ inputs.disko.nixosModules.disko ];
         };
     in
     {
-      nixosConfigurations = inputs.nixpkgs.lib.genAttrs [
+      nixosConfigurations = lib.genAttrs [
         "cray"
         "naitoh"
         "wilson"
         "isoImg"
         # "julliard"
         # "perlman"
-      ] mkSystem;
-      darwinConfigurations."mach" = inputs.nix-darwin.lib.darwinSystem {
-        inherit lib;
-        specialArgs = {
-          inherit (inputs) secrets;
-          inherit inputs;
-        };
-        modules = [
-          ./hosts/mach/configuration.nix
-          inputs.sops-nix.darwinModules.sops
-          inputs.nix-index-database.darwinModules.nix-index
-          inputs.hjem.darwinModules.default
-          {
-            networking.hostName = "mach";
-          }
-        ];
-      };
+      ] (mkHost "nixos");
+      darwinConfigurations = lib.genAttrs [ "mach" ] (mkHost "darwin");
     };
 }

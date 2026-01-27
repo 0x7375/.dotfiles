@@ -3,14 +3,12 @@
   inputs,
   config,
   lib,
+  mkNixos,
   ...
 }:
 
-let
-  cfg = config.me;
-in
-lib.mkIf cfg.wm.enable {
-  nixpkgs.overlays = lib.mkIf (cfg.wm.displayServer != "wayland") [
+lib.mkIf config.me.wm.enable (mkNixos {
+  nixpkgs.overlays = [
     (final: prev: {
       bemenu = inputs.wrappers.lib.wrapPackage {
         pkgs = prev;
@@ -40,4 +38,4 @@ lib.mkIf cfg.wm.enable {
   };
 
   packages = [ pkgs.bemenu ];
-}
+})

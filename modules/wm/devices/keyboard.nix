@@ -2,10 +2,11 @@
   lib,
   config,
   pkgs,
+  mkNixos,
   ...
 }:
 
-lib.mkIf config.me.wm.enable {
+lib.mkIf config.me.wm.enable (mkNixos {
   unfree-packages = [ "via" ];
 
   packages = with pkgs; [
@@ -19,4 +20,5 @@ lib.mkIf config.me.wm.enable {
   ];
 
   hardware.keyboard.qmk.enable = true;
-}
+})
+

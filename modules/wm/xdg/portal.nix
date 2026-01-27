@@ -1,11 +1,12 @@
 {
+  mkNixos,
   pkgs,
   config,
   lib,
   ...
 }:
 
-lib.mkIf config.me.wm.enable {
+lib.mkIf config.me.wm.enable (mkNixos {
   # xdg portal needed for global dark theme
   xdg.portal = {
     enable = true;
@@ -14,4 +15,4 @@ lib.mkIf config.me.wm.enable {
       pkgs.xdg-desktop-portal-gtk
     ];
   };
-}
+})

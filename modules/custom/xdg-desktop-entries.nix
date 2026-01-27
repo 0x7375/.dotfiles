@@ -2,6 +2,7 @@
   config,
   lib,
   pkgs,
+  mkNixos,
   ...
 }:
 
@@ -226,10 +227,10 @@ in
     '';
   };
 
-  config = lib.mkIf (config.xdg.desktopEntries != { }) {
+  config = lib.mkIf (config.xdg.desktopEntries != { }) (mkNixos {
     environment.systemPackages = (
       map lib.hiPrio # we need hiPrio to override existing entries
         (lib.attrsets.mapAttrsToList makeFile config.xdg.desktopEntries)
     );
-  };
+  });
 }

@@ -1,6 +1,11 @@
-{ lib, config, ... }:
+{
+  mkNixos,
+  lib,
+  config,
+  ...
+}:
 
-lib.mkIf config.me.boot.silent.enable {
+lib.mkIf config.me.boot.silent.enable (mkNixos {
   boot.kernelParams = [
     "quiet"
     "rd.systemd.show_status=false"
@@ -10,4 +15,5 @@ lib.mkIf config.me.boot.silent.enable {
 
   boot.consoleLogLevel = lib.mkForce 0; # forcing because disko sets this
   boot.initrd.verbose = false;
-}
+})
+

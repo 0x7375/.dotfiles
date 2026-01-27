@@ -1,6 +1,10 @@
-{ config, pkgs, ... }:
-
 {
+  mkNixos,
+  pkgs,
+  ...
+}:
+
+mkNixos {
   virtualisation.docker = {
     enable = true;
     rootless = {
@@ -9,7 +13,5 @@
     };
   };
 
-  environment.systemPackages = with pkgs; [
-    docker-compose
-  ];
+  packages = [ pkgs.docker-compose ];
 }

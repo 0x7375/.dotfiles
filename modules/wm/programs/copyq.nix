@@ -1,11 +1,12 @@
 {
+  mkNixos,
   pkgs,
   lib,
   config,
   ...
 }:
 
-lib.mkIf config.me.wm.enable {
+lib.mkIf config.me.wm.enable (mkNixos {
   packages = [ pkgs.copyq ];
 
   systemd.user.services.copyq = {
@@ -256,4 +257,4 @@ lib.mkIf config.me.wm.enable {
       tool_button_selected_css="\n    ;background: ''${sel_bg - #222}\n    ;color: ''${sel_fg}\n    ;border: 1px solid ''${sel_bg}"
       use_system_icons=false
     '';
-}
+})

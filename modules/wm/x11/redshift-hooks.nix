@@ -1,11 +1,12 @@
 {
   lib,
   config,
+  mkNixos,
   pkgs,
   ...
 }:
 
-lib.mkIf (config.me.wm.displayServer == "xorg") {
+lib.mkIf (config.me.wm.displayServer == "xorg") (mkNixos {
   hardware.i2c.enable = true;
 
   users.users.${config.me.user}.extraGroups = [
@@ -39,4 +40,4 @@ lib.mkIf (config.me.wm.displayServer == "xorg") {
         fi
       '';
   };
-}
+})

@@ -2,10 +2,11 @@
   pkgs,
   config,
   lib,
+  mkNixos,
   ...
 }:
 
-lib.mkIf config.me.wm.enable {
+lib.mkIf config.me.wm.enable (mkNixos {
   xdg = {
     terminal-exec = {
       enable = true;
@@ -18,4 +19,5 @@ lib.mkIf config.me.wm.enable {
 
   system.userActivationScripts.generateDunstIcons.text = lib.getExe pkgs.my.generate-icons;
   services.dbus.enable = true;
-}
+})
+

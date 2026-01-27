@@ -1,11 +1,12 @@
 {
+  mkNixos,
   lib,
   pkgs,
   config,
   ...
 }:
 
-{
+lib.mkIf (config.me.wm.displayServer == "xorg") (mkNixos {
   nixpkgs.overlays = [
     (final: prev: {
       grobi = prev.grobi.overrideAttrs (old: rec {
@@ -52,4 +53,4 @@
 
     wantedBy = [ "graphical-session.target" ];
   };
-}
+})

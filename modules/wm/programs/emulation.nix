@@ -1,16 +1,18 @@
 {
+  mkBundle,
   pkgs,
   lib,
   config,
   ...
 }:
 
-lib.mkIf config.me.wm.enable {
+lib.mkIf config.me.wm.enable (mkBundle {
   packages = with pkgs; [
     melonDS
     ryubing
-    dolphin-emu
   ];
+
+  nixos.packages = [ pkgs.dolphin-emu ];
 
   hj.xdg.config.files."melonDS/melonDS.toml" = {
     clobber = true;
@@ -244,4 +246,4 @@ lib.mkIf config.me.wm.enable {
         InputType = 1
       '';
   };
-}
+})

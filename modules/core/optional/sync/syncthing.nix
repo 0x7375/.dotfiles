@@ -1,4 +1,5 @@
 {
+  mkNixos,
   lib,
   pkgs,
   config,
@@ -9,7 +10,7 @@ let
   inherit (config.me) user home hostname;
 in
 {
-  config = lib.mkIf (config.me.syncthing.enable && config.me.secrets.enable) {
+  config = lib.mkIf (config.me.syncthing.enable && config.me.secrets.enable) (mkNixos {
     systemd.services.syncthing.environment.STNODEFAULTFOLDER = "true"; # Don't create default ~/Sync folder
 
     sops.secrets."${hostname}/syncthing/cert".owner = config.me.user;
@@ -35,5 +36,5 @@ in
         gui.user = "admin";
       };
     };
-  };
+  });
 }

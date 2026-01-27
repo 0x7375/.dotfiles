@@ -1,6 +1,10 @@
-{ pkgs, ... }:
-
 {
+  mkNixos,
+  pkgs,
+  ...
+}:
+
+mkNixos {
   programs.nix-ld = {
     enable = true;
     libraries = [ ];

@@ -1,4 +1,5 @@
 {
+  inputs,
   config,
   lib,
   pkgs,
@@ -7,40 +8,22 @@
 
 {
   imports = [
-    ../../modules/default.nix
-    ../../modules/custom/me.nix
-    ../../modules/custom/tinted.nix
-    ../../modules/core/system/nix.nix
-    ../../modules/core/system/hjem.nix
-    ../../modules/core/optional/dev.nix
-    ../../modules/core/programs/git.nix
-    ../../modules/core/system/nixpkgs.nix
-    ../../modules/core/secrets/default.nix
-    ../../modules/core/programs/tmux
-    ../../modules/core/programs/fzf.nix
-    ../../modules/core/programs/neovim.nix
-    ../../modules/core/programs/bash.nix
-    ../../modules/core/programs/nix-search
-    ../../modules/core/programs/direnv.nix
-    ../../modules/core/programs/lf
-    ../../modules/core/xdg/home-cleanup.nix
-    ../../modules/core/environment/packages.nix
-    ../../modules/core/environment/aliases.nix
-    ../../modules/core/environment/variables.nix
-    ../../modules/wm/pkgs.nix
-    ../../modules/wm/theme/tinted.nix
-    ../../modules/wm/x11/alacritty.nix
     ./options.nix
     (lib.mkAliasOptionModule [ "activation" ] [ "system" "activationScripts" "activation" "text" ])
   ]
   ++ (lib.my.filesIn ./modules)
-  ++ (lib.my.filesIn ../../modules/wm/programs/browser)
-  ++ (lib.my.filesIn ../../modules/core/zsh);
+  ++ (lib.my.filesIn ../../modules);
 
   activation = ''
+    # disable macos quarantine
+    spctl --master-disable
+
     mkdir -p /usr/local/etc/wireguard
     ln -sfn /etc/wireguard/ /usr/local/etc/wireguard
   '';
+
+  # "known to corrupt the Nix Store"
+  nix.settings.auto-optimise-store = lib.mkForce false;
 
   unfree-packages = [
     "1password"
@@ -51,14 +34,22 @@
     enable = true;
     brews = [
       "syncthing"
+      "choose-gui"
     ];
     casks = [
+      "karabiner-elements"
       "middleclick"
       "discord"
-      "alacritty"
       "signal"
+      "font-terminess-ttf-nerd-font"
+      "raycast"
     ];
+    onActivation.cleanup = "uninstall";
   };
+
+  hj.xdg.config.files."karabiner/karabiner.json".source = "${
+    inputs.karabiner-ts.packages.${pkgs.stdenv.hostPlatform.system}.default
+  }/karabiner.json";
 
   security.pam.services.sudo_local.touchIdAuth = true;
 
@@ -85,10 +76,16 @@
 
   programs._1password.enable = true;
 
+  networking.applicationFirewall = {
+    enable = true;
+    allowSigned = true;
+    allowSignedApp = true;
+    enableStealthMode = true;
+  };
+
   system.defaults = {
     LaunchServices.LSQuarantine = false;
     NSGlobalDomain = {
-
       "com.apple.sound.beep.volume" = 0.0;
       "com.apple.sound.beep.feedback" = 0;
       "com.apple.keyboard.fnState" = true;
@@ -102,11 +99,16 @@
       NSAutomaticWindowAnimationsEnabled = false;
       NSWindowResizeTime = 0.001;
 
+      ApplePressAndHoldEnabled = false;
+
       InitialKeyRepeat = 13;
       KeyRepeat = 2;
+
+      AppleShowAllExtensions = true;
     };
     dock = {
       autohide = true;
+      static-only = true;
       show-recents = false;
       wvous-bl-corner = 1;
       wvous-br-corner = 1;
@@ -128,6 +130,9 @@
       ShowStatusBar = true;
     };
     CustomUserPreferences = {
+      ".GlobalPreferences" = {
+        AppleShowAllFiles = true;
+      };
       "com.apple.WindowManager" = {
         EnableStandardClickToShowDesktop = 0;
         StandardHideDesktopIcons = 0;
@@ -147,15 +152,16 @@
         DSDontWriteUSBStores = true;
       };
       "com.apple.finder" = {
-        NewWindowTargetPath = "file://${config.me.home}/";
+        NewWindowTargetPath = "file://$HOME/";
         NewWindowTarget = "PfHm";
         FXDefaultSearchScope = "SCcf";
+        _FXSortFoldersFirst = true;
       };
     };
   };
 
   # TODO: fix tmux-sshr not using FZF_DEFAULT_OPTS
-  environment.etc."zshenv".text = lib.mkAfter ''
+  environment.etc.zshenv.text = lib.mkAfter ''
     if [ -e '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh' ]; then
       . '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh'
     fi
@@ -167,12 +173,10 @@
     export PATH=/run/current-system/sw/bin:/usr/bin:/bin:$PATH
   '';
 
-  hj.xdg.config.files."zsh/.zshenv".text = config.environment.etc."zshenv".text;
+  hj.xdg.config.files."zsh/.zshenv".text = config.environment.etc.zshenv.text;
 
-  # TODO: merge rebuild logic
   hj.xdg.config.files."zsh/.zshrc".text = lib.mkBefore ''
     ${config.environment.shellInit}
-    alias nd="sudo darwin-rebuild switch --flake $FLAKE"
   '';
 
   launchd.user.agents.theme-switcher = {

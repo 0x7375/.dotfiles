@@ -122,7 +122,10 @@ in
         mach = {
           syncthingId = "32SVOZP-RJL755K-D7ZTMRL-7FOTZZF-V7W5V5J-2JOIMCG-W6MRDGK-AO4D4AC";
           sshPublicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPf1snOTuk99EWDE7c2YJPQC9utOyiOAeRTskCjGBclG";
-          ips.vpn = "10.0.0.5";
+          ips = {
+            lan = "192.168.1.168";
+            vpn = "10.0.0.5";
+          };
         };
         shannon = {
           syncthingId = "JJ62FKA-U5HTR5S-NJ7A4EJ-TMO66SZ-QNUOYUA-CCQMUIB-STDX4RE-VCGEKAB";
@@ -222,11 +225,11 @@ in
       type = types.attrsOf (types.attrsOf types.str);
       default =
         let
-          map = lib.mapAttrs (name: value: lib.removePrefix "#" value);
+          map' = lib.mapAttrs (name: value: lib.removePrefix "#" value);
         in
         {
-          dark = map cfg.palette.dark;
-          light = map cfg.palette.light;
+          dark = map' cfg.palette.dark;
+          light = map' cfg.palette.light;
         };
       description = "Color palette in hex format (without #)";
       internal = true;
@@ -280,12 +283,6 @@ in
       type = types.bool;
       default = true;
       description = "Remap keys using keyd and keyd-application-mapper";
-    };
-
-    sleep.enable = mkOption {
-      type = types.bool;
-      default = true;
-      description = "Sleep reminders";
     };
 
     syncthing.enable = mkOption {

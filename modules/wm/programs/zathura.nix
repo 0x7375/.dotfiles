@@ -1,11 +1,12 @@
 {
+  mkNixos,
   pkgs,
   config,
   lib,
   ...
 }:
 
-lib.mkIf config.me.wm.enable {
+lib.mkIf config.me.wm.enable (mkNixos {
   packages = with pkgs; [
     zathura
     my.zaread
@@ -105,4 +106,5 @@ lib.mkIf config.me.wm.enable {
     set statusbar-bg	"${palette.bg2}"
     set statusbar-fg	"${palette.fg0}"
   '';
-}
+})
+

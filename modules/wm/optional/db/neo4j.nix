@@ -1,6 +1,11 @@
-{ config, lib, ... }:
+{
+  mkNixos,
+  config,
+  lib,
+  ...
+}:
 
-lib.mkIf config.me.wm.optional.neo4j.enable {
+lib.mkIf config.me.wm.optional.neo4j.enable (mkNixos {
   services.neo4j = {
     enable = true;
     bolt = {
@@ -18,4 +23,5 @@ lib.mkIf config.me.wm.optional.neo4j.enable {
       };
     };
   };
-}
+})
+

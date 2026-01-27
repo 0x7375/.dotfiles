@@ -1,6 +1,11 @@
-{ lib, pkgs, ... }:
-
 {
+  mkNixos,
+  lib,
+  pkgs,
+  ...
+}:
+
+mkNixos {
   systemd.timers.clean-old-trash = {
     wantedBy = [ "timers.target" ];
     timerConfig = {

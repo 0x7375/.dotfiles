@@ -1,20 +1,11 @@
 {
   lib,
   config,
+  mkNixos,
   ...
 }:
 
-lib.mkIf config.me.wm.enable {
-  environment.etc = {
-    "1password/custom_allowed_browsers" = {
-      text = ''
-        librewolf
-        zen
-      '';
-      mode = "0755";
-    };
-  };
-
+lib.mkIf config.me.wm.enable (mkNixos {
   nixpkgs.overlays = [
     (final: prev: {
       _1password-cli = final.auto._1password-cli;
@@ -27,6 +18,16 @@ lib.mkIf config.me.wm.enable {
     "1password"
     "1password-cli"
   ];
+
+  environment.etc = {
+    "1password/custom_allowed_browsers" = {
+      text = ''
+        librewolf
+        zen
+      '';
+      mode = "0755";
+    };
+  };
 
   programs = {
     _1password.enable = true;
@@ -75,4 +76,4 @@ lib.mkIf config.me.wm.enable {
       "d ${config.me.home}/.config/1Password/settings 0700 ${config.me.user} users - -"
       "f ${config.me.home}/.config/1Password/settings/settings.json 0600 ${config.me.user} users - ${content}"
     ];
-}
+})

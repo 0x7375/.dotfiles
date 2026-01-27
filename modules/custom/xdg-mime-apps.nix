@@ -8,8 +8,6 @@
 let
   inherit (lib) mkOption types;
 
-  cfg = config.xdg.mimeApps;
-
   strListOrSingleton = with types; coercedTo (either (listOf str) str) lib.toList (listOf str);
 
 in
@@ -132,13 +130,15 @@ in
         lib.warn warning processAll;
     }
 
-    (lib.mkIf cfg.enable {
+    (lib.mkIf config.xdg.mimeApps.enable {
       # Deprecated but still used by some applications.
       hj.xdg.data.files."applications/mimeapps.list".source =
         config.hj.xdg.config.files."mimeapps.list".source;
 
       hj.xdg.config.files."mimeapps.list".source =
         let
+          cfg = config.xdg.mimeApps;
+
           joinValues = lib.mapAttrs (n: lib.concatStringsSep ";");
 
           baseFile = (pkgs.formats.ini { }).generate "mimeapps.list" {

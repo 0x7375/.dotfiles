@@ -1,11 +1,12 @@
 {
   config,
+  mkNixos,
   pkgs,
   lib,
   ...
 }:
 
-lib.mkIf config.me.wm.enable {
+lib.mkIf config.me.wm.enable (mkNixos {
   security.polkit.enable = true;
 
   systemd.user.services.polkit-gnome = {
@@ -22,4 +23,4 @@ lib.mkIf config.me.wm.enable {
     protonvpn-gui
     stable.ente-auth # stable until https://github.com/ente-io/ente/issues/5589 is fixed
   ];
-}
+})

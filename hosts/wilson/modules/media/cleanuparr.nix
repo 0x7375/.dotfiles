@@ -33,7 +33,7 @@
     ports = [ "11011:11011" ];
 
     environment = {
-      TZ = config.time.timeZone;
+      TZ = toString config.time.timeZone;
       PUID = "0";
       PGID = "0";
     };

@@ -104,13 +104,16 @@ lib.mkMerge [
     darwin = {
       hj.xdg.config.files."ssh/config".text = ''
         Host *
-          AddKeysToAgent yes
           UseKeychain yes
+          AddKeysToAgent yes
           IdentityFile ~/.ssh/id_ed25519
       '';
 
+      # hj.xdg.config.files."zsh/.zshrc".text =
+      #   lib.mkAfter "ssh-add --apple-use-keychain ~/.ssh/id_ed25519 @null";
+
       # TODO: not working
-      launchd.agents.ssh-add = lib.mkIf config.me.secrets.enable {
+      launchd.user.agents.ssh-add = lib.mkIf config.me.secrets.enable {
         serviceConfig = {
           ProgramArguments = [
             "${pkgs.openssh}/bin/ssh-add"
@@ -118,6 +121,8 @@ lib.mkMerge [
             "${config.me.home}/.ssh/id_ed25519"
           ];
           RunAtLoad = true;
+          StandardOutPath = "/tmp/use-keychain.out";
+          StandardErrorPath = "/tmp/use-keychain.err";
         };
       };
     };

@@ -103,6 +103,8 @@ return {
             "node_modules/",
             ".expo/",
             ".DS_Store",
+            "desktop.ini",
+            ".localized",
             "doc/",
             ".cache/",
             "bin/",

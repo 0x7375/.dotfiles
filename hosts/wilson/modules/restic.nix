@@ -138,6 +138,8 @@ lib.mkIf config.me.secrets.enable {
       day = "Mon";
       exclude = [
         ".DS_Store"
+        "desktop.ini"
+        ".localized"
         "node_modules"
       ];
     });

@@ -205,7 +205,7 @@ mkBundle {
             fi
             for interface in "$@"; do
               if [[ $(uname) == "Darwin" ]]; then
-                echo yes
+                sudo wg-quick down "$interface" && sudo wg-quick up "$interface"
               else
                 sudo systemctl "$action" wg-quick-$interface.service
               fi

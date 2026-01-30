@@ -136,3 +136,4 @@ nixos-install --root /mnt --flake ~/.config/nixcfg#hostname
 - `sudo mv /etc/bashrc{,.backup}`
 - `sudo nix run --extra-experimental-features 'nix-command flakes' nix-darwin/master#darwin-rebuild -- switch --flake `
 - `sudo darwin-rebuild switch`
+- Privacy & Security -> Allow applications from `Anywhere`

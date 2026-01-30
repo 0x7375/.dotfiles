@@ -11,6 +11,7 @@ let
 in
 {
   config = lib.mkIf (config.me.syncthing.enable && config.me.secrets.enable) (mkNixos {
+    # TODO: not needed after 2.0
     systemd.services.syncthing.environment.STNODEFAULTFOLDER = "true"; # Don't create default ~/Sync folder
 
     sops.secrets."${hostname}/syncthing/cert".owner = config.me.user;

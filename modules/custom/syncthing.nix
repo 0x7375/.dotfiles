@@ -26,6 +26,8 @@ let
         "*.log"
         "*.out"
         ".DS_Store"
+        ".localized"
+        "desktop.ini"
       ],
       extraConfig ? { },
     }:

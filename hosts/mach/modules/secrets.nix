@@ -23,7 +23,7 @@ lib.mkIf config.me.secrets.enable {
       PrivateKey = ${config.sops.placeholder."${hostname}/vpn/pk"}
 
       [Peer]
-      PublicKey = z2/QJTGzNBiq4MKPqFDtuPJsCE1Tb/7VG6oYCExeYVg=
+      PublicKey = PpCxUOTz7Heh3B29OnI3XNZAKJ8abUETMzFNj3gpTyo=
       PresharedKey = ${config.sops.placeholder."${hostname}/vpn/psk"}
       AllowedIPs = ${networkIps.vpn.subnet},${networkIps.lan.subnet}
       Endpoint = ${config.sops.placeholder.server_vpn_endpoint}
@@ -31,6 +31,5 @@ lib.mkIf config.me.secrets.enable {
 
   packages = [ pkgs.wireguard-tools ];
 
-  # TODO: world readable mon gars
-  # environment.etc."wireguard/home.conf".source = config.sops.templates."home-vpn-mach.conf".path;
+  environment.etc."wireguard/home.conf".source = config.sops.templates."home-vpn-mach.conf".path;
 }

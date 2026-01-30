@@ -93,7 +93,6 @@ lib.mkIf config.me.secrets.enable {
     pictures = {
       path = "pictures";
       devices = groups.desktops;
-      ro = true;
     };
     documents = {
       path = "documents";

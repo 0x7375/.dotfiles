@@ -11,7 +11,12 @@ lib.mkIf config.me.network.enable (mkBundle {
       validHosts = lib.filterAttrs (_: v: v.ips.lan != null) config.me.hosts;
       ipHostPair = lib.mapAttrsToList (h: v: "${v.ips.lan} ${h} ${h}.local") validHosts;
     in
-    builtins.concatStringsSep "\n" ipHostPair;
+    lib.mkForce ''
+      127.0.0.1 localhost
+      255.255.255.255 broadcasthost
+      ::1 localhost
+      ${builtins.concatStringsSep "\n" ipHostPair}
+    '';
 
   nixos = {
     # Configure network proxy if necessary

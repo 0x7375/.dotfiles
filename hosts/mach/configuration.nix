@@ -9,17 +9,14 @@
 {
   imports = [
     ./options.nix
-    (lib.mkAliasOptionModule [ "activation" ] [ "system" "activationScripts" "activation" "text" ])
+    (lib.mkAliasOptionModule [ "activation" ] [ "system" "activationScripts" "postActivation" "text" ])
   ]
   ++ (lib.my.filesIn ./modules)
   ++ (lib.my.filesIn ../../modules);
 
   activation = ''
     # disable macos quarantine
-    spctl --master-disable
-
-    mkdir -p /usr/local/etc/wireguard
-    ln -sfn /etc/wireguard/ /usr/local/etc/wireguard
+    spctl --master-disable > /dev/null 2>&1 || true
   '';
 
   # "known to corrupt the Nix Store"
@@ -35,17 +32,37 @@
     brews = [
       "syncthing"
       "choose-gui"
+      "mas"
     ];
+    taps = [ "xcodesorg/made" ];
     casks = [
+      "1password@beta"
+      "ente-auth"
+      "jellyfin-media-player"
       "karabiner-elements"
       "middleclick"
       "discord"
       "signal"
       "font-terminess-ttf-nerd-font"
       "raycast"
+      "steam"
+      "xcodes-app"
     ];
-    onActivation.cleanup = "uninstall";
+    masApps = {
+      "KDE Connect" = 1580245991;
+    };
+    onActivation = {
+      cleanup = "uninstall";
+      extraFlags = [ "--quiet" ];
+    };
   };
+
+  packages = with pkgs; [
+    mas
+    pear-desktop
+    wireguard-tools
+    dark-mode-notify
+  ];
 
   hj.xdg.config.files."karabiner/karabiner.json".source = "${
     inputs.karabiner-ts.packages.${pkgs.stdenv.hostPlatform.system}.default
@@ -68,12 +85,6 @@
       ];
   };
 
-  packages = with pkgs; [
-    pear-desktop
-    wireguard-tools
-    dark-mode-notify
-  ];
-
   programs._1password.enable = true;
 
   networking.applicationFirewall = {
@@ -83,12 +94,25 @@
     enableStealthMode = true;
   };
 
+  # doc: https://github.com/mathiasbynens/dotfiles/blob/b7c7894e7bb2de5d60bfb9a2f5e46d01a61300ea/.macos
   system.defaults = {
+    universalaccess = {
+      reduceMotion = true;
+      reduceTransparency = true;
+    };
     LaunchServices.LSQuarantine = false;
     NSGlobalDomain = {
       "com.apple.sound.beep.volume" = 0.0;
       "com.apple.sound.beep.feedback" = 0;
       "com.apple.keyboard.fnState" = true;
+      "com.apple.mouse.tapBehavior" = 1;
+      AppleInterfaceStyleSwitchesAutomatically = true;
+      AppleMeasurementUnits = "Centimeters";
+      AppleMetricUnits = 1;
+      AppleTemperatureUnit = "Celsius";
+      _HIHideMenuBar = true;
+      AppleKeyboardUIMode = 3;
+      NSWindowShouldDragOnGesture = true;
 
       NSAutomaticCapitalizationEnabled = false;
       NSAutomaticSpellingCorrectionEnabled = false;
@@ -117,6 +141,7 @@
       expose-animation-duration = 0.1;
       expose-group-apps = true;
       autohide-delay = 1000.0;
+      launchanim = false;
     };
     trackpad = {
       Clicking = true;
@@ -128,8 +153,26 @@
       FXEnableExtensionChangeWarning = false;
       ShowPathbar = true;
       ShowStatusBar = true;
+      FXRemoveOldTrashItems = true;
     };
     CustomUserPreferences = {
+      "com.apple.symbolichotkeys" = {
+        AppleSymbolicHotKeys = {
+          "163" = {
+            # Set 'Option + N' for Show Notification Center
+            enabled = true;
+            value = {
+              parameters = [
+                110
+                45
+                524288
+              ];
+              type = "standard";
+            };
+          };
+        };
+      };
+      NSGlobalDomain."com.apple.mouse.linear" = true;
       ".GlobalPreferences" = {
         AppleShowAllFiles = true;
       };
@@ -144,14 +187,14 @@
       "com.apple.AdLib" = {
         allowApplePersonalizedAdvertising = false;
       };
-      "com.apple.controlcenter" = {
-        BatteryShowPercentage = true;
-      };
+      "com.apple.controlcenter".BatteryShowPercentage = true;
       "com.apple.desktopservices" = {
         DSDontWriteNetworkStores = true;
         DSDontWriteUSBStores = true;
       };
       "com.apple.finder" = {
+        DisableAllAnimations = true;
+        WarnOnEmptyTrash = false;
         NewWindowTargetPath = "file://$HOME/";
         NewWindowTarget = "PfHm";
         FXDefaultSearchScope = "SCcf";

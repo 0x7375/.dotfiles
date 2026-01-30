@@ -24,15 +24,15 @@ lib.mkMerge [
       '';
     };
 
-    darwin.programs.ssh.extraConfig =
-      let
-        validHosts = lib.filterAttrs (_: v: v.ips.lan != null) config.me.hosts;
-        hostEntries = lib.mapAttrsToList (h: v: ''
-          Host ${h}
-            HostName ${v.ips.lan}
-        '') validHosts;
-      in
-      builtins.concatStringsSep "\n" hostEntries;
+    # darwin.programs.ssh.extraConfig =
+    #   let
+    #     validHosts = lib.filterAttrs (_: v: v.ips.lan != null) config.me.hosts;
+    #     hostEntries = lib.mapAttrsToList (h: v: ''
+    #       Host ${h}
+    #         HostName ${v.ips.lan}
+    #     '') validHosts;
+    #   in
+    #   builtins.concatStringsSep "\n" hostEntries;
 
     nixos.services.fail2ban = {
       enable = true;

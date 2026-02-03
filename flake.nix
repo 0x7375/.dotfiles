@@ -12,6 +12,8 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    nix-homebrew.url = "github:zhaofengli/nix-homebrew";
+
     nur = {
       url = "github:nix-community/NUR";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -121,7 +123,8 @@
               networking.hostName = name;
             }
           ]
-          ++ lib.optionals isNixos [ inputs.disko.nixosModules.disko ];
+          ++ lib.optionals isNixos [ inputs.disko.nixosModules.disko ]
+          ++ lib.optionals (!isNixos) [ inputs.nix-homebrew.darwinModules.nix-homebrew ];
         };
     in
     {

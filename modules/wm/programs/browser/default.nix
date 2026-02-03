@@ -3,129 +3,16 @@
   inputs,
   pkgs,
   config,
-  options,
   mkBundle,
   ...
 }:
 
 let
   inherit (config.me.palette) dark;
+  profile = "nix";
   policies = import ./_policies.nix { inherit config lib; };
-in
-lib.mkIf config.me.wm.enable (mkBundle {
-  darwin = {
-    homebrew.casks = [ "zen" ];
-
-    environment.etc."zen-policies.plist".text = lib.generators.toPlist { escape = true; } (
-      policies // { EnterprisePoliciesEnabled = true; }
-    );
-
-    system.activationScripts.postActivation.text = ''
-      cp -f "/etc/zen-policies.plist" "/Library/Preferences/app.zen-browser.zen.plist"
-    '';
-  };
-  nixos = {
-    packages = [ pkgs.zen-browser ];
-
-    hj.files.".zen/native-messaging-hosts/com.1password.1password.json".text = # json
-      ''
-        {
-          "name": "com.1password.1password",
-          "description": "1Password BrowserSupport",
-          "path": "/run/wrappers/bin/1Password-BrowserSupport",
-          "type": "stdio",
-          "allowed_extensions": [
-            "{0a75d802-9aed-41e7-8daa-24c067386e82}",
-            "{25fc87fa-4d31-4fee-b5c1-c32a7844c063}",
-            "{d634138d-c276-4fc8-924b-40a0ea21d284}"
-          ]
-        }
-      '';
-  };
-
-  nixpkgs.overlays = [
-    (final: prev: {
-      zen-browser =
-        (inputs.zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.beta-unwrapped.override {
-          inherit policies;
-        }).overrideAttrs
-          (old: {
-            appendRunpaths = (old.appendRunpaths or [ ]) ++ [ "${final.speechd-minimal}/lib" ];
-          });
-    })
-  ];
-
-  packages = with pkgs; [
-    auto.librewolf
-  ];
-
-  hj.files.".librewolf/default".type = "directory";
-  hj.files.".librewolf/profiles.ini".text = config.hj.files.".zen/profiles.ini".text;
-
-  hj.files.".zen/default".type = "directory";
-  hj.files.".zen/profiles.ini" = {
-    generator = lib.generators.toINI { };
-    value = {
-      Profile0 = {
-        Name = "default";
-        IsRelative = 1;
-        Path = "default";
-        Default = 1;
-      };
-
-      General = {
-        StartWithLastProfile = 1;
-        Version = 2;
-      };
-    };
-  };
-
-  # required for zen to load the custom profile
-  vars.MOZ_LEGACY_PROFILES = "1";
-
-  hj.files.".librewolf/default/chrome/userChrome.css".text = builtins.readFile ./userChrome.css;
-  hj.files.".zen/default/chrome/userChrome.css".text =
-    # css
-    ''
-      /* change selected urlbar result font color */
-      /* .urlbarView-row { */
-      /*   &[selected] { */
-      /*     & * { */
-      /*       color: ${dark.fg0} !important; */
-      /*     } */
-      /*   } */
-      /* } */
-
-      /* change selected urlbar result icon bg color */
-      /* .urlbarView-row { */
-      /*   &[selected] { */
-      /*     & .urlbarView-favicon { */
-      /*       background-color: transparent !important; */
-      /*     } */
-      /*   } */
-      /* } */
-
-      /* hide workspace indicator */
-      /* #zen-current-workspace-indicator-container { */
-      /*   display: none; */
-      /* } */
-
-      /* disable animations */
-      * {
-        animation: none !important;
-
-        /* breaks popups and other stuff
-        /* transition: none !important; */
-      }
-    '';
-
-  hj.files.".zen/default/zen-keyboard-shortcuts.json".text = (
-    builtins.readFile ./zen-keyboard-shortcuts.json
-  );
-  # TODO declarative zen mods
-  # hj.files.".zen/default/zen-themes.json".text = (builtins.readFile ./zen-themes.json);
-
-  hj.files.".zen/default/user.js".text =
+  shortcuts = builtins.readFile ./zen-keyboard-shortcuts.json;
+  js =
     let
       userPrefValue =
         pref:
@@ -361,7 +248,149 @@ lib.mkIf config.me.wm.enable (mkBundle {
 
         # needed termfilechooser
         "widget.use-xdg-desktop-portal.file-picker" = 1;
+
+        # show new tab button
+        "zen.tabs.show-newtab-vertical" = false;
+
+        # show traditional three dot menu on mac
+        "zen.view.mac.show-three-dot-menu" = true;
       }
     )}";
-})
+  profiles = {
+    type = "copy";
+    generator = lib.generators.toINI { };
+    value = {
+      Profile0 = {
+        Name = profile;
+        IsRelative = 1;
+        Path = "${lib.optionalString pkgs.stdenv.isDarwin "Profiles/"}${profile}";
+        Default = 1;
+      };
 
+      General = {
+        StartWithLastProfile = 1;
+        Version = 2;
+      };
+    }
+    // lib.optionalAttrs pkgs.stdenv.isDarwin {
+      "Install6ED35B3CA1B5D3AF" = {
+        Default = "Profiles/${profile}";
+        Locked = 1;
+      };
+    };
+  };
+  css = # css
+    ''
+      /* change selected urlbar result font color */
+      /* .urlbarView-row { */
+      /*   &[selected] { */
+      /*     & * { */
+      /*       color: red !important; */
+      /*     } */
+      /*   } */
+      /* } */
+
+      /* change selected urlbar result icon bg color */
+      /* .urlbarView-row { */
+      /*   &[selected] { */
+      /*     & .urlbarView-favicon { */
+      /*       background-color: transparent !important; */
+      /*     } */
+      /*   } */
+      /* } */
+
+      /* hide current workspace indicator */
+      .zen-current-workspace-indicator {
+        display: none !important;
+      }
+
+      /* remove separator above tabs */
+      .pinned-tabs-container-separator {
+          display: none !important;
+      }
+
+      /* add some padding above tabs */
+      .zen-workspace-normal-tabs-section {
+        padding-block-start: .5em !important;
+      }
+
+      /* disable animations */
+      * {
+        animation: none !important;
+      }
+    '';
+in
+lib.mkIf config.me.wm.enable (mkBundle {
+  darwin = {
+    homebrew.casks = [ "zen" ];
+
+    environment.etc."zen-policies.plist".text = lib.generators.toPlist { escape = true; } (
+      policies // { EnterprisePoliciesEnabled = true; }
+    );
+
+    system.activationScripts.postActivation.text = ''
+      cp -f "/etc/zen-policies.plist" "/Library/Preferences/app.zen-browser.zen.plist"
+    '';
+
+    hj.files."Library/Application Support/zen-browser/Policies/Managed/policies.json".source =
+      "/etc/zen-policies.plist";
+
+    hj.files."Library/Application Support/zen/installs.ini" = {
+      type = "copy";
+      generator = lib.generators.toINI { };
+      value = {
+        "6ED35B3CA1B5D3AF" = {
+          Default = "Profiles/${profile}";
+          Locked = 1;
+        };
+      };
+    };
+
+    hj.files."Library/Application Support/zen/profiles.ini" = profiles;
+    hj.files."Library/Application Support/zen/Profiles/${profile}/chrome/userChrome.css".text = css;
+    hj.files."Library/Application Support/zen/Profiles/${profile}/zen-keyboard-shortcuts.json".text =
+      shortcuts;
+    hj.files."Library/Application Support/zen/Profiles/${profile}/user.js".text = js;
+  };
+
+  nixos = {
+    nixpkgs.overlays = [
+      (final: prev: {
+        zen-browser =
+          (inputs.zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.beta-unwrapped.override {
+            inherit policies;
+          }).overrideAttrs
+            (old: {
+              appendRunpaths = (old.appendRunpaths or [ ]) ++ [ "${final.speechd-minimal}/lib" ];
+            });
+      })
+    ];
+
+    packages = [ pkgs.zen-browser ];
+
+    hj.files.".zen/native-messaging-hosts/com.1password.1password.json".text = # json
+      ''
+        {
+          "name": "com.1password.1password",
+          "description": "1Password BrowserSupport",
+          "path": "/run/wrappers/bin/1Password-BrowserSupport",
+          "type": "stdio",
+          "allowed_extensions": [
+            "{0a75d802-9aed-41e7-8daa-24c067386e82}",
+            "{25fc87fa-4d31-4fee-b5c1-c32a7844c063}",
+            "{d634138d-c276-4fc8-924b-40a0ea21d284}"
+          ]
+        }
+      '';
+
+    hj.files.".zen/profiles.ini" = profiles;
+    hj.files.".zen/${profile}/chrome/userChrome.css".text = css;
+    hj.files.".zen/${profile}/zen-keyboard-shortcuts.json".text = shortcuts;
+    hj.files.".zen/${profile}/user.js".text = js;
+    # TODO declarative zen mods
+    # hj.files.".zen/${profile}/zen-themes.json".text = (builtins.readFile ./zen-themes.json);
+  };
+
+  # required for zen to load the custom profile
+  vars.MOZ_LEGACY_PROFILES = "1";
+})

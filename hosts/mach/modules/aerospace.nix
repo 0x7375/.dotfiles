@@ -58,12 +58,12 @@ in
           "${super}-m" = "exec-and-forget ${pkgs.writeShellScript "open-note" ''
             cd ~/notes
             note=$(ls *.md | sed 's/\.md$//' | ${lib.getExe pkgs.choose-gui})
-            [ -n "$note" ] && open -na Alacritty --args -e nvim "$HOME/notes/$note.md"
+            [ -n "$note" ] && open -na Alacritty --args -e zsh -lc "nvim '$HOME/notes/$note.md'"
           ''}";
 
           "${super}-shift-t" = "exec-and-forget open -na Alacritty";
           "${super}-shift-s" = "exec-and-forget ${getExe pkgs.my.swap-theme}";
-          "${super}-w" = "exec-and-forget open -na Zen";
+          "${super}-w" = "exec-and-forget open -a Zen";
 
           "${super}-h" = "focus left";
           "${super}-j" = "focus down";

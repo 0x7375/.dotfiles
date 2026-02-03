@@ -1,4 +1,4 @@
-{ secrets, config, ... }:
+{ lib, secrets, config, ... }:
 
 let
   cfg = config.me;
@@ -9,7 +9,7 @@ let
     key = "";
   };
 in
-{
+lib.mkIf config.me.secrets.enable {
   sops.secrets."syncthing/config" = mkSyncthingSecret "config.xml";
   sops.secrets."syncthing/cert" = mkSyncthingSecret "cert.pem";
   sops.secrets."syncthing/key" = mkSyncthingSecret "key.pem";

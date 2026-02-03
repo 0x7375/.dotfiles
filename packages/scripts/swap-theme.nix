@@ -33,6 +33,7 @@ pkgs.writeShellApplication {
     fd --hidden ".*-dark" "$themes_dir" | while read -r dark_file; do
       base_path="''${dark_file%-dark}"
       config_path="''${base_path#"$themes_dir"/}"
+      mkdir -p "$(dirname "$HOME/$config_path")"
       ln -sf "''${base_path}-''${theme}" "$HOME/$config_path"
     done
 

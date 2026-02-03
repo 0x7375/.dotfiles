@@ -1,7 +1,7 @@
 # Dotfiles
 
 NixOS configuration for an nvidia desktop, thinkpad laptop, a raspberry pi,
-wsl aswell as an M1 macbook (messy integration for now). Flake uses [hjem](https://github.com/feel-co/hjem) for user file management, 
+wsl aswell as an M1 macbook. Flake uses [hjem](https://github.com/feel-co/hjem) for user file management, 
 [sops-nix](https://github.com/Mic92/sops-nix) for secrets and [disko](https://github.com/nix-community/disko) for disk partitioning.
 
 ## Nixos-anywhere installation
@@ -130,10 +130,9 @@ nixos-install --root /mnt --flake ~/.config/nixcfg#hostname
 
 ## Darwin
 
-- Install nix
+- Install lix: `curl -sSf -L https://install.lix.systems/lix | sh -s -- install`
 - Clone repo
-- Install homebrew
-- `sudo mv /etc/bashrc{,.backup}`
-- `sudo nix run --extra-experimental-features 'nix-command flakes' nix-darwin/master#darwin-rebuild -- switch --flake `
+- `sudo mv /etc/hosts{,.backup}`
+- `sudo nix run github:LnL7/nix-darwin -- switch --flake .#mach`
 - `sudo darwin-rebuild switch`
 - Privacy & Security -> Allow applications from `Anywhere`

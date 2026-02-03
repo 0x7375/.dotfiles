@@ -109,22 +109,12 @@ lib.mkMerge [
           IdentityFile ~/.ssh/id_ed25519
       '';
 
-      # hj.xdg.config.files."zsh/.zshrc".text =
-      #   lib.mkAfter "ssh-add --apple-use-keychain ~/.ssh/id_ed25519 @null";
-
-      # TODO: not working
-      launchd.user.agents.ssh-add = lib.mkIf config.me.secrets.enable {
-        serviceConfig = {
-          ProgramArguments = [
-            "${pkgs.openssh}/bin/ssh-add"
-            "--apple-use-keychain"
-            "${config.me.home}/.ssh/id_ed25519"
-          ];
-          RunAtLoad = true;
-          StandardOutPath = "/tmp/use-keychain.out";
-          StandardErrorPath = "/tmp/use-keychain.err";
-        };
-      };
+      launchd.user.agents.ssh-add = lib.mkIf config.me.secrets.enable (
+        lib.my.mkLaunchdAgent {
+          name = "ssh-add";
+          command = "/usr/bin/ssh-add --apple-use-keychain ${config.me.home}/.ssh/id_ed25519";
+        }
+      );
     };
 
     nixos = {

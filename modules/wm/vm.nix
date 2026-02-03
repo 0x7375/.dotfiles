@@ -16,8 +16,8 @@ lib.mkIf config.me.wm.enable (mkNixos {
 
   virtualisation.vmVariant = {
     virtualisation = {
-      memorySize = 4096;
-      cores = 3;
+      memorySize = 8192;
+      cores = 8;
     };
   };
 
@@ -36,4 +36,3 @@ lib.mkIf config.me.wm.enable (mkNixos {
     ];
   };
 })
-

@@ -88,6 +88,7 @@ lib.mkIf config.me.secrets.enable {
     zsh_history = {
       path = ".local/state/zsh";
       devices = groups.linux;
+      ignorePatterns = [ "history" ];
     };
 
     pictures = {

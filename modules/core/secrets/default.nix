@@ -15,7 +15,7 @@ lib.mkIf config.me.secrets.enable {
   sops.age.sshKeyPaths = [ "${config.me.home}/.ssh/id_ed25519" ];
   sops.gnupg.sshKeyPaths = [ ];
 
-  system.activationScripts.generateSopsKey.text = # bash
+  activation = # bash
     ''
       [[ ! -e ${config.me.home}/.config/sops/age/keys.txt ]] && {
         mkdir -p ${config.me.home}/.config/sops/age

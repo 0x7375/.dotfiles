@@ -9,7 +9,6 @@
 {
   imports = [
     ./options.nix
-    (lib.mkAliasOptionModule [ "activation" ] [ "system" "activationScripts" "postActivation" "text" ])
   ]
   ++ (lib.my.filesIn ./modules)
   ++ (lib.my.filesIn ../../modules);
@@ -117,6 +116,7 @@
   system = {
     startup.chime = false;
     defaults = {
+      CustomSystemPreferences."com.apple.Accessibility".ReduceMotionEnabled = 1;
       menuExtraClock.Show24Hour = true;
       universalaccess = {
         reduceMotion = true;
@@ -161,6 +161,7 @@
         wvous-tl-corner = 1;
         wvous-tr-corner = 1;
         expose-animation-duration = 0.1;
+        minimize-to-application = false;
         expose-group-apps = true;
         autohide-delay = 1000.0;
         launchanim = false;
@@ -179,25 +180,9 @@
       };
       CustomUserPreferences = {
         "com.apple.Spotlight".MenuItemHidden = 1;
-        "com.apple.symbolichotkeys" = {
-          AppleSymbolicHotKeys = {
-            "163" = {
-              # Set 'Option + N' for Show Notification Center
-              enabled = true;
-              value = {
-                parameters = [
-                  110
-                  45
-                  524288
-                ];
-                type = "standard";
-              };
-            };
-          };
-        };
         NSGlobalDomain = {
           NSUserKeyEquivalents = {
-            Minimize = "@~^\\Uf70f";
+            Minimize = "";
           };
           "com.apple.mouse.linear" = true;
         };
@@ -228,6 +213,7 @@
           FXDefaultSearchScope = "SCcf";
           _FXSortFoldersFirst = true;
         };
+        "com.apple.dock".no-bouncing = true;
       };
     };
   };
@@ -264,6 +250,7 @@
 
   hj.files.".hushlogin".text = "";
 
+  networking.computerName = config.networking.hostName;
   vars.LANG = "en_US.UTF-8";
   nixpkgs.hostPlatform = "aarch64-darwin";
   system.stateVersion = 6;

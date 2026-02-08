@@ -1,8 +1,6 @@
 {
   lib,
-  pkgs,
   config,
-  options,
   mkBundle,
   ...
 }:
@@ -44,18 +42,21 @@ lib.mkMerge [
     sops.secrets."server_uni/server" = { };
     sops.secrets."server_uni/user" = { };
 
-    system.activationScripts."ssh-secret-substitution" = ''
-      server=$(cat "${config.sops.secrets."server_uni/server".path}")
-      user=$(cat "${config.sops.secrets."server_uni/user".path}")
-      configFile=/etc/ssh/ssh_config
-      ${lib.getExe' pkgs.gnused "sed"} -i "s#@server@#$server#" "$configFile"
-      ${lib.getExe' pkgs.gnused "sed"} -i "s#@user@#$user#" "$configFile"
-    '';
+    activation =
+      let
+        target = "/etc/ssh/ssh_config.d/999-secrets.conf";
+      in
+      ''
+        server=$(cat "${config.sops.secrets."server_uni/server".path}")
+        user=$(cat "${config.sops.secrets."server_uni/user".path}")
 
-    programs.ssh.extraConfig = ''
-      Host web
-        HostName @server@
-        User @user@
-    '';
+        cat <<EOF > "${target}"
+        Host web
+          HostName $server
+          User $user
+        EOF
+
+        chmod g+r,o+r "${target}"
+      '';
   })
 ]

@@ -1,8 +1,4 @@
 {
-  activation = ''
-    mkdir -p ~/Library/KeyBindings
-  '';
-
   hj.files."Library/KeyBindings/DefaultKeyBinding.dict".text = ''
     {
       "\Uf710" = {

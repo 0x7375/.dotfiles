@@ -47,6 +47,7 @@ pkgs.writeShellApplication {
 
     ${lib.optionalString isDarwin ''
       osascript -e "tell app \"System Events\" to tell appearance preferences to set dark mode to ''${theme_bool}"
+      osascript -e "tell application \"System Events\" to tell every desktop to set picture to \"~/Pictures/''${theme}.png\""
     ''}
 
     pkill -USR1 nvim

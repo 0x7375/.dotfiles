@@ -94,7 +94,7 @@
         let
           isNixos = type == "nixos";
           builder = if isNixos then lib.nixosSystem else inputs.nix-darwin.lib.darwinSystem;
-          pkgSet = if isNixos then "nixosModules" else "darwinModules";
+          modules = if isNixos then "nixosModules" else "darwinModules";
         in
         builder {
           inherit lib;
@@ -115,9 +115,9 @@
           };
           modules = [
             ./hosts/${name}/configuration.nix
-            inputs.sops-nix.${pkgSet}.sops
-            inputs.nix-index-database.${pkgSet}.nix-index
-            inputs.hjem.${pkgSet}.default
+            inputs.sops-nix.${modules}.sops
+            inputs.nix-index-database.${modules}.nix-index
+            inputs.hjem.${modules}.default
             {
               imports = lib.my.filesIn ./modules;
               networking.hostName = name;

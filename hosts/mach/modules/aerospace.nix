@@ -1,4 +1,9 @@
-{ pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 let
   inherit (lib) getExe;
@@ -6,136 +11,133 @@ in
 {
   services.aerospace = {
     enable = true;
-    settings = {
-      config-version = 2;
-      after-startup-command = [ ];
-      accordion-padding = 50;
-      enable-normalization-flatten-containers = true;
-      enable-normalization-opposite-orientation-for-nested-containers = true;
+    settings =
+      let
+        inherit (config.me.wm) terminal;
+      in
+      {
+        config-version = 2;
+        after-startup-command = [ ];
+        accordion-padding = 50;
+        enable-normalization-flatten-containers = true;
+        enable-normalization-opposite-orientation-for-nested-containers = true;
 
-      default-root-container-layout = "accordion";
-      default-root-container-orientation = "auto";
+        default-root-container-layout = "accordion";
+        default-root-container-orientation = "auto";
 
-      on-focused-monitor-changed = [ "move-mouse monitor-lazy-center" ];
-      automatically-unhide-macos-hidden-apps = true;
+        on-focused-monitor-changed = [ "move-mouse monitor-lazy-center" ];
+        automatically-unhide-macos-hidden-apps = true;
 
-      persistent-workspaces = map toString (lib.range 1 9);
+        persistent-workspaces = map toString (lib.range 1 9);
 
-      key-mapping.preset = "qwerty";
+        key-mapping.preset = "qwerty";
 
-      gaps = {
-        inner.horizontal = 0;
-        inner.vertical = 0;
-        outer.left = 0;
-        outer.bottom = 0;
-        outer.top = 0;
-        outer.right = 0;
-      };
-
-      mode.main.binding =
-        let
-          super = "alt-ctrl";
-        in
-        {
-          "${super}-shift-esc" = [
-            "reload-config"
-            "mode main"
-          ];
-          "${super}-enter" = [
-            "layout floating tiling"
-            "mode main"
-          ];
-          "${super}-a" = "layout tiles accordion horizontal";
-          "${super}-q" = "close --quit-if-last-window";
-          "${super}-f" = "fullscreen";
-
-          "${super}-t" = "exec-and-forget open -na Alacritty --args -e ${getExe pkgs.my.tmux-sessionizer} ~/";
-          "${super}-s" = "exec-and-forget open -na Alacritty --args -e ${getExe pkgs.my.tmux-sshr}";
-          "${super}-e" = "exec-and-forget open -na Alacritty --args -e ${getExe pkgs.lf}";
-          # "${super}-e" = "exec-and-forget osascript -e 'tell application \"Finder\" to make new Finder window to home'";
-          "${super}-shift-e" = "exec-and-forget open -na Alacritty --args -e sudo ${getExe pkgs.lf}";
-
-          "${super}-m" = "exec-and-forget ${pkgs.writeShellScript "open-note" ''
-            cd ~/notes
-            note=$(ls *.md | sed 's/\.md$//' | ${lib.getExe pkgs.choose-gui})
-            [ -n "$note" ] && open -na Alacritty --args -e zsh -lc "nvim '$HOME/notes/$note.md'"
-          ''}";
-
-          "${super}-shift-t" = "exec-and-forget open -na Alacritty";
-          "${super}-shift-s" = "exec-and-forget ${getExe pkgs.my.swap-theme}";
-          "${super}-w" = "exec-and-forget open -a Zen";
-
-          "${super}-h" = "focus left";
-          "${super}-j" = "focus down";
-          "${super}-k" = "focus up";
-          "${super}-l" = "focus right";
-
-          "${super}-shift-h" = "move left";
-          "${super}-shift-j" = "move down";
-          "${super}-shift-k" = "move up";
-          "${super}-shift-l" = "move right";
-
-          "${super}-minus" = "resize smart -50";
-          "${super}-equal" = "resize smart +50";
-
-          "${super}-1" = "workspace 1";
-          "${super}-2" = "workspace 2";
-          "${super}-3" = "workspace 3";
-          "${super}-4" = "workspace 4";
-          "${super}-5" = "workspace 5";
-          "${super}-6" = "workspace 6";
-          "${super}-7" = "workspace 7";
-          "${super}-8" = "workspace 8";
-          "${super}-9" = "workspace 9";
-
-          "${super}-shift-1" = "move-node-to-workspace 1";
-          "${super}-shift-2" = "move-node-to-workspace 2";
-          "${super}-shift-3" = "move-node-to-workspace 3";
-          "${super}-shift-4" = "move-node-to-workspace 4";
-          "${super}-shift-5" = "move-node-to-workspace 5";
-          "${super}-shift-6" = "move-node-to-workspace 6";
-          "${super}-shift-7" = "move-node-to-workspace 7";
-          "${super}-shift-8" = "move-node-to-workspace 8";
-          "${super}-shift-9" = "move-node-to-workspace 9";
-
-          "${super}-tab" = "workspace-back-and-forth";
-          "${super}-shift-tab" = "move-workspace-to-monitor --wrap-around next";
+        gaps = {
+          inner.horizontal = 0;
+          inner.vertical = 0;
+          outer.left = 0;
+          outer.bottom = 0;
+          outer.top = 0;
+          outer.right = 0;
         };
 
-      on-window-detected = [
-        {
-          "if" = {
-            app-id = "com.1password.1password";
-          };
-          run = "layout floating";
-        }
-        {
-          "if" = {
-            app-id = "app.zen-browser.zen";
-          };
-          run = "move-node-to-workspace 3";
-        }
-        {
-          "if" = {
-            app-id = "com.hnc.Discord";
-          };
-          run = "move-node-to-workspace 4";
-        }
-        {
-          "if" = {
-            app-id = "com.github.th-ch.youtube-music";
-          };
-          run = "move-node-to-workspace 4";
-        }
-      ];
-    };
-  };
+        mode.main.binding =
+          let
+            super = "alt-ctrl";
+          in
+          {
+            "${super}-shift-esc" = [
+              "reload-config"
+              "mode main"
+            ];
+            "${super}-enter" = [
+              "layout floating tiling"
+              "mode main"
+            ];
+            "${super}-a" = "layout tiles accordion horizontal";
+            "${super}-q" = "close --quit-if-last-window";
+            "${super}-f" = "fullscreen";
 
-  # TODO: try with squared corners
-  # services.jankyborders = {
-  #     enable = true;
-  #     active_color = "0xffe1e3e4"; # ARGB format
-  #     inactive_color = "0xff494d64";
-  #     width = 5.0;
-  #   };
+            "${super}-t" =
+              "exec-and-forget open -na ${terminal} --args -e ${getExe pkgs.my.tmux-sessionizer} ~/";
+            "${super}-s" = "exec-and-forget open -na ${terminal} --args -e ${getExe pkgs.my.tmux-sshr}";
+            "${super}-e" = "exec-and-forget open -na ${terminal} --args -e ${getExe pkgs.lf}";
+            # "${super}-e" = "exec-and-forget osascript -e 'tell application \"Finder\" to make new Finder window to home'";
+            "${super}-shift-e" = "exec-and-forget open -na ${terminal} --args -e sudo ${getExe pkgs.lf}";
+
+            "${super}-m" = "exec-and-forget ${pkgs.writeShellScript "open-note" ''
+              cd ~/notes
+              note=$(ls *.md | sed 's/\.md$//' | ${lib.getExe pkgs.choose-gui})
+              [ -n "$note" ] && open -na ${terminal} --args -e zsh -lc "nvim '$HOME/notes/$note.md'"
+            ''}";
+
+            "${super}-shift-t" = "exec-and-forget open -na ${terminal}";
+            "${super}-shift-s" = "exec-and-forget ${getExe pkgs.my.swap-theme}";
+            "${super}-w" = "exec-and-forget open -a Zen";
+
+            "${super}-h" = "focus left";
+            "${super}-j" = "focus down";
+            "${super}-k" = "focus up";
+            "${super}-l" = "focus right";
+
+            "${super}-shift-h" = "move left";
+            "${super}-shift-j" = "move down";
+            "${super}-shift-k" = "move up";
+            "${super}-shift-l" = "move right";
+
+            "${super}-minus" = "resize smart -50";
+            "${super}-equal" = "resize smart +50";
+
+            "${super}-1" = "workspace 1";
+            "${super}-2" = "workspace 2";
+            "${super}-3" = "workspace 3";
+            "${super}-4" = "workspace 4";
+            "${super}-5" = "workspace 5";
+            "${super}-6" = "workspace 6";
+            "${super}-7" = "workspace 7";
+            "${super}-8" = "workspace 8";
+            "${super}-9" = "workspace 9";
+
+            "${super}-shift-1" = "move-node-to-workspace 1";
+            "${super}-shift-2" = "move-node-to-workspace 2";
+            "${super}-shift-3" = "move-node-to-workspace 3";
+            "${super}-shift-4" = "move-node-to-workspace 4";
+            "${super}-shift-5" = "move-node-to-workspace 5";
+            "${super}-shift-6" = "move-node-to-workspace 6";
+            "${super}-shift-7" = "move-node-to-workspace 7";
+            "${super}-shift-8" = "move-node-to-workspace 8";
+            "${super}-shift-9" = "move-node-to-workspace 9";
+
+            "${super}-tab" = "workspace-back-and-forth";
+            "${super}-shift-tab" = "move-workspace-to-monitor --wrap-around next";
+          };
+
+        on-window-detected = [
+          {
+            "if" = {
+              app-id = "com.1password.1password";
+            };
+            run = "layout floating";
+          }
+          {
+            "if" = {
+              app-id = "app.zen-browser.zen";
+            };
+            run = "move-node-to-workspace 3";
+          }
+          {
+            "if" = {
+              app-id = "com.hnc.Discord";
+            };
+            run = "move-node-to-workspace 4";
+          }
+          {
+            "if" = {
+              app-id = "com.github.th-ch.youtube-music";
+            };
+            run = "move-node-to-workspace 4";
+          }
+        ];
+      };
+  };
 }

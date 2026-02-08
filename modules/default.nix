@@ -8,10 +8,12 @@
 }:
 
 {
-  imports = [
-    (lib.mkAliasOptionModule [ "packages" ] [ "environment" "systemPackages" ])
-    (lib.mkAliasOptionModule [ "vars" ] [ "environment" "variables" ])
-    (lib.mkAliasOptionModule [ "aliases" ] [ "environment" "shellAliases" ])
+  imports = with lib; [
+    (mkAliasOptionModule [ "packages" ] [ "environment" "systemPackages" ])
+    (mkAliasOptionModule [ "vars" ] [ "environment" "variables" ])
+    (mkAliasOptionModule [ "aliases" ] [ "environment" "shellAliases" ])
+    (mkAliasOptionModule [ "activation" ] [ "system" "activationScripts" "postActivation" "text" ])
+    (mkAliasOptionModule [ "preActivation" ] [ "system" "activationScripts" "preActivation" "text" ])
   ];
 
   options = {

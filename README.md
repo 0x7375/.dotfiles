@@ -132,7 +132,7 @@ nixos-install --root /mnt --flake ~/.config/nixcfg#hostname
 
 - Install lix: `curl -sSf -L https://install.lix.systems/lix | sh -s -- install`
 - Clone repo
-- `sudo mv /etc/hosts{,.backup}`
+- Give full disk access to terminal
 - `sudo nix run github:LnL7/nix-darwin -- switch --flake .#mach`
 - `sudo darwin-rebuild switch`
 - Privacy & Security -> Allow applications from `Anywhere`

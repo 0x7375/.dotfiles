@@ -6,6 +6,8 @@
 }:
 
 lib.mkIf config.me.network.enable (mkBundle {
+  darwin.preActivation = "rm -f /etc/hosts";
+
   environment.etc.hosts.text =
     let
       validHosts = lib.filterAttrs (_: v: v.ips.lan != null) config.me.hosts;

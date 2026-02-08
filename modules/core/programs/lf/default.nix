@@ -2,33 +2,25 @@
   lib,
   config,
   pkgs,
+  mkBundle,
   ...
 }:
 
 let
+  ctpv = (
+    pkgs.ctpv.override {
+      ueberzug = pkgs.ueberzugpp;
+      bat = pkgs.bat;
+    }
+  );
   desktop = config.me.wm.enable;
   isDarwin = pkgs.stdenv.isDarwin;
 in
-{
+mkBundle {
   nixpkgs.overlays = [
     (
       final: prev:
-      {
-        lf = prev.lf.overrideAttrs (old: rec {
-          version = "0d5ffcdb04170457edcd26da0e972fddf4e0fb2d";
-          src = pkgs.fetchFromGitHub {
-            owner = "CatsDeservePets";
-            repo = old.src.repo;
-            rev = version;
-            sha256 = "sLv2dUdRs65GYEpq3yrmktdV9QwZiCO/8dwEeq4nEhk=";
-          };
-          vendorHash = "sha256-ZShpWCfEVPLafrn3MvtxkRsBvwUEOiLBs1gZhKSBrsQ=";
-
-          doCheck = false;
-          doInstallCheck = false;
-        });
-      }
-      // (lib.optionalAttrs (config.me.hostname != "wilson") {
+      (lib.optionalAttrs (config.me.hostname != "wilson") {
         ouch = prev.ouch.override {
           enableUnfree = true;
         };
@@ -53,17 +45,32 @@ in
       with pkgs;
       [
         ueberzugpp
-        # pistol
         poppler-utils
       ]
     )
     ++ lib.optionals (desktop && !pkgs.stdenv.isDarwin) (
       with pkgs;
       [
+        ctpv
         libreoffice
         trash-cli
       ]
     );
+
+  hj.xdg.config.files."ctpv/config".text = ''
+    preview null .env .git-credentials .keyring {{
+        echo "preview disabled"
+    }}
+  '';
+
+  nixos.hj.xdg.config.files."lf/lfrc".text = lib.mkBefore ''
+    set previewer ${lib.getExe' ctpv "ctpv"}
+    map <c-p> $${lib.getExe' ctpv "ctpv"} "$f" | less -R
+
+    &${lib.getExe' ctpv "ctpv"} -s $id
+    cmd on-quit %${lib.getExe' ctpv "ctpv"} -e $id
+    set cleaner ${lib.getExe' ctpv "ctpvclear"}
+  '';
 
   hj.xdg.config.files."lf/lfrc".text =
     let
@@ -90,126 +97,6 @@ in
       set sortby "ext"
       set tabstop 4
 
-      cmd bulkrename ''${{
-        export VIMV=1; ${getExe' pkgs.vimv-rs "vimv"} -- $fs
-
-        ${getExe pkgs.lf} -remote "send $id load"
-        ${getExe pkgs.lf} -remote "send $id unselect"
-      }}
-
-      cmd calc-all-dirsize ''${{
-          ${getExe pkgs.lf} -remote "send $id invert"
-          ${getExe pkgs.lf} -remote "send $id calcdirsize"
-          ${getExe pkgs.lf} -remote "send $id unselect"
-          ${getExe pkgs.lf} -remote "send $id show-size"
-        }}
-
-      cmd compress %{{
-        default_name="$(basename $(echo "$fx" | head -n1))"
-        default_name="''${default_name%%.*}.zip"
-        
-        printf "Archive name (default: $default_name): "
-        read new_name
-        if [[ -z $new_name ]]; then
-          new_name=$default_name
-        fi
-
-        ${getExe pkgs.ouch} compress $(realpath --relative-to="$(pwd)" $fx) $new_name 
-
-        ${getExe pkgs.lf} -remote "send $id unselect"
-        ${getExe pkgs.lf} -remote "send $id select \"$new_name\""
-      }}
-      cmd copy-path ''${{
-        echo -en "$fx" | tr ' ' '\n' | ${copy}
-        ${getExe pkgs.lf} -remote 'send unselect'
-        ${getExe pkgs.lf} -remote 'send echo "Path copied to clipboard"'
-      }}
-
-      cmd edit ''${{
-        if [[ ''${NVIM:-} ]]; then
-          ${getExe pkgs.lf} -remote "send $id open"
-        else
-          $EDITOR $f
-        fi
-      }}
-
-      cmd edit-new %{{
-        printf "File name: "
-        read newf
-        if [[ -z $newf ]]; then
-          ${getExe pkgs.lf} -remote "send $id reload"
-          return;
-        fi
-
-        ${getExe pkgs.lf} -remote "send $id \$touch \"$newf\""
-        ${getExe pkgs.lf} -remote "send $id $\$EDITOR \"$newf\""
-      }}
-
-      cmd external-copy ''${{
-        if [[ $(uname) == "Darwin" ]]; then
-            osascript -e "set theFileList to {}" \
-                      $(printf " -e 'set end of theFileList to (POSIX file \"%s\") as alias'" $fx) \
-                      -e "set the clipboard to theFileList"
-        else
-          echo -en "$fx" | sed 's|^|file://|' | tr ' ' '\n' | ${getExe pkgs.xclip} -i -sel clip -t text/uri-list
-        fi
-        ${getExe pkgs.lf} -remote 'send unselect'
-        ${getExe pkgs.lf} -remote 'send echo "Files copied to clipboard"'
-      }}
-
-      cmd extract ''${{
-        set -f
-        ${getExe pkgs.ouch} decompress $fx
-        trash $f
-      }}
-
-      cmd follow_link %{{
-        ${getExe pkgs.lf} -remote "send $id select '$(readlink $f)'"
-      }}
-
-      cmd local-share ''${{
-        source ~/.config/zsh/widgets.zsh
-        out=$(ks $fx)
-        device=$(echo "$out" | head -n 1 | cut -d\  -f3)
-        count=$(echo "$out" | tail -n +2 | wc -l)
-
-        ${getExe pkgs.lf} -remote 'send unselect'
-        ${getExe pkgs.lf} -remote "send echo '$count Files sent to $device'"
-      }}
-
-      cmd mkdir %{{
-        printf "Directory name: "
-        read newd
-        if [[ -z $newd ]]; then
-          ${getExe pkgs.lf} -remote "send $id reload"
-          return;
-        fi
-
-        mkdir -p "$newd"
-        ${getExe pkgs.lf} -remote "send $id select \"$newd\""
-      }}
-
-      cmd mount-archive ''${{
-        if ${getExe pkgs.file} --mime-type "$f" | grep -qE 'application/zip|application/x-tar|application/x-7z-compressed|application/octet-stream|application/gzip'; then
-          mntdir="''${f}.mnt"
-          mkdir -p "$mntdir"
-          ${getExe pkgs.archivemount} "$f" "$mntdir"
-          ${getExe pkgs.lf} -remote "send $id cd $mntdir"
-        fi
-      }}
-
-      cmd move-to-new-dir %{{
-        printf "Directory name: "
-        read newd
-        if [[ -z $newd ]]; then
-          ${getExe pkgs.lf} -remote "send $id reload"
-          return;
-        fi
-
-        mkdir -p -- "$newd"
-        mv -- $fx "$newd"
-      }}
-
       cmd on-cd &{{
         if [ -d .git ] || [ -f .git ]; then
             branch="$(git branch --show-current 2>/dev/null)" || true
@@ -230,8 +117,76 @@ in
         set cursorpreviewfmt ""
       }}
 
-      cmd online-share $${getExe curl} -F"file=@$f" https://0x0.st | ${open}
-      cmd open &${open} "$f" > /dev/null 2>&1
+      map , find-prev
+      map . set hidden!
+      map / search
+      map ; find-next
+      map <c-d> half-down
+
+      cmd mount-archive ''${{
+        if ${getExe pkgs.file} --mime-type "$f" | grep -qE 'application/zip|application/x-tar|application/x-7z-compressed|application/octet-stream|application/gzip'; then
+          mntdir="''${f}.mnt"
+          mkdir -p "$mntdir"
+          ${getExe pkgs.archivemount} "$f" "$mntdir"
+          ${getExe pkgs.lf} -remote "send $id cd $mntdir"
+        fi
+      }}
+
+      map <c-l> mount-archive
+
+      cmd move-to-new-dir %{{
+        printf "Directory name: "
+        read newd
+        if [[ -z $newd ]]; then
+          ${getExe pkgs.lf} -remote "send $id reload"
+          return;
+        fi
+
+        mkdir -p -- "$newd"
+        mv -- $fx "$newd"
+      }}
+
+      map <c-n> move-to-new-dir
+      map <c-o> jump-prev
+      map <c-p> $less -R $f
+      map <c-r> redraw
+      map <c-u> half-up
+      map <c-z> $kill -STOP $PPID
+      map <enter> open
+      map <pgdn>
+      map <pgup>
+      map <space> $\${open} --ask $f
+      map <tab> jump-next
+
+      cmd toggle-executable ''${{
+        [[ -x $f ]] && chmod -x "$f" || chmod +x "$f"
+        ${getExe pkgs.lf} -remote 'send reload'
+      }}
+
+      map = toggle-executable
+      map ? search-back
+      map A :rename; cmd-end
+      map C clear
+      map D delete
+      map E $sudoedit $f
+      map F find-back
+      map G bottom
+
+      cmd copy-path ''${{
+        echo -en "$fx" | tr ' ' '\n' | ${copy}
+        ${getExe pkgs.lf} -remote 'send unselect'
+        ${getExe pkgs.lf} -remote 'send echo "Path copied to clipboard"'
+      }}
+
+      map H copy-path
+      map I :rename; cmd-home
+      map J :updir; down; open
+      map K :updir; up; open
+      map L
+      map M
+      map N search-prev
+      map O &${getExe pkgs.ripdrag} $fx
+
       cmd paste-overwrite %{{
           mode=$(head -1 ~/.local/share/lf/files)
           list=$(${getExe' pkgs.gnused "sed"} 1d ~/.local/share/lf/files)
@@ -244,6 +199,8 @@ in
           ${getExe pkgs.lf} -remote 'send clear'
           ${getExe pkgs.lf} -remote "send $id reload"
       }}
+
+      map P paste-overwrite
 
       cmd quit-and-cd ''${{
         # absolute paths are needed since we can be in a mount point
@@ -259,69 +216,34 @@ in
         ${getExe pkgs.lf} -remote "send $id quit"
       }}
 
-      cmd show-size :set sortby size; set info size; set reverse
+      map Q quit-and-cd
+      map R :source ${home}/.config/lf/lfrc; reload
+
       cmd su ''${{
         ${getExe pkgs.lf} -remote "send $id quit"
         sudo lf
       }}
 
-      cmd toggle-executable ''${{
-        [[ -x $f ]] && chmod -x "$f" || chmod +x "$f"
-        ${getExe pkgs.lf} -remote 'send reload'
-      }}
-
-      cmd touch %{{
-        printf "File name: "
-        read newf
-        if [[ -z $newf ]]; then
-          ${getExe pkgs.lf} -remote "send $id reload"
-          return;
-        fi
-
-        touch "$newf"
-        ${getExe pkgs.lf} -remote "send $id select \"$newf\""
-      }}
-
-
-      map , find-prev
-      map . set hidden!
-      map / search
-      map ; find-next
-      map <c-d> half-down
-      map <c-l> mount-archive
-      map <c-n> move-to-new-dir
-      map <c-o> jump-prev
-      map <c-p> $less -R $f
-      map <c-r> redraw
-      map <c-u> half-up
-      map <c-z> $kill -STOP $PPID
-      map <enter> open
-      map <pgdn>
-      map <pgup>
-      map <space> $\${open} --ask $f
-      map <tab> jump-next
-      map = toggle-executable
-      map ? search-back
-      map A :rename; cmd-end
-      map C clear
-      map D delete
-      map E $sudoedit $f
-      map F find-back
-      map G bottom
-      map H copy-path
-      map I :rename; cmd-home
-      map J :updir; down; open
-      map K :updir; up; open
-      map L
-      map M
-      map N search-prev
-      map O &${getExe pkgs.ripdrag} $fx
-      map P paste-overwrite
-      map Q quit-and-cd
-      map R :source ${home}/.config/lf/lfrc; reload
       map S su
       map V invert
+
+      cmd online-share $${getExe curl} -F"file=@$f" https://0x0.st | ${open}
+
       map W online-share
+
+      cmd external-copy ''${{
+        if [[ $(uname) == "Darwin" ]]; then
+            osascript -e "set theFileList to {}" \
+                      $(printf " -e 'set end of theFileList to (POSIX file \"%s\") as alias'" $fx) \
+                      -e "set the clipboard to theFileList"
+        else
+          echo -en "$fx" | sed 's|^|file://|' | tr ' ' '\n' | ${getExe pkgs.xclip} -i -sel clip -t text/uri-list
+        fi
+        ${getExe pkgs.lf} -remote 'send unselect'
+        ${getExe pkgs.lf} -remote 'send echo "Files copied to clipboard"'
+      }}
+
+
       map Y external-copy
       map [
       map \"
@@ -330,13 +252,35 @@ in
       map ]
       map ` !true
       map a :rename
+
+      cmd bulkrename ''${{
+        export VIMV=1; ${getExe' pkgs.vimv-rs "vimv"} -- $fs
+
+        ${getExe pkgs.lf} -remote "send $id load"
+        ${getExe pkgs.lf} -remote "send $id unselect"
+      }}
+
       map b bulkrename
       map c push A<c-u>
       map d
+
+      cmd edit ''${{
+        if [[ ''${NVIM:-} ]]; then
+          ${getExe pkgs.lf} -remote "send $id open"
+        else
+          $EDITOR $f
+        fi
+      }}
+
       map e edit
       map f find
       map g/ cd /
       map gD cd ${home}/downloads
+
+      cmd follow_link %{{
+        ${getExe pkgs.lf} -remote "send $id select '$(readlink $f)'"
+      }}
+
       map gL follow_link
       map gN cd /nix/store
       map gP cd ${home}/pictures
@@ -358,10 +302,55 @@ in
       map h updir
       map j down
       map k up
+
+      cmd open &{{
+       files="''${fv:-"$fx"}"
+       ${open} $files > /dev/null 2>&1
+      }}
+
       map l open
       map m
+
+      cmd mkdir %{{
+        printf "Directory name: "
+        read newd
+        if [[ -z $newd ]]; then
+          ${getExe pkgs.lf} -remote "send $id reload"
+          return;
+        fi
+
+        mkdir -p "$newd"
+        ${getExe pkgs.lf} -remote "send $id select \"$newd\""
+      }}
+
       map md mkdir
+
+      cmd edit-new %{{
+        printf "File name: "
+        read newf
+        if [[ -z $newf ]]; then
+          ${getExe pkgs.lf} -remote "send $id reload"
+          return;
+        fi
+
+        ${getExe pkgs.lf} -remote "send $id \$touch \"$newf\""
+        ${getExe pkgs.lf} -remote "send $id $\$EDITOR \"$newf\""
+      }}
+
       map me edit-new
+
+      cmd touch %{{
+        printf "File name: "
+        read newf
+        if [[ -z $newf ]]; then
+          ${getExe pkgs.lf} -remote "send $id reload"
+          return;
+        fi
+
+        touch "$newf"
+        ${getExe pkgs.lf} -remote "send $id select \"$newf\""
+      }}
+
       map mf touch
       map n search-next
       map p :paste; clear
@@ -369,18 +358,64 @@ in
       map r
       map s visual
       map t
+
+      cmd calc-all-dirsize ''${{
+          ${getExe pkgs.lf} -remote "send $id invert"
+          ${getExe pkgs.lf} -remote "send $id calcdirsize"
+          ${getExe pkgs.lf} -remote "send $id unselect"
+          ${getExe pkgs.lf} -remote "send $id show-size"
+        }}
+
       map ta calc-all-dirsize
       map tc :calcdirsize; show-size
       map tn :set sortby natural; set info; set noreverse
+
+      cmd show-size :set sortby size; set info size; set reverse
+
       map ts show-size
       map tt :set sortby time; set info time; set noreverse
       map u unselect
       map v toggle
+
+      cmd local-share ''${{
+        source ~/.config/zsh/widgets.zsh
+        out=$(ks $fx)
+        device=$(echo "$out" | head -n 1 | cut -d\  -f3)
+        count=$(echo "$out" | tail -n +2 | wc -l)
+
+        ${getExe pkgs.lf} -remote 'send unselect'
+        ${getExe pkgs.lf} -remote "send echo '$count Files sent to $device'"
+      }}
+
       map w local-share
       map x cut
       map y copy
       map za
+
+      cmd compress %{{
+        default_name="$(basename $(echo "$fx" | head -n1))"
+        default_name="''${default_name%%.*}.zip"
+        
+        printf "Archive name (default: $default_name): "
+        read new_name
+        if [[ -z $new_name ]]; then
+          new_name=$default_name
+        fi
+
+        ${getExe pkgs.ouch} compress $(realpath --relative-to="$(pwd)" $fx) $new_name 
+
+        ${getExe pkgs.lf} -remote "send $id unselect"
+        ${getExe pkgs.lf} -remote "send $id select \"$new_name\""
+      }}
+
       map zc compress
+
+      cmd extract ''${{
+        set -f
+        ${getExe pkgs.ouch} decompress $fx
+        trash $f
+      }}
+
       map ze extract
       map zh
       map zn
@@ -397,6 +432,13 @@ in
       setlocal ~/pictures/ reverse
 
       on-focus-gained
+
+      cmd visual-toggle &{{
+        while read -r file; do
+          lf -remote "send $id toggle \"$file\""
+        done <<< "$fv"
+        lf -remote "send $id visual-discard"
+      }}
 
       vmap s visual-toggle
       vmap o visual-change

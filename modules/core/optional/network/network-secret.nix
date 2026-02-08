@@ -18,7 +18,7 @@ lib.mkIf (config.me.secrets.enable && config.me.network.enable) (mkBundle {
   nixos = {
     sops.secrets.nextdns_id.neededForUsers = true;
 
-    system.activationScripts."unbound-secret-substitution" = ''
+    activation = ''
       secret=$(cat "${config.sops.secrets.nextdns_id.path}")
       configFile=/etc/unbound/unbound.conf
       ${lib.getExe' pkgs.gnused "sed"} -i "s#${template}#$secret#" "$configFile"

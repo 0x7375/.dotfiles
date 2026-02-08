@@ -129,22 +129,18 @@ in
   config = lib.mkIf cfg.enable (mkBundle {
     hj.files = lib.mergeAttrsList (lib.attrValues (lib.mapAttrs (_: v: v.files) processed));
 
-    nixos = {
-      systemd.user.tmpfiles.rules = lib.concatMap (
-        v:
-        (map (d: "d ${d} 0755 ${config.me.user} users - -") v.activation.dirs)
-        ++ [ "L ${v.activation.link.target} - - - - ${v.activation.link.source}" ]
-      ) (lib.attrValues processed);
-    };
+    nixos.systemd.user.tmpfiles.rules = lib.concatMap (
+      v:
+      (map (d: "d ${d} 0755 ${config.me.user} users - -") v.activation.dirs)
+      ++ [ "L ${v.activation.link.target} - - - - ${v.activation.link.source}" ]
+    ) (lib.attrValues processed);
 
-    darwin = {
-      system.activationScripts.tinted-files.text = ''
-        ${lib.concatMapStringsSep "\n" (v: ''
-          ${lib.concatMapStringsSep "\n" (d: "mkdir -p ${d}") v.activation.dirs}
-          ln -sf ${v.activation.link.source} ${v.activation.link.target}
-          chown -h ${config.me.user} ${v.activation.link.target}
-        '') (lib.attrValues processed)}
-      '';
-    };
+    darwin.activation = ''
+      ${lib.concatMapStringsSep "\n" (v: ''
+        ${lib.concatMapStringsSep "\n" (d: "mkdir -p ${d}") v.activation.dirs}
+        ln -sf ${v.activation.link.source} ${v.activation.link.target}
+        chown -h ${config.me.user} ${v.activation.link.target}
+      '') (lib.attrValues processed)}
+    '';
   });
 }

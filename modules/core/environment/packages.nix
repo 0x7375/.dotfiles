@@ -4,6 +4,7 @@
   packages =
     with pkgs;
     [
+      my.swap-theme
       my.dump-dotfiles
       wireguard-tools
       gcc

@@ -1,17 +1,19 @@
 {
   lib,
+  pkgs,
   config,
+  mkBundle,
   ...
 }:
 
 let
   inherit (config.me) hostname hosts;
 in
-lib.mkIf config.me.secrets.enable {
+lib.mkIf config.me.secrets.enable (mkBundle {
   sops.secrets."${hostname}/vpn/pk".owner = config.me.user;
   sops.secrets."${hostname}/vpn/psk".owner = config.me.user;
 
-  sops.templates."home-vpn-naitoh.conf".content =
+  sops.templates."home-vpn-${hostname}.conf".content =
     let
       inherit (config.me) networkIps;
     in
@@ -27,8 +29,14 @@ lib.mkIf config.me.secrets.enable {
       Endpoint = ${config.sops.placeholder.server_vpn_endpoint}
     '';
 
-  networking.wg-quick.interfaces.home = {
-    autostart = false;
-    configFile = config.sops.templates."home-vpn-naitoh.conf".path;
+  darwin = {
+    packages = [ pkgs.wireguard-tools ];
+    environment.etc."wireguard/home.conf".source =
+      config.sops.templates."home-vpn-${hostname}.conf".path;
   };
-}
+
+  nixos.networking.wg-quick.interfaces.home = {
+    autostart = false;
+    configFile = config.sops.templates."home-vpn-${hostname}.conf".path;
+  };
+})

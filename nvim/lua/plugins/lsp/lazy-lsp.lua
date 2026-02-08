@@ -48,7 +48,6 @@ return {
                 "scry",                            -- archived on Jun 1, 2023
                 "tailwindcss",                     -- associates with too many filetypes
                 "pylyzer",                         -- throws many irrelevant errors
-                "sourcekit",                       -- keeps crashing
                 "gdscript",                        -- doesn't exist?
                 -- "intelephense",
             },
@@ -124,6 +123,7 @@ return {
                 clangd = { on_attach = lspformat.on_attach, },
                 hls = { on_attach = lspformat.on_attach, },
                 gopls = { on_attach = lspformat.on_attach, },
+                sourcekit = { on_attach = lspformat.on_attach, },
                 intelephense = {
                     on_attach = lspformat.on_attach,
                     on_init = function(client)

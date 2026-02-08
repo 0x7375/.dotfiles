@@ -196,6 +196,9 @@ mkBundle {
         action="$1"
         shift
 
+        local is_darwin=0
+        [[ $(uname) == "Darwin" ]] && is_darwin=1
+
         # TODO: support darwin
         case "$action" in
           start|stop|restart)
@@ -203,27 +206,22 @@ mkBundle {
               echo "No interfaces specified. Please provide at least one interface."
               return 1
             fi
-            for interface in "$@"; do
-              if [[ $(uname) == "Darwin" ]]; then
-                sudo wg-quick down "$interface" && sudo wg-quick up "$interface"
+            for iface in "$@"; do
+              if (( is_darwin )); then
+                [[ "$action" =~ (stop|restart) ]] && sudo wg-quick down "$iface" 2>/dev/null
+                [[ "$action" =~ (start|restart) ]] && sudo wg-quick up "$iface"
               else
-                sudo systemctl "$action" wg-quick-$interface.service
+                sudo systemctl "$action" "wg-quick-$iface"
               fi
             done
             ;;
           show)
-            if [[ $# -eq 0 ]]; then
-              sudo wg show
-            else
-              for interface in "$@"; do
-                sudo wg show $interface
-              done
-            fi
+              sudo wg show "$@"
             ;;
           list)
             echo -n "Available WireGuard interfaces: "
-            if [[ $(uname) == "Darwin" ]]; then
-              echo yes
+            if (( is_darwin )); then
+              find /etc/wireguard -name "*.conf" 2>/dev/null | sed 's|.*/||; s|\.conf$||'
             else
               systemctl list-unit-files 'wg-quick-*.service' | grep -v "static\|alias" | grep "wg-quick-" | awk '{print $1}' | sed 's/wg-quick-\(.*\).service/\1/' | tr '\n' ' ' | sed 's/ $/\n/'
             fi

@@ -26,7 +26,6 @@
         local -i rc=$?
         emulate -L zsh
 
-        # TODO: merge with macos, check syncthing
         # command did not fail, is not empty, does not start with space, is not a single word
         if (( (rc == 0 || rc == 130 || rc == 3 || rc == 4 || rc == 139) && ''${+_HISTLINE} && $#_HISTLINE )) \
           && [[ ! $_HISTLINE =~ '^ ' ]] \

@@ -17,7 +17,7 @@ lib.mkIf config.me.wm.enable (mkBundle {
     "f ${path} 0644 ${user} users - dark"
   ];
 
-  darwin.system.activationScripts.tinted-state.text = ''
+  darwin.activation = ''
     [[ ! -f ${path} ]] && echo "dark" > ${path}
   '';
 })

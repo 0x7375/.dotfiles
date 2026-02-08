@@ -254,6 +254,8 @@ let
 
         # show traditional three dot menu on mac
         "zen.view.mac.show-three-dot-menu" = true;
+
+        "media.videocontrols.picture-in-picture.enable-when-switching-tabs.enabled" = true;
       }
     )}";
   profiles = {
@@ -328,7 +330,7 @@ lib.mkIf config.me.wm.enable (mkBundle {
       policies // { EnterprisePoliciesEnabled = true; }
     );
 
-    system.activationScripts.postActivation.text = ''
+    activation = ''
       cp -f "/etc/zen-policies.plist" "/Library/Preferences/app.zen-browser.zen.plist"
     '';
 

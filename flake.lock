@@ -231,11 +231,11 @@
         "nixpkgs": "nixpkgs"
       },
       "locked": {
-        "lastModified": 1769511584,
-        "narHash": "sha256-PzuqSfpCIiGR8/U+2R2Cpbz9bwKTFpl0m0Q3ez8Ez/8=",
+        "lastModified": 1770191654,
+        "narHash": "sha256-53p43ry62iQ3TNHIYceX1mV/6qrakVfaPV2cgjarI1g=",
         "ref": "refs/heads/main",
-        "rev": "6c4795869e4d10797ca7a5849b860310ae45081e",
-        "revCount": 3,
+        "rev": "912c6921db74e91b9fb54d864ddad75ecbafd4ef",
+        "revCount": 4,
         "type": "git",
         "url": "https://codeberg.org/0x7E/karabiner-ts"
       },

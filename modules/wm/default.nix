@@ -17,7 +17,6 @@ lib.mkIf config.me.wm.enable (mkNixos {
     };
   };
 
-  system.userActivationScripts.generateDunstIcons.text = lib.getExe pkgs.my.generate-icons;
+  activation = lib.getExe pkgs.my.generate-icons;
   services.dbus.enable = true;
 })
-

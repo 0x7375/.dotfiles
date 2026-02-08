@@ -36,7 +36,7 @@ mkBundle {
     };
   };
 
-  system.activationScripts.cleanup-channels.text = # bash
+  activation = # bash
     ''
       [[ -e /root/.nix-defexpr/channels ]] && rm -f /root/.nix-defexpr/channels
       [[ -e /nix/var/nix/profiles/per-user/root/channels ]] && rm -f /nix/var/nix/profiles/per-user/root/channels

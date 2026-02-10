@@ -28,6 +28,12 @@ in
         on-focused-monitor-changed = [ "move-mouse monitor-lazy-center" ];
         automatically-unhide-macos-hidden-apps = true;
 
+        workspace-to-monitor-force-assignment =
+          let
+            gen = display: list: lib.genAttrs (map toString list) (_: display);
+          in
+          (gen "main" (lib.range 1 4)) // (gen "secondary" (lib.range 5 9));
+
         persistent-workspaces = map toString (lib.range 1 9);
 
         key-mapping.preset = "qwerty";

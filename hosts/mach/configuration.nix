@@ -38,6 +38,8 @@
       "choose-gui"
     ];
     casks = [
+      "google-chrome"
+      "unnaturalscrollwheels"
       "1password@beta"
       "ente-auth"
       "jellyfin-media-player"

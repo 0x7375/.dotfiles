@@ -13,6 +13,9 @@
     };
   };
 
-  systemd.tmpfiles.settings.filebrowser."/data/".d.mode = lib.mkForce "0770";
+  systemd.tmpfiles.settings.filebrowser."/data/".d = {
+    mode = lib.mkForce "0775";
+    user = "root";
+  };
   systemd.services.filebrowser.serviceConfig.UMask = lib.mkForce "0007";
 }

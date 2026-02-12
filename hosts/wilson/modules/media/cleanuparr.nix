@@ -11,31 +11,36 @@
 
   networking.firewall.allowedTCPPorts = [ 11011 ];
 
-  virtualisation.oci-containers.containers.cleanuparr = {
-    image = "ghcr.io/cleanuparr/cleanuparr:2.0.14";
+  virtualisation.oci-containers.containers.cleanuparr =
+    let
+      name = "ghcr.io/cleanuparr/cleanuparr";
+      version = "2.5.1";
+    in
+    {
+      image = name + ":" + version;
 
-    imageFile = pkgs.dockerTools.pullImage {
-      imageName = "ghcr.io/cleanuparr/cleanuparr";
-      imageDigest = "sha256:7b45aca162cab47fc228b7e1866930d5a85660378cd796f378075ade786863aa";
-      sha256 = "bMyc43CHD9jqxc21/vGshj9jPe1ALMgHNRNNkMlnGo0=";
+      imageFile = pkgs.dockerTools.pullImage {
+        imageName = name;
+        imageDigest = "sha256:47bb76b03676d5b9bb3c7a01f1a9005066d60db63b3f8379057d77f89daa6c37";
+        sha256 = "TBcto0j7PHh16eBv9ynPIHPzt8x0gUiiVThaG2aUCmM=";
 
-      finalImageTag = "2.0.14";
+        finalImageTag = version;
+      };
+
+      extraOptions = [
+        "--add-host=host.docker.internal:host-gateway"
+      ];
+
+      volumes = [
+        "/var/lib/cleanuparr/:/config"
+      ];
+
+      ports = [ "11011:11011" ];
+
+      environment = {
+        TZ = toString config.time.timeZone;
+        PUID = "0";
+        PGID = "0";
+      };
     };
-
-    extraOptions = [
-      "--add-host=host.docker.internal:host-gateway"
-    ];
-
-    volumes = [
-      "/var/lib/cleanuparr/:/config"
-    ];
-
-    ports = [ "11011:11011" ];
-
-    environment = {
-      TZ = toString config.time.timeZone;
-      PUID = "0";
-      PGID = "0";
-    };
-  };
 }

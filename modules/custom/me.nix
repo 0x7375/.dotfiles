@@ -135,7 +135,9 @@ in
           syncthingId = "ZMUWGAS-D7ETM4C-77LZJQD-T3VBPZS-UWXFTVN-K32GD5G-XKCP4UG-OMRG4AA";
           ips.vpn = "10.0.0.4";
         };
-        yoshino.syncthingId = "4J5QS3L-TBUVQNM-RID2OP7-RTQG4GA-NWRB2E5-HXMTK7R-4C4QBFL-7M3RDAU";
+        yoshino = {
+          syncthingId = "4J5QS3L-TBUVQNM-RID2OP7-RTQG4GA-NWRB2E5-HXMTK7R-4C4QBFL-7M3RDAU";
+          ips.vpn = "10.0.0.6";
       };
     };
 

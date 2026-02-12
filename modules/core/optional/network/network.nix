@@ -53,6 +53,8 @@ lib.mkIf config.me.network.enable (mkBundle {
 
     # don't wait for network on boot
     systemd.services.NetworkManager-wait-online.wantedBy = lib.mkForce [ ];
+
+    networking.nftables.enable = true;
     networking.firewall.enable = true;
   };
 })

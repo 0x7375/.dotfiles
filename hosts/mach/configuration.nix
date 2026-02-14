@@ -38,6 +38,7 @@
       "choose-gui"
     ];
     casks = [
+      "secretive"
       "google-chrome"
       "unnaturalscrollwheels"
       "1password@beta"
@@ -237,6 +238,9 @@
 
   hj.xdg.config.files."zsh/.zshrc".text = lib.mkBefore ''
     ${config.environment.shellInit}
+    ${builtins.concatStringsSep "\n" (
+      lib.mapAttrsToList (n: v: "alias ${n}='${v}'") config.environment.shellAliases
+    )}
   '';
 
   launchd.user.agents.theme-switcher = lib.my.mkLaunchdAgent {

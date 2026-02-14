@@ -573,11 +573,11 @@
     "secrets": {
       "flake": false,
       "locked": {
-        "lastModified": 1770935200,
-        "narHash": "sha256-kWO1LR5wBx6mI2c5pBmOQGLcIWbdazh4hZRq6Wk2noQ=",
+        "lastModified": 1771034404,
+        "narHash": "sha256-gMEBUsHLqs98hhTBiNo38B0UmfiSHpphv0068vTjx9E=",
         "ref": "refs/heads/main",
-        "rev": "7dd0c331e5d0eac404b2bd6ee218ef6a9f19a450",
-        "revCount": 70,
+        "rev": "f9798f04cc534f6b7c702c0676ee0d8b247ed4c4",
+        "revCount": 73,
         "type": "git",
         "url": "ssh://git@codeberg.org/0x7E/nix-secrets"
       },
@@ -616,11 +616,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1768863606,
-        "narHash": "sha256-1IHAeS8WtBiEo5XiyJBHOXMzECD6aaIOJmpQKzRRl64=",
+        "lastModified": 1770683991,
+        "narHash": "sha256-xVfPvXDf9QN3Eh9dV+Lw6IkWG42KSuQ1u2260HKvpnc=",
         "owner": "Mic92",
         "repo": "sops-nix",
-        "rev": "c7067be8db2c09ab1884de67ef6c4f693973f4a2",
+        "rev": "8b89f44c2cc4581e402111d928869fe7ba9f7033",
         "type": "github"
       },
       "original": {

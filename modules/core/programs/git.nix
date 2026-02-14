@@ -10,6 +10,7 @@
 let
   inherit (config.me) hosts hostname;
   pubkey = hosts.${hostname}.sshPublicKey;
+  pubkeyFile = pkgs.writeText "key.pub" hosts.${hostname}.sshPublicKey;
   github = pkgs.writeText "github" ''
     [user]
       email = "github.little@0xaa.me"
@@ -78,7 +79,7 @@ lib.mkMerge [
         insteadOf = "forge:"
 
       [user]
-        signingkey = "${pubkey}"
+        signingkey = "${pubkeyFile}"
 
       [includeIf "hasconfig:remote.*.url:github:*/**"]
         path = "${github}"
@@ -101,21 +102,20 @@ lib.mkMerge [
 
     hj.files.".ssh/allowed_signers".text = "* ${pubkey}";
 
-    darwin = {
-      hj.xdg.config.files."ssh/config".text = ''
-        Host *
-          UseKeychain yes
-          AddKeysToAgent yes
-          IdentityFile ~/.ssh/id_ed25519
-      '';
+    darwin =
+      let
+        secretivePath = "${config.me.home}/Library/Containers/com.maxgoedjen.Secretive.SecretAgent/Data/socket.ssh";
+      in
+      {
+        hj.xdg.config.files."ssh/config".text = ''
+          Host *
+            IdentityAgent ${secretivePath}
+        '';
 
-      launchd.user.agents.ssh-add = lib.mkIf config.me.secrets.enable (
-        lib.my.mkLaunchdAgent {
-          name = "ssh-add";
-          command = "/usr/bin/ssh-add --apple-use-keychain ${config.me.home}/.ssh/id_ed25519";
-        }
-      );
-    };
+        environment.shellInit = ''
+          export SSH_AUTH_SOCK=${secretivePath}
+        '';
+      };
 
     nixos = {
       systemd.user.services.ssh-add = lib.mkIf config.me.secrets.enable {

@@ -10,6 +10,7 @@ let
   inherit (config.me) hostname hosts;
 in
 lib.mkIf config.me.secrets.enable (mkBundle {
+  sops.secrets.server_vpn_endpoint.owner = config.me.user;
   sops.secrets."${hostname}/vpn/pk".owner = config.me.user;
   sops.secrets."${hostname}/vpn/psk".owner = config.me.user;
 

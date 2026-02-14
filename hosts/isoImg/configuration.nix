@@ -11,6 +11,8 @@
     ./options.nix
   ];
 
+  isoImage.squashfsCompression = "gzip -Xcompression-level 1";
+
   systemd.services.sshd.wantedBy = pkgs.lib.mkForce [ "multi-user.target" ];
 
   services.openssh = {

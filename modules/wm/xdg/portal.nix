@@ -11,8 +11,6 @@ lib.mkIf config.me.wm.enable (mkNixos {
   xdg.portal = {
     enable = true;
     config.common.default = "*";
-    extraPortals = [
-      pkgs.xdg-desktop-portal-gtk
-    ];
+    extraPortals = with pkgs; [ darkman ];
   };
 })

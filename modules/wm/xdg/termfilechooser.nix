@@ -80,17 +80,6 @@ lib.mkIf config.me.wm.enable (mkNixos {
       default_dir=$XDG_DOWNLOAD_DIR
     '';
 
-  xdg.desktopEntries."swap-file-chooser" = {
-    exec = "${pkgs.writeShellScript "swap-file-chooser" ''
-      CONFIG="$HOME/.config/xdg-desktop-portal/portals.conf"
-      sed -i 's/gtk;termfilechooser/TEMP/' "$CONFIG" && \
-      sed -i 's/termfilechooser;gtk/gtk;termfilechooser/' "$CONFIG" && \
-      sed -i 's/TEMP/termfilechooser;gtk/' "$CONFIG"
-      systemctl --user restart xdg-desktop-portal
-    ''}";
-    name = "Swap File Chooser";
-  };
-
   hj.xdg.config.files."xdg-desktop-portal/portals.conf" = {
     type = "copy";
     clobber = true;
@@ -99,7 +88,7 @@ lib.mkIf config.me.wm.enable (mkNixos {
       ''
         [preferred]
         default=*
-        org.freedesktop.impl.portal.FileChooser=termfilechooser;gtk
+        org.freedesktop.impl.portal.FileChooser=termfilechooser
       '';
   };
 

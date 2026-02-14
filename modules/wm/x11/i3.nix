@@ -39,28 +39,29 @@ lib.mkIf (config.me.wm.displayServer == "xorg") (mkNixos {
       set $ws9 "9"
       set $ws10 "10"
 
-      set_from_resource $focused_bg bg0 #000000
-      set_from_resource $focused_fg fg2 #000000
-      set_from_resource $unfocused_bg bg1 #000000
-
-      font pango:monospace 8.000000
+      # hide tab title
+      font pango:monospace 0.000000
       floating_modifier $win
-      default_border pixel 1
+      default_border pixel 0
       default_floating_border pixel 1
       hide_edge_borders smart
       focus_wrapping no
       focus_follows_mouse yes
       focus_on_window_activation focus
       mouse_warping output
-      workspace_layout default
+      workspace_layout tabbed
       workspace_auto_back_and_forth no
 
-      client.focused $focused_fg $focused_bg $focused_fg $focused_fg $focused_fg
-      client.focused_inactive $unfocused_bg $focused_fg $unfocused_bg $unfocused_bg $unfocused_bg
-      client.unfocused $unfocused_bg $focused_fg $unfocused_bg $unfocused_bg $unfocused_bg
-      client.urgent $unfocused_bg $focused_fg $unfocused_bg $unfocused_bg $unfocused_bg
-      client.placeholder $unfocused_bg $focused_fg $unfocused_bg $unfocused_bg $unfocused_bg
-      client.background #ffffff
+      set_from_resource $inactive bg0 #000000
+      set_from_resource $active fg2 #000000
+
+      #                        border    background text      indicator child_border
+      client.focused           $active   $active    $active   $active   $active
+      client.focused_inactive  $inactive $inactive  $inactive $inactive $inactive
+      client.unfocused         $inactive $inactive  $inactive $inactive $inactive
+      client.urgent            $active   $active    $active   $active   $active
+      client.placeholder       $inactive $inactive  $inactive $inactive $inactive
+      client.background        $inactive
 
       bindsym $win+t $exec $term ${getExe pkgs.my.tmux-sessionizer} ~/
       bindsym $win+s $exec $term ${getExe pkgs.my.tmux-sshr}
@@ -73,7 +74,7 @@ lib.mkIf (config.me.wm.displayServer == "xorg") (mkNixos {
         [ -n "$note" ] && echo $EDITOR "${dir}/$note.md"
       ''})
       bindsym $win+n $exec $term ${getExe pkgs.zsh} -c '${getExe' pkgs.networkmanager "nmcli"} device wifi rescan && unset COLORTERM && TERM=xterm-old ${getExe' pkgs.networkmanager "nmtui'"}"}
-      bindsym $win+b $exec $term ${getExe pkgs.bluetuith} --no-warning
+      bindsym $win+b $exec ${pkgs.adw-bluetooth}/bin/awd-bluetooth
       bindsym $win+Shift+b $exec ${pkgs.writeShellScript "bluetooth-toogle" ''
         if ${getExe' pkgs.bluez "bluetoothctl"} info ${airpods} | grep -q "Connected: yes"; then
           echo -e "disconnect ${airpods}\nquit" | ${getExe' pkgs.bluez "bluetoothctl"}
@@ -120,8 +121,10 @@ lib.mkIf (config.me.wm.displayServer == "xorg") (mkNixos {
       bindsym $win+l focus right
       bindsym $win+q kill
       bindsym $win+f fullscreen toggle
+      bindsym $win+g layout toggle splith tabbed
+
       bindsym $win+Return floating toggle
-      bindsym $win+g focus mode_toggle
+      bindsym $win+Shift+g focus mode_toggle
 
       bindsym $win+Ctrl+h move left $window-move-amount
       bindsym $win+BackSpace move left $window-move-amount
@@ -187,9 +190,7 @@ lib.mkIf (config.me.wm.displayServer == "xorg") (mkNixos {
       for_window [class="Org.gnome.NautilusPreviewer"] floating enable
       for_window [class="Main"] floating enable
       for_window [class="Matplotlib"] floating enable
-      for_window [class="gnome-calculator"] floating enable
       for_window [class="Ryujinx"] floating enable
-      for_window [class="SimpMusic"] floating disable
       for_window [class=".*"] border pixel 1
       for_window [floating] move position center
       for_window [window_role="Popup"] border pixel 0
@@ -222,8 +223,6 @@ lib.mkIf (config.me.wm.displayServer == "xorg") (mkNixos {
       ''}
 
       $exec_always ${getExe' pkgs.hsetroot "hsetroot"} -solid "$(xrdb -query | grep 'bg0:' | cut -f2)"
-
-      $exec_always ${getExe pkgs.i3altlayout}
       $exec_always ${getExe' pkgs.polybar "polybar-msg"} cmd restart
 
     '';

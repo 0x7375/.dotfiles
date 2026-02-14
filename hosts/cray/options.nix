@@ -11,7 +11,7 @@
       optional = {
         postgresql.enable = false;
         neo4j.enable = false;
-        gaming.enable = true;
+        gaming.enable = false;
       };
     };
     dev.enable = true;

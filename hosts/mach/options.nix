@@ -2,6 +2,7 @@
   me = rec {
     keyd.enable = false;
     secrets.enable = true;
+    vpnPeer.enable = true;
     wm = {
       terminal = "alacritty";
       enable = true;

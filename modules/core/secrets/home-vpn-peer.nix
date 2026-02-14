@@ -8,8 +8,9 @@
 
 let
   inherit (config.me) hostname hosts;
+  cfg = config.me;
 in
-lib.mkIf config.me.secrets.enable (mkBundle {
+lib.mkIf (cfg.secrets.enable && cfg.vpnPeer.enable)  (mkBundle {
   sops.secrets.server_vpn_endpoint.owner = config.me.user;
   sops.secrets."${hostname}/vpn/pk".owner = config.me.user;
   sops.secrets."${hostname}/vpn/psk".owner = config.me.user;

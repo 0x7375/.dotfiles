@@ -7,7 +7,7 @@
 }:
 
 lib.mkIf config.me.wm.enable (mkNixos {
-  packages = [ pkgs.blueberry ];
+  packages = [ pkgs.adw-bluetooth ];
 
   hardware.bluetooth = {
     enable = true;

@@ -8,27 +8,10 @@
 
 lib.mkIf config.me.wm.enable (mkNixos {
   packages = with pkgs; [
-    gparted
-    nautilus
-    file-roller
+    nemo
     ntfs3g
+    exfat
   ];
 
-  services.gvfs.enable = true;
-
-  programs = {
-    kdeconnect.enable = true;
-
-    gnome-disks.enable = true;
-
-    localsend = {
-      enable = true;
-      package = pkgs.auto.localsend;
-    };
-
-    nautilus-open-any-terminal = {
-      enable = true;
-      terminal = config.me.wm.terminal;
-    };
-  };
+  programs.kdeconnect.enable = true;
 })

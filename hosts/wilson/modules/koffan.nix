@@ -1,6 +1,13 @@
 { pkgs, ... }:
 
 {
+  systemd.tmpfiles.rules = [
+    "d /var/lib/koffan 0755 root root -"
+  ];
+
+
+  networking.firewall.allowedTCPPorts = [ 3000 ];
+
   virtualisation.oci-containers.containers.koffan =
     let
       name = "ghcr.io/pansalut/koffan";
@@ -11,8 +18,8 @@
 
       imageFile = pkgs.dockerTools.pullImage {
         imageName = name;
-        imageDigest = "sha256:05144c8b3ca7021e53f2889b4284f9d1083d122b3dfa42b5614050c00a7e5e71 ";
-        sha256 = "9gBFwphlLnmKmKFCb2+U+YM+dWeBr9k+60+y96E85+U=";
+        imageDigest = "sha256:05144c8b3ca7021e53f2889b4284f9d1083d122b3dfa42b5614050c00a7e5e71";
+        sha256 = "sha256-LnmjKpNinQ9qb/gwOkdHwwXTPKwTTujdIP+VAwMOqsk=";
 
         finalImageTag = version;
       };
@@ -20,7 +27,7 @@
 
       environment = {
         APP_ENV = "production";
-        DISABLE_AUTH = true;
+        DISABLE_AUTH = "true";
         DEFAULT_LANG = "fr";
       };
 

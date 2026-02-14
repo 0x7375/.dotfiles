@@ -15,7 +15,7 @@
 
   systemd.tmpfiles.settings.filebrowser."/data/".d = {
     mode = lib.mkForce "0775";
-    user = "root";
+    user = lib.mkForce "root";
   };
   systemd.services.filebrowser.serviceConfig.UMask = lib.mkForce "0007";
 }

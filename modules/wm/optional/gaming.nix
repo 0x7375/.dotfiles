@@ -31,11 +31,11 @@ lib.mkIf config.me.wm.optional.gaming.enable (mkNixos {
   packages = with pkgs; [
     winetricks
     wine64
-    heroic
+    # heroic
     steamtinkerlaunch
     # modrinth-app
     (bottles.override { removeWarningPopup = true; })
-    lutris
+    # lutris
     protonup-ng
   ];
 

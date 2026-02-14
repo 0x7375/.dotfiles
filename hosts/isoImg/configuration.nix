@@ -29,5 +29,5 @@
 
   hardware.enableRedistributableFirmware = true;
 
-  networking.wireless.enable = false;
+  networking.wireless.enable = lib.mkForce false;
 }

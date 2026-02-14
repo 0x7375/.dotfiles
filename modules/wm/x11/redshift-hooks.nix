@@ -14,28 +14,35 @@ lib.mkIf (config.me.wm.displayServer == "xorg") (mkNixos {
     "video"
   ];
 
-  hj.xdg.config.files."redshift/hooks/brightness.sh" = {
+  hj.xdg.config.files."redshift/hooks/brightness.sh" = let
+    inherit (lib) getExe;
+  in {
     enable = true;
     executable = true;
     text = # bash
       ''
-        #!${lib.getExe pkgs.bash}
+        #!${getExe pkgs.bash}
+
         brightness_day=85
         brightness_transition=40
         brightness_night=15
 
         set_brightness() {
-            ${lib.getExe pkgs.brillo} -S "$1" &
+            ${getExe pkgs.my.swap-theme} "$1"
+            shift
+
+            ${getExe pkgs.brillo} -S "$1" &
             for display in 1 2; do
-              ${lib.getExe pkgs.ddcutil} --display $display setvcp 10 "$1" &
+              ${getExe pkgs.ddcutil} --display $display setvcp 10 "$1" &
             done
+
         }
 
         if [[ $1 == "period-changed" ]]; then
             case $3 in
-                night) set_brightness "$brightness_night" ;;
-                transition) set_brightness "$brightness_transition" ;;
-                daytime) set_brightness "$brightness_day" ;;
+                night) set_brightness "dark" "$brightness_night" ;;
+                transition) set_brightness "dark" "$brightness_transition" ;;
+                daytime) set_brightness "light" "$brightness_day" ;;
             esac
         fi
       '';

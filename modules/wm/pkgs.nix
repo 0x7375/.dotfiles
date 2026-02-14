@@ -21,9 +21,8 @@ lib.mkIf config.me.wm.enable (mkBundle {
       });
     in
     [
-      gnome-text-editor
-
-      texliveFull
+      ungoogled-chromium
+      texliveMedium
       typst
       gnome-calculator
       qbittorrent
@@ -34,14 +33,16 @@ lib.mkIf config.me.wm.enable (mkBundle {
     unfree-packages = [
       "discord"
       "omnissa-horizon-client"
+      "google-chrome"
     ];
 
     packages = with pkgs; [
-      (auto.discord.override {
-        # withOpenASAR = true;
-        withVencord = true;
-      })
-      ungoogled-chromium
+      # (auto.discord.override {
+      #   # withOpenASAR = true;
+      #   withVencord = true;
+      # })
+      vesktop
+      google-chrome
       my.generate-icons
       omnissa-horizon-client
       auto.signal-desktop

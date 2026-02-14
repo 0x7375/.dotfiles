@@ -39,16 +39,17 @@ lib.mkIf config.me.wm.enable (mkNixos {
       categories = [ "Game" ];
     };
 
-    "file-roller" = {
-      exec = "file-roller %F";
-      name = "File Roller";
-    };
-
     "apache-hop" = {
       exec = "env GTK_THEME=Adwaita:dark hop-gui";
       name = "Apache Hop";
       type = "Application";
       categories = [ "Development" ];
+    };
+
+    "koffan" = {
+      exec = "chromium --app=http://shop.0xaa.me";
+      name = "Koffan";
+      type = "Application";
     };
   };
 })

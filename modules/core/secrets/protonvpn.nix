@@ -81,7 +81,14 @@ lib.mkIf (config.me.secrets.enable) (mkNixos {
     autostart = false;
   };
 
-  networking.firewall.trustedInterfaces = [ "proton" ];
+  systemd.services."wg-quick-proton".preStart = ''
+    ${pkgs.iproute2}/bin/ip link delete proton 2>/dev/null || true
+  '';
+
+  boot.kernel.sysctl = {
+    "net.core.default_qdisc" = "fq";
+    "net.ipv4.tcp_congestion_control" = "bbr";
+  };
 
   systemd.services."proton-portforward" = lib.mkIf server {
     after = [
@@ -128,7 +135,14 @@ lib.mkIf (config.me.secrets.enable) (mkNixos {
       '';
 
       ExecStart = pkgs.writeShellScript "renew-proton-port" ''
+        PORT=$(< /var/lib/proton-vpn-port)
         while true; do
+          if ! ${getExe' pkgs.nftables "nft"} list chain inet nixos-fw input | grep -q "tcp dport $PORT accept"; then
+            ${getExe' pkgs.nftables "nft"} insert rule inet nixos-fw input iifname "proton" tcp dport "$PORT" accept
+            ${getExe' pkgs.nftables "nft"} insert rule inet nixos-fw input iifname "proton" udp dport "$PORT" accept
+            echo "Port $PORT inserted into filter table"
+          fi
+
           ${getExe' pkgs.libnatpmp "natpmpc"} -g ${gw-ip} -a 1 0 tcp 60 >/dev/null 2>&1
           ${getExe' pkgs.libnatpmp "natpmpc"} -g ${gw-ip} -a 1 0 udp 60 >/dev/null 2>&1
           echo "Port forwarding renewed"

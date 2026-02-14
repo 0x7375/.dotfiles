@@ -26,13 +26,6 @@ lib.mkIf config.me.dev.enable {
 
     # java
     zulu
-    ant
-    maven
-
-    # sql
-    mariadb
-    sqlite
-    litecli
 
     # c
     clang-tools

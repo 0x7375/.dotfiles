@@ -49,6 +49,7 @@ in
         };
       };
 
+      "shop.${url}" = mkSubDomain { port = 3000; };
       "media.${url}" = mkSubDomain { port = 8096; };
       "request.${url}" = mkSubDomain { port = 5055; };
       "sync.${url}" = mkSubDomain { port = 8384; };

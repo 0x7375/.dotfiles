@@ -26,6 +26,10 @@
 
   boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
 
+  boot.loader.systemd-boot.extraInstallCommands = ''
+    sed -i 's/^default .*/default auto-windows/' /boot/loader/loader.conf
+  '';
+
   services.xserver.videoDrivers = [ "nvidia" ];
   unfree-packages = [
     "nvidia-x11"
@@ -40,6 +44,8 @@
   # wayland.windowManager.hyprland.settings.input = {
   #   accel_profile = "flat";
   # };
+
+  time.hardwareClockInLocalTime = true;
 
   # do not change
   # For more information, see `man configuration.nix` or https://nixos.org/manual/nixos/stable/options#opt-system.stateVersion .

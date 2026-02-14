@@ -162,7 +162,7 @@ lib.mkIf (config.me.wm.displayServer == "wayland") {
     bind = SUPER, n, exec, ${term} ${getExe pkgs.zsh} -c '${getExe' pkgs.networkmanager "nmcli"} device wifi rescan && unset COLORTERM && TERM=xterm-old ${getExe' pkgs.networkmanager "nmtui"}'
     bind = SUPER SHIFT, n, exec, ${getExe' pkgs.networkmanager "nmcli"} device wifi rescan
 
-    bind = SUPER, b, exec, ${term} ${getExe pkgs.bluetuith} --no-warning
+    bind = SUPER, b, exec, ${getExe pkgs.adw-bluetooth}
     bind = SUPER SHIFT, b, exec, ${pkgs.writeShellScript "bluetooth-toggle" ''
       airpods="D4:68:AA:88:8E:32"
       if ${getExe' pkgs.bluez "bluetoothctl"} info $airpods | grep -q "Connected: yes"; then

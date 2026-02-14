@@ -282,6 +282,8 @@ in
       description = "Deploy secrets using sops-nix";
     };
 
+    vpnPeer.enable = mkEnableOption "Setup wireguard vpn peer";
+
     keyd.enable = mkOption {
       type = types.bool;
       default = true;

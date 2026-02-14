@@ -23,6 +23,8 @@ pkgs.writeShellApplication {
     theme_bool=false
     if [[ ''${1:-} == "sync" ]]; then
       if defaults read -g AppleInterfaceStyle &>/dev/null; then theme=dark; fi 
+    elif [[ ''${1:-} =~ ^(light|dark)$ ]]; then
+      theme=$1
     else
       [[ $(< "$theme_file") == "light" ]] && theme=dark
     fi
@@ -42,7 +44,7 @@ pkgs.writeShellApplication {
       dconf write /org/gnome/desktop/interface/color-scheme "'prefer-''${theme}'"
       dunstctl reload
       i3-msg restart
-      pkill nautilus
+      pkill nemo
     ''}
 
     ${lib.optionalString isDarwin ''

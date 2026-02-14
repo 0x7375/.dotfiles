@@ -47,6 +47,8 @@ lib.mkMerge [
         target = "/etc/ssh/ssh_config.d/999-secrets.conf";
       in
       ''
+        mkdir -p $(dirname "${target}")
+
         server=$(cat "${config.sops.secrets."server_uni/server".path}")
         user=$(cat "${config.sops.secrets."server_uni/user".path}")
 

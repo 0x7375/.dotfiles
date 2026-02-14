@@ -19,6 +19,8 @@ in
   documentation.man.generateCaches = lib.mkForce false;
 
   users.users.${config.me.user} = {
+    extraGroups = [ "video" ];
+
     openssh.authorizedKeys.keys =
       with config.me.hosts;
       map (h: h.sshPublicKey) [

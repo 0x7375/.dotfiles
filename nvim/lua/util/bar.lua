@@ -52,8 +52,8 @@ M.build_bar = function()
     local branch = git_branch()
     branch = ' ' .. branch
 
-    local set_green = "%#DiffAdd#"
-    local set_normal = "%#Comment#"
+    local set_green = "%#GruvboxGreen#"
+    local set_normal = "%#Dim#"
     local file_name = " " .. vim.fn.expand("%:~:.")
 
     local modified = ''
@@ -68,12 +68,15 @@ M.build_bar = function()
 
     local search_count = ""
     local mode = vim.api.nvim_get_mode().mode
+
     if mode ~= 'i' and vim.v.hlsearch == 1 and vim.fn.getreg('/') ~= '' then
         local s_count = vim.fn.searchcount({ recompute = 1, maxcount = 999 })
         if s_count and s_count.total and s_count.total > 0 then
             search_count = string.format(" [%d/%d]", s_count.current, s_count.total)
         end
     end
+
+    local mode_letter = " " .. mode:upper() .. " |"
 
     local recording = ""
     local reg = vim.fn.reg_recording()
@@ -83,6 +86,7 @@ M.build_bar = function()
 
     return table.concat({
         set_normal,
+        mode_letter,
         file_name,
         modified,
         recording,

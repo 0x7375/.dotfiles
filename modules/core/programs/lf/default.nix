@@ -76,9 +76,7 @@ mkBundle {
     let
       inherit (config.me) user uid home;
       inherit (lib) getExe getExe';
-      confirm-key = "s";
-      no-confirm =
-        keys: lib.concatStringsSep "\n" (map (key: "vmap ${key} push ${confirm-key}${key}") keys);
+      no-confirm = keys: lib.concatStringsSep "\n" (map (key: "vmap ${key} visual-toggle ${key}") keys);
       open = "${lib.optionalString (!isDarwin) "mime"}open";
       copy = if isDarwin then "pbcopy" else "${getExe pkgs.xsel} -ib";
     in
@@ -438,11 +436,16 @@ mkBundle {
           lf -remote "send $id toggle \"$file\""
         done <<< "$fv"
         lf -remote "send $id visual-discard"
+
+        if [ -n "$1" ]; then
+          lf -remote "send $id push $1"
+        fi
       }}
 
       vmap s visual-toggle
       vmap o visual-change
       vmap <esc> visual-discard
+
       ${no-confirm [
         "D"
         "x"

@@ -208,7 +208,7 @@ mkBundle {
             fi
             for iface in "$@"; do
               if (( is_darwin )); then
-                [[ "$action" =~ (stop|restart) ]] && sudo wg-quick down "$iface" 2>/dev/null
+                [[ "$action" =~ (stop|restart) ]] && sudo wg-quick down "$iface"
                 [[ "$action" =~ (start|restart) ]] && sudo wg-quick up "$iface"
               else
                 sudo systemctl "$action" "wg-quick-$iface"

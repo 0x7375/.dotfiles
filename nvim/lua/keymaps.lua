@@ -19,20 +19,23 @@ map({ 'n', 'v' }, '<space>', '<nop>')
 
 map({ "n", "x" }, "s", "V")
 
-map("n", "<ESC>", vim.cmd.nohlsearch, { desc = "Clear search highlights" })
+map("n", "<ESC>", function()
+  vim.cmd("nohlsearch")
+  bar.refresh()
+end, { desc = "Clear search highlights" })
 
 -- easy renaming
 map("n", "<leader>r", [[:%s/\v<<C-r><C-w>>/<C-r><C-w>/gI<Left><Left><Left>]])
 
 local function toggle_quickfix()
-    local windows = vim.fn.getwininfo()
-    for _, win in pairs(windows) do
-        if win["quickfix"] == 1 then
-            vim.cmd.cclose()
-            return
-        end
+  local windows = vim.fn.getwininfo()
+  for _, win in pairs(windows) do
+    if win["quickfix"] == 1 then
+      vim.cmd.cclose()
+      return
     end
-    vim.cmd.copen()
+  end
+  vim.cmd.copen()
 end
 
 map("n", "<leader>q", toggle_quickfix, { desc = "Toggle quickfix window" })
@@ -48,13 +51,13 @@ map("n", "*", "*zz", { noremap = true })
 map("n", "#", "#zz", { noremap = true })
 
 map('n', 'n', function()
-    vim.cmd('normal! nzz')
-    bar.refresh()
+  vim.cmd('normal! nzz')
+  bar.refresh()
 end)
 
 vim.keymap.set('n', 'N', function()
-    vim.cmd('normal! Nzz')
-    bar.refresh()
+  vim.cmd('normal! Nzz')
+  bar.refresh()
 end)
 
 map("n", "G", "Gzz", { noremap = true })
@@ -68,17 +71,17 @@ map("n", "<leader>s", ":%s#\\v", { noremap = true })
 map("n", "<leader>S", ":%g#\\v", { noremap = true })
 
 vim.keymap.set('c', '<CR>', function()
-    local cmdtype = vim.fn.getcmdtype()
-    -- center and refresh winbar on search commands
-    if cmdtype == '/' or cmdtype == '?' then
-        return '<CR>zz<Cmd>lua require("util.bar").refresh()<CR>'
-    else
-        return '<CR>'
-    end
+  local cmdtype = vim.fn.getcmdtype()
+  -- center and refresh winbar on search commands
+  if cmdtype == '/' or cmdtype == '?' then
+    return '<CR>zz<Cmd>lua require("util.bar").refresh()<CR>'
+  else
+    return '<CR>'
+  end
 end, { expr = true })
 
 map('i', '<Esc>', function()
-    return vim.fn.pumvisible() == 1 and '<C-e>' or '<Esc>'
+  return vim.fn.pumvisible() == 1 and '<C-e>' or '<Esc>'
 end, { expr = true })
 
 -- Makes the file executable
@@ -96,6 +99,8 @@ map("n", "<leader>=", "mzgg=G`zzz", { desc = "Indent whole file" })
 -- toggle line wrap
 map('n', '<leader>l', function() vim.cmd("set wrap!") end, { desc = "Toggle line wrap" })
 
+map('n', '<C-w>Q', function() vim.cmd("qa") end, { desc = "Quit all" })
+
 -- insert and command line emacs keybinds
 -- cmdline
 map('c', '<C-a>', '<Home>')
@@ -111,31 +116,31 @@ map('c', '<C-b>', '<Left>')
 
 -- direction based window resizing
 local change_width = function(d)
-    local v = vim.api
+  local v = vim.api
 
-    d = d and d or "left"
-    local lr = d == "left" or d == "right"
-    -- 5 for left right, 3 for up down
-    local amt = lr and 5 or 3
+  d = d and d or "left"
+  local lr = d == "left" or d == "right"
+  -- 5 for left right, 3 for up down
+  local amt = lr and 5 or 3
 
-    local pos = v.nvim_win_get_position(0)
-    local w = v.nvim_win_get_width(0)
-    local h = v.nvim_win_get_height(0)
+  local pos = v.nvim_win_get_position(0)
+  local w = v.nvim_win_get_width(0)
+  local h = v.nvim_win_get_height(0)
 
-    if lr then
-        amt = pos[2] == 0 and -amt or amt
-    else
-        amt = pos[1] == 0 and -amt or amt
-    end
+  if lr then
+    amt = pos[2] == 0 and -amt or amt
+  else
+    amt = pos[1] == 0 and -amt or amt
+  end
 
-    w = (d == "left") and (w + amt) or (w - amt)
-    h = (d == "up") and (h + amt) or (h - amt)
+  w = (d == "left") and (w + amt) or (w - amt)
+  h = (d == "up") and (h + amt) or (h - amt)
 
-    if lr then
-        v.nvim_win_set_width(0, w)
-    else
-        v.nvim_win_set_height(0, h)
-    end
+  if lr then
+    v.nvim_win_set_width(0, w)
+  else
+    v.nvim_win_set_height(0, h)
+  end
 end
 
 map("n", "<M-h>", function() change_width("left") end, { desc = "Resize window left" })

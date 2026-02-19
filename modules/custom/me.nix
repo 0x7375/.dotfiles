@@ -173,51 +173,51 @@ in
       default = {
         dark = {
           _theme = "dark";
-          bg0_dark = "#000000";
+          bg0_dark = "#1d2021";
 
-          bg0 = "#000000";
-          bg1 = "#202020";
-          bg2 = "#404040";
-          bg3 = "#606060";
-          fg4 = "#808080";
-          fg3 = "#808080";
-          fg2 = "#A0A0A0";
-          fg1 = "#A0A0A0";
-          fg0 = "#A0A0A0";
+          bg0 = "#282828";
+          bg1 = "#3c3836";
+          bg2 = "#504945";
+          bg3 = "#665c54";
+          fg4 = "#a89984";
+          fg3 = "#bdae93";
+          fg2 = "#d5c4a1";
+          fg1 = "#ebdbb2";
+          fg0 = "#fbf1c7";
 
-          red = "#d4726f";
-          green = "#7eb882";
-          yellow = "#606060";
-          cyan = "#404040";
-          blue = "#A0A0A0";
-          magenta = "#808080";
-          orange = "#606060";
+          red = "#fb4934";
+          green = "#b8bb26";
+          yellow = "#fabd2f";
+          cyan = "#8ec07c";
+          blue = "#83a598";
+          magenta = "#d3869b";
+          orange = "#fe8019";
 
-          sleep = "#DDA0DD";
+          sleep = "#d3869b";
         };
         light = {
           _theme = "light";
-          bg0_dark = "#FFFFFF";
+          bg0_dark = "#f9f5d7";
 
-          bg0 = "#FFFFFF";
-          bg1 = "#BFBFBF";
-          bg2 = "#9F9F9F";
-          bg3 = "#9F9F9F";
-          fg4 = "#7F7F7F";
-          fg3 = "#7F7F7F";
-          fg2 = "#5F5F5F";
-          fg1 = "#5F5F5F";
-          fg0 = "#5F5F5F";
+          bg0 = "#fbf1c7";
+          bg1 = "#ebdbb2";
+          bg2 = "#d5c4a1";
+          bg3 = "#bdae93";
+          fg4 = "#7c6f64";
+          fg3 = "#665c54";
+          fg2 = "#504945";
+          fg1 = "#3c3836";
+          fg0 = "#282828";
 
-          red = "#a8423f";
-          yellow = "#9F9F9F";
-          green = "#4a7c4e";
-          cyan = "#7F7F7F";
-          blue = "#5F5F5F";
-          magenta = "#7F7F7F";
-          orange = "#9F9F9F";
+          red = "#9d0006";
+          yellow = "#b57614";
+          green = "#79740e";
+          cyan = "#427b58";
+          blue = "#076678";
+          magenta = "#8f3f71";
+          orange = "#af3a03";
 
-          sleep = "#8F4D8F";
+          sleep = "#8f3f71";
         };
       };
       description = "Color palette";
@@ -273,7 +273,7 @@ in
     network.enable = mkOption {
       type = types.bool;
       default = true;
-      description = "Use nextdns and create NetworkManager profiles";
+      description = "Setup network and create NetworkManager profiles";
     };
 
     secrets.enable = mkOption {
@@ -337,7 +337,7 @@ in
 
       font = mkOption {
         type = types.str;
-        default = "Terminess";
+        default = "0xproto";
         description = "Default font";
       };
 

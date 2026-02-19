@@ -27,8 +27,14 @@ lib.mkIf config.me.secrets.enable (mkBundle {
       '';
   };
 
-  darwin.sops.age = {
-    keyFile = "/var/lib/sops-nix/se-identity.txt";
-    plugins = [ pkgs.age-plugin-se ];
+  darwin = {
+    packages = [ pkgs.age-plugin-se ];
+
+    vars.SOPS_AGE_KEY_FILE = "~/.config/age/se-identity.txt";
+
+    sops.age = {
+      keyFile = "/var/lib/sops-nix/se-identity.txt";
+      plugins = [ pkgs.age-plugin-se ];
+    };
   };
 })

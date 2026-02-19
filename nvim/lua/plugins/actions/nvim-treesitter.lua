@@ -2,14 +2,21 @@ return {
     'nvim-treesitter/nvim-treesitter',
     cond = not vim.g.rpi,
     build = ":TSUpdate",
-    cmd = { "TSUpdateSync", "TSUpdate", "TSInstall" },
-    event = { "BufReadPost", "BufWritePost", "BufNewFile", "CmdlineEnter" },
+    main = "nvim-treesitter.configs",
+    lazy = false,
     dependencies = {
         "nvim-treesitter/nvim-treesitter-textobjects",
         'nvim-treesitter/nvim-treesitter-refactor',
         {
-            "nvim-treesitter/playground",
-            cmd = { "TSHighlightCapturesUnderCursor" },
+            'Wansmer/treesj',
+            cond = not vim.g.rpi,
+            keys = {
+                { '<leader>nj', function() require('treesj').join() end,  desc = "Join node" },
+                { '<leader>ns', function() require('treesj').split() end, desc = "Split node" },
+            },
+            opts = {
+                use_default_keymaps = false,
+            },
         },
         {
             "HiPhish/rainbow-delimiters.nvim",
@@ -112,7 +119,4 @@ return {
             },
         },
     },
-    config = function(_, opts)
-        require("nvim-treesitter.configs").setup(opts)
-    end
 }

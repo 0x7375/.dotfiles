@@ -19,6 +19,8 @@ pkgs.writeShellApplication {
     themes_dir="$HOME/.local/state/tinted"
     theme_file="''${themes_dir}/theme"
 
+    [[ -f "$theme_file" ]] || echo "dark" > "$theme_file"
+
     theme=light
     theme_bool=false
     if [[ ''${1:-} == "sync" ]]; then
@@ -48,8 +50,7 @@ pkgs.writeShellApplication {
     ''}
 
     ${lib.optionalString isDarwin ''
-      osascript -e "tell app \"System Events\" to tell appearance preferences to set dark mode to ''${theme_bool}"
-      osascript -e "tell application \"System Events\" to tell every desktop to set picture to \"~/Pictures/''${theme}.png\""
+      [[ ''${1:-} != "sync" ]] &&  osascript -e "tell app \"System Events\" to tell appearance preferences to set dark mode to ''${theme_bool}"
     ''}
 
     pkill -USR1 nvim

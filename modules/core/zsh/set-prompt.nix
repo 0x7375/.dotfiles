@@ -40,7 +40,7 @@
 
       function set_prompt {
           # Last character is U+202F to navigate previous/next prompt in tmux (check with ga in vim)
-          [[ -n ''${ZSH_VERSION-} ]] && PS1='%(?.%f.%F{cyan}$? )$(get_ssh_info)%F{reset}%~%F{cyan}$(get_git_info)%F{reset}$(get_prompt_symbol)%f '
+          [[ -n ''${ZSH_VERSION-} ]] && PS1='%(?.%f.%F{red}$? )$(get_ssh_info)%F{reset}%~%F{cyan}$(get_git_info)%F{reset}$(get_prompt_symbol)%f '
           [[ -n ''${BASH_VERSION-} ]] && PS1='$(get_ssh_info)\[\033[34m\]\w\[\033[32m\]$(get_git_info)\[\033[0m\]$(get_prompt_symbol) '
       }
     '';

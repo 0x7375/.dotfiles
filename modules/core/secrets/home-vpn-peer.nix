@@ -33,8 +33,7 @@ lib.mkIf (cfg.secrets.enable && cfg.vpnPeer.enable)  (mkBundle {
 
   darwin = {
     packages = [ pkgs.wireguard-tools ];
-    environment.etc."wireguard/home.conf".source =
-      config.sops.templates."home-vpn-${hostname}.conf".path;
+    sops.templates."home-vpn-${hostname}.conf".path = "/etc/wireguard/home.conf";
   };
 
   nixos.networking.wg-quick.interfaces.home = {

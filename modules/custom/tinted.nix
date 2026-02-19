@@ -138,7 +138,7 @@ in
     darwin.activation = ''
       ${lib.concatMapStringsSep "\n" (v: ''
         ${lib.concatMapStringsSep "\n" (d: "mkdir -p ${d}") v.activation.dirs}
-        ln -sf ${v.activation.link.source} ${v.activation.link.target}
+        ln -s ${v.activation.link.source} ${v.activation.link.target} 2> /dev/null || true
         chown -h ${config.me.user} ${v.activation.link.target}
       '') (lib.attrValues processed)}
     '';

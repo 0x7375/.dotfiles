@@ -1,6 +1,6 @@
 { lib, pkgs, ... }:
 
-lib.mkIf false {
+lib.mkIf true {
   packages = with pkgs; [
     ollama
     aichat

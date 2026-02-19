@@ -28,7 +28,10 @@ lib.mkIf (config.me.syncthing-client.enable && config.me.secrets.enable) (mkNixo
 
     zsh_history = {
       path = ".local/state/zsh";
-      ignorePatterns = [ "history" ];
+      ignorePatterns = [
+        "history"
+        "machine_id"
+      ];
     };
 
     documents.path = "documents";
@@ -41,4 +44,3 @@ lib.mkIf (config.me.syncthing-client.enable && config.me.secrets.enable) (mkNixo
     courses.path = "courses";
   };
 })
-

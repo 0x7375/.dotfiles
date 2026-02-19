@@ -19,7 +19,7 @@ lib.mkMerge [
       neovim
 
       nixd
-      nixpkgs-fmt
+      nixfmt
 
       # tree-sitter
       tree-sitter

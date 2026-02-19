@@ -16,35 +16,32 @@ lib.mkIf (config.me.wm.terminal == "alacritty") (mkBundle {
   tinted.files.".config/alacritty/alacritty.toml" = {
     prefix = false;
     source =
-      palette:
-      let
-        nocolor = "00ff00";
-      in
+      p:
       (pkgs.formats.toml { }).generate "alacritty.toml" {
         colors = {
           primary = {
-            background = "0x${palette.bg0}";
-            foreground = "0x${palette.fg0}";
+            background = "0x${p.bg0}";
+            foreground = "0x${p.fg0}";
           };
           normal = {
-            black = "0x${palette.bg1}";
-            red = "0x${palette.red}";
-            green = "0x${palette.green}";
-            yellow = "0x${palette.yellow}";
-            blue = "0x${palette.blue}";
-            magenta = "0x${palette.magenta}";
-            cyan = "0x${palette.cyan}";
-            white = "0x${palette.fg3}";
+            black = "0x${p.bg1}";
+            red = "0x${p.red}";
+            green = "0x${p.green}";
+            yellow = "0x${p.yellow}";
+            blue = "0x${p.blue}";
+            magenta = "0x${p.magenta}";
+            cyan = "0x${p.cyan}";
+            white = "0x${p.fg3}";
           };
           bright = {
-            black = "0x${palette.bg3}";
-            red = "0x${nocolor}";
-            green = "0x${nocolor}";
-            yellow = "0x${nocolor}";
-            blue = "0x${palette.fg0}";
-            magenta = "0x${palette.bg3}";
-            cyan = "0x${palette.bg2}";
-            white = "0x${palette.bg0}";
+            black = "0x${p.bg3}";
+            red = "0x${p.red}";
+            green = "0x${p.green}";
+            yellow = "0x${p.yellow}";
+            blue = "0x${p.fg0}";
+            magenta = "0x${p.bg3}";
+            cyan = "0x${p.bg2}";
+            white = "0x${p.bg0}";
           };
         };
         cursor.style.blinking = "Never";

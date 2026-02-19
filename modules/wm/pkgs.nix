@@ -7,6 +7,12 @@
 }:
 
 lib.mkIf config.me.wm.enable (mkBundle {
+  unfree-packages = [
+    "discord"
+    "omnissa-horizon-client"
+    "google-chrome"
+  ];
+
   packages =
     with pkgs;
     let
@@ -21,7 +27,7 @@ lib.mkIf config.me.wm.enable (mkBundle {
       });
     in
     [
-      ungoogled-chromium
+      google-chrome
       texliveMedium
       typst
       gnome-calculator
@@ -33,7 +39,6 @@ lib.mkIf config.me.wm.enable (mkBundle {
     unfree-packages = [
       "discord"
       "omnissa-horizon-client"
-      "google-chrome"
     ];
 
     packages = with pkgs; [
@@ -42,7 +47,6 @@ lib.mkIf config.me.wm.enable (mkBundle {
       #   withVencord = true;
       # })
       vesktop
-      google-chrome
       my.generate-icons
       omnissa-horizon-client
       auto.signal-desktop

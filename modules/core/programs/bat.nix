@@ -2,19 +2,10 @@
   config,
   pkgs,
   lib,
-  mkBundle,
   ...
 }:
 
-let
-  batScript = # bash
-  ''
-    export XDG_CACHE_HOME="${config.vars.XDG_CACHE_HOME}"
-    cd "${pkgs.emptyDirectory}"
-    ${lib.getExe pkgs.bat} cache --build
-  '';
-in 
-mkBundle {
+{
   packages = [ pkgs.bat ];
 
   aliases.l = "${lib.getExe pkgs.bat} --style=plain --paging=always --pager='less -CR'";
@@ -22,17 +13,13 @@ mkBundle {
   # NOTE: run `bat cache --build` in an empty directory to work
   # around failure when ~/cache exists
   # https://github.com/sharkdp/bat/issues/1726
-  darwin.activation = ''
-    sudo -H -u ${config.me.user} ${lib.getExe pkgs.bash} -c '
-      ${batScript}
-    '
-  '';
-
-  nixos.system.userActivationScripts.batCache.text = ''
+  userActivation = ''
     (
-      ${batScript}
+      export XDG_CACHE_HOME="${config.vars.XDG_CACHE_HOME}"
+      cd "${pkgs.emptyDirectory}"
+      ${lib.getExe pkgs.bat} cache --build > /dev/null 2>&1
     )
-    '';
+  '';
 
   hj.xdg.config.files."bat/config".text = ''
     --style=header,grid

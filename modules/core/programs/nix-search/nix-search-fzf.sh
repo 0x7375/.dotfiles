@@ -2,21 +2,13 @@
 # we want to ensure run also our forked processes in a bash environment.
 SHELL="bash"
 
-# === Change keybinds or add more here ===
-
-declare -a INDEXES=(
-    "home-manager alt-h"
-    "nixos alt-j"
-    "nixpkgs alt-k"
-    "all alt-l"
-)
-
 SEARCH_SNIPPET_KEY="alt-s"
 OPEN_SOURCE_KEY="alt-o"
 EDIT_SOURCE_KEY="alt-e"
 OPEN_HOMEPAGE_KEY="alt-w"
 NIX_SHELL_KEY="alt-S"
 NIX_PROFILE_KEY="alt-P"
+PRINT_PREVIEW_KEY="ctrl-P"
 
 OPENER="xdg-open"
 [[ $OSTYPE == darwin* ]] && OPENER="open"
@@ -25,45 +17,13 @@ OPENER="xdg-open"
 # for debug / development
 CMD="${NIX_SEARCH_TV:-nix-search-tv}"
 
-# bind_index binds the given $key to the given $index
-bind_index() {
-    local key="$1"
-    local index="$2"
-    local prompt=""
-    local indexes_flag=""
-    if [[ -n "$index" && "$index" != "all" ]]; then
-        indexes_flag="--indexes $index"
-        prompt=$index
-    fi
-    local preview="$CMD preview $indexes_flag"
-    local print="$CMD print $indexes_flag"
-    echo "$key:change-prompt($prompt> )+change-preview($preview {})+reload($print)"
-}
-
 STATE_FILE="/tmp/nix-search-tv-fzf"
 # save_state saves the currently displayed index
 # to the $STATE_FILE. This file serves as an external script state
 # for communication between "print" and "preview" commands
-save_state() {
-    local index="$1"
-    local indexes_flag=""
-    if [[ -n "$index" && "$index" != "all" ]]; then
-        indexes_flag="--indexes $index"
-    fi
-    echo "execute(echo $indexes_flag > $STATE_FILE)"
-}
 
-FZF_BINDS=()
-for e in "${INDEXES[@]}"; do
-    index=$(echo "$e" | awk '{ print $1 }')
-    keybind=$(echo "$e" | awk '{ print $2 }')
-    fzf_bind=$(bind_index "$keybind" "$index")
-    fzf_save_state=$(save_state "$index")
-    FZF_BINDS+=("--bind" "$fzf_bind+$fzf_save_state")
-done
-#
 # reset the state
-echo "" >/tmp/nix-search-tv-fzf
+echo "" > $STATE_FILE
 
 SEARCH_SNIPPET_CMD=$'echo "{}"'
 # fzf surrounds the matched package with ', trim them
@@ -73,6 +33,7 @@ SEARCH_SNIPPET_CMD="$SEARCH_SNIPPET_CMD | awk '{ if (\$2) { print \$2 } else pri
 SEARCH_SNIPPET_CMD="$SEARCH_SNIPPET_CMD | xargs printf \"https://github.com/search?type=code&q=lang:nix+%s\" \$1 "
 
 PACKAGE_NAME="\$(echo '{}' | sed 's:nixpkgs/ ::g')"
+
 NIX_SHELL_CMD="nix shell nixpkgs#$PACKAGE_NAME"
 if [ -n "$TMUX" ]; then
     NIX_SHELL_CMD="tmux new-window -n nix-shell-$PACKAGE_NAME -c \$PWD \"$NIX_SHELL_CMD\""
@@ -91,6 +52,8 @@ EDIT_SOURCE_CMD="
     
     if echo \"\$source_url\" | grep -q 'nix-community/home-manager'; then
         repo_path=\"\$HOME/repos/home-manager\"
+    if echo \"\$source_url\" | grep -q 'nix-darwin/nix-darwin'; then
+        repo_path=\"\$HOME/repos/nix-darwin\"
     else
         repo_path=\"\$HOME/repos/nixpkgs\"
     fi
@@ -98,7 +61,7 @@ EDIT_SOURCE_CMD="
     \$EDITOR \"\$repo_path/\$file_path\"
 "
 
-PREVIEW_WINDOW="wrap"
+PREVIEW_WINDOW="wrap,60%"
 [ "$(tput cols)" -lt 90 ] && PREVIEW_WINDOW="$PREVIEW_WINDOW,up"
 
 exec "$CMD" print | fzf \
@@ -111,9 +74,9 @@ exec "$CMD" print | fzf \
     --bind "$SEARCH_SNIPPET_KEY:execute($SEARCH_SNIPPET_CMD | xargs $OPENER)" \
     --bind "$NIX_SHELL_KEY:become($NIX_SHELL_CMD)" \
     --bind "$NIX_PROFILE_KEY:execute($NIX_PROFILE_CMD)" \
+    --bind "$PRINT_PREVIEW_KEY:execute($CMD preview \$(cat $STATE_FILE) {} | less)" \
     --layout reverse \
     --scheme history \
     --border=sharp \
     --preview-border=sharp \
     --preview-window="$PREVIEW_WINDOW" \
-    "${FZF_BINDS[@]}"

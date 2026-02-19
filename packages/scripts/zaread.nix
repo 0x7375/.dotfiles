@@ -16,7 +16,7 @@ pkgs.writeShellApplication {
     ZA_CONFIG="''${XDG_CONFIG_HOME:-"$HOME"/.config}/zaread/zareadrc"
 
     # Default reader, i.e. command, which script uses to open pdf, epub and converted files
-    READER="zathura"
+    READER="sioyek"
     # Default converters, i.e. commands, which script uses to convert files to pdf
     MOBI_CMD="ebook-convert"
     OFFICE_CMD="soffice"

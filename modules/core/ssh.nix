@@ -45,9 +45,10 @@ lib.mkMerge [
     activation =
       let
         target = "/etc/ssh/ssh_config.d/999-secrets.conf";
+        targetDir = dirOf target;
       in
       ''
-        mkdir -p $(dirname "${target}")
+        mkdir -p "${targetDir}"
 
         server=$(cat "${config.sops.secrets."server_uni/server".path}")
         user=$(cat "${config.sops.secrets."server_uni/user".path}")

@@ -2,10 +2,11 @@
   pkgs,
   lib,
   config,
+  mkNixos,
   ...
 }:
 
-lib.mkIf config.me.boot.enable {
+lib.mkIf config.me.boot.enable (mkNixos {
   boot.plymouth = {
     enable = true;
     theme = "spinner_alt";
@@ -26,4 +27,4 @@ lib.mkIf config.me.boot.enable {
   boot.loader.systemd-boot.configurationLimit = 30;
   boot.loader.timeout = 0;
   boot.loader.efi.canTouchEfiVariables = true;
-}
+})

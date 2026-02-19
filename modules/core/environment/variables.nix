@@ -12,6 +12,7 @@
       EDITOR = "nvim";
       VISUAL = "nvim";
       PAGER = "less -R";
+      LESS = "-R";
       SYSTEMD_LESS = "RM";
       MANPAGER = "nvim +Man!";
       BROWSER = cfg.browser;

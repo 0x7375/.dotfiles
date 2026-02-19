@@ -22,25 +22,41 @@
       default = [ ];
       description = "List of unfree packages to allow installing.";
     };
+
+    userActivation = lib.mkOption {
+      type = lib.types.lines;
+      default = "";
+      description = "Alias for respective user activation method on macos/nixos, don't use single quotes on macos";
+    };
   };
 
   config = mkBundle {
     environment.etc.nixcfg.source = pkgs.lib.cleanSource inputs.self;
 
-    nixos.systemd.user.services.dotfiles-setup = {
-      description = "Clone dotfiles repository";
-      after = [ "network-online.target" ];
-      wants = [ "network-online.target" ];
-      serviceConfig = {
-        Type = "oneshot";
-        ExecStart = pkgs.writeShellScript "clone-dotfiles" ''
-          if [[ ! -e ${config.me.flakeDir} ]]; then
-            ${lib.getExe pkgs.git} -c core.sshCommand="${lib.getExe' pkgs.openssh "ssh"} -o StrictHostKeyChecking=accept-new" clone codeberg:0x7E/.dotfiles ${config.me.flakeDir}
-          fi
-        '';
-        RemainAfterExit = true;
+    darwin.system.activationScripts.postActivation.text = lib.mkIf (config.userActivation != "") ''
+      sudo -H -u ${config.me.user} ${lib.getExe pkgs.bash} -c '
+        ${config.userActivation}
+      '
+    '';
+
+    nixos = {
+      system.userActivationScripts.userActivation.text = config.userActivation;
+
+      systemd.user.services.dotfiles-setup = {
+        description = "Clone dotfiles repository";
+        after = [ "network-online.target" ];
+        wants = [ "network-online.target" ];
+        serviceConfig = {
+          Type = "oneshot";
+          ExecStart = pkgs.writeShellScript "clone-dotfiles" ''
+            if [[ ! -e ${config.me.flakeDir} ]]; then
+              ${lib.getExe pkgs.git} -c core.sshCommand="${lib.getExe' pkgs.openssh "ssh"} -o StrictHostKeyChecking=accept-new" clone codeberg:0x7E/.dotfiles ${config.me.flakeDir}
+            fi
+          '';
+          RemainAfterExit = true;
+        };
+        wantedBy = [ "default.target" ];
       };
-      wantedBy = [ "default.target" ];
     };
   };
 }

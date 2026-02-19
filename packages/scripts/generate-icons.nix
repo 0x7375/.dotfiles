@@ -56,10 +56,6 @@ pkgs.writeShellApplication {
           dark_color="$red"
           light_color="$light_red"
           ;;
-        moon.png)
-          dark_color="$sleep"
-          light_color="$light_sleep"
-          ;;
         *)
           dark_color="$primary"
           light_color="$light_primary"

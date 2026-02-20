@@ -52,7 +52,7 @@ EDIT_SOURCE_CMD="
     
     if echo \"\$source_url\" | grep -q 'nix-community/home-manager'; then
         repo_path=\"\$HOME/repos/home-manager\"
-    if echo \"\$source_url\" | grep -q 'nix-darwin/nix-darwin'; then
+    elif echo \"\$source_url\" | grep -q 'nix-darwin/nix-darwin'; then
         repo_path=\"\$HOME/repos/nix-darwin\"
     else
         repo_path=\"\$HOME/repos/nixpkgs\"

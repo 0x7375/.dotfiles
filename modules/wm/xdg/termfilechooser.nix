@@ -45,16 +45,17 @@ lib.mkIf config.me.wm.enable (mkNixos {
     })
   ];
 
-  packages = [ pkgs.xdg-desktop-portal-termfilechooser ];
+  xdg.portal = {
+    extraPortals = [
+      pkgs.xdg-desktop-portal-termfilechooser
+    ];
+    config.common."org.freedesktop.impl.portal.FileChooser" = "termfilechooser";
+  };
 
   vars = {
     GDK_DEBUG = "portals";
     GTK_USE_PORTAL = "1";
   };
-
-  xdg.portal.extraPortals = [
-    pkgs.xdg-desktop-portal-termfilechooser
-  ];
 
   hj.xdg.config.files."xdg-desktop-portal-termfilechooser/config".text =
     let
@@ -79,18 +80,6 @@ lib.mkIf config.me.wm.enable (mkNixos {
       cmd='${pkgs.xdg-desktop-portal-termfilechooser}/share/xdg-desktop-portal-termfilechooser/lf-wrapper.sh'
       default_dir=$XDG_DOWNLOAD_DIR
     '';
-
-  hj.xdg.config.files."xdg-desktop-portal/portals.conf" = {
-    type = "copy";
-    clobber = true;
-    permissions = "0644";
-    text = # ini
-      ''
-        [preferred]
-        default=*
-        org.freedesktop.impl.portal.FileChooser=termfilechooser
-      '';
-  };
 
   vars.QT_QPA_PLATFORMTHEME = "xdgdesktopportal";
 

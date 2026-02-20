@@ -43,7 +43,7 @@ pkgs.writeShellApplication {
 
     ${lib.optionalString (!isDarwin) ''
       xrdb -load "$HOME/.config/X11/xresources"
-      dconf write /org/gnome/desktop/interface/color-scheme "'prefer-''${theme}'"
+      darkman set "$theme"
       dunstctl reload
       i3-msg restart
       pkill nemo

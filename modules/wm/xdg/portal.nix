@@ -7,10 +7,11 @@
 }:
 
 lib.mkIf config.me.wm.enable (mkNixos {
-  # xdg portal needed for global dark theme
   xdg.portal = {
     enable = true;
-    config.common.default = "*";
+    config.common."org.freedesktop.impl.portal.Settings" = "darkman";
     extraPortals = with pkgs; [ darkman ];
   };
+
+  hj.xdg.config.files."darkman/config.yaml".text = "usegeoclue: false";
 })

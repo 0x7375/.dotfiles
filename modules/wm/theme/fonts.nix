@@ -22,6 +22,7 @@ lib.mkIf config.me.wm.enable (mkNixos {
       nerd-fonts.mononoki
       lexend
       nerd-fonts.terminess-ttf
+      nerd-fonts._0xproto
       noto-fonts
       noto-fonts-cjk-sans
       noto-fonts-color-emoji

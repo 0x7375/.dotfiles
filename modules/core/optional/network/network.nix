@@ -86,10 +86,12 @@ lib.mkIf config.me.network.enable (mkBundle {
 
     services.resolved = {
       enable = true;
-      dnssec = "true";
-      domains = [ "~." ];
-      fallbackDns = [ ];
-      dnsovertls = "true";
+      settings.Resolve = {
+        DNSOverTLS = true;
+        DNSSEC = "true";
+        FallbackDns = [ ];
+        Domains = [ "~." ];
+      };
     };
 
     # Configure network proxy if necessary

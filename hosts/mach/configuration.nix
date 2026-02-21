@@ -13,13 +13,14 @@
   ++ (lib.my.filesIn ./modules)
   ++ (lib.my.filesIn ../../modules);
 
-  activation = ''
-    # disable macos quarantine
-    spctl --master-disable > /dev/null 2>&1 || true
+  activation = # bash
+    ''
+      # disable macos quarantine
+      spctl --master-disable > /dev/null 2>&1 || true
 
-    flag_file=/var/db/profile_activated
-    [[ ! -e $flag_file ]] && sudo -u ${config.me.user} open ${./modules/profile.mobileconfig} && touch $flag_file
-  '';
+      flag_file=/var/db/profile_activated
+      [[ ! -e $flag_file ]] && sudo -u ${config.me.user} open ${./modules/profile.mobileconfig} && touch $flag_file
+    '';
 
   # "known to corrupt the Nix Store"
   nix.settings.auto-optimise-store = lib.mkForce false;
@@ -52,7 +53,6 @@
       "signal"
       "font-0xproto-nerd-font"
       "raycast"
-      "steam"
     ];
     onActivation = {
       cleanup = "zap";

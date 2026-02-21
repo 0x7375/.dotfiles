@@ -121,8 +121,7 @@
         "isoImg"
         # "julliard"
         # "perlman"
-      ]
-        (mkHost "nixos");
+      ] (mkHost "nixos");
       darwinConfigurations = lib.genAttrs [ "mach" ] (mkHost "darwin");
     };
 }

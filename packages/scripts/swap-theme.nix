@@ -37,17 +37,27 @@ pkgs.writeShellApplication {
       share_dir="$HOME/.local/share"
       theme_file="''${themes_dir}/theme"
 
+      # default to dark
       [[ -f "$theme_file" ]] || echo "dark" > "$theme_file"
 
       theme=light
       theme_bool=false
-      if [[ ''${1:-} == "sync" ]]; then
-        if defaults read -g AppleInterfaceStyle &>/dev/null; then theme=dark; fi 
-      elif [[ ''${1:-} =~ ^(light|dark)$ ]]; then
-        theme=$1
-      else
-        [[ $(< "$theme_file") == "light" ]] && theme=dark
-      fi
+
+      current_theme=$(< "$theme_file")
+
+      case ''${1:-} in
+        sync)
+          theme=light
+          defaults read -g AppleInterfaceStyle &>/dev/null && theme=dark
+          ;;
+        light|dark)
+          [[ $1 == "$current_theme" ]] && exit 0
+          theme=$1
+          ;;
+        *)
+          [[ $current_theme == light ]] && theme=dark || theme=light
+          ;;
+      esac
 
       echo "$theme" > "$theme_file"
       [[ "$theme" == "dark" ]] && theme_bool="true"

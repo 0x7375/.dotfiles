@@ -20,6 +20,7 @@ lib.mkMerge [
 
       nixd
       nixfmt
+      shfmt
 
       # tree-sitter
       tree-sitter

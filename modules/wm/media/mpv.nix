@@ -19,6 +19,8 @@ lib.mkIf config.me.wm.enable {
       sub-pos=%2%95
       sub-shadow-color=%7%#000000
       sub-shadow-offset=%1%0
+
+      hwdec=auto
     '';
 
   hj.xdg.config.files."mpv/input.conf".text = ''

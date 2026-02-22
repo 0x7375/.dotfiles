@@ -63,11 +63,7 @@ lib.mkIf config.me.wm.enable (mkNixos {
       3 = 3
       4 = 4
 
-      [librewolf]
-      ${defaultWithEnter}
-      control.e = f6
-
-      [zen-beta]
+      [${config.me.wm.browser}]
       ${defaultWithEnter}
       control.e = f6
 

@@ -30,6 +30,8 @@
     sed -i 's/^default .*/default auto-windows/' /boot/loader/loader.conf
   '';
 
+  vars.LIBVA_DRIVER_NAME = "nvidia";
+
   services.xserver.videoDrivers = [ "nvidia" ];
   unfree-packages = [
     "nvidia-x11"

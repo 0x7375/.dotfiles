@@ -1,6 +1,5 @@
 {
   me = {
-    refreshRate = 240;
     secrets.enable = true;
     syncthing.client.enable = true;
     # boot.debug.enable = false;
@@ -8,11 +7,7 @@
     wm = {
       enable = true;
       displayServer = "xorg";
-      optional = {
-        postgresql.enable = false;
-        neo4j.enable = false;
-        gaming.enable = false;
-      };
+      refreshRate = 240;
     };
     dev.enable = true;
   };

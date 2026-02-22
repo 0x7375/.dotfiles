@@ -15,7 +15,7 @@
       LESS = "-R";
       SYSTEMD_LESS = "RM";
       MANPAGER = "nvim +Man\\!";
-      BROWSER = cfg.browser;
+      BROWSER = cfg.wm.browser;
 
       GTK_CSD = "0";
       GHCUP_USE_XDG_DIRS = "true";

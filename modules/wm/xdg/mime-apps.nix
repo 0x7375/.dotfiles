@@ -16,6 +16,8 @@ lib.mkIf config.me.wm.enable (mkNixos {
             value = desktopEntry + ".desktop";
           }) list
         );
+
+      inherit (config.me.wm) browser;
     in
     {
       enable = true;
@@ -77,7 +79,7 @@ lib.mkIf config.me.wm.enable (mkNixos {
         "x-scheme-handler/https"
         "x-scheme-handler/chrome"
         "x-scheme-handler/mailto"
-      ] config.me.browser)
+      ] browser)
 
       // (mapEntries [
         "application/bzip2"
@@ -133,7 +135,7 @@ lib.mkIf config.me.wm.enable (mkNixos {
         "x-scheme-handler/http"
         "x-scheme-handler/https"
         "x-scheme-handler/chrome"
-      ] config.me.browser);
+      ] browser);
     };
 
   hj.xdg.data.files."mime/packages/gaphor.xml".text = # xml

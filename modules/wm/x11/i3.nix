@@ -18,7 +18,7 @@ lib.mkIf (config.me.wm.displayServer == "xorg") (mkNixos {
     in
     ''
       set $term ${getExe pkgs.${wm.terminal}} -e
-      set $browser ${config.me.browser}
+      set $browser ${wm.browser}
       set $exec exec --no-startup-id
       set $exec_always exec_always --no-startup-id
 
@@ -166,7 +166,7 @@ lib.mkIf (config.me.wm.displayServer == "xorg") (mkNixos {
       bindsym $win+Shift+9 move container to workspace $ws9
       bindsym $win+Shift+0 move container to workspace $ws10
 
-      assign [class="^zen-beta$"] 3
+      assign [class="^${wm.browser}$"] 3
       assign [class="^spotify$"] 4
       assign [class="^SimpMusic$"] 4
       assign [title="^ncspot$"] 4

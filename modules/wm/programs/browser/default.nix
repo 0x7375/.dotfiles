@@ -32,7 +32,7 @@ let
       peskyfox = import ./_peskyfox.nix;
       securefox = import ./_securefox.nix;
       smoothfox =
-        if config.me.refreshRate == 60 then
+        if config.me.wm.refreshRate == 60 then
           {
             "general.smoothScroll" = true;
             "mousewheel.default.delta_multiplier_y" = 275; # 250-400
@@ -260,6 +260,11 @@ let
         # no popups ty
         "media.webspeech.synth.enabled" = false;
         "network.protocol-handler.external.mailto" = false;
+
+        # force hardware acceleration
+        "media.hardware-video-decoding.force-enabled" = true;
+        "widget.dmabuf.force-enabled" = true;
+        "gfx.x11-egl.force-enabled" = true;
       }
     )}";
   profiles = {
@@ -327,7 +332,7 @@ let
     '';
 in
 {
-  options.me = {
+  options.me.wm = {
     refreshRate = lib.mkOption {
       type = lib.types.int;
       default = 60;
@@ -336,7 +341,7 @@ in
 
     browser = lib.mkOption {
       type = lib.types.str;
-      default = "zen-beta";
+      default = "zen";
       description = "Default browser";
     };
   };
@@ -375,10 +380,17 @@ in
     };
 
     nixos = {
+      # for hardware acceleration
+      vars.MOZ_DISABLE_RDD_SANDBOX = "1";
+
       packages = [
-        (inputs.zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.beta-unwrapped.override {
-          inherit policies;
-        })
+        (pkgs.wrapFirefox
+          inputs.zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.zen-browser-unwrapped
+          {
+            pname = "zen-browser";
+            extraPolicies = policies;
+          }
+        )
       ];
 
       hj.files.".zen/native-messaging-hosts/com.1password.1password.json".text = # json

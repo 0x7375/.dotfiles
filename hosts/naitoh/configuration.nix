@@ -23,6 +23,8 @@ in
       ];
   };
 
+  hardware.graphics.enable = true;
+
   vars.WINIT_X11_SCALE_FACTOR = "1.11";
 
   hardware.brillo.enable = true;

@@ -9,7 +9,7 @@ let
   inherit (lib) getExe getExe';
   rgba = color: alpha: "rgba(${color}${alpha})";
   term = "${lib.getExe pkgs.foot} -e";
-  browser = config.me.browser;
+  browser = config.me.wm.browser;
 in
 lib.mkIf (config.me.wm.displayServer == "wayland") {
   hj.xdg.config.files."zsh/.zshrc".text =
@@ -97,7 +97,7 @@ lib.mkIf (config.me.wm.displayServer == "wayland") {
       force_split = 2
     }
 
-    windowrulev2 = workspace 3, class:^(zen-beta)$
+    windowrulev2 = workspace 3, class:^(${config.me.wm.browser})$
     windowrulev2 = workspace 4, class:^(spotify)$
     windowrulev2 = workspace 4, class:^(SimpMusic)$
     windowrulev2 = workspace 4, title:^(ncspot)$
@@ -120,7 +120,7 @@ lib.mkIf (config.me.wm.displayServer == "wayland") {
     windowrulev2 = float, class:^(SimpMusic)$
 
     windowrulev2 = noscreenshare,class:^(Bitwarden)$
-    windowrulev2 = suppressevent maximize, class:^(zen-beta)$
+    windowrulev2 = suppressevent maximize, class:^(${config.me.wm.browser})$
     windowrulev2 = center, floating:1
 
     windowrulev2 = noblur, class:^(Gromit-mpx)$

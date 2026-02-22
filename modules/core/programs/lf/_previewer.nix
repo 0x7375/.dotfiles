@@ -1,0 +1,171 @@
+{
+  config,
+  pkgs,
+  ...
+}:
+
+let
+  desktop = config.me.wm.enable;
+in
+pkgs.writeShellApplication {
+  name = "previewer";
+  runtimeInputs =
+    with pkgs;
+    [
+      bat
+      file
+      w3m
+      delta
+      chafa
+      imagemagick
+      ffmpegthumbnailer
+      poppler-utils
+    ]
+    ++ lib.optionals desktop (
+      with pkgs;
+      [
+        fontforge
+      ]
+    )
+    ++ lib.optionals (desktop && !pkgs.stdenv.isDarwin) (
+      with pkgs;
+      [
+        libreoffice
+      ]
+    );
+  text = ''
+    ueberzug_preview() {
+      path="$(readlink -f -- "$1" | sed 's/\\/\\\\/g;s/"/\\"/g')"
+      printf '{"action":"add","identifier":"preview","x":%d,"y":%d,"width":%d,"height":%d,"scaler":"contain","scaling_position_x":0.5,"scaling_position_y":0.5,"path":"%s"}\n' \
+        "$x" "$y" "$width" "$height" "$path" | tee -a /tmp/lf-preview-debug.log > "''${FIFO_UEBERZUG:-}"
+      exit 1
+    }
+
+    hash() {
+      cache="$HOME/.cache/lf/$(stat --printf '%n\0%i\0%F\0%s\0%W\0%Y' -- "$(readlink -f -- "$1")" | sha256sum | cut -d' ' -f1).jpg"
+    }
+
+    chafa_preview() {
+      chafa --symbols vhalf --format symbols --size "''${width}x''${height}" "$1"
+      exit 1
+    }
+
+    ueberzug_or_chafa() {
+      if [ -p "''${FIFO_UEBERZUG:-}" ]; then
+        ueberzug_preview "$1"
+      else
+        chafa_preview "$1"
+      fi
+    }
+
+    preview_cached() {
+      if ! [ -f "$cache" ]; then
+        dir="$(dirname -- "$cache")"
+        [ -d "$dir" ] || mkdir -p -- "$dir"
+        "$@"
+      fi
+      ueberzug_or_chafa "$cache"
+    }
+
+    file="$1"
+    width="$2"
+    height="$3"
+    x="$4"
+    y="$5"
+
+    case "''${file##*.}" in
+      env | gpg | keyring)
+        echo "preview disabled"
+        exit 0
+        ;;
+    esac
+
+    hash "$file"
+    case "$(file -Lb --mime-type -- "$file")" in
+      image/svg+xml)
+        preview_cached convert "$file" "$cache"
+        ;;
+      image/*)
+        orientation="$(magick identify -format '%[orientation]\n' -- "$file")"
+        if [ -n "$orientation" ] \
+          && [ "$orientation" != Undefined ] \
+          && [ "$orientation" != TopLeft ]; then
+          preview_cached magick -- "$file" -auto-orient "$cache"
+        else
+          ueberzug_or_chafa "$file"
+        fi
+        ;;
+      video/*)
+        preview_cached ffmpegthumbnailer -i "$file" -o "$cache" -s 0
+        ;;
+
+      audio/*)
+        ffmpeg -hide_banner -i "$file" 2>&1 | grep -v "^ffmpeg\|^Input\|At least"
+        ;;
+
+      application/zip | \
+        application/x-tar | \
+        application/x-7z-compressed | \
+        application/gzip | \
+        application/x-bzip2 | \
+        application/x-xz | \
+        application/x-rar)
+        atool -l "$file"
+        ;;
+
+      font/* | \
+        application/font* | \
+        application/x-font*)
+        if [ -p "''${FIFO_UEBERZUG:-}" ]; then
+          preview_cached fontimage -o "$cache" "$file"
+        else
+          file -Lb "$file"
+        fi
+        ;;
+
+      application/pdf)
+        if [ -p "''${FIFO_UEBERZUG:-}" ]; then
+          preview_cached pdftoppm -jpeg -f 1 -singlefile "$file" "''${cache%.jpg}"
+        else
+          pdftotext -l 3 "$file" -
+        fi
+        ;;
+
+      application/vnd.openxmlformats-officedocument.* | \
+        application/vnd.ms-* | \
+        application/msword | \
+        application/vnd.oasis.*)
+        if [ -p "''${FIFO_UEBERZUG:-}" ]; then
+          # shellcheck disable=SC2329
+          office_to_jpg() {
+            tmp="$(mktemp -d)"
+            libreoffice --headless --convert-to pdf --outdir "$tmp" "$file" 2>/dev/null
+            pdftoppm -jpeg -f 1 -singlefile "$tmp"/*.pdf "''${cache%.jpg}"
+            rm -rf "$tmp"
+          }
+          preview_cached office_to_jpg
+        else
+          file -Lb "$file"
+        fi
+        ;;
+
+      text/x-diff | \
+        text/x-patch)
+        delta < "$file"
+        ;;
+
+      text/html)
+        w3m "$file"
+        ;;
+
+      text/*)
+        bat --color=always --style=plain "$file"
+        ;;
+      *)
+        file -Lb "$file"
+        ;;
+    esac
+
+    exit 0
+  '';
+}

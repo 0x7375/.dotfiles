@@ -7,28 +7,48 @@
 }:
 
 let
-  ctpv = (
-    pkgs.ctpv.override {
-      ueberzug = pkgs.ueberzugpp;
-      bat = pkgs.bat;
-    }
-  );
   desktop = config.me.wm.enable;
   isDarwin = pkgs.stdenv.isDarwin;
+  previewer = lib.getExe (import ./_previewer.nix { inherit pkgs config; });
+  cleaner = pkgs.writeShellScript "cleaner" ''
+    [ -p "$FIFO_UEBERZUG" ] && printf '{"action":"remove","identifier":"preview"}\n' >"$FIFO_UEBERZUG"
+  '';
 in
 mkBundle {
   nixpkgs.overlays = [
     (
       final: prev:
-      (lib.optionalAttrs (config.me.hostname != "wilson") {
+      {
+        lf = prev.writeShellApplication {
+          name = "lf";
+          runtimeInputs = with prev; [
+            lf
+            ueberzugpp
+          ];
+          text = ''
+            if [ -n "''${DISPLAY-}" ] && [ -z "''${FIFO_UEBERZUG-}" ]; then
+              export FIFO_UEBERZUG="''${TMPDIR:-/tmp}/lf-ueberzug-$$"
+
+              cleanup() {
+                exec 3>&-
+                rm -- "$FIFO_UEBERZUG"
+              }
+
+              mkfifo -- "$FIFO_UEBERZUG"
+              while [ -p "$FIFO_UEBERZUG" ] && ! ueberzugpp layer -s <"$FIFO_UEBERZUG"; do :; done &
+              exec 3>"$FIFO_UEBERZUG"
+              trap cleanup EXIT
+              lf "$@" 3>&-
+            else
+              exec lf "$@"
+            fi
+          '';
+        };
+      }
+      // (lib.optionalAttrs (config.me.hostname != "wilson") {
         ouch = prev.ouch.override {
           enableUnfree = true;
         };
-      })
-      // (lib.optionalAttrs (prev.stdenv.hostPlatform.isAarch64) {
-        ctpv = prev.ctpv.overrideAttrs (old: {
-          CFLAGS = (old.CFLAGS or "") + " -fsigned-char";
-        });
       })
     )
   ];
@@ -41,36 +61,14 @@ mkBundle {
       ouch
       perl5Packages.FileMimeInfo
     ])
-    ++ lib.optionals desktop (
-      with pkgs;
-      [
-        ueberzugpp
-        poppler-utils
-      ]
-    )
+    ++ lib.optionals desktop (with pkgs; [ ueberzugpp ])
     ++ lib.optionals (desktop && !pkgs.stdenv.isDarwin) (
       with pkgs;
       [
-        ctpv
         libreoffice
         trash-cli
       ]
     );
-
-  hj.xdg.config.files."ctpv/config".text = ''
-    preview null .env .git-credentials .keyring {{
-        echo "preview disabled"
-    }}
-  '';
-
-  nixos.hj.xdg.config.files."lf/lfrc".text = lib.mkBefore ''
-    set previewer ${lib.getExe' ctpv "ctpv"}
-    map <c-p> $${lib.getExe' ctpv "ctpv"} "$f" | less
-
-    &${lib.getExe' ctpv "ctpv"} -s $id
-    cmd on-quit %${lib.getExe' ctpv "ctpv"} -e $id
-    set cleaner ${lib.getExe' ctpv "ctpvclear"}
-  '';
 
   hj.xdg.config.files."lf/lfrc".text =
     let
@@ -81,6 +79,9 @@ mkBundle {
       copy = if isDarwin then "pbcopy" else "${getExe pkgs.xsel} -ib";
     in
     ''
+      set previewer ${previewer}
+      set cleaner ${cleaner}
+
       set filesep "\n"
       set hidden
       set noicons
@@ -146,7 +147,11 @@ mkBundle {
 
       map <c-n> move-to-new-dir
       map <c-o> jump-prev
-      map <c-p> $less -R $f
+      map <c-p> ''${{
+        cols=$(tput cols)
+        lines=$(tput lines)
+        ${previewer} "$f" "$cols" "$lines" 0 0 | less -R
+      }}
       map <c-r> redraw
       map <c-u> half-up
       map <c-z> $kill -STOP $PPID

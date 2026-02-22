@@ -61,7 +61,7 @@ EDIT_SOURCE_CMD="
     \$EDITOR \"\$repo_path/\$file_path\"
 "
 
-PREVIEW_WINDOW="wrap,60%"
+PREVIEW_WINDOW="wrap,40%"
 [ "$(tput cols)" -lt 90 ] && PREVIEW_WINDOW="$PREVIEW_WINDOW,up"
 
 exec "$CMD" print | fzf \

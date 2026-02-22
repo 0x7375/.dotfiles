@@ -2,7 +2,7 @@
   me = {
     refreshRate = 240;
     secrets.enable = true;
-    syncthing-client.enable = true;
+    syncthing.client.enable = true;
     # boot.debug.enable = false;
     btrfs.enable = true;
     wm = {

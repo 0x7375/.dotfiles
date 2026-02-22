@@ -1,7 +1,7 @@
 {
   me = {
     secrets.enable = true;
-    syncthing-client.enable = true;
+    syncthing.client.enable = true;
     boot.debug.enable = false;
     btrfs.enable = true;
     vpnPeer.enable = true;

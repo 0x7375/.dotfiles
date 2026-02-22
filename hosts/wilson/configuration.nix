@@ -6,7 +6,7 @@
 }:
 
 let
-  inherit (config.me) hosts hostname;
+  inherit (config.me) host;
 
 in
 {
@@ -46,7 +46,7 @@ in
     description = "Send notification when a service fails";
     serviceConfig = {
       Type = "oneshot";
-      ExecStart = "${lib.getExe pkgs.curl} -d \"Service %i failed\" http://${hosts.${hostname}.ips.lan}:8719/status";
+      ExecStart = "${lib.getExe pkgs.curl} -d \"Service %i failed\" http://${host.ips.lan}:8719/status";
     };
   };
 

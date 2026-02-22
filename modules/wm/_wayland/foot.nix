@@ -4,23 +4,23 @@
   mkNixos,
   ...
 }:
-let
-  # inherit (myLib) hex light_hex;
-  nocolor = "00ff00";
-in
+
 lib.mkIf (config.me.wm.displayServer == "wayland") (mkNixos {
   programs.foot = {
     enable = true;
     settings = {
-      main = {
-        # font = "${config.me.wm.font} Nerd Font:pixelsize=22:style=Bold";
-        font = "${config.me.wm.font} Nerd Font:size=18";
-        horizontal-letter-offset = 0;
-        vertical-letter-offset = 0;
-        pad = "20x20 center";
-        selection-target = "clipboard";
-        dpi-aware = "no";
-      };
+      main =
+        let
+          inherit (config.me.wm.terminalFont) family size;
+        in
+        {
+          font = "${family}:size=${size}";
+          horizontal-letter-offset = 0;
+          vertical-letter-offset = 0;
+          pad = "20x20 center";
+          selection-target = "clipboard";
+          dpi-aware = "no";
+        };
 
       bell = {
         urgent = "no";
@@ -103,4 +103,3 @@ lib.mkIf (config.me.wm.displayServer == "wayland") (mkNixos {
     };
   };
 })
-

@@ -97,14 +97,18 @@ lib.mkIf (config.me.wm.terminal == "alacritty") (mkBundle {
             y = x;
           };
         };
-        font = {
-          builtin_box_drawing = true;
-          normal = {
-            family = "${config.me.wm.font} Nerd Font";
+        font =
+          let
+            inherit (config.me.wm.terminalFont) family size;
+          in
+          {
+            builtin_box_drawing = true;
+            normal = {
+              inherit family;
+            };
+            inherit size;
+            offset.y = 0;
           };
-          size = config.me.wm.fontSize;
-          offset.y = 0;
-        };
       };
   };
 })

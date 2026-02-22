@@ -2,11 +2,11 @@
   "nodes": {
     "auto-update": {
       "locked": {
-        "lastModified": 1763283776,
-        "narHash": "sha256-Y7TDFPK4GlqrKrivOcsHG8xSGqQx3A6c+i7novT85Uk=",
+        "lastModified": 1771369470,
+        "narHash": "sha256-0NBlEBKkN3lufyvFegY4TYv5mCNHbi5OmBDrzihbBMQ=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "50a96edd8d0db6cc8db57dab6bb6d6ee1f3dc49a",
+        "rev": "0182a361324364ae3f436a63005877674cf45efb",
         "type": "github"
       },
       "original": {
@@ -241,11 +241,11 @@
         "nixpkgs": "nixpkgs_2"
       },
       "locked": {
-        "lastModified": 1771639578,
-        "narHash": "sha256-2Bjf0IjSxfm/uyDvg4Kbmk8v42/f40gJNnfuUDrfLmw=",
+        "lastModified": 1771731051,
+        "narHash": "sha256-pFHT7KYNmSh6tyYXQZT6yfrw+HDaXuFNdVTcpezELco=",
         "ref": "refs/heads/main",
-        "rev": "f7960250caf59cad70642df2cc9f48153eb6e54e",
-        "revCount": 18,
+        "rev": "8fd9167afa61f886fcc54ff7ba8956744faeef87",
+        "revCount": 23,
         "type": "git",
         "url": "https://codeberg.org/0x7E/nd"
       },
@@ -652,11 +652,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1760329437,
-        "narHash": "sha256-TbTTbn2pr0urylodXUi0r9sUB/AjvaZuLclG4b0wLp8=",
+        "lastModified": 1771719171,
+        "narHash": "sha256-ZDE3//9Hg+9X5xXcDJ4k/d6qcOVQ4MrTmvf1zv/omZY=",
         "owner": "0xc000022070",
         "repo": "zen-browser-flake",
-        "rev": "df8f0729adfcb72b1e6bb2751f92dec0f54283c3",
+        "rev": "2a71f2e720db962f2522b38704e23e11163e91ae",
         "type": "github"
       },
       "original": {

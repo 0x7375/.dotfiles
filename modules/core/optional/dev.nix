@@ -5,36 +5,40 @@
   ...
 }:
 
-lib.mkIf config.me.dev.enable {
-  packages = with pkgs; [
-    gnumake
-    deno
+{
+  options.me.dev.enable = lib.mkEnableOption "Install development packages";
 
-    go
-    delve
+  config = lib.mkIf config.me.dev.enable {
+    packages = with pkgs; [
+      gnumake
+      deno
 
-    # nodePackages.eas-cli
+      go
+      delve
 
-    nodejs_24
+      # nodePackages.eas-cli
 
-    # haskell
-    # ghc
+      nodejs_24
 
-    # php
-    php
-    # nodePackages.intelephense
+      # haskell
+      # ghc
 
-    # java
-    zulu
+      # php
+      php
+      # nodePackages.intelephense
 
-    # c
-    clang-tools
-    gcc
-    bear
-    gdb
+      # java
+      zulu
 
-    python3
-    taplo
-    jq
-  ];
+      # c
+      clang-tools
+      gcc
+      bear
+      gdb
+
+      python3
+      taplo
+      jq
+    ];
+  };
 }

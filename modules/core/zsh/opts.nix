@@ -9,6 +9,7 @@
       setopt extendedglob
       setopt interactivecomments
       setopt appendhistory
+      setopt extendedhistory
       setopt histignorespace
       setopt histignoredups
       setopt banghist

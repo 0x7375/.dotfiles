@@ -8,7 +8,7 @@
 let
   server = "wilson";
 in
-lib.mkIf (config.me.syncthing-client.enable && config.me.secrets.enable) (mkNixos {
+lib.mkIf (config.me.syncthing.client.enable && config.me.secrets.enable) (mkNixos {
   programs.fuse.userAllowOther = true;
 
   services.syncthing.settings.devices.${server}.id = config.me.hosts.${server}.syncthingId;

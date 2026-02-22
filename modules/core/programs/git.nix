@@ -8,9 +8,9 @@
 }:
 
 let
-  inherit (config.me) hosts hostname;
-  pubkey = hosts.${hostname}.sshPublicKey;
-  pubkeyFile = pkgs.writeText "key.pub" hosts.${hostname}.sshPublicKey;
+  inherit (config.me) host;
+  pubkey = host.sshPublicKey;
+  pubkeyFile = pkgs.writeText "key.pub" host.sshPublicKey;
   github = pkgs.writeText "github" ''
     [user]
       email = "github.little@0xaa.me"

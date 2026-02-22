@@ -5,18 +5,27 @@
 }:
 
 {
-  users.groups.${config.me.mediaGroup} = { };
+  options.me.mediaGroup = lib.mkOption {
+    type = lib.types.str;
+    default = "media";
+    description = "Media group name";
+    internal = true;
+  };
 
-  systemd.services = lib.mkMerge (
-    map (service: lib.my.notifyOnServiceFailure service) [
-      "podman-flaresolverr"
-      "podman-cleanuparr"
-      "jellyfin"
-      # "jellyseerr"
-      "prowlarr"
-      "qbittorrent"
-      "radarr"
-      "sonarr"
-    ]
-  );
+  config = {
+    users.groups.${config.me.mediaGroup} = { };
+
+    systemd.services = lib.mkMerge (
+      map (service: lib.my.notifyOnServiceFailure service) [
+        "podman-flaresolverr"
+        "podman-cleanuparr"
+        "jellyfin"
+        # "jellyseerr"
+        "prowlarr"
+        "qbittorrent"
+        "radarr"
+        "sonarr"
+      ]
+    );
+  };
 }

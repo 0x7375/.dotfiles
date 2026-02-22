@@ -65,7 +65,7 @@ mkBundle {
 
   nixos.hj.xdg.config.files."lf/lfrc".text = lib.mkBefore ''
     set previewer ${lib.getExe' ctpv "ctpv"}
-    map <c-p> $${lib.getExe' ctpv "ctpv"} "$f" | less -R
+    map <c-p> $${lib.getExe' ctpv "ctpv"} "$f" | less
 
     &${lib.getExe' ctpv "ctpv"} -s $id
     cmd on-quit %${lib.getExe' ctpv "ctpv"} -e $id

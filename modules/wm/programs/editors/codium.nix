@@ -166,7 +166,7 @@ lib.mkIf config.me.wm.enable {
             "notebook.dragAndDropEnabled": false,
             "notebook.undoRedoPerCell": false,
             "security.workspace.trust.banner": "never",
-            "editor.fontFamily": "'${config.me.wm.font} Nerd Font', 'serif'",
+            "editor.fontFamily": "'${config.me.wm.terminalFont.family}', 'serif'",
             "editor.wordSeparators": "`~!@#$%^&*()-=+[{]}\\|;:'\",.<>/?_",
             "editor.minimap.enabled": false,
             "notebook.cellToolbarLocation": {

@@ -43,7 +43,6 @@ local opts = {
         "netrwSettings",
         "netrwFileHandlers",
         "matchit",
-        "man",
         "matchparen",
         "tar",
         "tarPlugin",
@@ -86,8 +85,8 @@ end
 require("lazy").setup({
   { import = 'plugins.nav' },
   { import = 'plugins.lsp' },
-  { import = 'plugins.dap' },
   { import = 'plugins.actions' },
+  { import = 'plugins.dap' },
   { import = 'plugins.tools' },
   { import = 'plugins.ui' },
 }, opts)

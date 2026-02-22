@@ -7,7 +7,12 @@
 
 let
   cfg = config.me.syncthing;
-  inherit (lib) mkOption types mkIf;
+  inherit (lib)
+    mkOption
+    mkEnableOption
+    types
+    mkIf
+    ;
 
   syncthingDirConfig =
     {
@@ -80,6 +85,13 @@ let
 in
 {
   options.me.syncthing = {
+    enable = mkOption {
+      type = types.bool;
+      default = cfg.client.enable;
+      description = "Start syncthing service";
+    };
+    client.enable = mkEnableOption "Setup folders";
+
     server = mkOption {
       type = types.str;
       default = "wilson";

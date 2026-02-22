@@ -39,13 +39,6 @@ lib.mkIf config.me.wm.enable (mkNixos {
       categories = [ "Game" ];
     };
 
-    "apache-hop" = {
-      exec = "env GTK_THEME=Adwaita:dark hop-gui";
-      name = "Apache Hop";
-      type = "Application";
-      categories = [ "Development" ];
-    };
-
     "koffan" = {
       exec = "chromium --app=http://shop.0xaa.me";
       name = "Koffan";
@@ -53,4 +46,3 @@ lib.mkIf config.me.wm.enable (mkNixos {
     };
   };
 })
-

@@ -6,28 +6,32 @@
 
 let
   home = "home";
-  inherit (config.me) hostname hosts;
+  inherit (config.me) hostname hosts host;
   wgPort = 51820;
 
   peerKeys = {
-    naitoh  = "apB8TVyEJ7G/gLe5b3ckvUYJSSKv85rl1jWkZoiEQgE=";
+    naitoh = "apB8TVyEJ7G/gLe5b3ckvUYJSSKv85rl1jWkZoiEQgE=";
     shannon = "mEN17hfodGLbe58cS6r7qeegmeQlSebz2JCUIlsWdn0=";
-    lamarr  = "vEKQ3Lpxn8JScQRMS8t6lq6dGWXiB9oyBgr2gSTfvxA=";
-    mach    = "z2/QJTGzNBiq4MKPqFDtuPJsCE1Tb/7VG6oYCExeYVg=";
+    lamarr = "vEKQ3Lpxn8JScQRMS8t6lq6dGWXiB9oyBgr2gSTfvxA=";
+    mach = "z2/QJTGzNBiq4MKPqFDtuPJsCE1Tb/7VG6oYCExeYVg=";
     yoshino = "+TLwV2JKgqxaAHBv/BYrwDXEcILUt3cbuth1XY/HfTo=";
   };
 
   peerNames = builtins.attrNames peerKeys;
 in
 lib.mkIf config.me.secrets.enable {
-  sops.secrets = 
+  sops.secrets =
     let
       mkPskSecret = name: {
         name = "${name}/vpn/psk";
-        value = { owner = config.me.user; };
+        value = {
+          owner = config.me.user;
+        };
       };
     in
-    { "${hostname}/vpn/pk".owner = config.me.user; } 
+    {
+      "${hostname}/vpn/pk".owner = config.me.user;
+    }
     // (builtins.listToAttrs (map mkPskSecret peerNames));
 
   # redirect clients network traffic to the VPN
@@ -62,7 +66,7 @@ lib.mkIf config.me.secrets.enable {
   };
 
   networking.wg-quick.interfaces.${home} = {
-    address = [ "${hosts.${hostname}.ips.vpn}/24" ];
+    address = [ "${host.ips.vpn}/24" ];
     listenPort = wgPort;
     privateKeyFile = config.sops.secrets."${hostname}/vpn/pk".path;
 

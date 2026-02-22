@@ -138,12 +138,6 @@ lib.mkIf config.me.wm.enable (mkNixos {
         frame_color = palette.green;
         foreground = palette.green;
       };
-      z_sleep = {
-        appname = "sleep";
-        frame_color = palette.sleep;
-        foreground = palette.sleep;
-        timeout = 0;
-      };
       volume = {
         appname = "volume";
         history_ignore = true;
@@ -151,4 +145,3 @@ lib.mkIf config.me.wm.enable (mkNixos {
     };
   };
 })
-

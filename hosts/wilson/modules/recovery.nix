@@ -1,7 +1,7 @@
 { config, pkgs, ... }:
 
 let
-  inherit (config.me) hosts hostname;
+  inherit (config.me) host;
 in
 {
   services.watchdogd.enable = true;
@@ -31,7 +31,7 @@ in
         for i in {1..10}; do
           if curl --fail --connect-timeout 5 \
             -d "Server crashed, rebooted" \
-            http://${hosts.${hostname}.ips.lan}:8719/status; then
+            http://${host.ips.lan}:8719/status; then
             break
           fi
           echo "Notification failed. Retrying in 5s..."

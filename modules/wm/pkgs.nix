@@ -27,10 +27,10 @@ lib.mkIf config.me.wm.enable (mkBundle {
       });
     in
     [
+      my.swap-theme
       google-chrome
       texliveMedium
       typst
-      gnome-calculator
       qbittorrent
       # st
     ];

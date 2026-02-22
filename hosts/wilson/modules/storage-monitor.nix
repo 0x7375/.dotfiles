@@ -5,7 +5,7 @@
 }:
 
 let
-  inherit (config.me) hosts hostname;
+  inherit (config.me) host;
 in
 {
   systemd.services.storage-monitor = {
@@ -38,7 +38,7 @@ in
 
       if [[ -n $message ]]; then
         if [[ ! -f $lockfile ]]; then
-          curl -d "$message" http://${hosts.${hostname}.ips.lan}:8719/status
+          curl -d "$message" http://${host.ips.lan}:8719/status
           touch "$lockfile"
         fi
       fi

@@ -17,7 +17,6 @@ lib.mkIf (config.me.wm.displayServer == "xorg") (mkNixos {
       dir = "$HOME/notes";
     in
     ''
-      set $tmux ${getExe pkgs.${wm.terminal}} -e
       set $term ${getExe pkgs.${wm.terminal}} -e
       set $browser ${config.me.browser}
       set $exec exec --no-startup-id
@@ -64,9 +63,10 @@ lib.mkIf (config.me.wm.displayServer == "xorg") (mkNixos {
       client.background        $inactive
 
       bindsym $win+t $exec $term ${getExe pkgs.my.tmux-sessionizer} ~/
+      bindsym $win+Shift+t $exec {getExe pkgs.${wm.terminal}
+
       bindsym $win+s $exec $term ${getExe pkgs.my.tmux-sshr}
       bindsym $win+Shift+s $exec ${getExe pkgs.my.swap-theme}
-      bindsym $win+Shift+t $exec ${getExe pkgs.tmux} new-session
       bindsym $win+e $exec $term ${getExe pkgs.lf}
       bindsym $win+Shift+e $exec $term sudo ${getExe pkgs.lf}
       bindsym $win+m $exec $term $(${pkgs.writeShellScript "open-note" ''

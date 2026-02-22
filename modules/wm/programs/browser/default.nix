@@ -256,6 +256,10 @@ let
         "zen.view.mac.show-three-dot-menu" = true;
 
         "media.videocontrols.picture-in-picture.enable-when-switching-tabs.enabled" = true;
+
+        # no popups ty
+        "media.webspeech.synth.enabled" = false;
+        "network.protocol-handler.external.mailto" = false;
       }
     )}";
   profiles = {
@@ -322,77 +326,85 @@ let
       }
     '';
 in
-lib.mkIf config.me.wm.enable (mkBundle {
-  darwin = {
-    homebrew.casks = [ "zen" ];
-
-    environment.etc."zen-policies.plist".text = lib.generators.toPlist { escape = true; } (
-      policies // { EnterprisePoliciesEnabled = true; }
-    );
-
-    activation = ''
-      cp -f "/etc/zen-policies.plist" "/Library/Preferences/app.zen-browser.zen.plist"
-    '';
-
-    hj.files."Library/Application Support/zen-browser/Policies/Managed/policies.json".source =
-      "/etc/zen-policies.plist";
-
-    hj.files."Library/Application Support/zen/installs.ini" = {
-      type = "copy";
-      generator = lib.generators.toINI { };
-      value = {
-        "6ED35B3CA1B5D3AF" = {
-          Default = "Profiles/${profile}";
-          Locked = 1;
-        };
-      };
+{
+  options.me = {
+    refreshRate = lib.mkOption {
+      type = lib.types.int;
+      default = 60;
+      description = "Refresh rate (for smooth scrolling settings)";
     };
 
-    hj.files."Library/Application Support/zen/profiles.ini" = profiles;
-    hj.files."Library/Application Support/zen/Profiles/${profile}/chrome/userChrome.css".text = css;
-    hj.files."Library/Application Support/zen/Profiles/${profile}/zen-keyboard-shortcuts.json".text =
-      shortcuts;
-    hj.files."Library/Application Support/zen/Profiles/${profile}/user.js".text = js;
+    browser = lib.mkOption {
+      type = lib.types.str;
+      default = "zen-beta";
+      description = "Default browser";
+    };
   };
 
-  nixos = {
-    nixpkgs.overlays = [
-      (final: prev: {
-        zen-browser =
-          (inputs.zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.beta-unwrapped.override {
-            inherit policies;
-          }).overrideAttrs
-            (old: {
-              appendRunpaths = (old.appendRunpaths or [ ]) ++ [ "${final.speechd-minimal}/lib" ];
-            });
-      })
-    ];
+  config = lib.mkIf config.me.wm.enable (mkBundle {
+    darwin = {
+      homebrew.casks = [ "zen" ];
 
-    packages = [ pkgs.zen-browser ];
+      environment.etc."zen-policies.plist".text = lib.generators.toPlist { escape = true; } (
+        policies // { EnterprisePoliciesEnabled = true; }
+      );
 
-    hj.files.".zen/native-messaging-hosts/com.1password.1password.json".text = # json
-      ''
-        {
-          "name": "com.1password.1password",
-          "description": "1Password BrowserSupport",
-          "path": "/run/wrappers/bin/1Password-BrowserSupport",
-          "type": "stdio",
-          "allowed_extensions": [
-            "{0a75d802-9aed-41e7-8daa-24c067386e82}",
-            "{25fc87fa-4d31-4fee-b5c1-c32a7844c063}",
-            "{d634138d-c276-4fc8-924b-40a0ea21d284}"
-          ]
-        }
+      activation = ''
+        cp -f "/etc/zen-policies.plist" "/Library/Preferences/app.zen-browser.zen.plist"
       '';
 
-    hj.files.".zen/profiles.ini" = profiles;
-    hj.files.".zen/${profile}/chrome/userChrome.css".text = css;
-    hj.files.".zen/${profile}/zen-keyboard-shortcuts.json".text = shortcuts;
-    hj.files.".zen/${profile}/user.js".text = js;
-    # TODO declarative zen mods
-    # hj.files.".zen/${profile}/zen-themes.json".text = (builtins.readFile ./zen-themes.json);
-  };
+      hj.files."Library/Application Support/zen-browser/Policies/Managed/policies.json".source =
+        "/etc/zen-policies.plist";
 
-  # required for zen to load the custom profile
-  vars.MOZ_LEGACY_PROFILES = "1";
-})
+      hj.files."Library/Application Support/zen/installs.ini" = {
+        type = "copy";
+        generator = lib.generators.toINI { };
+        value = {
+          "6ED35B3CA1B5D3AF" = {
+            Default = "Profiles/${profile}";
+            Locked = 1;
+          };
+        };
+      };
+
+      hj.files."Library/Application Support/zen/profiles.ini" = profiles;
+      hj.files."Library/Application Support/zen/Profiles/${profile}/chrome/userChrome.css".text = css;
+      hj.files."Library/Application Support/zen/Profiles/${profile}/zen-keyboard-shortcuts.json".text =
+        shortcuts;
+      hj.files."Library/Application Support/zen/Profiles/${profile}/user.js".text = js;
+    };
+
+    nixos = {
+      packages = [
+        (inputs.zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.beta-unwrapped.override {
+          inherit policies;
+        })
+      ];
+
+      hj.files.".zen/native-messaging-hosts/com.1password.1password.json".text = # json
+        ''
+          {
+            "name": "com.1password.1password",
+            "description": "1Password BrowserSupport",
+            "path": "/run/wrappers/bin/1Password-BrowserSupport",
+            "type": "stdio",
+            "allowed_extensions": [
+              "{0a75d802-9aed-41e7-8daa-24c067386e82}",
+              "{25fc87fa-4d31-4fee-b5c1-c32a7844c063}",
+              "{d634138d-c276-4fc8-924b-40a0ea21d284}"
+            ]
+          }
+        '';
+
+      hj.files.".zen/profiles.ini" = profiles;
+      hj.files.".zen/${profile}/chrome/userChrome.css".text = css;
+      hj.files.".zen/${profile}/zen-keyboard-shortcuts.json".text = shortcuts;
+      hj.files.".zen/${profile}/user.js".text = js;
+      # TODO declarative zen mods
+      # hj.files.".zen/${profile}/zen-themes.json".text = (builtins.readFile ./zen-themes.json);
+    };
+
+    # required for zen to load the custom profile
+    vars.MOZ_LEGACY_PROFILES = "1";
+  });
+}

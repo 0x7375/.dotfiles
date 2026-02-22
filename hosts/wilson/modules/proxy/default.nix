@@ -6,9 +6,9 @@
 }:
 
 let
-  inherit (config.me) hosts hostname;
+  inherit (config.me) host;
   url = "0xaa.me";
-  ip = hosts.${hostname}.ips.lan;
+  ip = host.ips.lan;
   mkSubDomain =
     {
       port,

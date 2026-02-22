@@ -20,7 +20,7 @@
 
       merge_histories() {
         # Keep only the most recent occurrence of each command across all history files, sorted by timestamp
-        sort -n "$hist_dir"/*_history 2>/dev/null | awk '
+        sort -t':' -k2,2n "$hist_dir"/*_history 2>/dev/null | awk '
           {
             # Extract command content, ignoring timestamp
             if (match($0, /^: [0-9]+:[0-9]+;/)) {
@@ -35,6 +35,12 @@
             for(i=1;i<=NR;i++) 
               if(seen[cmds[i]]==i) print lines[i]
           }' > "$HISTFILE"
+      }
+
+      zshaddhistory() {
+        emulate -L zsh
+        _HISTLINE=''${1%%$'\n'}
+        return 2
       }
 
       precmd() {

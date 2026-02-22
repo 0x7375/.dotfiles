@@ -208,20 +208,6 @@ lib.mkIf (config.me.wm.displayServer == "xorg") (mkNixos {
       # makes arbtt work properly
       $exec ${getExe' pkgs.xorg.xprop "xprop"} -root -f _NET_CLIENT_LIST 32a -set _NET_CLIENT_LIST 0
 
-      $exec_always ${pkgs.writeShellScript "set-wallpaper" ''
-        # wallpapers="$HOME/pictures/wallpapers/$(< $TINTED_FILE)"
-        # if [[ -d $wallpapers ]]; then
-        #   shuf -e -n1 --random-source=<(date +%Y%m%d | md5sum) \
-        #     ''${wallpapers}/* | \
-        #     ${getExe' pkgs.findutils "xargs"} ${getExe pkgs.feh} --no-fehbg --bg-fill
-        # else
-        #   ${getExe pkgs.feh} --no-fehbg --bg-fill ${config.me.flakeDir}/.assets/wallpaper.png
-        # fi
-
-        # ${getExe pkgs.feh} --no-fehbg --bg-fill "$HOME/pictures/wallpapers/$(< $TINTED_FILE)_nixos.png" ||
-        #   ${getExe' pkgs.hsetroot "hsetroot"} -solid "$(xrdb -query | grep 'bg0:' | cut -f2)"
-      ''}
-
       $exec_always ${getExe' pkgs.hsetroot "hsetroot"} -solid "$(xrdb -query | grep 'bg0:' | cut -f2)"
       $exec_always ${getExe' pkgs.polybar "polybar-msg"} cmd restart
 

@@ -12,10 +12,21 @@ pkgs.writeShellApplication {
   name = "swap-theme";
   bashOptions = [ "nounset" ];
   excludeShellChecks = [ "SC2034" ];
-  runtimeInputs = with pkgs; [
-    procps
-    fd
-  ];
+  runtimeInputs =
+    with pkgs;
+    [
+      procps
+      fd
+      darkman
+    ]
+    ++ lib.optionals (config.me.wm.displayServer == "xorg") (
+      with pkgs;
+      [
+        i3
+        dunst
+        xorg.xrdb
+      ]
+    );
   text =
     let
       inherit (config.me.wm) theme iconTheme;
@@ -62,6 +73,8 @@ pkgs.writeShellApplication {
           ln -sfT "${iconTheme.package}/share/icons/${iconTheme.name}-''${theme^}" "$share_dir/icons/${iconTheme.name}"
 
           xrdb -load "$HOME/.config/X11/xresources"
+          sleep .5
+
           darkman set "$theme"
           dunstctl reload
           i3-msg restart

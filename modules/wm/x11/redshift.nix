@@ -28,4 +28,3 @@ lib.mkIf (config.me.wm.displayServer == "xorg" && config.me.secrets.enable) (mkN
     ''
   );
 })
-

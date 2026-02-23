@@ -6,7 +6,13 @@
 
 let
   home = "home";
-  inherit (config.me) hostname hosts host;
+  inherit (config.me)
+    hostname
+    hosts
+    host
+    services
+    ;
+  inherit (services.koffan) port;
   wgPort = 51820;
 
   peerKeys = {
@@ -53,13 +59,13 @@ lib.mkIf config.me.secrets.enable {
 
       chain enforce_input {
         type filter hook input priority -10; policy accept;
-        ip saddr @restricted_peer tcp dport 3000 accept
+        ip saddr @restricted_peer tcp dport ${toString port} accept
         ip saddr @restricted_peer drop
       }
 
       chain enforce_forward {
         type filter hook forward priority -10; policy accept;
-        ip saddr @restricted_peer ct original protocol tcp ct original proto-dst 3000 accept
+        ip saddr @restricted_peer ct original protocol tcp ct original proto-dst ${toString port} accept
         ip saddr @restricted_peer drop
       }
     '';

@@ -13,7 +13,7 @@ let
     mkOption {
       type = types.nullOr types.str;
       default = null;
-      description = "SSH public key (null for devices like phones)";
+      inherit description;
     };
 
   hostSubmodule = {

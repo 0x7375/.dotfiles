@@ -1,4 +1,9 @@
-{ lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 {
   services.filebrowser = {
@@ -7,7 +12,7 @@
     openFirewall = true;
     group = "media";
     settings = {
-      port = 8081;
+      port = config.me.services.filebrowser.port;
       address = "0.0.0.0";
       root = "/data/";
     };

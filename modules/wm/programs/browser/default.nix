@@ -77,7 +77,6 @@ let
                 "ublock0_raymondhill_net-browser-action",
                 "_d7742d87-e61d-4b78-b8a1-b469842139fa_-browser-action",
                 "_21f1ba12-47e1-4a9b-ad4e-3a0260bbeb26_-browser-action",
-                "addon_darkreader_org-browser-action",
                 "_7a7a4a92-a2a0-41d1-9fd7-1e92480d612d_-browser-action",
                 "_aecec67f-0d10-4fa7-b7c7-609a2db280cf_-browser-action",
                 "_e58d3966-3d76-4cd9-8552-1582fbc800c1_-browser-action",
@@ -113,7 +112,6 @@ let
             "seen": [
               "_21f1ba12-47e1-4a9b-ad4e-3a0260bbeb26_-browser-action",
               "_d7742d87-e61d-4b78-b8a1-b469842139fa_-browser-action",
-              "addon_darkreader_org-browser-action",
               "ublock0_raymondhill_net-browser-action",
               "_7a7a4a92-a2a0-41d1-9fd7-1e92480d612d_-browser-action",
               "_aecec67f-0d10-4fa7-b7c7-609a2db280cf_-browser-action",

@@ -1,0 +1,38 @@
+html {
+    font-size: 62.5%; /* 1rem = 10px */
+}
+
+body {
+  font-family: monospace;
+  max-width: 30%;
+  margin: 2rem auto;
+  padding: 2rem;
+  color: #333;
+}
+
+h1 {
+  text-align: center;
+  font-size: 5rem;
+  margin-bottom: 3rem;
+}
+
+ul {
+  font-size: 3rem;
+  list-style-type: none;
+  padding: 0;
+}
+
+li {
+  padding: 1.5rem 0;
+  border-bottom: 0.1rem solid #eee;
+}
+
+a {
+  color: #555;
+  text-decoration: none;
+  display: block;
+
+  :hover {
+    color: #000;
+  }
+}

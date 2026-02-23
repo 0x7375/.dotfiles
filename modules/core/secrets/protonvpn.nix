@@ -107,32 +107,38 @@ lib.mkIf (config.me.secrets.enable) (mkNixos {
       Restart = "on-failure";
       RestartSec = "5s";
       LoadCredential = [ "password:${config.sops.secrets."wilson/qbittorrent/pw".path}" ];
-      ExecStartPre = pkgs.writeShellScript "get-proton-port" ''
-        OUTPUT=$(${getExe' pkgs.libnatpmp "natpmpc"} -g ${gw-ip} -a 1 0 tcp 60 2>/dev/null)
-        PORT=$(echo "$OUTPUT" | ${getExe' pkgs.gawk "awk"} '/Mapped public port/ {print $4}')
+      ExecStartPre = pkgs.writeShellScript "get-proton-port" (
+        let
+          inherit (config.me.services.qBittorrent) port;
+        in
+        # bash
+        ''
+          OUTPUT=$(${getExe' pkgs.libnatpmp "natpmpc"} -g ${gw-ip} -a 1 0 tcp 60 2>/dev/null)
+          PORT=$(echo "$OUTPUT" | ${getExe' pkgs.gawk "awk"} '/Mapped public port/ {print $4}')
 
-        if [ -n "$PORT" ]; then
-          if [ -f /var/lib/proton-vpn-port ] && [ "$(< /var/lib/proton-vpn-port)" == "$PORT" ]; then
-            echo "Port unchanged: $PORT"
-          else
-            echo "$PORT" > /var/lib/proton-vpn-port
-            echo "Successfully got new port: $PORT"
-            
-            if systemctl is-active --quiet qbittorrent; then
-              PASS=$(cat "$CREDENTIALS_DIRECTORY/password")
-              SID=$(${getExe pkgs.curl} -s -i -X POST "http://localhost:8080/api/v2/auth/login" \
-                --data "username=admin&password=$PASS" | grep -i set-cookie | sed 's/.*SID=\([^;]*\);.*/\1/')
-              
-                ${getExe pkgs.curl} -s -X POST "http://localhost:8080/api/v2/app/setPreferences" \
-                  -H "Content-Type: application/x-www-form-urlencoded" \
-                  -H "Cookie: SID=$SID" \
-                  --data "json={\"listen_port\":$PORT}" && echo "qBittorrent port updated to $PORT"
+          if [ -n "$PORT" ]; then
+            if [ -f /var/lib/proton-vpn-port ] && [ "$(< /var/lib/proton-vpn-port)" == "$PORT" ]; then
+              echo "Port unchanged: $PORT"
             else
-              echo "qBittorrent not running, skipping port update"
+              echo "$PORT" > /var/lib/proton-vpn-port
+              echo "Successfully got new port: $PORT"
+              
+              if systemctl is-active --quiet qbittorrent; then
+                PASS=$(cat "$CREDENTIALS_DIRECTORY/password")
+                SID=$(${getExe pkgs.curl} -s -i -X POST "http://localhost:${toString port}/api/v2/auth/login" \
+                  --data "username=admin&password=$PASS" | grep -i set-cookie | sed 's/.*SID=\([^;]*\);.*/\1/')
+                
+                  ${getExe pkgs.curl} -s -X POST "http://localhost:${toString port}/api/v2/app/setPreferences" \
+                    -H "Content-Type: application/x-www-form-urlencoded" \
+                    -H "Cookie: SID=$SID" \
+                    --data "json={\"listen_port\":$PORT}" && echo "qBittorrent port updated to $PORT"
+              else
+                echo "qBittorrent not running, skipping port update"
+              fi
             fi
           fi
-        fi
-      '';
+        ''
+      );
 
       ExecStart = pkgs.writeShellScript "renew-proton-port" ''
         PORT=$(< /var/lib/proton-vpn-port)

@@ -6,22 +6,44 @@
 }:
 
 let
-  inherit (config.me) host;
-  url = "0xaa.me";
+  inherit (config.me) host domain;
   ip = host.ips.lan;
   mkSubDomain =
     {
       port,
       webSockets ? false,
+      extraConfig ? "",
+      ...
     }:
     {
       forceSSL = true;
-      useACMEHost = url;
+      useACMEHost = domain;
       locations."/" = {
         proxyPass = "http://${ip}:${toString port}";
         proxyWebsockets = webSockets;
+        inherit extraConfig;
       };
     };
+
+  generatedHtml =
+    let
+      links = lib.concatStringsSep "\n" (
+        lib.mapAttrsToList (
+          name: service: ''<li><a href="${service.url}">${name}</a></li>''
+        ) config.me.services
+      );
+    in
+    # html
+    ''
+      <!DOCTYPE html>
+      <html>
+        <head>~/Homepage</head>
+        <body>
+          <h1>~/Homepage</h1>
+          <ul id="services">${links}</ul>
+        </body>
+      </html>
+    '';
 in
 {
   networking.firewall.allowedTCPPorts = [
@@ -31,7 +53,7 @@ in
 
   systemd.tmpfiles.rules =
     let
-      content = builtins.replaceStrings [ "\n" ] [ "\\n" ] (builtins.readFile ./index.html);
+      content = builtins.replaceStrings [ "\n" ] [ "\\n" ] generatedHtml;
     in
     [
       "f+ /var/www/index.html 0644 root root - ${content}"
@@ -40,7 +62,7 @@ in
   services.nginx = {
     enable = true;
     virtualHosts = {
-      "${url}" = {
+      "${domain}" = {
         forceSSL = true;
         enableACME = true;
         locations."/" = {
@@ -49,35 +71,19 @@ in
         };
       };
 
-      "shop.${url}" = mkSubDomain { port = 3000; };
-      "media.${url}" = mkSubDomain { port = 8096; };
-      "request.${url}" = mkSubDomain { port = 5055; };
-      "sync.${url}" = mkSubDomain { port = 8384; };
-      "torrent.${url}" = mkSubDomain { port = 8080; };
-      "file.${url}" = mkSubDomain { port = 8081; };
-      "indexer.${url}" = mkSubDomain { port = 9696; };
-      "movies.${url}" = mkSubDomain { port = 7878; };
-      "shows.${url}" = mkSubDomain { port = 8989; };
-      "subtitles.${url}" = mkSubDomain { port = 6767; };
-      "notify.${url}" = mkSubDomain {
-        port = 8719;
-        webSockets = true;
-      };
-      "cleanup.${url}" = mkSubDomain {
-        port = 11011;
-        webSockets = true;
-      };
-
-      "router.${url}" = {
+      "router.${domain}" = {
         forceSSL = true;
-        useACMEHost = url;
+        useACMEHost = domain;
         locations."/".proxyPass = "http://${config.me.networkIps.lan.gateway}";
       };
-    };
+    }
+    // lib.mapAttrs' (
+      _: service: lib.nameValuePair "${service.subdomain}.${domain}" (mkSubDomain service)
+    ) config.me.services;
   };
 
   systemd.services =
-    lib.my.notifyOnServiceFailure "nginx" // lib.my.notifyOnServiceFailure "acme-${url}";
+    lib.my.notifyOnServiceFailure "nginx" // lib.my.notifyOnServiceFailure "acme-${domain}";
 
   sops.secrets.cloudflare = {
     sopsFile = "${secrets}/cloudflare.env";
@@ -88,8 +94,8 @@ in
   security.acme = lib.mkIf config.me.secrets.enable {
     acceptTerms = true;
     defaults.email = "acme.ranked@0xaa.me";
-    certs."${url}" = {
-      extraDomainNames = [ "*.${url}" ];
+    certs."${domain}" = {
+      extraDomainNames = [ "*.${domain}" ];
       dnsProvider = "cloudflare";
       environmentFile = config.sops.secrets.cloudflare.path;
       webroot = null;

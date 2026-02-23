@@ -121,7 +121,6 @@
     in
     listToAttrs [
       (extension "ublock-origin" "uBlock0@raymondhill.net")
-      (extension "darkreader" "addon@darkreader.org")
       (extension "violentmonkey" "{aecec67f-0d10-4fa7-b7c7-609a2db280cf}")
       (extension "vimium-ff" "{d7742d87-e61d-4b78-b8a1-b469842139fa}")
       (extension "1password-x-password-manager" "{d634138d-c276-4fc8-924b-40a0ea21d284}")

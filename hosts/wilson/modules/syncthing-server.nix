@@ -5,7 +5,8 @@
 }:
 
 let
-  inherit (config.me) hostname;
+  inherit (config.me) hostname services;
+  inherit (services.syncthing) port;
   cray = "cray";
   naitoh = "naitoh";
   cutler = "cutler";
@@ -31,13 +32,13 @@ let
     ];
   };
 in
-lib.mkIf config.me.secrets.enable {
-  networking.firewall.allowedTCPPorts = [ 8384 ];
+{
+  networking.firewall.allowedTCPPorts = [ port ];
 
   systemd.services = lib.my.notifyOnServiceFailure "syncthing";
 
   services.syncthing = {
-    guiAddress = "0.0.0.0:8384";
+    guiAddress = "0.0.0.0:${toString port}";
     openDefaultPorts = true;
     settings = {
       devices =

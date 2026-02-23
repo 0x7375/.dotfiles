@@ -16,41 +16,37 @@ let
 in
 mkBundle {
   nixpkgs.overlays = [
-    (
-      final: prev:
-      {
-        lf = prev.writeShellApplication {
-          name = "lf";
-          runtimeInputs = with prev; [
-            lf
-            ueberzugpp
-          ];
-          text = ''
-            if [ -n "''${DISPLAY-}" ] && [ -z "''${FIFO_UEBERZUG-}" ]; then
-              export FIFO_UEBERZUG="''${TMPDIR:-/tmp}/lf-ueberzug-$$"
+    (final: prev: {
+      lf = prev.writeShellApplication {
+        name = "lf";
+        runtimeInputs = with prev; [
+          lf
+          ueberzugpp
+        ];
+        text = ''
+          if [ -n "''${DISPLAY-}" ] && [ -z "''${FIFO_UEBERZUG-}" ]; then
+            export FIFO_UEBERZUG="''${TMPDIR:-/tmp}/lf-ueberzug-$$"
 
-              cleanup() {
-                exec 3>&-
-                rm -- "$FIFO_UEBERZUG"
-              }
+            cleanup() {
+              exec 3>&-
+              rm -- "$FIFO_UEBERZUG"
+            }
 
-              mkfifo -- "$FIFO_UEBERZUG"
-              while [ -p "$FIFO_UEBERZUG" ] && ! ueberzugpp layer -s <"$FIFO_UEBERZUG"; do :; done &
-              exec 3>"$FIFO_UEBERZUG"
-              trap cleanup EXIT
-              lf "$@" 3>&-
-            else
-              exec lf "$@"
-            fi
-          '';
-        };
-      }
-      // (lib.optionalAttrs (config.me.hostname != "wilson") {
-        ouch = prev.ouch.override {
-          enableUnfree = true;
-        };
-      })
-    )
+            mkfifo -- "$FIFO_UEBERZUG"
+            while [ -p "$FIFO_UEBERZUG" ] && ! ueberzugpp layer -s <"$FIFO_UEBERZUG"; do :; done &
+            exec 3>"$FIFO_UEBERZUG"
+            trap cleanup EXIT
+            lf "$@" 3>&-
+          else
+            exec lf "$@"
+          fi
+        '';
+      };
+
+      ouch = (prev.crossPkgs or prev).ouch.override {
+        enableUnfree = true;
+      };
+    })
   ];
 
   unfree-packages = [ "ouch" ];

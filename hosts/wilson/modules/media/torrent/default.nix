@@ -10,7 +10,7 @@ let
   portTemplate = "@port@";
   inherit (config.me) hostname;
 in
-lib.mkIf config.me.secrets.enable {
+{
   sops.secrets."${hostname}/qbittorrent/pw_hash" = {
     owner = config.services.qbittorrent.user;
   };

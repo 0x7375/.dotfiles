@@ -4,12 +4,15 @@
   ...
 }:
 
+let
+  inherit (config.me.services.cleanuparr) port;
+in
 {
   systemd.tmpfiles.rules = [
     "d /var/lib/cleanuparr 0755 root root -"
   ];
 
-  networking.firewall.allowedTCPPorts = [ 11011 ];
+  networking.firewall.allowedTCPPorts = [ port ];
 
   virtualisation.oci-containers.containers.cleanuparr =
     let
@@ -35,7 +38,7 @@
         "/var/lib/cleanuparr/:/config"
       ];
 
-      ports = [ "11011:11011" ];
+      ports = [ "${toString port}:${toString port}" ];
 
       environment = {
         TZ = toString config.time.timeZone;

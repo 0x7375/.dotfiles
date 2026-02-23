@@ -1,12 +1,14 @@
-{ pkgs, ... }:
+{ config, pkgs, ... }:
 
+let
+  inherit (config.me.services.koffan) port;
+in
 {
   systemd.tmpfiles.rules = [
     "d /var/lib/koffan 0755 root root -"
   ];
 
-
-  networking.firewall.allowedTCPPorts = [ 3000 ];
+  networking.firewall.allowedTCPPorts = [ port ];
 
   virtualisation.oci-containers.containers.koffan =
     let
@@ -23,7 +25,7 @@
 
         finalImageTag = version;
       };
-      ports = [ "3000:80" ];
+      ports = [ "${toString port}:80" ];
 
       environment = {
         APP_ENV = "production";

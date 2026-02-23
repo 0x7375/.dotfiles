@@ -1,8 +1,5 @@
 { config, pkgs, ... }:
 
-let
-  inherit (config.me) host;
-in
 {
   services.watchdogd.enable = true;
   boot.kernelParams = [
@@ -24,23 +21,28 @@ in
 
     path = with pkgs; [ curl ];
 
-    script = ''
-      MARKER="/var/lib/crash-notifier/clean_exit"
+    script =
+      let
+        inherit (config.me.services.ntfy) url;
+      in
+      # bash
+      ''
+        MARKER="/var/lib/crash-notifier/clean_exit"
 
-      if [ ! -f "$MARKER" ]; then
-        for i in {1..10}; do
-          if curl --fail --connect-timeout 5 \
-            -d "Server crashed, rebooted" \
-            http://${host.ips.lan}:8719/status; then
-            break
-          fi
-          echo "Notification failed. Retrying in 5s..."
-          sleep 5
-        done
-      fi
+        if [ ! -f "$MARKER" ]; then
+          for i in {1..10}; do
+            if curl --fail --connect-timeout 5 \
+              -d "Server crashed, rebooted" \
+              ${url}/status; then
+              break
+            fi
+            echo "Notification failed. Retrying in 5s..."
+            sleep 5
+          done
+        fi
 
-      rm -f "$MARKER"
-    '';
+        rm -f "$MARKER"
+      '';
 
     preStop = ''
       touch /var/lib/crash-notifier/clean_exit

@@ -23,6 +23,7 @@ lib.mkIf config.me.wm.enable (mkBundle {
       obs-studio
       vlc
       celluloid
+      jellyfin-media-player
     ];
     # opening calibre ports
     networking.firewall = {
@@ -38,4 +39,3 @@ lib.mkIf config.me.wm.enable (mkBundle {
     };
   };
 })
-

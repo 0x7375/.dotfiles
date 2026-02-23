@@ -19,10 +19,6 @@ mkBundle {
     ns = "nix shell";
     nr = "nix repl .";
 
-    svn = "${getExe' pkgs.subversion "svn"} --config-dir $XDG_CONFIG_HOME/subversion";
-    adb = "HOME=$XDG_DATA_HOME/android ${getExe' pkgs.android-tools "adb"}";
-    wget = "${getExe pkgs.wget} --hsts-file=$XDG_DATA_HOME/wget-hsts";
-
     v = "$EDITOR";
 
     extract = "${getExe' pkgs.atool "aunpack"}";

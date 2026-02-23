@@ -7,18 +7,8 @@
 }:
 
 lib.mkIf config.me.wm.enable (mkNixos {
-  unfree-packages = [ "via" ];
-
-  packages = with pkgs; [
-    via
-    vial
-  ];
-
-  services.udev.packages = with pkgs; [
-    via
-    vial
-  ];
+  packages = with pkgs; [ vial ];
+  services.udev.packages = with pkgs; [ vial ];
 
   hardware.keyboard.qmk.enable = true;
 })
-

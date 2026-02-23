@@ -241,11 +241,11 @@
         "nixpkgs": "nixpkgs_2"
       },
       "locked": {
-        "lastModified": 1771832206,
-        "narHash": "sha256-LOK9bQ5N/OEpLr9t2HFsKyge29dTjEdx+C8lREklAgY=",
+        "lastModified": 1771866993,
+        "narHash": "sha256-QVTX5pdiY7qGj0kfuurC4QrjMTkWBF472GtKOMGk1HY=",
         "ref": "refs/heads/main",
-        "rev": "26d3779da49cbd41dd061fa117d9b59c0f6620ca",
-        "revCount": 24,
+        "rev": "1afb13bc3aeacb1fe86522cf5eef5b1e17c860c1",
+        "revCount": 25,
         "type": "git",
         "url": "https://codeberg.org/0x7E/nd"
       },
@@ -553,11 +553,11 @@
     "secrets": {
       "flake": false,
       "locked": {
-        "lastModified": 1771812894,
-        "narHash": "sha256-VwmxZvdkwE+JeKU2AptLPGkShjNhqSPtO2v1v77tjfU=",
+        "lastModified": 1771834289,
+        "narHash": "sha256-IpLtdCDtsZH6CocgLwDILrbBH+ZdFumI58sShRwjbRI=",
         "ref": "refs/heads/main",
-        "rev": "b420a8141bede02e92ee3a43576c5b2e03c28b39",
-        "revCount": 75,
+        "rev": "a9b89e1bd02570f9946ea8bdd45502cd37a8380b",
+        "revCount": 76,
         "type": "git",
         "url": "ssh://git@codeberg.org/0x7E/nix-secrets"
       },

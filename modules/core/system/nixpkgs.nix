@@ -103,7 +103,7 @@ in
         InconsolataNF = prev.callPackage (pkgs-path + /derivations/fonts/InconsolataNF.nix) { };
       };
 
-      apache-hop = prev.callPackage (pkgs-path + /derivations/apache-hop.nix) { };
+      pass-secret-service-rs = prev.callPackage (pkgs-path + /derivations/pass-secret-service-rs.nix) { };
 
       # namespace for scripts: e.g. "my.tmux-sessionizer"
       my = builtins.listToAttrs (

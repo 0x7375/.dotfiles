@@ -7,33 +7,32 @@
 }:
 
 lib.mkIf config.me.wm.enable (mkNixos {
-  services.gnome.gnome-keyring.enable = true;
-  programs.seahorse.enable = true;
+  services.passSecretService = {
+    enable = true;
+    package = pkgs.pass-secret-service-rs;
+  };
 
   packages = with pkgs; [
-    polkit_gnome
-    libsecret
-    libgnome-keyring
+    pass
+    gnupg
   ];
 
-  systemd.user.tmpfiles.rules =
-    let
-      content =
-        builtins.replaceStrings [ "\n" ] [ "\\n" ]
-          # toml
-          ''
-            [keyring]
-            display-name=login
-            ctime=1744318225
-            mtime=0
-            lock-on-idle=false
-            lock-after=false
-          '';
-    in
-    [
-      "d ${config.me.home}/.local/share/keyrings 0700 ${config.me.user} users - -"
-      "f ${config.me.home}/.local/share/keyrings/login.keyring 0600 ${config.me.user} users - ${content}"
-    ];
-
-  hj.xdg.data.files."keyrings/default".text = "login";
+  userActivation =
+    # bash
+    ''
+      if ! ${lib.getExe pkgs.gnupg} --list-secret-keys "secrets@localhost" &>/dev/null; then
+        ${lib.getExe pkgs.gnupg} --batch --gen-key <<EOF
+      %no-protection
+      Key-Type: EdDSA
+      Key-Curve: ed25519
+      Subkey-Type: ECDH
+      Subkey-Curve: cv25519
+      Name-Real: Secrets
+      Name-Email: secrets@localhost
+      Expire-Date: 0
+      %commit
+      EOF
+        ${lib.getExe pkgs.pass} init "secrets@localhost"
+      fi
+    '';
 })

@@ -7,6 +7,16 @@
 }:
 
 lib.mkIf (config.me.wm.displayServer == "xorg") (mkNixos {
+  nixpkgs.overlays = [
+    (final: prev: {
+      xcolor = prev.xcolor.overrideAttrs (old: {
+        patches = (old.patches or [ ]) ++ [
+          ./xcolor_cancel_with_right_click.patch
+        ];
+      });
+    })
+  ];
+
   hj.xdg.config.files."zsh/.zshrc".text =
     lib.mkBefore ''[[ $(tty) == "/dev/tty1" ]] && exec startx &> /dev/null'';
 
@@ -35,6 +45,7 @@ lib.mkIf (config.me.wm.displayServer == "xorg") (mkNixos {
           xdo
           xclip
           xdotool
+          xcolor
         ];
       };
     };

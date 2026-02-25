@@ -22,6 +22,20 @@ lib.mkIf config.me.wm.enable (
           })
         ];
 
+        me.wm.bindings =
+          let
+            playerctl = lib.getExe pkgs.playerctl;
+            change-volume = lib.getExe pkgs.my.change-volume;
+          in
+          {
+            XF86AudioRaiseVolume = "${change-volume} up";
+            XF86AudioLowerVolume = "${change-volume} down";
+            XF86AudioMute = "${change-volume} mute";
+            XF86AudioNext = "${playerctl} next";
+            XF86AudioPrev = "${playerctl} previous";
+            XF86AudioPlay = "${playerctl} play-pause";
+          };
+
         packages = with pkgs; [
           playerctl
           pavucontrol

@@ -9,6 +9,8 @@
 lib.mkIf config.me.wm.enable (mkNixos {
   packages = [ pkgs.copyq ];
 
+  me.wm.bindings."Mod+Shift+p" = "${lib.getExe pkgs.copyq} show";
+
   systemd.user.services.copyq = {
     description = "CopyQ clipboard management daemon";
     partOf = [ "graphical-session.target" ];

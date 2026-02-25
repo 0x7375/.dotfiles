@@ -81,6 +81,13 @@ lib.mkIf config.me.wm.enable (mkNixos {
       default_dir=$XDG_DOWNLOAD_DIR
     '';
 
+  me.wm.floating = [
+    {
+      type = "title";
+      name = "filechooser";
+    }
+  ];
+
   vars.QT_QPA_PLATFORMTHEME = "xdgdesktopportal";
 
   systemd.user.services."file-handler".serviceConfig.ExecStart = "${lib.getExe pkgs.file-handler}";

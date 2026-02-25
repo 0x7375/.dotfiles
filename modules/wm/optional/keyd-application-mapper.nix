@@ -46,10 +46,10 @@ lib.mkIf config.me.wm.enable (mkNixos {
 
       apps = [
         "1password"
+        "vesktop"
         "discord"
         "ssh-askpass"
         "polkit-gnome-authentication-agent-1"
-        "spotify"
       ];
 
       appConfigs = builtins.concatStringsSep "\n\n" (map (app: "[${app}]\n${defaultWithEnter}") apps);

@@ -503,6 +503,7 @@
         "nur": "nur",
         "secrets": "secrets",
         "sops-nix": "sops-nix",
+        "token2": "token2",
         "wrappers": "wrappers",
         "zen-browser": "zen-browser"
       }
@@ -622,6 +623,22 @@
         "owner": "nix-systems",
         "repo": "default",
         "type": "github"
+      }
+    },
+    "token2": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1772040414,
+        "narHash": "sha256-wYS52VTPrUyd04MhDpGNO9WG5FjFstl8NOzduXbbVHA=",
+        "ref": "refs/heads/main",
+        "rev": "9db347a14cc031a93a5c1a176cc618a0d4ddfb20",
+        "revCount": 1,
+        "type": "git",
+        "url": "ssh://git@codeberg.org/0x7E/token2-totp-cli"
+      },
+      "original": {
+        "type": "git",
+        "url": "ssh://git@codeberg.org/0x7E/token2-totp-cli"
       }
     },
     "wrappers": {

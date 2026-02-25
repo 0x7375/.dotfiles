@@ -41,6 +41,14 @@ lib.mkIf config.me.wm.enable (mkBundle {
       "omnissa-horizon-client"
     ];
 
+    me.wm.assign = [
+      {
+        type = "class";
+        name = "vesktop";
+        workspace = "4";
+      }
+    ];
+
     packages = with pkgs; [
       # (auto.discord.override {
       #   # withOpenASAR = true;

@@ -12,6 +12,16 @@ lib.mkIf config.me.wm.enable (mkNixos {
     dunst
   ];
 
+  me.wm.bindings =
+    let
+      dunst = lib.getExe' pkgs.dunst "dunstctl";
+    in
+    {
+      "Mod+x" = "${dunst} close-all";
+      "Mod+r" = "${dunst} history-pop";
+      "Mod+a" = "${dunst} action";
+    };
+
   hj.xdg.data.files."dbus-1/services/org.knopwob.dunst.service".source =
     "${pkgs.dunst}/share/dbus-1/services/org.knopwob.dunst.service";
 
@@ -105,7 +115,7 @@ lib.mkIf config.me.wm.enable (mkNixos {
         max_icon_size = 80;
         sticky_history = true;
         history_length = 20;
-        browser = "${lib.getExe' pkgs.xdg-utils "xdg-open"}";
+        browser = config.me.wm.open;
         always_run_script = true;
         title = "Dunst";
         class = "Dunst";

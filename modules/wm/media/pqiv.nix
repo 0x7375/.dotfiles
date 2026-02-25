@@ -8,6 +8,13 @@
 lib.mkIf config.me.wm.enable {
   packages = [ pkgs.pqiv ];
 
+  me.wm.floating = [
+    {
+      type = "class";
+      name = "Pqiv";
+    }
+  ];
+
   hj.xdg.config.files."pqivrc".text = lib.concatLines [
     (lib.generators.toINI
       {

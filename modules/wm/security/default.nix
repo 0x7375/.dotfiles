@@ -30,4 +30,12 @@ lib.mkIf config.me.wm.enable (mkNixos {
     name = "Bitwarden";
     type = "Application";
   };
+
+  me.wm.floating = [
+    {
+      type = "title";
+      name = "Bitwarden Web vault";
+      enable = false;
+    }
+  ];
 })

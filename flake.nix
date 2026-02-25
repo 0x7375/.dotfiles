@@ -40,6 +40,10 @@
       url = "git+ssh://git@codeberg.org/0x7E/nix-secrets";
       flake = false;
     };
+    token2 = {
+      url = "git+ssh://git@codeberg.org/0x7E/token2-totp-cli";
+      flake = false;
+    };
 
     disko = {
       url = "github:nix-community/disko/latest";
@@ -70,7 +74,10 @@
     let
       lib = inputs.nixpkgs.lib.extend (
         self: super: {
-          my = import ./lib { lib = self; };
+          my = import ./lib {
+            lib = self;
+            inherit inputs;
+          };
         }
       );
 

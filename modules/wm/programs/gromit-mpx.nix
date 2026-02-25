@@ -1,11 +1,26 @@
 {
   mkNixos,
+  pkgs,
   lib,
   config,
   ...
 }:
 
 lib.mkIf config.me.wm.enable (mkNixos {
+  me.wm =
+    let
+      gromit = lib.getExe pkgs.gromit-mpx;
+    in
+    {
+      startup.gromit = gromit;
+      bindings = {
+        "Mod+o" = "${gromit} --toggle";
+        "Mod+Shift+o" = "${gromit} --clear";
+        "Alt+Shift+o" = "${gromit} --undo";
+        F9 = "${gromit} --toggle";
+      };
+    };
+
   hj.xdg.config.files."gromit-mpx.ini" = {
     generator = lib.generators.toINI { };
     value = {

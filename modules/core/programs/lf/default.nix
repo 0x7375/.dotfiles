@@ -68,11 +68,16 @@ mkBundle {
 
   hj.xdg.config.files."lf/lfrc".text =
     let
-      inherit (config.me) user uid home;
+      inherit (config.me)
+        user
+        uid
+        home
+        wm
+        ;
+      inherit (wm) copy;
       inherit (lib) getExe getExe';
       no-confirm = keys: lib.concatStringsSep "\n" (map (key: "vmap ${key} visual-toggle ${key}") keys);
       open = "${lib.optionalString (!isDarwin) "mime"}open";
-      copy = if isDarwin then "pbcopy" else "${getExe pkgs.xsel} -ib";
     in
     ''
       set previewer ${previewer}

@@ -9,11 +9,6 @@ pkgs.writeShellApplication {
   runtimeInputs =
     with pkgs;
     let
-      xcolor = pkgs.xcolor.overrideAttrs (old: {
-        patches = (old.patches or [ ]) ++ [
-          ./xcolor_cancel_with_right_click.patch
-        ];
-      });
     in
     [
       coreutils-full
@@ -28,7 +23,6 @@ pkgs.writeShellApplication {
       else
         [
           xcolor
-          xsel
         ]
     );
   text = ''
@@ -38,7 +32,7 @@ pkgs.writeShellApplication {
     if [[ $XDG_SESSION_TYPE == "x11" ]]; then
       color=$(xcolor | tr -d '\n')
       [[ -n $color ]] && {
-        echo -n "$color" | xsel -ib
+        echo -n "$color" | ${config.me.wm.copy}
       }
     else
       color=$(hyprpicker -ra)

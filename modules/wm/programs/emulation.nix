@@ -12,6 +12,13 @@ lib.mkIf config.me.wm.enable (mkBundle {
     ryubing
   ];
 
+  me.wm.floating = [
+    {
+      type = "class";
+      name = "Ryujinx";
+    }
+  ];
+
   nixos.packages = [ pkgs.dolphin-emu ];
 
   hj.xdg.config.files."melonDS/melonDS.toml" = {

@@ -7,6 +7,9 @@
 }:
 
 lib.mkIf config.me.wm.enable (mkNixos {
+  # makes arbtt work properly
+  me.wm.startup.arbtt = "${lib.getExe' pkgs.xorg.xprop "xprop"} -root -f _NET_CLIENT_LIST 32a -set _NET_CLIENT_LIST 0";
+
   services.arbtt = {
     enable = true;
     logFile = "%h/.local/state/arbtt/capture.log";
@@ -28,4 +31,3 @@ lib.mkIf config.me.wm.enable (mkNixos {
     }
   '';
 })
-

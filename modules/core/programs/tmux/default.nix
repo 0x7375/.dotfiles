@@ -6,7 +6,7 @@
 }:
 
 let
-  inherit (lib) getExe getExe';
+  inherit (lib) getExe;
   plugins = with pkgs.tmuxPlugins; [
     fzf-tmux-url
     yank
@@ -16,7 +16,7 @@ in
 {
   # nixpkgs.overlays = [
   #   (final: prev: {
-  #     tmux = prev.tmux.overrideAttrs (old: {
+  #     tmux = (prev.crossPkgs or prev).tmux.overrideAttrs (old: {
   #       patches = (old.patches or [ ]) ++ [
   #         ./tmux_bigger_input_buffer.patch
   #       ];
@@ -39,16 +39,11 @@ in
 
   programs.tmux = {
     enable = true;
-    extraConfig = # tmux
+    extraConfig =
       let
-        clip =
-          if config.me.wm.displayServer == "wayland" then
-            "${getExe' pkgs.wl-clipboard "wl-copy"}"
-          else if config.me.wm.displayServer == "x11" then
-            "${getExe pkgs.xsel} -i"
-          else
-            "pbcopy";
+        inherit (config.me.wm) copy;
       in
+      # tmux
       ''
         set -g @plugin 'wfxr/tmux-fzf-url'
         set -g @fzf-url-history-limit '2000'
@@ -160,20 +155,20 @@ in
         # don't cancel mouse selection on release
         bind -T copy-mode-vi MouseDragEnd1Pane \
           select-pane \; \
-          send -X copy-pipe-no-clear "${clip}"
+          send -X copy-pipe-no-clear "${copy}"
 
         bind -T copy-mode-vi DoubleClick1Pane \
           select-pane \; \
           send -X select-word \; \
-          send -X copy-pipe-no-clear "${clip}"
+          send -X copy-pipe-no-clear "${copy}"
 
         bind -T copy-mode-vi TripleClick1Pane \
           select-pane \; \
           send -X select-line \; \
-          send -X copy-pipe-no-clear "${clip}"
+          send -X copy-pipe-no-clear "${copy}"
 
         bind -T copy-mode-vi 'y' \
-          send -X copy-pipe-and-cancel "${clip}"
+          send -X copy-pipe-and-cancel "${copy}"
 
         ${lib.concatMapStringsSep "\n" (x: "run-shell ${x.rtp}") plugins}
       '';

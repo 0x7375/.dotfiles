@@ -7,6 +7,12 @@
 }:
 
 lib.mkIf config.me.wm.enable (mkNixos {
+  nixpkgs.overlays = [
+    (final: prev: {
+      pass-secret-service-rs = prev.callPackage ./_pass-secret-service-rs.nix { };
+    })
+  ];
+
   services.passSecretService = {
     enable = true;
     package = pkgs.pass-secret-service-rs;

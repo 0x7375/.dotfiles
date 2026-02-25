@@ -7,9 +7,47 @@
 
 let
   inherit (lib) getExe getExe';
-  rgba = color: alpha: "rgba(${color}${alpha})";
-  term = "${lib.getExe pkgs.foot} -e";
-  browser = config.me.wm.browser;
+
+  mkHyprBind =
+    name: cfg:
+    let
+      parts = lib.splitString "+" name;
+      key = lib.last parts;
+      modStr = lib.concatStringsSep " " (
+        map (
+          m:
+          if m == "Mod" then
+            "SUPER"
+          else if m == "Alt" then
+            "ALT"
+          else
+            lib.toUpper m
+        ) (lib.init parts)
+      );
+
+      prefix = if cfg.release then "bindr" else "bind";
+      bindStr = if modStr == "" then key else "${modStr}, ${key}";
+    in
+    "${prefix} = ${bindStr}, exec, ${cfg.cmd}";
+
+  mkHyprStart =
+    cfg:
+    let
+      prefix = if cfg.always then "exec" else "exec-once";
+    in
+    "${prefix} = ${cfg.cmd}";
+
+  extraBinds = lib.concatStringsSep "\n" (lib.mapAttrsToList mkHyprBind config.me.wm.bindings);
+  startupCmds = lib.concatMapStringsSep "\n" mkHyprStart config.me.wm.onStart;
+
+  assignRules = lib.concatMapStringsSep "\n" (
+    cfg: "windowrulev2 = workspace ${cfg.workspace}, ${cfg.type}:^(${cfg.name})$"
+  ) config.me.wm.assign;
+
+  floatingRules = lib.concatMapStringsSep "\n" (
+    cfg: "windowrulev2 = float, ${cfg.type}:^(${cfg.name})$"
+  ) config.me.wm.floating;
+
 in
 lib.mkIf (config.me.wm.displayServer == "wayland") {
   hj.xdg.config.files."zsh/.zshrc".text =
@@ -97,9 +135,11 @@ lib.mkIf (config.me.wm.displayServer == "wayland") {
       force_split = 2
     }
 
+    ${assignRules}
+    ${floatingRules}
+
     windowrulev2 = workspace 3, class:^(${config.me.wm.browser})$
     windowrulev2 = workspace 4, class:^(spotify)$
-    windowrulev2 = workspace 4, class:^(SimpMusic)$
     windowrulev2 = workspace 4, title:^(ncspot)$
     windowrulev2 = workspace 4, class:^(discord)$
     windowrulev2 = workspace 6, class:^(.gamescope-wrapped)$
@@ -109,14 +149,8 @@ lib.mkIf (config.me.wm.displayServer == "wayland") {
     windowrulev2 = float, title:^(Preferences)$
     windowrulev2 = float, title:^(Steam - Update News)$
     windowrulev2 = float, title:^(Friends List)$
-    windowrulev2 = float, title:^(filechooser)$
-    windowrulev2 = float, class:^(Pqiv)$
-    windowrulev2 = float, class:^(1Password)$
-    windowrulev2 = float, class:^(Org.gnome.NautilusPreviewer)$
     windowrulev2 = float, class:^(Main)$
     windowrulev2 = float, class:^(Matplotlib)$
-    windowrulev2 = float, class:^(Ryujinx)$
-    windowrulev2 = float, class:^(SimpMusic)$
 
     windowrulev2 = noscreenshare,class:^(Bitwarden)$
     windowrulev2 = suppressevent maximize, class:^(${config.me.wm.browser})$
@@ -140,51 +174,13 @@ lib.mkIf (config.me.wm.displayServer == "wayland") {
     windowrulev2 = bordersize 0, floating:0, onworkspace:f[1]
     windowrulev2 = rounding 0, floating:0, onworkspace:f[1]
 
-    bind = SUPER, t, exec, ${term} ${getExe pkgs.my.tmux-sessionizer} ~/
-    bind = SUPER SHIFT, t, exec, ${term} -e tmux new-session
-    bind = SUPER, s, exec, ${term} ${getExe pkgs.my.tmux-sshr}
-    bind = SUPER SHIFT, s, exec, ${getExe pkgs.my.swap-theme}
+    ${startupCmds}
+    ${extraBinds}
 
-    bind = SUPER, e, exec, ${term} ${getExe pkgs.lf}
-    bind = SUPER SHIFT, e, exec, ${term} sudo ${getExe pkgs.lf}
-
-    bind = SUPER, w, exec, ${browser}
-    bind = SUPER, u, exec, ${getExe' pkgs._1password-gui "1password"} --quick-access
-    bind = SUPER, d, exec, ${getExe pkgs.j4-dmenu-desktop} --no-generic -d '${getExe pkgs.bemenu} -p "DESKTOP"'
-
-    bind = SUPER, m, exec, ${pkgs.writeShellScript "open-note" ''
-      dir="$HOME/notes"
-      note=$(ls $dir | sed 's/\.md$//' | bemenu -p "NOTE")
-      [ -n "$note" ] && ${term} -e $EDITOR "$dir/$note.md"
-    ''}
-
-    bind = SUPER, n, exec, ${term} ${getExe pkgs.zsh} -c '${getExe' pkgs.networkmanager "nmcli"} device wifi rescan && unset COLORTERM && TERM=xterm-old ${getExe' pkgs.networkmanager "nmtui"}'
-    bind = SUPER SHIFT, n, exec, ${getExe' pkgs.networkmanager "nmcli"} device wifi rescan
-
-    bind = SUPER, b, exec, ${getExe pkgs.adw-bluetooth}
-    bind = SUPER SHIFT, b, exec, ${pkgs.writeShellScript "bluetooth-toggle" ''
-      airpods="D4:68:AA:88:8E:32"
-      if ${getExe' pkgs.bluez "bluetoothctl"} info $airpods | grep -q "Connected: yes"; then
-        echo -e "disconnect $airpods\nquit" | ${getExe' pkgs.bluez "bluetoothctl"}
-      else
-        echo -e "connect $airpods\nquit" | ${getExe' pkgs.bluez "bluetoothctl"}
-      fi
-    ''}
-
-    bind = SUPER SHIFT, p, exec, ${getExe pkgs.copyq} show
     bind = SUPER SHIFT, i, exec, ${getExe' pkgs.procps "pkill"} -USR1 waybar
 
     bind = SUPER, o, togglespecialworkspace, gromit
     bind = , F9, togglespecialworkspace, gromit
-    bind = SUPER SHIFT, o, exec, ${getExe pkgs.gromit-mpx} --clear
-    bind = ALT SHIFT, o, exec, ${getExe pkgs.gromit-mpx} --undo
-
-    bind = SUPER, p, exec, ${getExe pkgs.my.powermenu}
-    bind = SUPER SHIFT, c, exec, ${getExe pkgs.my.color-picker}
-
-    bind = SUPER, x, exec, ${getExe' pkgs.dunst "dunstctl"} close-all
-    bind = SUPER, r, exec, ${getExe' pkgs.dunst "dunstctl"} history-pop
-    bind = SUPER, a, exec, ${getExe' pkgs.dunst "dunstctl"} action
 
     bind = SUPER, q, killactive
     bind = SUPER, f, fullscreen, 0
@@ -236,21 +232,6 @@ lib.mkIf (config.me.wm.displayServer == "wayland") {
     bindm = SUPER, mouse:272, movewindow
     bindm = SUPER, mouse:273, resizewindow
 
-    bindl = , XF86AudioNext, exec, ${getExe pkgs.playerctl} next
-    bindl = , XF86AudioPrev, exec, ${getExe pkgs.playerctl} previous
-    bindl = , XF86AudioPlay, exec, ${getExe pkgs.playerctl} play-pause
-    bindel = , XF86AudioRaiseVolume, exec, ${getExe pkgs.my.change-volume} up
-    bindel = , XF86AudioLowerVolume, exec, ${getExe pkgs.my.change-volume} down
-    bindel = , XF86AudioMute, exec, ${getExe pkgs.my.change-volume} mute
-    bindel = , XF86MonBrightnessUp, exec, ${getExe pkgs.my.change-brightness} up
-    bindel = , XF86MonBrightnessDown, exec, ${getExe pkgs.my.change-brightness} down
-
-    bindn = , Print, exec, ${getExe pkgs.my.screenshot} region
-    bindn = ALT, Sys_Req, exec, ${getExe pkgs.my.screenshot} window
-    bindn = SHIFT, Print, exec, ${getExe pkgs.my.screenshot} monitor
-
-    exec-once = ${getExe' pkgs.dbus "dbus-update-activation-environment"} --systemd --all
-    exec-once = ${getExe' pkgs.kdePackages.kdeconnect-kde "kdeconnect-indicator"}
     exec-once = ${getExe' pkgs.hyprland "hyprctl"} dispatch workspace 1
 
     exec = ${pkgs.writeShellScript "set-wallpaper" ''

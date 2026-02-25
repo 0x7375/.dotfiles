@@ -14,4 +14,5 @@ lib.mkIf config.me.wm.enable (mkNixos {
   ];
 
   programs.kdeconnect.enable = true;
+  me.wm.startup.kdeconnect = lib.getExe' pkgs.kdePackages.kdeconnect-kde "kdeconnect-indicator";
 })

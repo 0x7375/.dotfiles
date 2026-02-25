@@ -25,7 +25,7 @@ lib.mkIf config.me.secrets.enable (mkNixos {
     after = [ "network.target" ];
     environment.ATTIC_SERVER = url;
     serviceConfig = {
-      ExecStartPre = "${lib.getExe pkgs.attic-client} login local ${url} $ATTIC_TOKEN";
+      ExecStartPre = "${lib.getExe pkgs.attic-client} login local ${url} $ATTIC_SERVER_TOKEN_RS256_SECRET_BASE64";
       ExecStart = "${lib.getExe pkgs.attic-client} watch-store cache";
       Restart = "on-failure";
       KillMode = "control-group";

@@ -40,7 +40,7 @@ in
     };
 
     nixos.networking.wg-quick.interfaces.home = {
-      autostart = false;
+      autostart = true;
       configFile = config.sops.templates."home-vpn-${hostname}.conf".path;
     };
   });

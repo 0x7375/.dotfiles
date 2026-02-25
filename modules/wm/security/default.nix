@@ -24,4 +24,10 @@ lib.mkIf config.me.wm.enable (mkNixos {
     polkit_gnome
     stable.ente-auth # stable until https://github.com/ente-io/ente/issues/5589 is fixed
   ];
+
+  xdg.desktopEntries.bitwarden = {
+    exec = "helium --app=http://vault.bitwarden.com";
+    name = "Bitwarden";
+    type = "Application";
+  };
 })

@@ -13,7 +13,6 @@ vim.opt.completeopt = { "menu", "menuone", "popup", "nearest" }
 
 -- hide search hit bottom
 vim.opt.shortmess:append("Is")
-vim.opt.sessionoptions:remove("folds")
 
 vim.opt.nu = true
 vim.opt.relativenumber = true

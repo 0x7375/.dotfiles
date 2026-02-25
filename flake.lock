@@ -241,11 +241,11 @@
         "nixpkgs": "nixpkgs_2"
       },
       "locked": {
-        "lastModified": 1771866993,
-        "narHash": "sha256-QVTX5pdiY7qGj0kfuurC4QrjMTkWBF472GtKOMGk1HY=",
+        "lastModified": 1771996560,
+        "narHash": "sha256-VfReG3PPBk8Y/iKyQAzGVvIcLcPhgapbu41vIZzxorY=",
         "ref": "refs/heads/main",
-        "rev": "1afb13bc3aeacb1fe86522cf5eef5b1e17c860c1",
-        "revCount": 25,
+        "rev": "be9d779a232c671ccd122ac29e67137acc7bdfb8",
+        "revCount": 26,
         "type": "git",
         "url": "https://codeberg.org/0x7E/nd"
       },
@@ -440,15 +440,15 @@
       "inputs": {
         "flake-parts": "flake-parts_3",
         "nixpkgs": [
-          "nixpkgs"
+          "auto-update"
         ]
       },
       "locked": {
-        "lastModified": 1765059149,
-        "narHash": "sha256-n6BiVAdPVN74XPjYM3PGNQCg9gF7oQI+ioRvdOfgUqs=",
+        "lastModified": 1771957321,
+        "narHash": "sha256-Pwv0JoRJxexReo1b0ei3kjm1ZPIbSOIUL7bRrusz8+I=",
         "owner": "nix-community",
         "repo": "NUR",
-        "rev": "a3a3e78202ab054dc9bedcf406437645ab3f68f4",
+        "rev": "7acd3a015faa03764aa9eb1e741777ac3e653262",
         "type": "github"
       },
       "original": {

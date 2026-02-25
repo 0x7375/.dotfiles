@@ -13,7 +13,7 @@ in
     enable = config.me.wm.displayServer == "xorg";
     text = # bash
       ''
-        if [[ -z $DISPLAY ]]; then
+        if [[ -z $DISPLAY && "$XDG_SESSION_TYPE" != "x11"  ]]; then
           return 0
         fi
 
@@ -25,7 +25,7 @@ in
         long_command_alert_start() {
           time_taken=$(${getExe' pkgs.coreutils "date"} +%s)
           cmd="$1"
-          start_window_id=$(${getExe pkgs.xdotool} getactivewindow)
+          start_window_id=$(${getExe pkgs.xdotool} getactivewindow 2>/dev/null || echo "0")
         }
 
         long_command_alert_end() {

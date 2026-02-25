@@ -115,7 +115,6 @@ lib.mkIf (config.me.wm.displayServer == "wayland") {
     windowrulev2 = float, class:^(Org.gnome.NautilusPreviewer)$
     windowrulev2 = float, class:^(Main)$
     windowrulev2 = float, class:^(Matplotlib)$
-    windowrulev2 = float, class:^(gnome-calculator)$
     windowrulev2 = float, class:^(Ryujinx)$
     windowrulev2 = float, class:^(SimpMusic)$
 

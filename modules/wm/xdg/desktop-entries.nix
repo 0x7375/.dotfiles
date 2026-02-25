@@ -39,8 +39,8 @@ lib.mkIf config.me.wm.enable (mkNixos {
       categories = [ "Game" ];
     };
 
-    "koffan" = {
-      exec = "chromium --app=http://shop.0xaa.me";
+    koffan = {
+      exec = "helium --app=http://shop.0xaa.me";
       name = "Koffan";
       type = "Application";
     };

@@ -23,25 +23,6 @@ return {
       "folke/lazydev.nvim",
       ft = "lua",
     },
-    {
-      "stevearc/conform.nvim",
-      opts = {
-        formatters_by_ft = {
-          nix = { "injected" },
-          sh = { "shfmt" },
-        },
-        formatters = {
-          shfmt = {
-            prepend_args = { "-i", "2", "-bn", "-ci", "-sr" },
-          },
-        },
-      },
-      init = function()
-        vim.api.nvim_create_user_command("Conform", function()
-          require("conform").format({ formatters = { "injected" } })
-        end, {})
-      end,
-    }
   },
 
   config = function()

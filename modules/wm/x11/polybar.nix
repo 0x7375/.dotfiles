@@ -9,21 +9,17 @@
 lib.mkIf (config.me.wm.displayServer == "xorg") (mkNixos {
   packages = [ pkgs.polybar ];
 
-  me.wm =
-    let
-      polybar = lib.getExe pkgs.polybar;
-    in
-    {
-      bindings."Mod+i" = "${lib.getExe' pkgs.polybar "polybar-msg"} cmd toggle";
+  me.wm = {
+    bindings."Mod+i" = "${lib.getExe' pkgs.polybar "polybar-msg"} cmd toggle";
 
-      startup = {
-        polybar = polybar;
-        polybar-restart = {
-          cmd = "${polybar}/bin/polybar-msg cmd restart";
-          always = true;
-        };
+    startup = {
+      polybar = lib.getExe pkgs.polybar;
+      polybar-restart = {
+        cmd = "${lib.getExe' pkgs.polybar "polybar-msg"} cmd restart";
+        always = true;
       };
     };
+  };
 
   hj.xdg.config.files."polybar/config.ini".text = ''
     [bar/main]

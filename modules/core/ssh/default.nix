@@ -9,6 +9,18 @@ lib.mkMerge [
   (mkBundle {
     users.users.${config.me.user}.openssh.authorizedKeys.keys = config.me.hosts.yubikey.sshPublicKeys;
 
+    hj.files.".ssh/sk_main" = {
+      text = builtins.readFile ./sk_main;
+      type = "copy";
+      permissions = "0600";
+    };
+
+    hj.files.".ssh/sk_backup" = {
+      text = builtins.readFile ./sk_backup;
+      type = "copy";
+      permissions = "0600";
+    };
+
     services.openssh = {
       enable = true;
       extraConfig = ''

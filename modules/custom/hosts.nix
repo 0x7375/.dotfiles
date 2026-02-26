@@ -16,6 +16,9 @@ let
       inherit description;
     };
 
+  yubikey-main = "sk-ssh-ed25519@openssh.com AAAAGnNrLXNzaC1lZDI1NTE5QG9wZW5zc2guY29tAAAAIKtQ/n+Lg+BZdaGKAkJNykyf93bjvr++lCnEeHQuV6oTAAAABHNzaDo= yubikey-main";
+  yubikey-backup = "sk-ssh-ed25519@openssh.com AAAAGnNrLXNzaC1lZDI1NTE5QG9wZW5zc2guY29tAAAAIGTDz1++tiT0SytsEP3XzTshTI6Edd+o6nMTVl/iLxzSAAAABHNzaDo= yubikey-backup";
+
   hostSubmodule = {
     options = {
       sshPublicKeys = mkOption {
@@ -23,6 +26,13 @@ let
         default = [ ];
         description = "SSH public keys";
       };
+
+      sshSigningKey = mkOption {
+        type = types.str;
+        default = yubikey-main;
+        description = "Public key used for git signing";
+      };
+
       syncthingId = mkNullOption "Syncthing Device ID";
       ips = {
         lan = mkNullOption "Local Network IP";
@@ -40,12 +50,13 @@ in
       default = {
         yubikey = {
           sshPublicKeys = [
-            "sk-ssh-ed25519@openssh.com AAAAGnNrLXNzaC1lZDI1NTE5QG9wZW5zc2guY29tAAAAIKtQ/n+Lg+BZdaGKAkJNykyf93bjvr++lCnEeHQuV6oTAAAABHNzaDo= yubikey-main"
-            "sk-ssh-ed25519@openssh.com AAAAGnNrLXNzaC1lZDI1NTE5QG9wZW5zc2guY29tAAAAIGTDz1++tiT0SytsEP3XzTshTI6Edd+o6nMTVl/iLxzSAAAABHNzaDo= yubikey-backup"
+            yubikey-backup
+            yubikey-main
           ];
         };
 
         cray = {
+          sshSigningKey = yubikey-backup;
           syncthingId = "E5O7YJW-QG5GRP2-GTOIL44-GARB6IA-KVLTV4L-PNELNSW-U54NY7P-N3R5NQW";
           ips.lan = "192.168.1.120";
         };
@@ -72,16 +83,19 @@ in
           };
         };
 
-        mach = {
-          syncthingId = "32SVOZP-RJL755K-D7ZTMRL-7FOTZZF-V7W5V5J-2JOIMCG-W6MRDGK-AO4D4AC";
-          sshPublicKeys = [
-            "ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBLePZnDLZNnXzR5vgtmdu+fDEKu3GH87jM2EjSyBIF/0fEL8WPf9MkWRTsa3CY8bf+1SlFqUiGrtrMzyDx4fnPg="
-          ];
-          ips = {
-            lan = "192.168.1.168";
-            vpn = "10.0.0.5";
+        mach =
+          let
+            pub = "ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBLePZnDLZNnXzR5vgtmdu+fDEKu3GH87jM2EjSyBIF/0fEL8WPf9MkWRTsa3CY8bf+1SlFqUiGrtrMzyDx4fnPg=";
+          in
+          {
+            syncthingId = "32SVOZP-RJL755K-D7ZTMRL-7FOTZZF-V7W5V5J-2JOIMCG-W6MRDGK-AO4D4AC";
+            sshSigningKey = pub;
+            sshPublicKeys = [ pub ];
+            ips = {
+              lan = "192.168.1.168";
+              vpn = "10.0.0.5";
+            };
           };
-        };
 
         shannon = {
           syncthingId = "JJ62FKA-U5HTR5S-NJ7A4EJ-TMO66SZ-QNUOYUA-CCQMUIB-STDX4RE-VCGEKAB";

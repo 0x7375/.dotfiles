@@ -8,10 +8,7 @@
 }:
 
 let
-  inherit (config.me) hosts;
-  yubikey-pubkey = builtins.head config.me.hosts.yubikey.sshPublicKeys;
-  mach-pubkey = builtins.head config.me.hosts.mach.sshPublicKeys;
-  pubkey = if pkgs.stdenv.isDarwin then mach-pubkey else yubikey-pubkey;
+  inherit (config.me) hosts host;
 
   github = pkgs.writeText "github" ''
     [user]
@@ -83,7 +80,7 @@ lib.mkMerge [
         insteadOf = "forge:"
 
       [user]
-        signingkey = "key::${pubkey}"
+        signingkey = "key::${host.sshSigningKey}"
 
       [includeIf "hasconfig:remote.*.url:github:*/**"]
         path = "${github}"
@@ -132,7 +129,7 @@ lib.mkMerge [
           Type = "oneshot";
           ExecStartPre = "${lib.getExe' pkgs.coreutils "sleep"} 1";
           Environment = "SSH_AUTH_SOCK=%t/ssh-agent";
-          ExecStart = "${lib.getExe' pkgs.openssh "ssh-add"} %h/.ssh/id_ed25519_sk_main";
+          ExecStart = "${lib.getExe' pkgs.openssh "ssh-add"} %h/.ssh/sk_main %h/.ssh/sk_backup";
           RemainAfterExit = "yes";
         };
       };

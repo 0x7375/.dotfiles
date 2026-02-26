@@ -24,10 +24,12 @@
 
   documentation.man.generateCaches = lib.mkForce false;
 
+  users.users.root.openssh.authorizedKeys.keys = config.me.hosts.yubikey.sshPublicKeys;
+
   users.users.${config.me.user} = {
     extraGroups = [ "video" ];
 
-    openssh.authorizedKeys.keys = config.hosts.mach.sshPublicKeys;
+    openssh.authorizedKeys.keys = config.me.hosts.mach.sshPublicKeys;
   };
 
   packages = with pkgs; [

@@ -1,6 +1,13 @@
 {
   me = {
-    secrets.enable = true;
+    vpnPeer.enable = true;
+    secrets = {
+      enable = true;
+      tpm = {
+        enable = true;
+        file = ./keys.txt;
+      };
+    };
     syncthing.client.enable = true;
     # boot.debug.enable = false;
     btrfs.enable = true;

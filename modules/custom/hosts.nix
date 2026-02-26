@@ -27,10 +27,17 @@ let
         description = "SSH public keys";
       };
 
-      sshSigningKey = mkOption {
-        type = types.str;
-        default = yubikey-main;
-        description = "Public key used for git signing";
+      sshSigning = {
+        key = mkOption {
+          type = types.str;
+          default = yubikey-main;
+          description = "Public key used for git signing";
+        };
+        path = mkOption {
+          type = types.str;
+          default = "sk_main";
+          description = "Relative privaty key path used for ssh agent";
+        };
       };
 
       syncthingId = mkNullOption "Syncthing Device ID";
@@ -56,9 +63,15 @@ in
         };
 
         cray = {
-          sshSigningKey = yubikey-backup;
+          sshSigning = {
+            key = yubikey-backup;
+            path = "sk_backup";
+          };
           syncthingId = "E5O7YJW-QG5GRP2-GTOIL44-GARB6IA-KVLTV4L-PNELNSW-U54NY7P-N3R5NQW";
-          ips.lan = "192.168.1.120";
+          ips = {
+            lan = "192.168.1.120";
+            vpn = "10.0.0.7";
+          };
         };
 
         naitoh = {
@@ -89,7 +102,7 @@ in
           in
           {
             syncthingId = "32SVOZP-RJL755K-D7ZTMRL-7FOTZZF-V7W5V5J-2JOIMCG-W6MRDGK-AO4D4AC";
-            sshSigningKey = pub;
+            sshSigning.key = pub;
             sshPublicKeys = [ pub ];
             ips = {
               lan = "192.168.1.168";

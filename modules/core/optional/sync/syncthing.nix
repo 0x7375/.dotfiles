@@ -8,11 +8,12 @@
 
 let
   inherit (config.me) user home hostname;
+  mkHostSecret = lib.my.mkHostSecret hostname;
 in
 {
   config = lib.mkIf (config.me.syncthing.enable && config.me.secrets.enable) (mkNixos {
-    sops.secrets."${hostname}/syncthing/cert".owner = config.me.user;
-    sops.secrets."${hostname}/syncthing/key".owner = config.me.user;
+    sops.secrets."syncthing/cert" = mkHostSecret "syncthing/cert" { owner = user; };
+    sops.secrets."syncthing/key" = mkHostSecret "syncthing/cert" { owner = user; };
 
     sops.secrets.syncthing_pw.owner = user;
 
@@ -24,8 +25,8 @@ in
       overrideDevices = true;
       overrideFolders = true;
       guiPasswordFile = config.sops.secrets.syncthing_pw.path;
-      key = "${config.sops.secrets."${hostname}/syncthing/key".path}";
-      cert = "${config.sops.secrets."${hostname}/syncthing/cert".path}";
+      key = "${config.sops.secrets."syncthing/key".path}";
+      cert = "${config.sops.secrets."syncthing/cert".path}";
       settings = {
         options = {
           urAccepted = -1;

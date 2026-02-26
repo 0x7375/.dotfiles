@@ -76,7 +76,7 @@
         self: super: {
           my = import ./lib {
             lib = self;
-            inherit inputs;
+            inherit (inputs) secrets;
           };
         }
       );

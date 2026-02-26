@@ -23,13 +23,14 @@ lib.mkMerge [
 
     services.openssh = {
       enable = true;
-      extraConfig = ''
-        AllowUsers ${config.me.user}
-        PermitRootLogin no
-        PasswordAuthentication no
-        KbdInteractiveAuthentication no
-        AuthenticationMethods publickey
-      '';
+      settings = {
+        AllowUsers = [
+          config.me.user
+          "root"
+        ];
+        PasswordAuthentication = false;
+        KbdInteractiveAuthentication = false;
+      };
     };
 
     # darwin.programs.ssh.extraConfig =

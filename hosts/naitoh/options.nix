@@ -1,6 +1,9 @@
 {
   me = {
-    secrets.enable = true;
+    secrets = {
+      enable = true;
+      tpm = true;
+    };
     syncthing.client.enable = true;
     boot.debug.enable = false;
     btrfs.enable = true;

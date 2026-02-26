@@ -1,4 +1,4 @@
-{ inputs, lib }:
+{ secrets, lib }:
 
 {
   filesIn =
@@ -13,6 +13,14 @@
       nixFilter = file: hasSuffix ".nix" file.name;
     in
     dir: filter ignoreFilter (fileset.toList (fileset.fileFilter nixFilter dir));
+
+  mkHostSecret =
+    hostname: name: extra:
+    {
+      sopsFile = "${secrets}/${hostname}/default.yaml";
+      key = name;
+    }
+    // extra;
 
   mkLaunchdAgent =
     {

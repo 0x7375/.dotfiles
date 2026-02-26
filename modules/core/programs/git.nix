@@ -1,14 +1,19 @@
 {
-  secrets,
   lib,
   pkgs,
   config,
   mkBundle,
+  secrets,
   ...
 }:
 
 let
-  inherit (config.me) hosts host;
+  inherit (config.me)
+    hosts
+    host
+    home
+    user
+    ;
 
   github = pkgs.writeText "github" ''
     [user]
@@ -80,7 +85,7 @@ lib.mkMerge [
         insteadOf = "forge:"
 
       [user]
-        signingkey = "key::${host.sshSigningKey}"
+        signingkey = "${pkgs.writeText "key.pub" host.sshSigning.key}"
 
       [includeIf "hasconfig:remote.*.url:github:*/**"]
         path = "${github}"
@@ -105,7 +110,7 @@ lib.mkMerge [
 
     darwin =
       let
-        secretivePath = "${config.me.home}/Library/Containers/com.maxgoedjen.Secretive.SecretAgent/Data/socket.ssh";
+        secretivePath = "${home}/Library/Containers/com.maxgoedjen.Secretive.SecretAgent/Data/socket.ssh";
       in
       {
         hj.xdg.config.files."ssh/config".text = ''
@@ -129,7 +134,7 @@ lib.mkMerge [
           Type = "oneshot";
           ExecStartPre = "${lib.getExe' pkgs.coreutils "sleep"} 1";
           Environment = "SSH_AUTH_SOCK=%t/ssh-agent";
-          ExecStart = "${lib.getExe' pkgs.openssh "ssh-add"} %h/.ssh/sk_main %h/.ssh/sk_backup";
+          ExecStart = "${lib.getExe' pkgs.openssh "ssh-add"} %h/.ssh/${host.sshSigning.path}";
           RemainAfterExit = "yes";
         };
       };
@@ -138,7 +143,10 @@ lib.mkMerge [
         wantedBy = [ "default.target" ];
         description = "SSH authentication agent";
         documentation = [ "man:ssh-agent(1)" ];
-        environment.DISPLAY = ":0";
+        environment = {
+          DISPLAY = ":0";
+          SSH_ASKPASS_REQUIRE = "force";
+        };
         serviceConfig.ExecStart = "${lib.getExe' pkgs.openssh "ssh-agent"} -D -a %t/ssh-agent";
       };
 
@@ -153,7 +161,7 @@ lib.mkMerge [
     sops.secrets.git-config = {
       sopsFile = "${secrets}/uni-git-config.ini";
       format = "ini";
-      owner = config.me.user;
+      owner = user;
     };
 
     hj.xdg.config.files."git/config".text = lib.mkAfter ''

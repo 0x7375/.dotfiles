@@ -45,7 +45,8 @@ let
   ) config.me.wm.assign;
 
   floatingRules = lib.concatMapStringsSep "\n" (
-    cfg: "windowrulev2 = float, ${cfg.type}:^(${cfg.name})$"
+    cfg:
+    ''for_window [${cfg.type}="^${cfg.name}$"] floating ${if cfg.enable then "enable" else "disable"}''
   ) config.me.wm.floating;
 
 in

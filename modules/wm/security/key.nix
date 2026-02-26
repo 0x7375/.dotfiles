@@ -36,17 +36,26 @@ lib.mkIf config.me.wm.enable (
             root:${main}:${backup}
           '';
 
-        packages = [ pkgs.seahorse ];
+        packages = with pkgs; [
+          seahorse
+          age-plugin-fido2-hmac
+        ];
 
-        programs.ssh.askPassword = lib.getExe (
-          pkgs.writeShellApplication {
-            name = "ssh-askpass-notify";
-            runtimeInputs = [ pkgs.libnotify ];
-            text = ''
-              notify-send -i "key" -t 5000 "SSH" "Tap your security key"
-            '';
-          }
-        );
+        programs.ssh = {
+          askPassword = lib.getExe (
+            pkgs.writeShellApplication {
+              name = "ssh-askpass-notify";
+              runtimeInputs = [ pkgs.libnotify ];
+              text = ''
+                notify-send -i "key" -t 5000 "SSH" "Tap your security key"
+              '';
+            }
+          );
+          extraConfig = ''
+            Host *
+              LogLevel QUIET
+          '';
+        };
 
         security.pam = {
           u2f = {

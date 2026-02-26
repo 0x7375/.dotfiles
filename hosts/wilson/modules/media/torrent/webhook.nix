@@ -14,7 +14,7 @@ lib.mkIf config.me.secrets.enable {
     ];
     wantedBy = [ "multi-user.target" ];
     serviceConfig = {
-      LoadCredential = [ "qb-password:${config.sops.secrets."wilson/qbittorrent/pw".path}" ];
+      LoadCredential = [ "qb-password:${config.sops.secrets."qbittorrent/pw".path}" ];
       ExecStart =
         pkgs.writers.writePython3 "jellyfin-webhook"
           {

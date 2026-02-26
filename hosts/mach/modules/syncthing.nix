@@ -1,23 +1,29 @@
-{ lib, secrets, config, ... }:
+{
+  lib,
+  secrets,
+  config,
+  ...
+}:
 
 let
-  cfg = config.me;
-  mkSyncthingSecret = filename: {
-    owner = cfg.user;
-    sopsFile = "${secrets}/syncthing/${filename}";
+  inherit (config.me) user home;
+  inherit (lib.my) mkHostSecret;
+
+in
+lib.mkIf config.me.secrets.enable {
+  sops.secrets."syncthing/config" = {
+    owner = user;
+    sopsFile = "${secrets}/mach/config.xml";
     format = "binary";
     key = "";
   };
-in
-lib.mkIf config.me.secrets.enable {
-  sops.secrets."syncthing/config" = mkSyncthingSecret "config.xml";
-  sops.secrets."syncthing/cert" = mkSyncthingSecret "cert.pem";
-  sops.secrets."syncthing/key" = mkSyncthingSecret "key.pem";
+
+  sops.secrets."syncthing/cert" = mkHostSecret "syncthing/cert" { owner = user; };
+  sops.secrets."syncthing/key" = mkHostSecret "syncthing/cert" { owner = user; };
 
   activation =
     let
       inherit (config.sops) secrets;
-      inherit (cfg) home;
     in
     ''
       stDir="${home}/Library/Application Support/Syncthing"
@@ -27,7 +33,7 @@ lib.mkIf config.me.secrets.enable {
       cp -f ${secrets."syncthing/key".path} "$stDir/key.pem"
       cp -f ${secrets."syncthing/cert".path} "$stDir/cert.pem"
 
-      chown -R ${cfg.user}: "$stDir"
+      chown -R ${user}: "$stDir"
       chmod 600 "$stDir/config.xml" "$stDir/key.pem" "$stDir/cert.pem"
     '';
 }

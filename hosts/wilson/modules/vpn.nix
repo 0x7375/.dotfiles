@@ -21,24 +21,23 @@ let
     lamarr = "vEKQ3Lpxn8JScQRMS8t6lq6dGWXiB9oyBgr2gSTfvxA=";
     mach = "z2/QJTGzNBiq4MKPqFDtuPJsCE1Tb/7VG6oYCExeYVg=";
     yoshino = "+TLwV2JKgqxaAHBv/BYrwDXEcILUt3cbuth1XY/HfTo=";
+    cray = "IZKATLv0/+V137IYJJpw7I2qVbilaSQnaFMfj9zlmBc=";
   };
 
   peerNames = builtins.attrNames peerKeys;
 in
 lib.mkIf config.me.secrets.enable {
-  sops.secrets =
-    let
-      mkPskSecret = name: {
-        name = "${name}/vpn/psk";
-        value = {
-          owner = config.me.user;
-        };
+  sops.secrets = {
+    "vpn/pk" = lib.my.mkHostSecret hostname "vpn/pk" { owner = config.me.user; };
+  }
+  // builtins.listToAttrs (
+    map (name: {
+      name = "${name}/vpn/psk";
+      value = {
+        owner = config.me.user;
       };
-    in
-    {
-      "${hostname}/vpn/pk".owner = config.me.user;
-    }
-    // (builtins.listToAttrs (map mkPskSecret peerNames));
+    }) peerNames
+  );
 
   # redirect clients network traffic to the VPN
   # networking.nat = {
@@ -74,7 +73,7 @@ lib.mkIf config.me.secrets.enable {
   networking.wg-quick.interfaces.${home} = {
     address = [ "${host.ips.vpn}/24" ];
     listenPort = wgPort;
-    privateKeyFile = config.sops.secrets."${hostname}/vpn/pk".path;
+    privateKeyFile = config.sops.secrets."vpn/pk".path;
 
     peers = lib.mapAttrsToList (name: pubKey: {
       publicKey = pubKey;

@@ -6,7 +6,7 @@
 }:
 
 let
-  inherit (config.me) host domain;
+  inherit (config.me) host domain hostname;
   ip = host.ips.lan;
   mkSubDomain =
     {
@@ -86,7 +86,7 @@ in
     lib.my.notifyOnServiceFailure "nginx" // lib.my.notifyOnServiceFailure "acme-${domain}";
 
   sops.secrets.cloudflare = {
-    sopsFile = "${secrets}/cloudflare.env";
+    sopsFile = "${secrets}/${hostname}/cloudflare.env";
     format = "dotenv";
     key = "";
   };

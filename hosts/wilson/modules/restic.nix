@@ -8,6 +8,7 @@
 
 let
   inherit (config.me) hostname home;
+  mkHostSecret = lib.my.mkHostSecret hostname;
 in
 lib.mkIf config.me.secrets.enable {
   packages = with pkgs; [
@@ -15,14 +16,14 @@ lib.mkIf config.me.secrets.enable {
     restic
   ];
 
-  vars.RESTIC_PASSWORD_FILE = config.sops.secrets."${hostname}/restic_pw".path;
-
-  sops.secrets."${hostname}/restic_pw" = { };
+  sops.secrets."restic_pw" = mkHostSecret "restic_pw" { };
 
   sops.secrets.rclone_config = {
-    sopsFile = "${secrets}/rclone-config.ini";
+    sopsFile = "${secrets}/${hostname}/rclone-config.ini";
     format = "ini";
   };
+
+  vars.RESTIC_PASSWORD_FILE = config.sops.secrets."restic_pw".path;
 
   services.restic.backups =
     let
@@ -76,7 +77,7 @@ lib.mkIf config.me.secrets.enable {
         }:
         {
           initialize = true;
-          passwordFile = config.sops.secrets."${hostname}/restic_pw".path;
+          passwordFile = config.sops.secrets."restic_pw".path;
           rcloneConfigFile = config.sops.secrets.rclone_config.path;
           repository = remotes.${remote}.path + name;
           inherit paths;

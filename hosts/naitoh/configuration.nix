@@ -15,14 +15,6 @@ in
   ]
   ++ (lib.my.filesIn ./modules);
 
-  users.users.${config.me.user} = {
-    openssh.authorizedKeys.keys =
-      with config.me.hosts;
-      map (h: h.sshPublicKey) [
-        cray
-      ];
-  };
-
   hardware.graphics.enable = true;
 
   vars.WINIT_X11_SCALE_FACTOR = "1.11";

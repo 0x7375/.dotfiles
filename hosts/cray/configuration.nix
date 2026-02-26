@@ -11,13 +11,6 @@
   ]
   ++ (lib.my.filesIn ./modules);
 
-  users.users.${config.me.user}.openssh.authorizedKeys.keys =
-    with config.me.hosts;
-    map (h: h.sshPublicKey) [
-      naitoh
-      mach
-    ];
-
   services.picom.enable = lib.mkForce false;
 
   powerManagement.cpuFreqGovernor = "performance";

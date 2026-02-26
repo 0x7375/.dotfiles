@@ -8,9 +8,11 @@
 }:
 
 let
-  inherit (config.me) host;
-  pubkey = host.sshPublicKey;
-  pubkeyFile = pkgs.writeText "key.pub" host.sshPublicKey;
+  inherit (config.me) hosts;
+  yubikey-pubkey = builtins.head config.me.hosts.yubikey.sshPublicKeys;
+  mach-pubkey = builtins.head config.me.hosts.mach.sshPublicKeys;
+  pubkey = if pkgs.stdenv.isDarwin then mach-pubkey else yubikey-pubkey;
+
   github = pkgs.writeText "github" ''
     [user]
       email = "github.little@0xaa.me"
@@ -26,6 +28,8 @@ let
       email = "codeberg.unmapped@0xaa.me"
       name = "0x7E"
   '';
+
+  allSigningKeys = hosts.yubikey.sshPublicKeys ++ hosts.mach.sshPublicKeys;
 in
 lib.mkMerge [
   (mkBundle {
@@ -79,7 +83,7 @@ lib.mkMerge [
         insteadOf = "forge:"
 
       [user]
-        signingkey = "${pubkeyFile}"
+        signingkey = "key::${pubkey}"
 
       [includeIf "hasconfig:remote.*.url:github:*/**"]
         path = "${github}"
@@ -100,7 +104,7 @@ lib.mkMerge [
         path = "${codeberg}"
     '';
 
-    hj.files.".ssh/allowed_signers".text = "* ${pubkey}";
+    hj.files.".ssh/allowed_signers".text = lib.concatMapStrings (k: "* ${k}\n") allSigningKeys;
 
     darwin =
       let
@@ -128,7 +132,7 @@ lib.mkMerge [
           Type = "oneshot";
           ExecStartPre = "${lib.getExe' pkgs.coreutils "sleep"} 1";
           Environment = "SSH_AUTH_SOCK=%t/ssh-agent";
-          ExecStart = "${lib.getExe' pkgs.openssh "ssh-add"} %h/.ssh/id_ed25519";
+          ExecStart = "${lib.getExe' pkgs.openssh "ssh-add"} %h/.ssh/id_ed25519_sk_main";
           RemainAfterExit = "yes";
         };
       };

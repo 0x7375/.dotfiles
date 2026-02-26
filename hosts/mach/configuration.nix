@@ -98,15 +98,7 @@
     auth       sufficient     pam_tid.so
   '';
 
-  users.users.${config.me.user} = {
-    home = config.me.home;
-    openssh.authorizedKeys.keys =
-      with config.me.hosts;
-      map (h: h.sshPublicKey) [
-        naitoh
-        cray
-      ];
-  };
+  users.users.${config.me.user}.home = config.me.home;
 
   programs._1password.enable = true;
 

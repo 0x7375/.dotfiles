@@ -11,16 +11,6 @@
     ./options.nix
   ];
 
-  users.users.${config.me.user} = {
-    openssh.authorizedKeys.keys =
-      with config.me.hosts;
-      map (h: h.sshPublicKey) [
-        cray
-        naitoh
-        julliard
-      ];
-  };
-
   services.logind.settings.Login.HandleLidSwitch = "ignore";
 
   packages = with pkgs; [

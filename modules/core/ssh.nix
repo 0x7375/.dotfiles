@@ -7,18 +7,16 @@
 
 lib.mkMerge [
   (mkBundle {
+    users.users.${config.me.user}.openssh.authorizedKeys.keys = config.me.hosts.yubikey.sshPublicKeys;
+
     services.openssh = {
       enable = true;
       extraConfig = ''
         AllowUsers ${config.me.user}
         PermitRootLogin no
+        PasswordAuthentication no
         KbdInteractiveAuthentication no
-
-        Match Address ${config.me.networkIps.lan.subnet},${config.me.networkIps.vpn.subnet}
-          AuthenticationMethods publickey
-
-        Match All
-          AuthenticationMethods "publickey,password"
+        AuthenticationMethods publickey
       '';
     };
 

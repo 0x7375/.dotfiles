@@ -27,14 +27,7 @@
   users.users.${config.me.user} = {
     extraGroups = [ "video" ];
 
-    openssh.authorizedKeys.keys =
-      with config.me.hosts;
-      map (h: h.sshPublicKey) [
-        cray
-        naitoh
-        mach
-        julliard
-      ];
+    openssh.authorizedKeys.keys = config.hosts.mach.sshPublicKeys;
   };
 
   packages = with pkgs; [

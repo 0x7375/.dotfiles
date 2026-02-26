@@ -21,7 +21,7 @@ mkNixos {
 
   vars = directories;
 
-  system.activationScripts.createXdgUserDirectories =
+  userActivation =
     let
       directoriesList = lib.attrValues directories;
       mkdir = (dir: ''[[ -L "${dir}" ]] || mkdir -p $VERBOSE_ARG "${dir}"'');

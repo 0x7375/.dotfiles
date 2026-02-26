@@ -141,6 +141,7 @@ lib.mkMerge [
         wantedBy = [ "default.target" ];
         description = "SSH authentication agent";
         documentation = [ "man:ssh-agent(1)" ];
+        environment.DISPLAY = ":0";
         serviceConfig.ExecStart = "${lib.getExe' pkgs.openssh "ssh-agent"} -D -a %t/ssh-agent";
       };
 

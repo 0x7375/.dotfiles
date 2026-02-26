@@ -28,13 +28,25 @@ lib.mkIf config.me.wm.enable (
 
         environment.etc.u2f-mappings.text =
           let
-            main = "YdXi/3GR49vmWnA9K4FupHaUQo7x2LQi98fllT3UCDAPBOD/jVkwR3BLOnIN2YM0Wb6Ux54GJVXxZYPTA8j6sET8Z+8Nzu5qctuN+3c2rTbRRezMnxMX10DcpAbQwljH,98547XlxcGQ90xDtHBxHUx6CwXMIsfGwhkUkN3ZT450586/fJa0aHtmWQD0mRgcd9WEHGNKzGbTDFO8N1G2XeQ==,es256,+presence";
-            backup = "U2oUgvA+MJdKClbVJx9CZZp7OA1+hgzDJjVkhXJDz6WyP+WFY/oPoN/wnlQT3X33u2y2KL0LBYcPYY76Xf718Bq4cmc0B86PlLz3+7mDRXrLB2gDJ67wVReiGzRpMJ1V,0SL7k3nc0obDrUuW+hPeAl5pbMAtzvFdh4KlDKATUPm0OXvM9Qiv+eJb6AffTUIDAd4sy9pDGmzfk+70inMBLw==,es256,+presence";
+            main = "Qn2ON91sm8M17uGRoTgFnoELP1MTC+ZyL50p253vQHV0ceri4A8HMSsUEjWWPWVIiUaNp4Gd6fmpE2sFuBz7lHxbwlKWooCr7k8nO5yzzGRj5GpOJia+OB+1RHYEBBVi,FnLrRtI7tXuSNnBlKdbLGooQBCpc11wQyB8/nWaLZvuMNaL4LPAXgnZ/CUvgG/rRZip9+1f3/FzaHmwdhKhmPg==,es256,+presence";
+            backup = "toxmjgOuJ7ZJvtFSVvKtJ62vg+kIvlUPeucS1UpQ/JfUgGKIIHDqRza75HYXl1NK6I1BhYfFdrZyszwO33ohs6kT+wFVhnUhIM1fHJ+yvK8DABBSBGOSjzgmBXpXaxql,Cv3QySgQubnubMF05DY8UTELZW9S29jQDhnzhbqsZtuZgjoMcVMBUZiU9dYlHap4nG20XPw6tO4IGB1DA7gfjQ==,es256,+presence";
           in
           ''
             ${config.me.user}:${main}:${backup}
             root:${main}:${backup}
           '';
+
+        packages = [ pkgs.seahorse ];
+
+        programs.ssh.askPassword = lib.getExe (
+          pkgs.writeShellApplication {
+            name = "ssh-askpass-notify";
+            runtimeInputs = [ pkgs.libnotify ];
+            text = ''
+              notify-send -i "key" -t 5000 "SSH" "Tap your security key"
+            '';
+          }
+        );
 
         security.pam = {
           u2f = {
@@ -42,6 +54,8 @@ lib.mkIf config.me.wm.enable (
             settings = {
               cue = true;
               authfile = config.environment.etc.u2f-mappings.source;
+              origin = "pam://yubikey";
+              appid = "pam://yubikey";
             };
           };
           services = {
@@ -66,7 +80,7 @@ lib.mkIf config.me.wm.enable (
         ];
 
         me.wm.bindings."Mod+u" = pkgs.writeShellScript "totp-menu" ''
-          notify-send -i "key" -t 3000 "TOTP" "Tap your security key"
+          notify-send -i "key" -t 5000 "TOTP" "Tap your security key"
 
           tokens=$(sudo ${lib.getExe pkgs.token2-cli} get_all 2>&1 | grep -iv "touch")
           selected=$(echo "$tokens" | awk -F'] | - ' '{print $2}' | bemenu -i -l 10 -p "TOTP")

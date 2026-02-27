@@ -33,17 +33,19 @@
 
     nixos = lib.mkMerge [
       {
-        hj.files."sops/age/fido2-backup.txt" = {
+        hj.xdg.config.files."sops/age/sk_backup" = {
           text = builtins.readFile ./age-fido2-backup.txt;
           type = "copy";
           permissions = "0600";
         };
 
-        hj.xdg.config.files."sops/age/fido2-main.txt" = {
+        hj.xdg.config.files."sops/age/sk_main" = {
           text = builtins.readFile ./age-fido2-main.txt;
           type = "copy";
           permissions = "0600";
         };
+
+        vars.SOPS_AGE_KEY_FILE = "~/.config/sops/age/${config.me.host.sopsDecryptionKey}";
       }
       (lib.mkIf config.me.secrets.tpm.enable {
         hj.xdg.config.files."sops/age/keys.txt".source = config.me.secrets.tpm.file;

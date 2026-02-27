@@ -20,7 +20,7 @@ let
   yubikey-backup = "sk-ssh-ed25519@openssh.com AAAAGnNrLXNzaC1lZDI1NTE5QG9wZW5zc2guY29tAAAAIGTDz1++tiT0SytsEP3XzTshTI6Edd+o6nMTVl/iLxzSAAAABHNzaDo= yubikey-backup";
 
   hostSubmodule = {
-    options = {
+    options = rec {
       sshPublicKeys = mkOption {
         type = types.listOf types.str;
         default = [ ];
@@ -36,8 +36,14 @@ let
         path = mkOption {
           type = types.str;
           default = "sk_main";
-          description = "Relative privaty key path used for ssh agent";
+          description = "Relative private key path used for ssh agent";
         };
+      };
+
+      sopsDecryptionKey = mkOption {
+        type = types.str;
+        default = cfg.host.sshSigning.path;
+        description = "Relative privaty key path used for sops age decryption";
       };
 
       syncthingId = mkNullOption "Syncthing Device ID";

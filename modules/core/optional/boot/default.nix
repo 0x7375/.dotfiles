@@ -48,10 +48,38 @@ in
     boot.initrd.luks.devices.crypted.crypttabExtraOpts = [ "fido2-device=auto" ];
 
     boot.initrd.systemd.enable = true;
-    boot.loader.systemd-boot.enable = true;
-    boot.loader.systemd-boot.editor = false;
-    boot.loader.systemd-boot.configurationLimit = 30;
-    boot.loader.timeout = 0;
+
+    environment.etc.temp.text = "rebuild";
+
+    boot.loader.limine = {
+      enable = true;
+      enableEditor = false;
+      maxGenerations = 30;
+      # TODO: watch nixpkgs issues about automating keys enrolling
+      secureBoot.enable = true;
+      style = {
+        backdrop = "000000";
+        wallpapers = lib.mkForce [ ];
+
+        # TODO: uncomment on next update
+        interface = {
+          # helpHidden = true;
+          branding = "";
+        };
+
+        graphicalTerminal = {
+          background = "FF000000";
+          foreground = "FFFFFF";
+        };
+      };
+      extraConfig = ''
+        # TODO: remove on next update
+        interface_help_hidden: yes
+        quiet: yes
+      '';
+    };
+    boot.loader.timeout = 1;
+
     boot.loader.efi.canTouchEfiVariables = true;
   });
 }

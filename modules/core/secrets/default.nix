@@ -32,6 +32,19 @@
     sops.age.sshKeyPaths = [ ];
 
     nixos = lib.mkMerge [
+      {
+        hj.files."sops/age/fido2-backup.txt" = {
+          text = builtins.readFile ./age-fido2-backup.txt;
+          type = "copy";
+          permissions = "0600";
+        };
+
+        hj.xdg.config.files."sops/age/fido2-main.txt" = {
+          text = builtins.readFile ./age-fido2-main.txt;
+          type = "copy";
+          permissions = "0600";
+        };
+      }
       (lib.mkIf config.me.secrets.tpm.enable {
         hj.xdg.config.files."sops/age/keys.txt".source = config.me.secrets.tpm.file;
 
@@ -58,8 +71,6 @@
 
     darwin = {
       packages = [ pkgs.age-plugin-se ];
-
-      vars.SOPS_AGE_KEY_FILE = "~/.config/age/se-identity.txt";
 
       sops.age = {
         keyFile = "/var/lib/sops-nix/se-identity.txt";

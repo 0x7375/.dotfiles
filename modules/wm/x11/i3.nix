@@ -170,7 +170,7 @@ lib.mkIf (config.me.wm.displayServer == "xorg") (mkNixos {
 
     $exec ${getExe' pkgs.i3 "i3-msg"} workspace 1
 
-    $exec ${getExe pkgs.xorg.xset} s off -dpms
+    $exec ${getExe pkgs.xset} s off -dpms
     $exec_always ${getExe' pkgs.hsetroot "hsetroot"} -solid "$(xrdb -query | grep 'bg0:' | cut -f2)"
 
     ${startupCmds}

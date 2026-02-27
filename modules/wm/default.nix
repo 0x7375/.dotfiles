@@ -77,7 +77,7 @@ lib.mkIf config.me.wm.enable (mkNixos {
           release = true;
         };
         "Mod+Shift+m" = {
-          cmd = "${term} -e sh -c '${getExe' pkgs.xorg.xprop "xprop"}; exec $SHELL'";
+          cmd = "${term} -e sh -c '${getExe' pkgs.xprop "xprop"}; exec $SHELL'";
           release = true;
         };
       };

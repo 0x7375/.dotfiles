@@ -39,7 +39,7 @@ lib.mkIf (config.me.wm.displayServer == "xorg") {
         atomic = true;
         execute_after = [
           "${getExe' pkgs.i3 "i3-msg"} restart"
-          "${getExe' pkgs.xorg.xset "xset"} s off -dpms"
+          "${getExe' pkgs.xset "xset"} s off -dpms"
         ];
       }
       {
@@ -50,7 +50,7 @@ lib.mkIf (config.me.wm.displayServer == "xorg") {
         atomic = true;
         execute_after = [
           "${getExe' pkgs.i3 "i3-msg"} restart"
-          "${getExe' pkgs.xorg.xset "xset"} s off -dpms"
+          "${getExe' pkgs.xset "xset"} s off -dpms"
         ];
       }
       {
@@ -61,7 +61,7 @@ lib.mkIf (config.me.wm.displayServer == "xorg") {
         atomic = true;
         execute_after = [
           "${getExe' pkgs.i3 "i3-msg"} restart"
-          "${getExe' pkgs.xorg.xset "xset"} s off -dpms"
+          "${getExe' pkgs.xset "xset"} s off -dpms"
         ];
       }
       {

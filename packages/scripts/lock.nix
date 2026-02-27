@@ -21,7 +21,7 @@ pkgs.writeShellApplication {
       else
         [
           i3lock-color
-          xorg.xrdb
+          xrdb
         ]
     );
   text = ''

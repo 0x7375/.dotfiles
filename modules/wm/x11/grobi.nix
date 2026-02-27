@@ -40,7 +40,7 @@ lib.mkIf (config.me.wm.displayServer == "xorg") (mkNixos {
     ];
 
     path = [
-      pkgs.xorg.xrandr
+      pkgs.xrandr
       pkgs.bash
     ];
 

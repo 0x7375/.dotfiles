@@ -12,8 +12,8 @@ pkgs.writeShellApplication {
         [ hyprland ]
       else
         [
-          xorg.xrandr
-          xorg.xset
+          xrandr
+          xset
         ]
     );
   bashOptions = [

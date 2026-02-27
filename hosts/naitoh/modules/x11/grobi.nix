@@ -42,7 +42,7 @@ lib.mkIf (config.me.wm.displayServer == "xorg") {
           primary = "HDMI-1";
           execute_after = [
             "${getExe' pkgs.i3 "i3-msg"} restart"
-            "${getExe' pkgs.xorg.xset "xset"} s off -dpms"
+            "${getExe' pkgs.xset "xset"} s off -dpms"
           ];
         };
     in
@@ -67,7 +67,7 @@ lib.mkIf (config.me.wm.displayServer == "xorg") {
         atomic = true;
         execute_after = [
           "${getExe' pkgs.i3 "i3-msg"} restart"
-          "${getExe' pkgs.xorg.xset "xset"} s on -dpms"
+          "${getExe' pkgs.xset "xset"} s on -dpms"
         ];
       }
       {

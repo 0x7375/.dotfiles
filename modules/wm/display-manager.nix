@@ -8,16 +8,12 @@
 lib.mkIf config.me.wm.enable (mkNixos {
   nixpkgs.overlays = [
     (final: prev: {
-      xorg = prev.xorg.overrideScope (
-        xFinal: xPrev: {
-          xinit = xPrev.xinit.overrideAttrs (old: {
-            postInstall = (old.postInstall or "") + ''
-              substituteInPlace $out/bin/startx \
-                --replace-fail '$HOME/.serverauth.$$' ''\'''${XDG_RUNTIME_DIR:-$HOME/.cache}/xserverauth.$$'
-            '';
-          });
-        }
-      );
+      xinit = prev.xinit.overrideAttrs (old: {
+        postInstall = (old.postInstall or "") + ''
+          substituteInPlace $out/bin/startx \
+            --replace-fail '$HOME/.serverauth.$$' ''\'''${XDG_RUNTIME_DIR:-$HOME/.cache}/xserverauth.$$'
+        '';
+      });
     })
   ];
 

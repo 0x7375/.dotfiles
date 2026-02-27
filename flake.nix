@@ -2,10 +2,9 @@
   description = "NixOS";
 
   inputs = {
-    nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-24.11";
-    nixpkgs.follows = "nixpkgs-unstable";
-    # nixpkgs-patcher.url = "github:gepbird/nixpkgs-patcher";
+
     auto-update.url = "github:nixos/nixpkgs/nixos-unstable";
 
     nur = {
@@ -49,10 +48,6 @@
       url = "github:nix-community/disko/latest";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    lanzaboote = {
-      url = "github:nix-community/lanzaboote/v0.4.2";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
 
     neovim-nightly-overlay = {
       url = "github:nix-community/neovim-nightly-overlay";
@@ -85,6 +80,7 @@
         type: name:
         let
           isNixos = type == "nixos";
+
           builder = if isNixos then lib.nixosSystem else inputs.nix-darwin.lib.darwinSystem;
           modules = if isNixos then "nixosModules" else "darwinModules";
         in

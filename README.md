@@ -61,6 +61,20 @@ bootctl status
 
 Secure boot should now work and we can reboot
 
+### Optional: require fido2 key to boot
+
+Enroll the keys, one at a time with:
+```
+sudo systemd-cryptenroll --fido2-device=auto /dev/crypted-device
+```
+
+Find regular password keyslot and wipe it
+```
+sudo cryptsetup luksDump /dev/nvme0n1p2
+
+sudo systemd-cryptenroll --wipe-slot=password /dev/crypted-device
+```
+
 ## Making a bootable USB drive
 
 Building the iso

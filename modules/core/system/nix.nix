@@ -44,8 +44,11 @@ mkBundle {
 
   nixos.programs.nh = {
     enable = true;
-    clean.enable = true;
-    clean.extraArgs = "--keep 5 --keep-since 7d";
     flake = config.me.flakeDir;
+    clean = {
+      enable = true;
+      dates = "daily";
+      extraArgs = "--keep 5";
+    };
   };
 }

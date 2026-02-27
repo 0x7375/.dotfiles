@@ -8,7 +8,7 @@
 
 lib.mkIf config.me.wm.enable (mkBundle {
   packages = with pkgs; [
-    melonds
+    melonDS
     ryubing
   ];
 

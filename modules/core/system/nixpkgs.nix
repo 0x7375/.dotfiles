@@ -14,7 +14,7 @@ in
 
   nixpkgs.overlays = [
     (final: prev: {
-      stable = import inputs.nixpkgs-stable {
+      unstable = import inputs.nixpkgs-unstable {
         system = final.stdenv.hostPlatform.system;
         config.allowUnfreePredicate = config.nixpkgs.config.allowUnfreePredicate;
       };

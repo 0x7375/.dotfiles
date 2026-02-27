@@ -93,12 +93,10 @@
 
       services.resolved = {
         enable = true;
-        settings.Resolve = {
-          DNSOverTLS = true;
-          DNSSEC = "true";
-          FallbackDns = [ ];
-          Domains = [ "~." ];
-        };
+        dnsovertls = "true";
+        dnssec = "true";
+        fallbackDns = [ ];
+        domains = [ "~." ];
       };
 
       # Configure network proxy if necessary

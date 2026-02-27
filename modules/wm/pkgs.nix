@@ -58,8 +58,8 @@ lib.mkIf config.me.wm.enable (mkBundle {
       my.generate-icons
       omnissa-horizon-client
       auto.signal-desktop
-      stable.gaphor
-      # stable.jetbrains.idea-community
+      gaphor
+      # jetbrains.idea-community
     ];
   };
 })

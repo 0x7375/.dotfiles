@@ -50,8 +50,6 @@
       (lib.mkIf config.me.secrets.tpm.enable {
         hj.xdg.config.files."sops/age/keys.txt".source = config.me.secrets.tpm.file;
 
-        users.users.${config.me.user}.extraGroups = [ "tss" ];
-
         packages = with pkgs; [
           age-plugin-tpm
           tpm2-tools
@@ -65,7 +63,7 @@
 
         sops.age = {
           keyFile = "${config.me.home}/.config/sops/age/keys.txt";
-          plugins = with pkgs; [ age-plugin-tpm ];
+          plugins = with pkgs; [ unstable.age-plugin-tpm ];
         };
       })
       (lib.mkIf (!config.me.secrets.tpm.enable) {

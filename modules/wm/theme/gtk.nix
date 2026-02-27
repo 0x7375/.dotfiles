@@ -130,6 +130,12 @@ in
     };
 
   config = lib.mkIf config.me.wm.enable (mkNixos {
+    nixpkgs.overlays = [
+      (final: prev: {
+        gruvbox-gtk-theme = final.unstable.gruvbox-gtk-theme;
+      })
+    ];
+
     programs.dconf.enable = true;
 
     vars = {

@@ -49,6 +49,9 @@ Verify entries are signed
 sbctl verify
 ```
 
+Warning:
+On Thinkpad devices, do not select "Clear All Secure Boot Keys" as it will drop the Forbidden Signature Database (dbx). Make sure to only select "Reset to Setup Mode".
+
 Inside the bios: security -> secure boot -> enable secure boot and select reset to setup mode
 ([guide](https://github.com/nix-community/lanzaboote/blob/master/docs/QUICK_START.md#part-2-enabling-secure-boot))
 

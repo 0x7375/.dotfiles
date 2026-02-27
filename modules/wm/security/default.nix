@@ -22,11 +22,10 @@ lib.mkIf config.me.wm.enable (mkNixos {
   packages = with pkgs; [
     protonvpn-gui
     polkit_gnome
-    stable.ente-auth # stable until https://github.com/ente-io/ente/issues/5589 is fixed
   ];
 
   xdg.desktopEntries.bitwarden = {
-    exec = "helium --app=http://vault.bitwarden.com";
+    exec = "${lib.getExe pkgs.helium} --app=http://vault.bitwarden.com";
     name = "Bitwarden";
     type = "Application";
   };

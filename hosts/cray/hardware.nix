@@ -23,6 +23,16 @@
   boot.kernelModules = [ "kvm-intel" ];
   boot.extraModulePackages = [ ];
 
+  # boot.loader.systemd-boot.extraInstallCommands = ''
+  #   sed -i 's/^default .*/default auto-windows/' /boot/loader/loader.conf
+  # '';
+
+  boot.loader.limine.extraEntries = ''
+    /Windows
+        protocol: efi
+        path: boot():/EFI/Microsoft/Boot/bootmgfw.efi
+  '';
+
   hardware.nvidia = {
     open = true;
     modesetting.enable = true;

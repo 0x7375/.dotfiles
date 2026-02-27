@@ -45,16 +45,17 @@ in
       ENV{DISPLAY}=":0", \
       ENV{XAUTHORITY}="/run/user/${toString config.me.uid}/Xauthority", \
       RUN+="${getExe' pkgs.su "su"} ${config.me.user} -c '${getExe pkgs.my.charging-notify} 1'"
+
+      # Automatically lock when security key is unplugged
+      ACTION=="remove",\
+       ENV{ID_BUS}=="usb",\
+       ENV{ID_MODEL_ID}=="0024",\
+       ENV{ID_VENDOR_ID}=="349e",\
+       ENV{ID_VENDOR}=="TOKEN2",\
+       RUN+="${lib.getExe' pkgs.systemd "loginctl"} lock-sessions"
     '';
 
-  programs.i3lock.enable = true;
-
-  packages = with pkgs; [
-    acpi
-    my.idle-check
-    my.lock
-    my.powermenu
-  ];
+  packages = with pkgs; [ acpi ];
 
   services.logind.settings.Login.HandleLidSwitch = "ignore";
 
@@ -76,6 +77,17 @@ in
     tapping = true;
     tappingDragLock = false;
     disableWhileTyping = true;
+  };
+
+  programs.xss-lock = {
+    enable = true;
+    extraOptions = [ "--transfer-sleep-lock" ];
+    lockerCommand = lib.getExe pkgs.my.lock;
+  };
+
+  programs.i3lock = {
+    enable = true;
+    u2fSupport = true;
   };
 
   # do not change

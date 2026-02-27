@@ -24,7 +24,7 @@ pkgs.writeShellApplication {
       [
         i3
         dunst
-        xrdb
+        xorg.xrdb
       ]
     );
   text =

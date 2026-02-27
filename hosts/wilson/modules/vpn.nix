@@ -27,6 +27,17 @@ let
   peerNames = builtins.attrNames peerKeys;
 in
 lib.mkIf config.me.secrets.enable {
+  services.dnsmasq = {
+    enable = true;
+    settings = {
+      interface = [ "home" ];
+      bind-interfaces = true;
+      address = lib.mapAttrsToList (name: hostCfg: "/${name}.vpn/${hostCfg.ips.vpn}") (
+        lib.filterAttrs (_: h: h.ips ? vpn) hosts
+      );
+    };
+  };
+
   sops.secrets = {
     "vpn/pk" = lib.my.mkHostSecret hostname "vpn/pk" { owner = config.me.user; };
   }

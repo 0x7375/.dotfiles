@@ -43,7 +43,8 @@ let
   ) config.me.wm.assign;
 
   floatingRules = lib.concatMapStringsSep "\n" (
-    cfg: ''for_window [${cfg.type}="^${cfg.name}$"] floating enable''
+    cfg:
+    ''for_window [${cfg.type}="^${cfg.name}$"] floating ${if cfg.enable then "enable" else "disable"} ''
   ) config.me.wm.floating;
 
   startupCmds = lib.concatStringsSep "\n" (lib.mapAttrsToList mkI3Start config.me.wm.startup);

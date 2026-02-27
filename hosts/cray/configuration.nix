@@ -18,10 +18,6 @@
 
   boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
 
-  boot.loader.systemd-boot.extraInstallCommands = ''
-    sed -i 's/^default .*/default auto-windows/' /boot/loader/loader.conf
-  '';
-
   vars.LIBVA_DRIVER_NAME = "nvidia";
 
   services.xserver.videoDrivers = [ "nvidia" ];

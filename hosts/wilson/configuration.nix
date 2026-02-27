@@ -32,6 +32,11 @@
     openssh.authorizedKeys.keys = config.me.hosts.mach.sshPublicKeys;
   };
 
+  security.pam.services = {
+    login.unixAuth = lib.mkForce true;
+    sudo.unixAuth = lib.mkForce true;
+  };
+
   packages = with pkgs; [
     ncdu
     xclip

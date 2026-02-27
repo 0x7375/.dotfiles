@@ -66,15 +66,6 @@ let
         "https://update.greasyfork.org/*"
       ];
 
-      WebAppInstallForceList = [
-        {
-          create_desktop_shortcut = true;
-          default_launch_container = "window";
-          custom_name = "Bitwarden";
-          url = "https://vault.bitwarden.com";
-        }
-      ];
-
       "3rdparty".extensions = {
         ${extensions.ublock}.adminSettings = builtins.toJSON {
           userSettings = {
@@ -137,29 +128,35 @@ let
     ];
 in
 lib.mkIf config.me.wm.enable {
-  packages = [
-    # patched for compatibility with nixos module, add cli flags
-    (pkgs.nur.repos.Ev357.helium.overrideAttrs (old: {
-      buildCommand =
-        let
-          bwrapPath = builtins.head (builtins.match ".*ln -s ([^ ]+) [$]out/bin/helium.*" old.buildCommand);
-          flags = [
-            "--enable-features=HeliumMiddleClickAutoscroll"
-            "--no-first-run"
-          ];
-        in
-        ''
-          mkdir -p $out/bin
-          cp ${bwrapPath} $out/bin/helium
-          sed -i 's|--tmpfs /etc|--tmpfs /etc --ro-bind /etc/chromium /etc/chromium|' $out/bin/helium
+  # patched for compatibility with nixos module, add cli flags
+  nixpkgs.overlays = [
+    (final: prev: {
+      helium = pkgs.nur.repos.Ev357.helium.overrideAttrs (old: {
+        buildCommand =
+          let
+            bwrapPath = builtins.head (builtins.match ".*ln -s ([^ ]+) [$]out/bin/helium.*" old.buildCommand);
+            flags = [
+              "--enable-features=HeliumMiddleClickAutoscroll"
+              "--no-first-run"
+            ];
+          in
+          ''
+            mkdir -p $out/bin
+            cp ${bwrapPath} $out/bin/helium
+            sed -i 's|--tmpfs /etc|--tmpfs /etc --ro-bind /etc/chromium /etc/chromium|' $out/bin/helium
 
-          # enable autoscroll
-          sed -i 's|-container-init "\$@"|-container-init ${builtins.concatStringsSep " " flags} "\$@"|' $out/bin/helium
-        ''
-        +
-          builtins.replaceStrings [ "mkdir -p $out/bin\nln -s ${bwrapPath} $out/bin/helium\n" ] [ "" ]
-            old.buildCommand;
-    }))
+            # enable autoscroll
+            sed -i 's|-container-init "\$@"|-container-init ${builtins.concatStringsSep " " flags} "\$@"|' $out/bin/helium
+          ''
+          +
+            builtins.replaceStrings [ "mkdir -p $out/bin\nln -s ${bwrapPath} $out/bin/helium\n" ] [ "" ]
+              old.buildCommand;
+      });
+    })
+  ];
+
+  packages = [
+    pkgs.helium
   ];
 
   programs.chromium = {

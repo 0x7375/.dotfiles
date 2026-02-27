@@ -16,7 +16,7 @@ lib.mkIf config.me.wm.enable (
             pam_u2f = (prev.crossPkgs or prev).pam_u2f.overrideAttrs (old: {
               postPatch = (old.postPatch or "") + ''
                 substituteInPlace util.h \
-                  --replace-fail "Please touch the FIDO authenticator." "\033[34m::\033[0m Touch the key!"
+                  --replace-fail "Please touch the FIDO authenticator." ":: Touch the key!"
               '';
             });
           })
@@ -45,16 +45,14 @@ lib.mkIf config.me.wm.enable (
           askPassword = lib.getExe (
             pkgs.writeShellApplication {
               name = "ssh-askpass-notify";
+              bashOptions = [ ];
               runtimeInputs = [ pkgs.libnotify ];
               text = ''
+                export DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/$UID/bus"
                 notify-send -i "key" -t 5000 "SSH" "Tap your security key"
               '';
             }
           );
-          extraConfig = ''
-            Host *
-              LogLevel QUIET
-          '';
         };
 
         security.pam = {
@@ -70,7 +68,7 @@ lib.mkIf config.me.wm.enable (
           services = {
             login = {
               u2fAuth = true;
-              unixAuth = true;
+              unixAuth = false;
             };
             sudo = {
               u2fAuth = true;

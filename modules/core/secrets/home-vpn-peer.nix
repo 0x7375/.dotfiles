@@ -7,7 +7,7 @@
 }:
 
 let
-  inherit (config.me) hostname host;
+  inherit (config.me) hostname host hosts;
   cfg = config.me;
   mkHostSecret = lib.my.mkHostSecret hostname;
 in
@@ -27,6 +27,7 @@ in
         [Interface]
         Address = ${host.ips.vpn}/24
         PrivateKey = ${config.sops.placeholder."vpn/pk"}
+        DNS = ${hosts.wilson.ips.vpn}, vpn
 
         [Peer]
         PublicKey = PpCxUOTz7Heh3B29OnI3XNZAKJ8abUETMzFNj3gpTyo=

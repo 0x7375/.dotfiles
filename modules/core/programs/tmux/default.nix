@@ -86,13 +86,13 @@ in
 
         set -g popup-border-style fg=black
 
-        set -g window-status-current-style fg=default
+        set -g window-status-current-style fg=red
         set -g window-status-style fg=brightblack
 
         set -g pane-active-border-style fg=default
         set -g pane-border-style fg=brightblack
 
-        set -g mode-style 'fg=default,reverse'
+        set -g mode-style 'fg=red,reverse'
 
         setw -g mode-keys vi
 

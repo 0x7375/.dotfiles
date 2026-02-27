@@ -18,7 +18,7 @@ lib.mkIf config.me.wm.enable (mkBundle {
   nixos = {
     packages = with pkgs; [
       sly
-      stable.calibre
+      calibre
       gimp
       obs-studio
       vlc

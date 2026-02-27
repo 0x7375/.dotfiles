@@ -55,7 +55,7 @@ mkBundle {
     (with pkgs; [
       lf
       ouch
-      perl5Packages.FileMimeInfo
+      perl540Packages.FileMimeInfo
     ])
     ++ lib.optionals desktop (with pkgs; [ ueberzugpp ])
     ++ lib.optionals (desktop && !pkgs.stdenv.isDarwin) (

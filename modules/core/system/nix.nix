@@ -1,5 +1,6 @@
 {
   mkBundle,
+  pkgs,
   config,
   inputs,
   ...
@@ -7,9 +8,14 @@
 
 mkBundle {
   nix = {
+    package = pkgs.unstable.nix;
     extraOptions = ''
       warn-dirty = false
       trusted-users = root ${config.me.user}
+
+      connect-timeout = 10
+      # still build when a cache fails
+      fallback = true
     '';
     nixPath = [ "nixpkgs=${inputs.nixpkgs}" ];
     channel.enable = false;
@@ -25,7 +31,7 @@ mkBundle {
     };
     registry = {
       nixpkgs.flake = inputs.nixpkgs;
-      stable.flake = inputs.nixpkgs-stable;
+      unstable.flake = inputs.nixpkgs-unstable;
       n.flake = inputs.nixpkgs;
       t = {
         from.type = "indirect";
@@ -43,10 +49,10 @@ mkBundle {
     '';
 
   nixos.programs.nh = {
-    enable = true;
+    enable = false;
     flake = config.me.flakeDir;
     clean = {
-      enable = true;
+      enable = false;
       dates = "daily";
       extraArgs = "--keep 5";
     };

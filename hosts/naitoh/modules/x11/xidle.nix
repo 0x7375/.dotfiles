@@ -13,19 +13,12 @@ lib.mkIf (config.me.wm.displayServer == "xorg") {
     unitConfig.ConditionEnvironment = [ "DISPLAY" ];
     serviceConfig = {
       Type = "simple";
-      ExecStart =
-        let
-          idle-check = lib.getExe pkgs.my.idle-check;
-        in
-        ''
-          ${pkgs.xidlehook}/bin/xidlehook --detect-sleep --not-when-audio \
-            --timer 600 \
-              "${idle-check} standby" "" \
-            --timer 30 \
-              "${idle-check} lock" "" \
-            --timer 2970 \
-              "${idle-check} hibernate" ""
-        '';
+      ExecStart = ''
+        ${lib.getExe pkgs.xidlehook} --detect-sleep --not-when-audio \
+          --timer 600 "xset dpms force standby" "" \
+          --timer 30 "loginctl lock-sessions" "" \
+          --timer 2970 "systemctl hibernate" ""
+      '';
       Restart = "always";
     };
     wantedBy = [ "graphical-session.target" ];

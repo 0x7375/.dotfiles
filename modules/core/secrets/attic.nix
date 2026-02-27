@@ -11,11 +11,7 @@ let
   inherit (config.me.services.attic) url;
 in
 lib.mkIf config.me.secrets.enable (mkNixos {
-  sops.secrets.attic = {
-    sopsFile = "${secrets}/attic.env";
-    format = "dotenv";
-    key = "";
-  };
+  sops.secrets.attic_access_token = { };
 
   packages = [ pkgs.attic-client ];
 
@@ -25,12 +21,16 @@ lib.mkIf config.me.secrets.enable (mkNixos {
     after = [ "network.target" ];
     environment.ATTIC_SERVER = url;
     serviceConfig = {
-      ExecStartPre = "${lib.getExe pkgs.attic-client} login local ${url} $ATTIC_SERVER_TOKEN_RS256_SECRET_BASE64";
+      LoadCredential = [ "token:${config.sops.secrets.attic_access_token.path}" ];
+
+      ExecStartPre = pkgs.writeShellScript "attic-login" ''
+        TOKEN=$(cat $CREDENTIALS_DIRECTORY/token)
+        ${lib.getExe pkgs.attic-client} login local ${url} $TOKEN
+      '';
       ExecStart = "${lib.getExe pkgs.attic-client} watch-store cache";
       Restart = "on-failure";
       KillMode = "control-group";
       KillSignal = "SIGTERM";
-      EnvironmentFile = config.sops.secrets.attic.path;
     };
   };
 

@@ -49,8 +49,6 @@ in
 
     boot.initrd.systemd.enable = true;
 
-    environment.etc.temp.text = "rebuild";
-
     boot.loader.limine = {
       enable = true;
       enableEditor = false;

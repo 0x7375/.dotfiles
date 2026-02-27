@@ -1,7 +1,13 @@
-{ lib, config, ... }:
+{
+  secrets,
+  lib,
+  config,
+  ...
+}:
 
 let
   inherit (config.me.services.attic) port url;
+  inherit (config.me) hostname;
 in
 lib.mkIf config.me.secrets.enable {
   nixpkgs.overlays = [
@@ -17,6 +23,12 @@ lib.mkIf config.me.secrets.enable {
   ];
 
   networking.firewall.allowedTCPPorts = [ port ];
+
+  sops.secrets.attic = {
+    sopsFile = "${secrets}/${hostname}/attic.env";
+    format = "dotenv";
+    key = "";
+  };
 
   services.atticd = {
     enable = true;

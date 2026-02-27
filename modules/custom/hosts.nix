@@ -129,7 +129,7 @@ in
 
     host = mkOption {
       type = types.submodule hostSubmodule;
-      default = cfg.hosts.${cfg.hostname};
+      default = cfg.hosts.${cfg.hostname} or { };
       internal = true;
     };
   };

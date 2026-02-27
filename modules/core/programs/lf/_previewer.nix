@@ -157,12 +157,12 @@ pkgs.writeShellApplication {
       text/html)
         w3m "$file"
         ;;
-
-      text/*)
-        bat --color=always --style=plain "$file"
-        ;;
       *)
-        file -Lb "$file"
+        if file --mime-encoding -- "$file" | grep -q "binary"; then
+          file -Lb "$file"
+        else
+          bat --color=always --style=plain "$file" || echo "oopsie"
+        fi
         ;;
     esac
 

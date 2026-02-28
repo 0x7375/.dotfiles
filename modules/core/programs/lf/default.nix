@@ -417,7 +417,7 @@ mkBundle {
       cmd extract ''${{
         set -f
         ${getExe pkgs.ouch} decompress $fx
-        trash $f
+        ${getExe' pkgs.trash-cli "trash"} $f
       }}
 
       map ze extract

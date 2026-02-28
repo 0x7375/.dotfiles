@@ -20,7 +20,7 @@ pkgs.writeShellApplication {
     ''
       options=(kill logout hibernate shutdown reboot setup)
       if [[ -d /sys/class/power_supply/BAT0 ]]; then
-        options+=(lock suspend)
+        options+=(lock)
       else
         options+=(windows)
       fi
@@ -37,8 +37,7 @@ pkgs.writeShellApplication {
         ;;
         "lock") lock ;;
         "logout") loginctl terminate-user ${toString config.me.uid} ;;
-        "suspend") systemctl suspend && lock ;;
-        "hibernate") pkill 1password; systemctl hibernate ;;
+        "hibernate") systemctl hibernate ;;
         "shutdown") systemctl poweroff ;;
         "reboot") systemctl --no-wall reboot ;;
         "windows") systemctl --no-wall reboot --boot-loader-entry=auto-windows ;;

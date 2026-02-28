@@ -11,17 +11,6 @@ lib.mkIf config.me.wm.enable (
   mkNixos (
     lib.mkMerge [
       {
-        nixpkgs.overlays = [
-          (final: prev: {
-            pam_u2f = (prev.crossPkgs or prev).pam_u2f.overrideAttrs (old: {
-              postPatch = (old.postPatch or "") + ''
-                substituteInPlace util.h \
-                  --replace-fail "Please touch the FIDO authenticator." ":: Touch the key!"
-              '';
-            });
-          })
-        ];
-
         services.udev.packages = [ pkgs.yubikey-personalization ];
 
         services.pcscd.enable = true;
@@ -60,6 +49,7 @@ lib.mkIf config.me.wm.enable (
             enable = true;
             settings = {
               cue = true;
+              cue_prompt = ":: Touch the key!";
               authfile = config.environment.etc.u2f-mappings.source;
               origin = "pam://yubikey";
               appid = "pam://yubikey";

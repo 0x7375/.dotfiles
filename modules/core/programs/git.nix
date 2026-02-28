@@ -143,18 +143,16 @@ lib.mkMerge [
         wantedBy = [ "default.target" ];
         description = "SSH authentication agent";
         documentation = [ "man:ssh-agent(1)" ];
-        environment = {
-          DISPLAY = ":0";
-          SSH_ASKPASS_REQUIRE = "force";
-        };
         serviceConfig.ExecStart = "${lib.getExe' pkgs.openssh "ssh-agent"} -D -a %t/ssh-agent";
       };
 
-      environment.shellInit = ''
-        if [ -z "$SSH_AUTH_SOCK" ]; then
-          export SSH_AUTH_SOCK=$XDG_RUNTIME_DIR/ssh-agent
-        fi
-      '';
+      environment.shellInit =
+        # bash
+        ''
+          if [ -z "$SSH_AUTH_SOCK" ]; then
+            export SSH_AUTH_SOCK=$XDG_RUNTIME_DIR/ssh-agent
+          fi
+        '';
     };
   })
   (lib.mkIf config.me.secrets.enable {

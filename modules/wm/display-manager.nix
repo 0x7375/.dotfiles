@@ -48,10 +48,11 @@ lib.mkIf config.me.wm.enable (mkNixos {
         if test -z "$DBUS_SESSION_BUS_ADDRESS"; then
         	eval $(dbus-launch --exit-with-session --sh-syntax)
         fi
-        systemctl --user import-environment DISPLAY XAUTHORITY
+
+        systemctl --user import-environment DISPLAY XAUTHORITY XDG_SESSION_ID XDG_SESSION_TYPE
 
         if command -v dbus-update-activation-environment &> /dev/null; then
-          dbus-update-activation-environment DISPLAY XAUTHORITY
+          dbus-update-activation-environment --systemd --all
         fi
       '';
   };

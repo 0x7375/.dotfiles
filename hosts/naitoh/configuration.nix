@@ -48,16 +48,29 @@ in
 
       # Automatically lock when security key is unplugged
       ACTION=="remove",\
-       ENV{ID_BUS}=="usb",\
-       ENV{ID_MODEL_ID}=="0024",\
-       ENV{ID_VENDOR_ID}=="349e",\
-       ENV{ID_VENDOR}=="TOKEN2",\
-       RUN+="${lib.getExe' pkgs.systemd "loginctl"} lock-sessions"
+      SUBSYSTEM=="usb",\
+      ENV{DEVTYPE}=="usb_interface",\
+      ENV{INTERFACE}=="11/0/0",\
+      ENV{PRODUCT}=="349e/24/100",\
+      ENV{DISPLAY}=":0", \
+      ENV{XAUTHORITY}="/run/user/${toString config.me.uid}/Xauthority", \
+      RUN+="${lib.getExe' pkgs.xorg.xset "xset"} s activate"
+
+      SUBSYSTEM=="hidraw", \
+      ATTRS{idVendor}=="349e", \
+      ATTRS{idProduct}=="0024", \
+      TAG+="uaccess"
     '';
 
   packages = with pkgs; [ acpi ];
 
   services.logind.settings.Login.HandleLidSwitch = "ignore";
+
+  systemd.sleep.extraConfig = ''
+    AllowSuspend=no
+    AllowHybridSleep=no
+    AllowSuspendThenHibernate=no
+  '';
 
   systemd.services.disable-lid-wakeup = {
     description = "Disable lid switch as wake source";
@@ -79,10 +92,11 @@ in
     disableWhileTyping = true;
   };
 
-  programs.xss-lock = {
-    enable = true;
-    extraOptions = [ "--transfer-sleep-lock" ];
-    lockerCommand = lib.getExe pkgs.my.lock;
+  me.wm.startup.xss-lock = "while true; do ${lib.getExe pkgs.xss-lock} --transfer-sleep-lock -- ${lib.getExe pkgs.my.lock}; sleep 1; done";
+
+  security.pam.services.i3lock = {
+    u2fAuth = true;
+    unixAuth = false;
   };
 
   programs.i3lock = {

@@ -45,7 +45,10 @@ in
 
     systemd.settings.Manager.RebootWatchdogSec = "10s";
 
-    boot.initrd.luks.devices.crypted.crypttabExtraOpts = [ "fido2-device=auto" ];
+    boot.initrd.luks.devices.crypted.crypttabExtraOpts = [
+      "fido2-device=auto"
+      "token-timeout=0"
+    ];
 
     boot.initrd.systemd.enable = true;
 

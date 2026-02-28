@@ -477,11 +477,11 @@
     "token2": {
       "flake": false,
       "locked": {
-        "lastModified": 1772040414,
-        "narHash": "sha256-wYS52VTPrUyd04MhDpGNO9WG5FjFstl8NOzduXbbVHA=",
+        "lastModified": 1772240542,
+        "narHash": "sha256-GHKfaeXkCXiXSF6AjgbWc/e8+hf1UmSZMvMBQq+zABM=",
         "ref": "refs/heads/main",
-        "rev": "9db347a14cc031a93a5c1a176cc618a0d4ddfb20",
-        "revCount": 1,
+        "rev": "da509b5bc6f2162050414d193d736b66f4f3b85d",
+        "revCount": 2,
         "type": "git",
         "url": "ssh://git@codeberg.org/0x7E/token2-totp-cli"
       },

@@ -27,7 +27,7 @@
   #   sed -i 's/^default .*/default auto-windows/' /boot/loader/loader.conf
   # '';
 
-  boot.loader.limine.extraEntries = ''
+  boot.loader.limine.extraConfig = ''
     /Windows
         protocol: efi
         path: boot():/EFI/Microsoft/Boot/bootmgfw.efi

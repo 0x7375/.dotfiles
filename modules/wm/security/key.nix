@@ -30,20 +30,6 @@ lib.mkIf config.me.wm.enable (
           age-plugin-fido2-hmac
         ];
 
-        programs.ssh = {
-          askPassword = lib.getExe (
-            pkgs.writeShellApplication {
-              name = "ssh-askpass-notify";
-              bashOptions = [ ];
-              runtimeInputs = [ pkgs.libnotify ];
-              text = ''
-                export DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/$UID/bus"
-                notify-send -i "key" -t 5000 "SSH" "Tap your security key"
-              '';
-            }
-          );
-        };
-
         security.pam = {
           u2f = {
             enable = true;
@@ -64,6 +50,10 @@ lib.mkIf config.me.wm.enable (
               u2fAuth = true;
               unixAuth = false;
             };
+            polkit-1 = {
+              u2fAuth = true;
+              unixAuth = false;
+            };
           };
         };
       }
@@ -77,8 +67,6 @@ lib.mkIf config.me.wm.enable (
         ];
 
         me.wm.bindings."Mod+u" = pkgs.writeShellScript "totp-menu" ''
-          notify-send -i "key" -t 5000 "TOTP" "Tap your security key"
-
           tokens=$(sudo ${lib.getExe pkgs.token2-cli} get_all 2>&1 | grep -iv "touch")
           selected=$(echo "$tokens" | awk -F'] | - ' '{print $2}' | bemenu -i -l 10 -p "TOTP")
           echo "$tokens" | grep -F "$selected" | head -n 1 | awk '{print $NF}' | tr -d '\r\n' | ${config.me.wm.copy}

@@ -22,13 +22,20 @@
 
   config = lib.mkIf config.me.wm.enable {
     me.wm = {
-      assign = [
-        {
-          type = "class";
-          name = config.me.wm.browser;
-          workspace = "3";
-        }
-      ];
+      assign =
+        let
+          inherit (config.me.wm) browser;
+          browserPascalCase =
+            lib.strings.toUpper (builtins.substring 0 1 browser)
+            + builtins.substring 1 ((builtins.stringLength browser) - 1) browser;
+        in
+        [
+          {
+            type = "class";
+            name = browserPascalCase;
+            workspace = "3";
+          }
+        ];
 
       bindings = {
         "Mod+w" = config.me.wm.browser;

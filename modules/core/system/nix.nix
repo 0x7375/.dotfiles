@@ -1,14 +1,24 @@
 {
-  mkBundle,
   pkgs,
+  mkBundle,
   config,
   inputs,
   ...
 }:
 
 mkBundle {
+  nixpkgs.overlays = [
+    (final: prev: {
+      nix = final.unstable.nix.override {
+        nix-cli = final.unstable.nix.nix-cli.overrideAttrs (old: {
+          # https://github.com/NixOS/nix/pull/15297
+          patches = (old.patches or [ ]) ++ [ ./nix_shell_packages_env_var.patch ];
+        });
+      };
+    })
+  ];
+
   nix = {
-    package = pkgs.unstable.nix;
     extraOptions = ''
       warn-dirty = false
       trusted-users = root ${config.me.user}

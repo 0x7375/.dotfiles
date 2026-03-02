@@ -41,20 +41,19 @@ lib.mkIf config.me.wm.enable (
               appid = "pam://yubikey";
             };
           };
-          services = {
-            login = {
-              u2fAuth = true;
-              unixAuth = false;
+          services =
+            let
+              config = {
+                u2fAuth = true;
+                unixAuth = false;
+              };
+            in
+            {
+              login = config;
+              sudo = config;
+              polkit-1 = config;
+              su = config;
             };
-            sudo = {
-              u2fAuth = true;
-              unixAuth = false;
-            };
-            polkit-1 = {
-              u2fAuth = true;
-              unixAuth = false;
-            };
-          };
         };
       }
       (lib.mkIf config.me.secrets.enable {

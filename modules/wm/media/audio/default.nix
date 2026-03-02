@@ -34,6 +34,9 @@ lib.mkIf config.me.wm.enable (
             XF86AudioNext = "${playerctl} next";
             XF86AudioPrev = "${playerctl} previous";
             XF86AudioPlay = "${playerctl} play-pause";
+            XF86AudioMicMute = "${playerctl} play-pause";
+            Prior = "${playerctl} previous";
+            Next = "${playerctl} next";
           };
 
         packages = with pkgs; [

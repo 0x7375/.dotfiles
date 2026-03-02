@@ -28,6 +28,7 @@ lib.mkIf config.me.wm.enable (mkBundle {
     in
     [
       my.swap-theme
+      my.backup-vault
       google-chrome
       texliveMedium
       typst

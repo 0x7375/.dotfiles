@@ -27,7 +27,7 @@ in
         [Interface]
         Address = ${host.ips.vpn}/24
         PrivateKey = ${config.sops.placeholder."vpn/pk"}
-        DNS = ${hosts.wilson.ips.vpn}, vpn
+        DNS = ${hosts.wilson.ips.vpn}
 
         [Peer]
         PublicKey = PpCxUOTz7Heh3B29OnI3XNZAKJ8abUETMzFNj3gpTyo=

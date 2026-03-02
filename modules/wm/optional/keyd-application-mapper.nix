@@ -45,7 +45,6 @@ lib.mkIf config.me.wm.enable (mkNixos {
       defaultWithEnter = default + "\ncontrol.m = enter";
 
       apps = [
-        "1password"
         "vesktop"
         "discord"
         "ssh-askpass"
@@ -69,10 +68,6 @@ lib.mkIf config.me.wm.enable (mkNixos {
 
       # make fullscreen toggle compact mode aswell
       meta.f = macro(A-c M-f)
-
-      [io-ente-auth]
-      ${defaultWithEnter}
-      control.e = macro(tab tab tab enter)
 
       [copyq]
       ${default}

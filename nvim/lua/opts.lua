@@ -11,6 +11,8 @@ vim.opt.pummaxwidth = 60
 vim.opt.pumborder = "single"
 vim.opt.completeopt = { "menu", "menuone", "popup", "nearest" }
 
+vim.o.sessionoptions = "blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions"
+
 -- hide search hit bottom
 vim.opt.shortmess:append("Is")
 

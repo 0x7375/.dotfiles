@@ -17,6 +17,7 @@ mkBundle {
   aliases = {
     np = "nix profile";
     ns = "nix shell";
+    nb = "nix build";
     nr = "nix repl .";
 
     v = "$EDITOR";

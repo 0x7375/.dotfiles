@@ -25,11 +25,6 @@
   # "known to corrupt the Nix Store"
   nix.settings.auto-optimise-store = lib.mkForce false;
 
-  unfree-packages = [
-    "1password"
-    "1password-cli"
-  ];
-
   nix-homebrew = {
     enable = true;
     enableRosetta = true;
@@ -45,8 +40,6 @@
       "secretive"
       "google-chrome"
       "unnaturalscrollwheels"
-      "1password@beta"
-      "ente-auth"
       "jellyfin-media-player"
       "karabiner-elements"
       "middleclick"
@@ -99,8 +92,6 @@
   '';
 
   users.users.${config.me.user}.home = config.me.home;
-
-  programs._1password.enable = true;
 
   networking.applicationFirewall = {
     enable = true;

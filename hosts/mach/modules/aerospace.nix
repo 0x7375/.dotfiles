@@ -121,12 +121,6 @@ in
         on-window-detected = [
           {
             "if" = {
-              app-id = "com.1password.1password";
-            };
-            run = "layout floating";
-          }
-          {
-            "if" = {
               app-id = "app.zen-browser.zen";
             };
             run = "move-node-to-workspace 3";

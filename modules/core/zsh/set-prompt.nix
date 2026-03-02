@@ -24,6 +24,20 @@
           fi
       }
 
+      function get_env() {
+          if [[ -n $DIRENV_DIR ]]; then
+              msg=direnv
+          elif [[ -n $VIRTUAL_ENV ]]; then
+              msg=venv
+          elif [[ -n $NIX_SHELL_PACKAGES ]]; then
+              msg=shell
+          elif [[ -n $NIX_BUILD_TOP ]]; then
+              msg=develop
+          fi
+
+          [[ -n $msg ]] && echo "($msg) "
+      }
+
       function get_prompt_symbol() {
           if [[ $SHLVL -gt ${if pkgs.stdenv.isLinux then "1" else "2"} || -n ''${DIRENV_LOADED-} ]]; then
               echo " ::"
@@ -35,13 +49,14 @@
       function get_ssh_info() {
           if [[ -n ''${SSH_CONNECTION-} ]]; then
               [[ -n ''${ZSH_VERSION-} ]] && echo "%F{yellow}%n%F{reset}@%F{cyan}%m:"
+              [[ -n ''${BASH_VERSION-} ]] && echo "\[\033[33m\]\u\[\033[0m\]@\[\033[36m\]\h:\[\033[0m\]"
           fi
       }
 
       function set_prompt {
-          # Last character is U+202F to navigate previous/next prompt in tmux (check with ga in vim)
-          [[ -n ''${ZSH_VERSION-} ]] && PS1='%(?.%f.%F{red}$? )$(get_ssh_info)%F{reset}%~%F{cyan}$(get_git_info)%F{reset}$(get_prompt_symbol)%f '
-          [[ -n ''${BASH_VERSION-} ]] && PS1='$(get_ssh_info)\[\033[34m\]\w\[\033[32m\]$(get_git_info)\[\033[0m\]$(get_prompt_symbol) '
+          # Last character is U+202F to navigate previous/next prompt in tmux (show unicode with ga in vim)
+          [[ -n ''${ZSH_VERSION-} ]] && PS1='%(?.%f.%F{red}$? )$(get_ssh_info)%F{reset}$(get_env)%~%F{cyan}$(get_git_info)%F{reset}$(get_prompt_symbol)%f '
+          [[ -n ''${BASH_VERSION-} ]] && PS1='\[\033[31m\]$(r=$?; [ $r -ne 0 ] && echo "$r ")\[\033[0m\]$(get_ssh_info)$(get_env)\w\[\033[36m\]$(get_git_info)\[\033[0m\]$(get_prompt_symbol) '
       }
     '';
 }

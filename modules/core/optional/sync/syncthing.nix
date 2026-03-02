@@ -13,7 +13,7 @@ in
 {
   config = lib.mkIf (config.me.syncthing.enable && config.me.secrets.enable) (mkNixos {
     sops.secrets."syncthing/cert" = mkHostSecret "syncthing/cert" { owner = user; };
-    sops.secrets."syncthing/key" = mkHostSecret "syncthing/cert" { owner = user; };
+    sops.secrets."syncthing/key" = mkHostSecret "syncthing/key" { owner = user; };
 
     sops.secrets.syncthing_pw.owner = user;
 

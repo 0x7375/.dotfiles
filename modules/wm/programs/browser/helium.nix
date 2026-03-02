@@ -24,6 +24,13 @@ let
       mkDisabledPermissions = perms: lib.genAttrs (map (p: "Default${p}Setting") perms) (_: 2);
     in
     {
+      DefaultSearchProviderEnabled = true;
+      DefaultSearchProviderName = "Brave";
+      DefaultSearchProviderSearchURL = "https://search.brave.com/search?q={searchTerms}";
+      DefaultSearchProviderSuggestURL = "https://search.brave.com/api/suggest?q={searchTerms}";
+      DefaultSearchProviderIconURL = "https://search.brave.com/favicon.ico";
+      DefaultSearchProviderNewTabURL = "https://search.brave.com/";
+
       DefaultCookiesSetting = 4;
 
       CookiesAllowedForUrls = [

@@ -60,20 +60,6 @@ in
       #     };
       #   });
 
-      # ente-auth = prev.callPackage ../derivations/ente-auth/package.nix { flutter324 = prev.flutter324; };
-
-      # ente-auth = (import inputs.nixpkgs-master {
-      #   system = final.system;
-      #   config.allowUnfree = true;
-      # }).ente-auth.overrideAttrs (old: {
-      #   # patches = (old.patches or [ ]) ++ [
-      #   #   (prev.fetchpatch {
-      #   #     url = "https://github.com/ente-io/ente/commit/87f7d3a4843c98defcf0a14553d32ab76a7f6bfd.patch";
-      #   #     sha256 = "04ym0kg81gj0rcvl50a7l16jkbqd5xfzj6jq45npg09wlq30n4hm";
-      #   #   })
-      #   # ];
-      # });
-
       polybar =
         (prev.polybar.override {
           i3Support = true;

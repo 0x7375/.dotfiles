@@ -48,7 +48,6 @@ in
     boot.initrd.luks.devices.crypted.crypttabExtraOpts = [
       "fido2-device=auto"
       "token-timeout=0"
-      "tries=3"
     ];
 
     boot.initrd.systemd.enable = true;

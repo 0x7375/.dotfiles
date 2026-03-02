@@ -141,11 +141,11 @@
         "nixpkgs": "nixpkgs_2"
       },
       "locked": {
-        "lastModified": 1771996560,
-        "narHash": "sha256-VfReG3PPBk8Y/iKyQAzGVvIcLcPhgapbu41vIZzxorY=",
+        "lastModified": 1772387869,
+        "narHash": "sha256-Hn1Fkn2sgP/bkb9klPgdXSsa7n/ZIMdTGC58MVdbDHg=",
         "ref": "refs/heads/main",
-        "rev": "be9d779a232c671ccd122ac29e67137acc7bdfb8",
-        "revCount": 26,
+        "rev": "9f50b7f24aa6c0306403bf9ff225a16a2558c03b",
+        "revCount": 29,
         "type": "git",
         "url": "https://codeberg.org/0x7E/nd"
       },

@@ -19,7 +19,7 @@ lib.mkIf config.me.secrets.enable {
   };
 
   sops.secrets."syncthing/cert" = mkHostSecret "syncthing/cert" { owner = user; };
-  sops.secrets."syncthing/key" = mkHostSecret "syncthing/cert" { owner = user; };
+  sops.secrets."syncthing/key" = mkHostSecret "syncthing/key" { owner = user; };
 
   activation =
     let

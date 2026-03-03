@@ -17,9 +17,9 @@ lib.mkIf (config.me.secrets.enable && config.me.network.enable) (mkNixos {
   networking.networkmanager.ensureProfiles = lib.mkIf (config.me.hostname != "wilson") {
     environmentFiles = [ config.sops.secrets.networkingEnvironment.path ];
     profiles = {
-      Home = {
+      home-wifi = {
         connection = {
-          id = "home";
+          id = "home-wifi";
           type = "wifi";
         };
         wifi = {
@@ -30,7 +30,7 @@ lib.mkIf (config.me.secrets.enable && config.me.network.enable) (mkNixos {
           psk = "$PSK_HOME";
         };
       };
-      Sekai = {
+      sekai = {
         connection = {
           id = "sekai";
           type = "wifi";

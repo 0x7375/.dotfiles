@@ -1,8 +1,8 @@
 {
   networking.networkmanager.ensureProfiles.profiles = {
-    Away_1 = {
+    away_1 = {
       connection = {
-        id = "Away_1";
+        id = "away_1";
         type = "wifi";
       };
       wifi = {
@@ -13,9 +13,9 @@
         psk = "$PSK_AWAY_1";
       };
     };
-    Away_2 = {
+    away_2 = {
       connection = {
-        id = "Away_2";
+        id = "away_2";
         type = "wifi";
       };
       wifi = {
@@ -26,7 +26,7 @@
         psk = "$PSK_AWAY_2";
       };
     };
-    Eduroam = {
+    eduroam = {
       "802-1x" = {
         anonymous-identity = "anonymous@unicaen.fr";
         eap = "ttls;";
@@ -35,7 +35,7 @@
         phase2-auth = "mschapv2";
       };
       connection = {
-        id = "Eduroam";
+        id = "eduroam";
         type = "wifi";
       };
       wifi = {

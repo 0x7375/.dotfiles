@@ -73,14 +73,15 @@
 
     environment.etc.hosts.text =
       let
-        validHosts = lib.filterAttrs (_: v: v.ips.lan != null) config.me.hosts;
-        ipHostPair = lib.mapAttrsToList (h: v: "${v.ips.lan} ${h} ${h}.local") validHosts;
+        lanHosts =
+          lib.filterAttrs (_: v: v.ips.lan != null) config.me.hosts
+          |> lib.mapAttrsToList (h: v: "${v.ips.lan} ${h}");
       in
       lib.mkForce ''
         127.0.0.1 localhost
         255.255.255.255 broadcasthost
         ::1 localhost
-        ${builtins.concatStringsSep "\n" ipHostPair}
+        ${builtins.concatStringsSep "\n" lanHosts}
       '';
 
     nixos = {

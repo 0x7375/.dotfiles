@@ -20,6 +20,11 @@ lib.mkIf config.me.wm.enable (mkNixos {
   programs.kdeconnect.enable = true;
   me.wm.startup.kdeconnect = lib.getExe' pkgs.kdePackages.kdeconnect-kde "kdeconnect-indicator";
 
+  sops.secrets."kdeconnect/key" = mkHostSecret "kdeconnect/key" {
+    owner = user;
+    path = "${config.me.home}/.config/kdeconnect/privateKey.pem";
+  };
+
   hj.xdg.config.files."kdeconnect/config".text = # ini
     ''
       [General]
@@ -27,13 +32,30 @@ lib.mkIf config.me.wm.enable (mkNixos {
       name=${config.me.hostname}
     '';
 
-  sops.secrets."kdeconnect/cert" = mkHostSecret "kdeconnect/cert" {
-    owner = user;
-    path = "~/.config/kdeconnect/certificate.pem";
-  };
-  sops.secrets."kdeconnect/key" = mkHostSecret "kdeconnect/key" {
-    owner = user;
-    path = "~/.config/kdeconnect/key.pem";
-  };
+  hj.xdg.config.files."kdeconnect/certificate.pem".text = ''
+    -----BEGIN CERTIFICATE-----
+    ${config.me.host.kdeconnect.cert}
+    -----END CERTIFICATE-----
+  '';
 
+  hj.xdg.config.files."kdeconnect/trusted_devices".text =
+    let
+      kdeconnectHosts = lib.filterAttrs (
+        n: h: n != hostname && h.kdeconnect.id != null && h.kdeconnect.cert != null
+      ) config.me.hosts;
+    in
+    lib.concatMapAttrsStringSep "\n" (
+      name: _:
+      let
+        h = config.me.hosts.${name};
+      in
+      ''
+        [_${h.kdeconnect.id}_]
+        certificate="-----BEGIN CERTIFICATE-----\n${h.kdeconnect.cert}\n-----END CERTIFICATE-----\n"
+        name=${name}
+        protocolVersion=8
+        type=desktop
+
+      ''
+    ) kdeconnectHosts;
 })

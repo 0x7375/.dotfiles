@@ -11,7 +11,7 @@ in
 lib.mkIf (config.me.syncthing.client.enable && config.me.secrets.enable) (mkNixos {
   programs.fuse.userAllowOther = true;
 
-  services.syncthing.settings.devices.${server}.id = config.me.hosts.${server}.syncthingId;
+  services.syncthing.settings.devices.${server}.id = config.me.hosts.${server}.syncthing.id;
   me.syncthing.folders = {
     ds.path = "games/ds";
     switch.path = "games/switch";

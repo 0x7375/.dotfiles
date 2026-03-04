@@ -30,7 +30,14 @@
           elif [[ -n $VIRTUAL_ENV ]]; then
               msg=venv
           elif [[ -n $NIX_SHELL_PACKAGES ]]; then
-              msg=shell
+              local pkgs=$(echo "$NIX_SHELL_PACKAGES" | tr ' ' '\n' | sed 's/-[0-9].*//' | sort -u)
+              local count=$(echo "$pkgs" | wc -l)
+              if [ "$count" -le 3 ]; then
+                  msg=$(echo "$pkgs" | paste -sd,)
+              else
+                  local first=$(echo "$pkgs" | head -3 | paste -sd,)
+                  msg="$first+$((count - 3))"
+              fi
           elif [[ -n $NIX_BUILD_TOP ]]; then
               msg=develop
           fi
@@ -56,7 +63,7 @@
       function set_prompt {
           # Last character is U+202F to navigate previous/next prompt in tmux (show unicode with ga in vim)
           [[ -n ''${ZSH_VERSION-} ]] && PS1='%(?.%f.%F{red}$? )$(get_ssh_info)%F{reset}$(get_env)%~%F{cyan}$(get_git_info)%F{reset}$(get_prompt_symbol)%f '
-          [[ -n ''${BASH_VERSION-} ]] && PS1='\[\033[31m\]$(r=$?; [ $r -ne 0 ] && echo "$r ")\[\033[0m\]$(get_ssh_info)$(get_env)\w\[\033[36m\]$(get_git_info)\[\033[0m\]$(get_prompt_symbol) '
+          [[ -n ''${BASH_VERSION-} ]] && PS1='\[\033[31m\]$(r=$?; [ $r -ne 0 ] && printf "$r ")\[\033[0m\]$(get_ssh_info)$(get_env)\w\[\033[36m\]$(get_git_info)\[\033[0m\]$(get_prompt_symbol) '
       }
     '';
 }

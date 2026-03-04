@@ -90,7 +90,7 @@ lib.mkIf config.me.wm.enable (
         };
       }
       # easyeffects
-      {
+      (lib.mkIf false {
         packages = with pkgs; [
           easyeffects
           at-spi2-core
@@ -125,7 +125,7 @@ lib.mkIf config.me.wm.enable (
             RestartSec = 5;
           };
         };
-      }
+      })
     ]
   )
 )

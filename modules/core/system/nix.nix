@@ -59,7 +59,7 @@ mkBundle {
     '';
 
   nixos.programs.nh = {
-    enable = false;
+    enable = true;
     flake = config.me.flakeDir;
     clean = {
       enable = false;

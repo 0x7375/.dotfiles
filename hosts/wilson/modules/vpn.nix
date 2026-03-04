@@ -10,9 +10,7 @@ let
     hostname
     hosts
     host
-    services
     ;
-  inherit (services.koffan) port;
   wgPort = 51820;
 
   peerKeys = {
@@ -27,17 +25,6 @@ let
   peerNames = builtins.attrNames peerKeys;
 in
 lib.mkIf config.me.secrets.enable {
-  services.dnsmasq = {
-    enable = true;
-    settings = {
-      interface = [ "home" ];
-      bind-interfaces = true;
-      address = lib.mapAttrsToList (name: hostCfg: "/${name}.vpn/${hostCfg.ips.vpn}") (
-        lib.filterAttrs (_: h: h.ips ? vpn) hosts
-      );
-    };
-  };
-
   sops.secrets = {
     "vpn/pk" = lib.my.mkHostSecret hostname "vpn/pk" { owner = config.me.user; };
   }
@@ -58,28 +45,6 @@ lib.mkIf config.me.secrets.enable {
   # };
 
   networking.firewall.allowedUDPPorts = [ wgPort ];
-
-  networking.nftables.tables.restrict-to-koffan = {
-    family = "inet";
-    content = ''
-      set restricted_peer {
-        type ipv4_addr
-        elements = { ${hosts.yoshino.ips.vpn} }
-      }
-
-      chain enforce_input {
-        type filter hook input priority -10; policy accept;
-        ip saddr @restricted_peer tcp dport ${toString port} accept
-        ip saddr @restricted_peer drop
-      }
-
-      chain enforce_forward {
-        type filter hook forward priority -10; policy accept;
-        ip saddr @restricted_peer ct original protocol tcp ct original proto-dst ${toString port} accept
-        ip saddr @restricted_peer drop
-      }
-    '';
-  };
 
   networking.wg-quick.interfaces.${home} = {
     address = [ "${host.ips.vpn}/24" ];

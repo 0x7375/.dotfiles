@@ -10,7 +10,6 @@ lib.mkIf config.me.wm.enable (mkBundle {
   unfree-packages = [
     "discord"
     "omnissa-horizon-client"
-    "google-chrome"
   ];
 
   packages =
@@ -29,7 +28,6 @@ lib.mkIf config.me.wm.enable (mkBundle {
     [
       my.swap-theme
       my.backup-vault
-      google-chrome
       texliveMedium
       typst
       qbittorrent

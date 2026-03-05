@@ -32,8 +32,8 @@ in
       [ -f /var/lib/proton-vpn-port ] && port=$(< /var/lib/proton-vpn-port)
       configFile=${config.services.qbittorrent.profileDir}/qBittorrent/config/qBittorrent.conf
 
-      ${lib.getExe' pkgs.gnused "sed"} -i "s#@guiPassword@#$secret#" "$configFile"
-      ${lib.getExe' pkgs.gnused "sed"} -i "s#@port@#$port#" "$configFile"
+      ${lib.getExe' pkgs.gnused "sed"} -i "s#${template}#$secret#" "$configFile"
+      ${lib.getExe' pkgs.gnused "sed"} -i "s#${portTemplate}#$port#" "$configFile"
     '';
   };
 

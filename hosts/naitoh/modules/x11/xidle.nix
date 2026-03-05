@@ -15,8 +15,7 @@ lib.mkIf (config.me.wm.displayServer == "xorg") {
       Type = "simple";
       ExecStart = ''
         ${lib.getExe pkgs.xidlehook} --detect-sleep --not-when-audio \
-          --timer 600 "xset dpms force standby" "" \
-          --timer 300 "systemctl hibernate" ""
+          --timer 600 "xset dpms force standby" ""
       '';
       Restart = "always";
     };

@@ -37,7 +37,7 @@ lib.mkIf config.me.secrets.enable {
     }) peerNames
   );
 
-  # redirect clients network traffic to the VPN
+  # redirect clients wan traffic to the VPN
   # networking.nat = {
   #   enable = true;
   #   internalInterfaces = [ home ];

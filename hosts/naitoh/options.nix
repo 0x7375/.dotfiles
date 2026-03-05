@@ -2,10 +2,7 @@
   me = {
     secrets = {
       enable = true;
-      tpm = {
-        enable = true;
-        file = ./keys.txt;
-      };
+      tpm.enable = true;
     };
     syncthing.client.enable = true;
     boot.debug.enable = false;

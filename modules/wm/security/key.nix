@@ -65,6 +65,8 @@ lib.mkIf config.me.wm.enable (
           })
         ];
 
+        packages = [ pkgs.token2-cli ];
+
         me.wm.bindings."Mod+u" = pkgs.writeShellScript "totp-menu" ''
           tokens=$(sudo ${lib.getExe pkgs.token2-cli} get_all 2>&1 | grep -iv "touch")
           selected=$(echo "$tokens" | awk -F'] | - ' '{print $2}' | bemenu -i -l 10 -p "TOTP")

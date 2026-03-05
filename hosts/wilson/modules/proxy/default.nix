@@ -37,7 +37,13 @@ let
     ''
       <!DOCTYPE html>
       <html>
-        <head>~/Homepage</head>
+        <head>
+          <title>~/Homepage</title>
+          <style type="text/css">
+          ${builtins.readFile ./styles.css}
+          </style>
+        </head>
+        <styles href="./styles.css"
         <body>
           <h1>~/Homepage</h1>
           <ul id="services">${links}</ul>

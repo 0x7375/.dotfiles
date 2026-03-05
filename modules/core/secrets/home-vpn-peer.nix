@@ -7,7 +7,7 @@
 }:
 
 let
-  inherit (config.me) hostname host hosts;
+  inherit (config.me) hostname host;
   cfg = config.me;
   mkHostSecret = lib.my.mkHostSecret hostname;
 in

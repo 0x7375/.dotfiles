@@ -1,5 +1,6 @@
 html {
     font-size: 62.5%; /* 1rem = 10px */
+    color-scheme: light dark;
 }
 
 body {
@@ -7,7 +8,6 @@ body {
   max-width: 30%;
   margin: 2rem auto;
   padding: 2rem;
-  color: #333;
 }
 
 h1 {
@@ -24,15 +24,15 @@ ul {
 
 li {
   padding: 1.5rem 0;
-  border-bottom: 0.1rem solid #eee;
+  border-bottom: 0.1rem solid light-dark(#eee, #333);
 }
 
 a {
-  color: #555;
+  color: light-dark(#555, #aaa);
   text-decoration: none;
   display: block;
 
-  :hover {
-    color: #000;
+  &:hover {
+    color: light-dark(#000, #fff);
   }
 }

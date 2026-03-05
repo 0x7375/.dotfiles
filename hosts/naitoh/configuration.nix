@@ -55,11 +55,6 @@ in
       ENV{DISPLAY}=":0", \
       ENV{XAUTHORITY}="/run/user/${toString config.me.uid}/Xauthority", \
       RUN+="${lib.getExe' pkgs.xorg.xset "xset"} s activate"
-
-      SUBSYSTEM=="hidraw", \
-      ATTRS{idVendor}=="349e", \
-      ATTRS{idProduct}=="0024", \
-      TAG+="uaccess"
     '';
 
   packages = with pkgs; [ acpi ];

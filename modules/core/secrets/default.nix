@@ -15,13 +15,7 @@
       description = "Deploy secrets using sops-nix";
     };
 
-    tpm = {
-      enable = lib.mkEnableOption "Use tmp to decrypt sops secrets";
-      file = lib.mkOption {
-        type = lib.types.path;
-        description = "Path to age identity tpm file";
-      };
-    };
+    tpm.enable = lib.mkEnableOption "Use tmp to decrypt sops secrets";
   };
 
   config = lib.mkIf config.me.secrets.enable (mkBundle {
@@ -50,15 +44,13 @@
         vars.SOPS_AGE_KEY_FILE = "${config.me.home}/.config/sops/age/${config.me.host.sopsDecryptionKey}";
       }
       (lib.mkIf config.me.secrets.tpm.enable {
-        environment.etc."tpm_key".source = config.me.secrets.tpm.file;
-
         sops.age = {
           keyFile = "/etc/tpm_key";
           plugins = with pkgs; [ unstable.age-plugin-tpm ];
         };
 
         packages = with pkgs; [
-          age-plugin-tpm
+          unstable.age-plugin-tpm
           tpm2-tools
         ];
 

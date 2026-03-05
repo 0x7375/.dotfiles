@@ -50,12 +50,11 @@ pkgs.writeShellApplication {
             --insidever-color="''${yellow}"ff --insidewrong-color="''${red}"ff \
             --ringver-color="''${fg}"ff --ringwrong-color="''${fg}"ff --radius=60 \
             --verif-text="" --wrong-text="" --noinput-text="" --lock-text="" || i3lock -n
-
-
-        kill "$HIBERNATE_PID" 2>/dev/null || true
-        $browser_was_open && ${browser} &
       else
         hyprlock
       fi
+
+      kill "$HIBERNATE_PID" 2>/dev/null || true
+      $browser_was_open && ${browser} &
     '';
 }

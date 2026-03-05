@@ -59,10 +59,6 @@ in
             client_max_body_size 0;
           '';
         };
-        koffan = {
-          subdomain = "shop";
-          port = 3000;
-        };
         bazarr = {
           subdomain = "subtitles";
           port = 6767;

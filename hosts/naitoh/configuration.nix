@@ -64,6 +64,20 @@ in
 
   packages = with pkgs; [ acpi ];
 
+  services.acpid = {
+    enable = true;
+    handlers.lid = {
+      event = "button/lid LID close";
+      action =
+        # bash
+        ''
+          if ${lib.getExe' pkgs.procps "pgrep"} -x i3lock > /dev/null; then
+            systemctl hibernate
+          fi
+        '';
+    };
+  };
+
   services.logind.settings.Login.HandleLidSwitch = "ignore";
 
   systemd.sleep.extraConfig = ''

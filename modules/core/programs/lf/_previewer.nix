@@ -74,7 +74,7 @@ pkgs.writeShellApplication {
     y="$5"
 
     case "''${file##*.}" in
-      env | gpg | keyring)
+      pem | env | gpg | keyring)
         echo "preview disabled"
         exit 0
         ;;
@@ -158,7 +158,7 @@ pkgs.writeShellApplication {
         w3m "$file"
         ;;
       *)
-        if file --mime-encoding -- "$file" | grep -q "binary"; then
+        if file -L --mime-encoding -- "$file" | grep -q "binary"; then
           file -Lb "$file"
         else
           bat --color=always --style=plain "$file" || echo "oopsie"

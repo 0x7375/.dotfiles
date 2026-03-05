@@ -33,6 +33,8 @@
 
     nixos = lib.mkMerge [
       {
+        sops.useSystemdActivation = true;
+
         hj.xdg.config.files."sops/age/sk_backup" = {
           text = builtins.readFile ./age-fido2-backup.txt;
           type = "copy";
@@ -45,10 +47,15 @@
           permissions = "0600";
         };
 
-        vars.SOPS_AGE_KEY_FILE = "~/.config/sops/age/${config.me.host.sopsDecryptionKey}";
+        vars.SOPS_AGE_KEY_FILE = "${config.me.home}/.config/sops/age/${config.me.host.sopsDecryptionKey}";
       }
       (lib.mkIf config.me.secrets.tpm.enable {
-        hj.xdg.config.files."sops/age/keys.txt".source = config.me.secrets.tpm.file;
+        environment.etc."tpm_key".source = config.me.secrets.tpm.file;
+
+        sops.age = {
+          keyFile = "/etc/tpm_key";
+          plugins = with pkgs; [ unstable.age-plugin-tpm ];
+        };
 
         packages = with pkgs; [
           age-plugin-tpm
@@ -59,11 +66,6 @@
           enable = true;
           pkcs11.enable = true;
           tctiEnvironment.enable = true;
-        };
-
-        sops.age = {
-          keyFile = "${config.me.home}/.config/sops/age/keys.txt";
-          plugins = with pkgs; [ unstable.age-plugin-tpm ];
         };
       })
       (lib.mkIf (!config.me.secrets.tpm.enable) {

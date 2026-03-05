@@ -94,9 +94,11 @@ lib.mkIf secrets.enable (
         };
       }
       (lib.mkIf server {
-        sops.secrets."qbittorrent/pw" = lib.my.mkHostSecret hostname "qbittorrent/pw" { };
+        sops.secrets."qbittorrent/pw" = lib.my.mkHostSecret hostname "qbittorrent/pw" {
+          owner = config.services.qbittorrent.user;
+        };
 
-        systemd.services."proton-portforward" = lib.mkIf server {
+        systemd.services."proton-portforward" = {
           after = [
             "network-online.target"
             "wg-quick-proton.service"

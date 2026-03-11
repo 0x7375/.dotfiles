@@ -31,8 +31,12 @@ let
       lamarr
     ];
   };
+  mkHostSecret = lib.my.mkHostSecret hostname;
 in
 {
+  sops.secrets."syncthing/key" = mkHostSecret "syncthing/key" { owner = "syncthing"; };
+  sops.secrets.syncthing_pw.owner = "syncthing";
+
   users.users.syncthing.extraGroups = [ "media" ];
 
   systemd.tmpfiles.settings.syncthing."/data/syncthing".d = {

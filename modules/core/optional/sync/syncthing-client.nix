@@ -6,10 +6,19 @@
 }:
 
 let
-  inherit (config.me) user server home;
+  inherit (config.me)
+    user
+    server
+    home
+    hostname
+    ;
+  mkHostSecret = lib.my.mkHostSecret hostname;
 in
 lib.mkIf (config.me.syncthing.client.enable && config.me.secrets.enable) (mkNixos {
   programs.fuse.userAllowOther = true;
+
+  sops.secrets."syncthing/key" = mkHostSecret "syncthing/key" { owner = user; };
+  sops.secrets.syncthing_pw.owner = user;
 
   services.syncthing = {
     inherit user;

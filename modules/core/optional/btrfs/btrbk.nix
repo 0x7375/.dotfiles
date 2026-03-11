@@ -22,8 +22,10 @@
       };
     };
 
-    systemd.tmpfiles.rules = [
-      "d /snapshots 0755 root root"
-    ];
+    systemd.tmpfiles.settings.syncthing."/snapshots".d = {
+      group = "root";
+      user = "root";
+      mode = "0755";
+    };
   });
 }

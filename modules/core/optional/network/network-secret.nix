@@ -6,6 +6,9 @@
   ...
 }:
 
+let
+  inherit (config.me) hostname server;
+in
 lib.mkIf (config.me.secrets.enable && config.me.network.enable) (mkNixos {
   sops.secrets.networkingEnvironment = {
     sopsFile = "${secrets}/networking-environment.env";
@@ -14,7 +17,7 @@ lib.mkIf (config.me.secrets.enable && config.me.network.enable) (mkNixos {
     owner = config.me.user;
   };
 
-  networking.networkmanager.ensureProfiles = lib.mkIf (config.me.hostname != "wilson") {
+  networking.networkmanager.ensureProfiles = lib.mkIf (hostname != server) {
     environmentFiles = [ config.sops.secrets.networkingEnvironment.path ];
     profiles = {
       home-wifi = {

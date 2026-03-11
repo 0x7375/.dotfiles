@@ -37,7 +37,7 @@ let
       extraConfig ? { },
     }:
     {
-      path = "~/" + path;
+      path = cfg.dataRoot + path;
       inherit type;
       inherit devices;
       inherit ignorePatterns;
@@ -65,7 +65,7 @@ let
         };
         devices = mkOption {
           type = types.listOf types.str;
-          default = [ "wilson" ];
+          default = [ config.me.server ];
         };
         ignorePatterns = mkOption {
           type = types.listOf types.str;
@@ -92,10 +92,10 @@ in
     };
     client.enable = mkEnableOption "Setup folders";
 
-    server = mkOption {
+    dataRoot = mkOption {
       type = types.str;
-      default = "wilson";
-      description = "Hostname of the central server";
+      default = "~/";
+      description = "The base path where Syncthing folders are stored";
     };
 
     folders = mkOption {

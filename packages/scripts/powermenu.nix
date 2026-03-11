@@ -40,7 +40,10 @@ pkgs.writeShellApplication {
         "hibernate") systemctl hibernate ;;
         "shutdown") systemctl poweroff ;;
         "reboot") systemctl --no-wall reboot ;;
-        "windows") systemctl --no-wall reboot --boot-loader-entry=auto-windows ;;
+        "windows")
+          ENTRY=$(efibootmgr | grep -i "windows" | grep -oP "Boot\K[0-9A-F]+" | head -1)
+          efibootmgr --bootnext "$ENTRY" && systemctl --no-wall reboot
+        ;;
         "setup") systemctl --no-wall reboot --firmware-setup ;;
       esac
     '';

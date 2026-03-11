@@ -4,9 +4,6 @@
   ...
 }:
 
-let
-  inherit (config.me) host;
-in
 {
   systemd.services.storage-monitor = {
     description = "Monitor storage usage";

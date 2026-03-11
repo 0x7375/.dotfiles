@@ -6,8 +6,7 @@
 }:
 
 let
-  inherit (config.me) host domain hostname;
-  ip = host.ips.lan;
+  inherit (config.me) domain hostname;
   mkSubDomain =
     {
       port,
@@ -19,7 +18,7 @@ let
       forceSSL = true;
       useACMEHost = domain;
       locations."/" = {
-        proxyPass = "http://${ip}:${toString port}";
+        proxyPass = "http://127.0.0.1:${toString port}";
         proxyWebsockets = webSockets;
         inherit extraConfig;
       };

@@ -40,9 +40,45 @@ in
       sops.templates."home-vpn-${hostname}.conf".path = "/etc/wireguard/home.conf";
     };
 
-    nixos.networking.wg-quick.interfaces.home = {
-      autostart = true;
-      configFile = config.sops.templates."home-vpn-${hostname}.conf".path;
+    nixos = {
+      networking.wg-quick.interfaces.home = {
+        autostart = false;
+        configFile = config.sops.templates."home-vpn-${hostname}.conf".path;
+      };
+
+      systemd.services.vpn-home-manager = {
+        description = "Auto-toggle home VPN based on network location";
+        after = [ "network-online.target" ];
+        wantedBy = [ "multi-user.target" ];
+        path = [ pkgs.iproute2 ];
+
+        script =
+          # bash
+          ''
+            is_home() {
+              ip route show "${config.me.networkIps.lan.subnet}" | grep -q "proto kernel"
+            }
+
+            check_and_toggle() {
+              if is_home; then
+                systemctl stop wg-quick-home.service || true
+              else
+                systemctl start wg-quick-home.service || true
+              fi
+            }
+
+            check_and_toggle
+            ip monitor route | while read -r _; do
+              check_and_toggle
+            done
+          '';
+
+        serviceConfig = {
+          Type = "simple";
+          Restart = "always";
+          RestartSec = "5s";
+        };
+      };
     };
   });
 }

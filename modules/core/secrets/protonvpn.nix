@@ -9,8 +9,8 @@
 let
   inherit (lib) getExe getExe';
   gw-ip = "10.2.0.1";
-  server = config.me.hostname == "wilson";
-  inherit (config.me) secrets hostname;
+  inherit (config.me) secrets hostname server;
+  isServer = hostname == server;
 in
 lib.mkIf secrets.enable (
   mkNixos (
@@ -27,7 +27,7 @@ lib.mkIf secrets.enable (
             ip = "10.2.0.2";
             table = "200";
             postUpFile = writeScriptFile "postUp.sh" (
-              if server then
+              if isServer then
                 # bash
                 ''
                   ip route add ${gw-ip} dev proton
@@ -45,7 +45,7 @@ lib.mkIf secrets.enable (
                 ''
             );
             preDownFile = writeScriptFile "preDown.sh" (
-              if server then
+              if isServer then
                 # bash
                 ''
                   ip route del ${gw-ip} dev proton
@@ -69,7 +69,7 @@ lib.mkIf secrets.enable (
             Address = ${ip}/32
             PrivateKey = ${config.sops.placeholder."proton_vpn/sk"}
             ListenPort = 0
-            ${if server then "Table = ${table}" else ""}
+            ${if isServer then "Table = ${table}" else ""}
             PostUp = ${postUpFile}
             PreDown = ${preDownFile}
 
@@ -93,7 +93,7 @@ lib.mkIf secrets.enable (
           "net.ipv4.tcp_congestion_control" = "bbr";
         };
       }
-      (lib.mkIf server {
+      (lib.mkIf isServer {
         sops.secrets."qbittorrent/pw" = lib.my.mkHostSecret hostname "qbittorrent/pw" {
           owner = config.services.qbittorrent.user;
         };

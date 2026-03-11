@@ -44,6 +44,8 @@
     '';
 
     nixos = {
+      security.polkit.enable = true;
+
       system.userActivationScripts.userActivation.text = config.userActivation;
 
       systemd.user.services.dotfiles-setup = {

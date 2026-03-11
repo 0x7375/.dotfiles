@@ -1,9 +1,4 @@
-{
-  mkNixos,
-  lib,
-  pkgs,
-  ...
-}:
+{ mkNixos, ... }:
 
 mkNixos {
   hj.files.".XCompose".text = # xcompose

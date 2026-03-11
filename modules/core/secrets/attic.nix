@@ -1,6 +1,5 @@
 {
   config,
-  secrets,
   lib,
   mkNixos,
   pkgs,

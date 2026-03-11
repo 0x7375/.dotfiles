@@ -7,6 +7,7 @@
     };
     syncthing.client.enable = true;
     # boot.debug.enable = false;
+    boot.encryption.enable = true;
     btrfs.enable = true;
     wm = {
       enable = true;

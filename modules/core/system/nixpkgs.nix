@@ -76,13 +76,6 @@ in
             '';
           });
 
-      # nh = prev.nh.overrideAttrs (old: {
-      #   postPatch = ''
-      #     substituteInPlace src/search.rs \
-      #       --replace-fail "print_hyperlink!(position, format!(\"file://{nixpkgs_path}/{postion_trimmed}\"));" "print_hyperlink!(format!(\"https://github.com/NixOS/nixpkgs/blob/nixos-unstable/{postion_trimmed}\"), \"\");"
-      #   '';
-      # });
-
       # derivations
       fonts = {
         CartographCF = prev.callPackage (pkgs-path + /derivations/fonts/CartographCF.nix) { };

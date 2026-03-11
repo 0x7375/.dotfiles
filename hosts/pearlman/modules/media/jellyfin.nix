@@ -1,6 +1,11 @@
 { pkgs, config, ... }:
 
 {
+  users.users.jellyfin.extraGroups = [
+    "render"
+    "video"
+  ];
+
   services.jellyfin = {
     enable = true;
     package = pkgs.auto.jellyfin;

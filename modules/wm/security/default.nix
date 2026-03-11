@@ -7,8 +7,6 @@
 }:
 
 lib.mkIf config.me.wm.enable (mkNixos {
-  security.polkit.enable = true;
-
   systemd.user.services.polkit-gnome = {
     description = "GNOME PolicyKit Agent";
     after = [ "graphical-session.target" ];

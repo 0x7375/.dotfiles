@@ -27,16 +27,13 @@
   #   sed -i 's/^default .*/default auto-windows/' /boot/loader/loader.conf
   # '';
 
-  boot.loader.limine.extraConfig = ''
+  boot.loader.limine.extraEntries = ''
     /Windows
         protocol: efi
         path: boot():/EFI/Microsoft/Boot/bootmgfw.efi
   '';
 
-  hardware.nvidia = {
-    open = true;
-    modesetting.enable = true;
-  };
+  hardware.nvidia.open = true;
 
   # Enables DHCP on each ethernet and wireless interface. In case of scripted networking
   # (the default) this is the recommended approach. When using systemd-networkd it's

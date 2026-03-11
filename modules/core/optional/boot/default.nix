@@ -27,6 +27,7 @@ in
           description = "Enable silent boot";
         };
         debug.enable = mkEnableOption "Make boot verbose";
+        encryption.enable = mkEnableOption "Make boot verbose";
       };
     };
 
@@ -44,11 +45,6 @@ in
     boot.kernel.sysctl."kernel.sysrq" = 1;
 
     systemd.settings.Manager.RebootWatchdogSec = "10s";
-
-    boot.initrd.luks.devices.crypted.crypttabExtraOpts = [
-      "fido2-device=auto"
-      "token-timeout=0"
-    ];
 
     boot.initrd.systemd.enable = true;
 
@@ -80,7 +76,5 @@ in
       '';
     };
     boot.loader.timeout = 1;
-
-    boot.loader.efi.canTouchEfiVariables = true;
   });
 }

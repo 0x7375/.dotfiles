@@ -10,9 +10,6 @@ mkNixos {
   i18n.supportedLocales = options.i18n.supportedLocales.default ++ [ "fr_FR.UTF-8/UTF-8" ];
   location.provider = "manual";
 
-  # documentation.man.generateCaches = true;
-  # documentation.dev.enable = true;
-
   boot.tmp.useTmpfs = true;
   systemd.services.nix-daemon = {
     environment.TMPDIR = "/var/tmp";

@@ -13,7 +13,7 @@
   };
 
   config = {
-    users.groups.${config.me.mediaGroup} = { };
+    users.groups.${config.me.mediaGroup}.gid = 989;
 
     systemd.services = lib.mkMerge (
       map (service: lib.my.notifyOnServiceFailure service) [

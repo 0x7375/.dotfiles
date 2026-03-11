@@ -20,11 +20,13 @@ lib.mkIf config.me.secrets.enable {
         remote_url="https://codeberg.org"
         user="0x7E"
         remote="''${remote_url}/''${user}"
-        backup_dir="${config.me.home}/git"
+        backup_dir="/data/backups/git"
         mkdir -p "$backup_dir"
 
+        export GIT_SSH_COMMAND="ssh -i /root/.ssh/id_backup_codeberg -o IdentitiesOnly=yes -o StrictHostKeyChecking=no"
+
         repos=$(curl -s "''${remote_url}/api/v1/users/$user/repos" | jq -r '.[].clone_url')
-        repos+=$'\n'"''${remote}/nix-secrets.git"
+        repos+=$'\n'"git@codeberg.org:''${user}/nix-secrets.git"
 
         for repo in $repos; do
           repo_name=$(basename "$repo" .git)
@@ -34,14 +36,11 @@ lib.mkIf config.me.secrets.enable {
             cd "$repo_dir"
             git fetch --all --prune
           else
-            git clone --bare "codeberg:$user/$repo_name" "$repo_dir"
+            git clone --bare "$repo" "$repo_dir"
           fi
         done
       '';
-    serviceConfig = {
-      Type = "oneshot";
-      User = config.me.user;
-    };
+    serviceConfig.Type = "oneshot";
   };
 
   systemd.timers.git-backup = {

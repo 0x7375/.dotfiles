@@ -7,8 +7,9 @@
 }:
 
 let
-  inherit (config.me) hostname home;
+  inherit (config.me) hostname;
   mkHostSecret = lib.my.mkHostSecret hostname;
+  syncthingRoot = "/data/syncthing";
 in
 lib.mkIf config.me.secrets.enable {
   packages = with pkgs; [
@@ -27,7 +28,7 @@ lib.mkIf config.me.secrets.enable {
 
   services.restic.backups =
     let
-      syncthingDirs = map (path: "${home}/${path}") [
+      syncthingDirs = map (path: "${syncthingRoot}/${path}") [
         "documents"
         "games/ds"
         "perso"
@@ -49,14 +50,14 @@ lib.mkIf config.me.secrets.enable {
         "/var/lib/cleanuparr"
       ];
 
-      gitRepos = [ "${home}/git" ];
+      gitRepos = [ "/data/git" ];
 
       backupConfig =
         let
           remotes = {
             local = {
               time = "18:00:00";
-              path = "/srv/backups/";
+              path = "/data/backups/restic";
             };
             proton = {
               time = "20:00:00";

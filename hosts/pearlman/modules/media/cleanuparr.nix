@@ -8,24 +8,26 @@ let
   inherit (config.me.services.cleanuparr) port;
 in
 {
-  systemd.tmpfiles.rules = [
-    "d /var/lib/cleanuparr 0755 root root -"
-  ];
+  systemd.tmpfiles.settings.cleanuparr."/var/lib/cleanuparr".d = {
+    group = "root";
+    user = "root";
+    mode = "0755";
+  };
 
   networking.firewall.allowedTCPPorts = [ port ];
 
   virtualisation.oci-containers.containers.cleanuparr =
     let
       name = "ghcr.io/cleanuparr/cleanuparr";
-      version = "2.5.1";
+      version = "2.7.7";
     in
     {
       image = name + ":" + version;
 
       imageFile = pkgs.dockerTools.pullImage {
         imageName = name;
-        imageDigest = "sha256:47bb76b03676d5b9bb3c7a01f1a9005066d60db63b3f8379057d77f89daa6c37";
-        sha256 = "3LYiHhc9pKBqdFvStore9ZuYFVm+xxH5pHF437VWEE4=";
+        imageDigest = "sha256:834072365f22211aa8f25103b7896f566641e2f5ccc50bb9050afd0696f4cade";
+        sha256 = "ckoUNy8BYHNr57T4CQNOLa2myjEfDk3O/3l2S8b0b4A=";
 
         finalImageTag = version;
       };

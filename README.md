@@ -1,15 +1,25 @@
 # Dotfiles
 
-NixOS configuration for an nvidia desktop, thinkpad laptop, a raspberry pi,
-wsl aswell as an M1 macbook. Flake uses [hjem](https://github.com/feel-co/hjem) for user file management, 
-[sops-nix](https://github.com/Mic92/sops-nix) for secrets and [disko](https://github.com/nix-community/disko) for disk partitioning.
+NixOS configuration for various machines, uses
+[hjem](https://github.com/feel-co/hjem) for user file management,
+[sops-nix](https://github.com/Mic92/sops-nix) for secrets and
+[disko](https://github.com/nix-community/disko) for disk partitioning.
+
+| Name       | Role    | Description                                                                      |
+| :--------- | :------ | :------------------------------------------------------------------------------- |
+| `pearlman` | Server  | Unowhy Y13 2020 laptop (N4100). Runs syncthing, media stack and others. |
+| `wilson`   | Server  | Raspberry pi 4 2GB, previously used as a home server.                            |
+| `cray`     | Desktop | Main workstation, uses an Nvidia gpu.                                             |
+| `naitoh`   | Laptop  | Main laptop, thinkpad e14 gen4 AMD.
+| `mach`     | Laptop  | M1 Macbook, uses nix-darwin.                                                      |
+| `julliard` | WSL     | Windows WSL config.                                                                |
+| `isoImg`   | ISO     | Custom NixOS iso.                                                                 |
 
 ## Nixos-anywhere installation
 
 ### Pre-requisites
 
-Store password for disk encryption in a file, and create the structure for the
-ssh key to be passed to nixos-anywhere
+Store password for disk encryption in a file, and create the structure for necessary files to be passed to nixos-anywhere (note: created files will be owned by root)
 
 ```bash
 host=naitoh
@@ -17,28 +27,26 @@ user=ayko
 
  echo -n "luksPassword" > /tmp/secret.key
 root=$(mktemp -d)
-install -Dm 600 ~/$host $root/home/$user/.ssh/id_ed25519
+install -Dm 600 ~/tpm_key $root/etc/tpm_key
 ```
 
 Secure boot keys can optionally be generated with sbctl to be passed to
 nixos-anywhere
 
 ```bash
-sbctl create-keys
-mkdir -p $root/var/lib
-sudo cp -r /var/lib/sbctl $root/var/lib
-sudo chown -R ${user}:users $root/var/lib/sbctl
+mkdir -p $root/var/lib/sbctl/keys
+sbctl create-keys --directory $root/var/lib/sbctl/keys --disable-sandbox
 ```
 
 ### Install
 
-Note: SSHPASS and --env-password are only needed if public key auth is not set up
+Note: SSHPASS and --env-password are only needed if public key auth is not set
+up
 
 ```bash
 SSHPASS=remote-pw nix run nixpkgs#nixos-anywhere -- --env-password \
 --disk-encryption-keys /tmp/secret.key /tmp/secret.key \
---extra-files "$root" --chown /home/$user 1000:100 \
---flake path:.#$host root@$host
+--extra-files "$root" --flake path:.#$host root@$host
 ```
 
 ### Optional: enable secure boot
@@ -49,10 +57,12 @@ Verify entries are signed
 sbctl verify
 ```
 
-Warning:
-On Thinkpad devices, do not select "Clear All Secure Boot Keys" as it will drop the Forbidden Signature Database (dbx). Make sure to only select "Reset to Setup Mode".
+Warning: On Thinkpad devices, do not select "Clear All Secure Boot Keys" as it
+will drop the Forbidden Signature Database (dbx). Make sure to only select
+"Reset to Setup Mode".
 
-Inside the bios: security -> secure boot -> enable secure boot and select reset to setup mode
+Inside the bios: security -> secure boot -> enable secure boot and select reset
+to setup mode
 ([guide](https://github.com/nix-community/lanzaboote/blob/master/docs/QUICK_START.md#part-2-enabling-secure-boot))
 
 Enroll keys
@@ -67,11 +77,13 @@ Secure boot should now work and we can reboot
 ### Optional: require fido2 key to boot
 
 Enroll the keys, one at a time with:
+
 ```
 sudo systemd-cryptenroll --fido2-device=auto /dev/crypted-device
 ```
 
 Find regular password keyslot and wipe it
+
 ```
 sudo cryptsetup luksDump /dev/nvme0n1p2
 
@@ -153,3 +165,4 @@ nixos-install --root /mnt --flake ~/.config/nixcfg#hostname
 - `sudo nix run github:LnL7/nix-darwin -- switch --flake .#mach`
 - `sudo darwin-rebuild switch`
 - Privacy & Security -> Allow applications from `Anywhere`
+

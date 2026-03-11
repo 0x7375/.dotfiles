@@ -119,10 +119,9 @@
       nixosConfigurations = lib.genAttrs [
         "cray"
         "naitoh"
-        "wilson"
+        "pearlman"
         "isoImg"
         # "julliard"
-        # "perlman"
       ] (mkHost "nixos");
       darwinConfigurations = lib.genAttrs [ "mach" ] (mkHost "darwin");
     };

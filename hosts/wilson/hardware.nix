@@ -33,11 +33,6 @@
   boot.extraModulePackages = [ ];
   boot.kernelPackages = pkgs.linuxKernel.packages.linux_rpi4;
 
-  # allow watching more files for syncthing
-  boot.kernel.sysctl = {
-    "fs.inotify.max_user_watches" = 204800;
-  };
-
   fileSystems."/" = {
     device = "/dev/disk/by-label/NIXOS_SD";
     fsType = "ext4";

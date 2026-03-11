@@ -21,6 +21,7 @@ lib.mkIf config.me.wm.enable (mkNixos {
   packages = with pkgs; [
     pass
     gnupg
+    seahorse
   ];
 
   userActivation =

@@ -329,7 +329,7 @@ let
       }
     '';
 in
-lib.mkIf (config.me.wm.enable && false) (mkBundle {
+lib.mkIf config.me.wm.enable (mkBundle {
   darwin = {
     homebrew.casks = [ "zen" ];
 

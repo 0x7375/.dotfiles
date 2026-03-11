@@ -22,33 +22,22 @@
     })
   ];
 
-  documentation.man.generateCaches = lib.mkForce false;
-
   users.users.root.openssh.authorizedKeys.keys = config.me.hosts.yubikey.sshPublicKeys;
+  users.users.${config.me.user}.openssh.authorizedKeys.keys = config.me.hosts.mach.sshPublicKeys;
 
-  users.users.${config.me.user} = {
-    extraGroups = [ "video" ];
-
-    openssh.authorizedKeys.keys = config.me.hosts.mach.sshPublicKeys;
-  };
-
-  security.pam.services = {
-    login.unixAuth = lib.mkForce true;
-    sudo.unixAuth = lib.mkForce true;
-  };
+  security.pam.services = lib.genAttrs [ "sudo" "su" "polkit-1" "login" ] (_: {
+    unixAuth = lib.mkForce true;
+  });
 
   packages = with pkgs; [
     ncdu
     xclip
-    my.pw-backup
   ];
 
   services.journald.extraConfig = ''
     SystemMaxFileSize=40M
     SystemMaxUse=200M
   '';
-
-  programs.nh.clean.extraArgs = lib.mkForce "--keep 2 --keep-since 7d";
 
   system.stateVersion = "24.11";
 }

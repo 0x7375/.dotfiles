@@ -59,6 +59,14 @@ in
             client_max_body_size 0;
           '';
         };
+        homarr = {
+          subdomain = "home";
+          port = 7575;
+          webSockets = true;
+          extraConfig = ''
+            proxy_set_header X-Forwarded-Host $host;
+          '';
+        };
         bazarr = {
           subdomain = "subtitles";
           port = 6767;
@@ -76,7 +84,7 @@ in
           subdomain = "media";
           port = 8096;
         };
-        jellyseer = {
+        seerr = {
           subdomain = "request";
           port = 5055;
         };

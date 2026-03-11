@@ -63,10 +63,10 @@ in
           };
           ExcludedFileNames = (builtins.readFile ./blacklist.txt);
           Interface = "proton";
-          MaxConnections = -1;
-          MaxConnectionsPerTorrent = -1;
-          MaxUploads = -1;
-          MaxUploadsPerTorrent = -1;
+          MaxConnections = 150;
+          MaxConnectionsPerTorrent = 50;
+          MaxUploads = 15;
+          MaxUploadsPerTorrent = 4;
           Preallocation = true;
           QueueingSystemEnabled = false;
         };

@@ -3,8 +3,8 @@
 {
   services.watchdogd.enable = true;
   boot.kernelParams = [
-    "bcm2835_wdt.nowayout=1"
     "panic=10"
+    "iTCO_wdt.nowayout=1"
   ];
 
   systemd.services.crash-notifier = {

@@ -13,7 +13,7 @@ lib.mkIf config.me.secrets.enable {
   nixpkgs.overlays = [
     (final: prev: {
       attic-server = (
-        prev.crossPkgs.attic-server.overrideAttrs (old: {
+        (prev.crossPkgs or prev).attic-server.overrideAttrs (old: {
           env = (old.env or { }) // {
             RUSTFLAGS = "-C target-feature=-aes,-sha2,-crypto";
           };

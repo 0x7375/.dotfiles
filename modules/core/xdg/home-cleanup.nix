@@ -11,12 +11,24 @@ let
 in
 mkBundle {
   nixos = {
-    systemd.tmpfiles.rules = [
-      "d ${config.me.home}/.local 0755 ${config.me.user} users -"
-      "d ${config.me.home}/.local/share 0755 ${config.me.user} users -"
-      "d ${config.me.home}/.local/share/gnupg 0700 ${config.me.user} users -"
-      "d ${config.me.home}/.local/share/android 0755 ${config.me.user} users -"
-    ];
+    systemd.tmpfiles.settings.cleanup =
+      let
+        dir = {
+          mode = "0755";
+          user = config.me.user;
+          group = "users";
+        };
+      in
+      {
+        "${config.me.home}/.local".d = dir;
+        "${config.me.home}/.local/share".d = dir;
+        "${config.me.home}/.local/share/android".d = dir;
+        "${config.me.home}/.local/share/gnupg".d = {
+          mode = "0700";
+          user = config.me.user;
+          group = "users";
+        };
+      };
 
     vars = rec {
       XDG_RUNTIME_DIR = "/run/user/$UID";

@@ -48,6 +48,27 @@ lib.mkIf config.me.wm.enable (mkNixos {
               echo -e "connect ${airpods}\nquit" | ${getExe' pkgs.bluez "bluetoothctl"}
             fi
           '';
+
+      wizToggle =
+        pkgs.writers.writePython3Bin "wiz-toggle" { libraries = [ pkgs.python3Packages.pywizlight ]; }
+          ''
+            import asyncio
+            from pywizlight import wizlight, PilotBuilder
+
+
+            async def main():
+                bulb = wizlight("192.168.1.110")
+                try:
+                    state = await bulb.updateState()
+                    if state.get_scene_id() == 14:
+                        await bulb.turn_on(PilotBuilder(colortemp=3000, brightness=255))
+                    else:
+                        await bulb.turn_on(PilotBuilder(scene=14))
+                finally:
+                    await bulb.async_close()
+
+            asyncio.run(main())
+          '';
     in
     {
       XF86MonBrightnessUp = "${change-brightness} up";
@@ -70,6 +91,7 @@ lib.mkIf config.me.wm.enable (mkNixos {
       "Mod+Shift+b" = btToggle;
       "Mod+d" = "${getExe pkgs.j4-dmenu-desktop} --no-generic -d '${getExe pkgs.bemenu} -p \"DESKTOP\"'";
       "Mod+p" = getExe pkgs.my.powermenu;
+      "Mod+Shift+i" = getExe wizToggle;
 
       "Mod+Shift+c" = {
         cmd = getExe pkgs.my.color-picker;

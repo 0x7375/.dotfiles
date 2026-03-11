@@ -9,6 +9,11 @@ lib.mkMerge [
   (mkBundle {
     users.users.${config.me.user}.openssh.authorizedKeys.keys = config.me.hosts.yubikey.sshPublicKeys;
 
+    programs.ssh.extraConfig = ''
+      Host pearlman
+        ForwardAgent yes
+    '';
+
     hj.files.".ssh/sk_main" = {
       text = builtins.readFile ./sk_main;
       type = "copy";

@@ -69,6 +69,12 @@ in
       description = "User name";
     };
 
+    server = mkOption {
+      type = types.str;
+      default = "pearlman";
+      description = "Server hostname";
+    };
+
     uid = mkOption {
       type = types.int;
       default = 1000;

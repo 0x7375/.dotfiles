@@ -8,6 +8,7 @@
     boot.debug.enable = false;
     btrfs.enable = true;
     vpnPeer.enable = true;
+    boot.encryption.enable = true;
     wm = {
       enable = true;
       displayServer = "xorg";

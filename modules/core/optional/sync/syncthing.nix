@@ -7,7 +7,7 @@
 }:
 
 let
-  inherit (config.me) user home hostname;
+  inherit (config.me) user hostname;
   mkHostSecret = lib.my.mkHostSecret hostname;
 in
 {
@@ -18,9 +18,7 @@ in
 
     services.syncthing = {
       enable = true;
-      inherit user;
       package = pkgs.auto.syncthing;
-      dataDir = home;
       overrideDevices = true;
       overrideFolders = true;
       guiPasswordFile = config.sops.secrets.syncthing_pw.path;

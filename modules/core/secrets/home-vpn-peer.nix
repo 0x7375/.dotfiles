@@ -49,6 +49,7 @@ in
       systemd.services.vpn-home-manager = {
         description = "Auto-toggle home VPN based on network location";
         after = [ "network-online.target" ];
+        wants = [ "network-online.target" ];
         wantedBy = [ "multi-user.target" ];
         path = [ pkgs.iproute2 ];
 

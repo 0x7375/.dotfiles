@@ -38,3 +38,6 @@ m.youtube.com##.single-column-browse-results-tabs>a:has-text(Shorts)
 
 ! adblocking
 www.twitch.tv##+js(twitch-videoad)
+
+! whitelist homarr
+@@||umami.homarr.dev^

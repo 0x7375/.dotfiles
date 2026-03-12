@@ -7,6 +7,7 @@
 
 let
   stateDir = "/var/lib/homarr";
+  inherit (config.me.services.homarr) port;
 in
 {
   boot.kernel.sysctl."vm.overcommit_memory" = 1;
@@ -38,12 +39,11 @@ in
       environmentFiles = [ config.sops.secrets.homarr.path ];
 
       volumes = [
-        "${stateDir}/configs:/app/data/configs"
-        "${stateDir}/icons:/app/public/icons"
-        "${stateDir}/data:/data"
+        "${stateDir}/data:/appdata"
+        "${stateDir}/icons:/public/icons"
       ];
 
-      ports = [ "7575:7575" ];
+      ports = [ "${toString port}:${toString port}" ];
     };
 
   systemd.tmpfiles.settings.homarr =
@@ -55,7 +55,6 @@ in
       };
     in
     {
-      "${stateDir}/configs".d = dir;
       "${stateDir}/icons".d = dir;
       "${stateDir}/data".d = dir;
     };

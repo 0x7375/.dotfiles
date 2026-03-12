@@ -42,6 +42,7 @@ mkBundle {
     registry = {
       nixpkgs.flake = inputs.nixpkgs;
       unstable.flake = inputs.nixpkgs-unstable;
+      auto.flake = inputs.auto-update;
       n.flake = inputs.nixpkgs;
       t = {
         from.type = "indirect";

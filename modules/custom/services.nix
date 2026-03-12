@@ -67,6 +67,10 @@ in
             proxy_set_header X-Forwarded-Host $host;
           '';
         };
+        dashdot = {
+          subdomain = "dash";
+          port = 3001;
+        };
         bazarr = {
           subdomain = "subtitles";
           port = 6767;

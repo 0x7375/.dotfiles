@@ -32,13 +32,15 @@
     ];
   };
 
-  packages = [ pkgs.mergerfs ];
-
   fileSystems."/data" = {
-    # device = "/mnt/ssd:/mnt/hdd";
-    device = "/mnt/ssd";
+    device = "/mnt/ssd:/mnt/hdd";
     fsType = "fuse.mergerfs";
+    depends = [
+      "/mnt/ssd"
+      "/mnt/hdd"
+    ];
     options = [
+      "nofail"
       "allow_other"
       "use_ino"
       "cache.files=partial"

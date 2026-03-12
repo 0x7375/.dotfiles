@@ -31,7 +31,7 @@
     unixAuth = lib.mkForce true;
   });
 
-  boot.kernel.sysctl."kernel.consoleblank" = 60;
+  boot.kernelParams = [ "consoleblank=60" ];
 
   # because battery is dead so time is wrong
   services.timesyncd.servers = [

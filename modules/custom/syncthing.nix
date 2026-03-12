@@ -18,8 +18,12 @@ let
     {
       path,
       devices,
+      ignorePatterns ? [ ],
       type ? "sendreceive",
-      ignorePatterns ? [
+      extraConfig ? { },
+    }:
+    let
+      defaultPatterns = [
         ".cache"
         "bin"
         "node_modules"
@@ -28,19 +32,25 @@ let
         "*.o"
         "*.toc"
         "*.aux"
+        "!capture.log"
         "*.log"
         "*.out"
+        "*.idx"
+
+        # windows
+        "desktop.ini"
+
+        # macos
         ".DS_Store"
         ".localized"
-        "desktop.ini"
-      ],
-      extraConfig ? { },
-    }:
+        "Photos Library.photoslibrary"
+      ];
+    in
     {
       path = cfg.dataRoot + path;
       inherit type;
       inherit devices;
-      inherit ignorePatterns;
+      ignorePatterns = defaultPatterns ++ ignorePatterns;
       versioning =
         if type != "sendonly" then
           {

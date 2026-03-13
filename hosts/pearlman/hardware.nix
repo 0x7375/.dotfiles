@@ -32,6 +32,8 @@
     ];
   };
 
+  packages = with pkgs; [ mergerfs ];
+
   fileSystems."/data" = {
     device = "/mnt/ssd:/mnt/hdd";
     fsType = "fuse.mergerfs";
@@ -63,8 +65,8 @@
   boot.kernelModules = [ "kvm-intel" ];
   boot.extraModulePackages = [ ];
 
-  # disable UAS, use usb-storage
-  boot.kernelParams = [ "usb-storage.quirks=0bda:9201:u" ];
+  # disable broken UAS for ssh and hdd
+  boot.kernelParams = [ "usb-storage.quirks=0bda:9201:u,152d:0578:u" ];
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
   hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;

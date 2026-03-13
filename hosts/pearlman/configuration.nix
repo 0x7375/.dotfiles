@@ -33,15 +33,17 @@
 
   boot.kernelParams = [ "consoleblank=60" ];
 
-  # because battery is dead so time is wrong
+  # because bios settings are unreliable
   services.timesyncd.servers = [
     "162.159.200.1" # Cloudflare NTP
     "216.239.35.0" # Google NTP
   ];
 
+  boot.tmp.tmpfsSize = "512M";
+
   virtualisation.containers.storage.settings.storage = {
     driver = "overlay";
-    graphroot = "/data/containers/storage";
+    graphroot = "/mnt/ssd/containers/storage";
     runroot = "/run/containers/storage";
   };
 

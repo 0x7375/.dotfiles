@@ -44,7 +44,7 @@ in
         # un-ignore fuse.mergerfs filesystem type
         DASHDOT_FS_TYPE_FILTER = "cifs,9p,fuse.rclone,nfs4,iso9660,fuse.shfs,autofs";
 
-        DASHDOT_FS_DEVICE_FILTER = "mmcblk1boot0,mmcblk1boot1";
+        DASHDOT_FS_DEVICE_FILTER = "mmcblk0boot0,mmcblk0boot1,mmcblk1boot0,mmcblk1boot1";
       };
     };
 }

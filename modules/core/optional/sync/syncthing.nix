@@ -6,12 +6,13 @@
   ...
 }:
 
-let
-  inherit (config.me) user hostname;
-  mkHostSecret = lib.my.mkHostSecret hostname;
-in
 {
   config = lib.mkIf (config.me.syncthing.enable && config.me.secrets.enable) (mkNixos {
+    systemd.services.syncthing = {
+      after = [ "sops-install-secrets.service" ];
+      requires = [ "sops-install-secrets.service" ];
+    };
+
     services.syncthing = {
       enable = true;
       package = pkgs.auto.syncthing;

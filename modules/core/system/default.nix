@@ -20,7 +20,7 @@ mkNixos {
 
   zramSwap = {
     enable = true;
-    memoryPercent = 100;
+    memoryPercent = 50;
   };
 
   services.fstrim.enable = true;

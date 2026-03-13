@@ -39,6 +39,7 @@
         "podman-flaresolverr"
         "podman-cleanuparr"
         "jellyfin"
+        "syncthing"
         # "jellyseerr"
         "prowlarr"
         "qbittorrent"

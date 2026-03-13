@@ -39,7 +39,7 @@ in
 
   users.users.syncthing.extraGroups = [ "media" ];
 
-  systemd.tmpfiles.settings.syncthing."/data/syncthing".d = {
+  systemd.tmpfiles.settings.syncthing."/mnt/ssd/syncthing".d = {
     group = "syncthing";
     mode = "0755";
     user = "syncthing";
@@ -49,8 +49,6 @@ in
   boot.kernel.sysctl."fs.inotify.max_user_watches" = 204800;
 
   networking.firewall.allowedTCPPorts = [ port ];
-
-  systemd.services = lib.my.notifyOnServiceFailure "syncthing";
 
   services.syncthing = {
     enable = lib.mkForce true;
@@ -65,7 +63,7 @@ in
     };
   };
   me.syncthing = {
-    dataRoot = "/data/syncthing/";
+    dataRoot = "/mnt/ssd/syncthing/";
 
     folders = {
       ds = {

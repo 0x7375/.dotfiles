@@ -17,6 +17,8 @@ in
   };
 
   systemd.services.qbittorrent = {
+    after = [ "sops-install-secrets.service" ];
+    requires = [ "sops-install-secrets.service" ];
     serviceConfig = {
       # necesarry for polkit rule to work
       RestrictAddressFamilies = lib.mkForce [

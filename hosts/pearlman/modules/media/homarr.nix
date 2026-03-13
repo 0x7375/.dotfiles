@@ -7,7 +7,7 @@
 
 let
   stateDir = "/var/lib/homarr";
-  inherit (config.me.services.homarr) port;
+  inherit (config.me.services.homarr) port url;
 in
 {
   boot.kernel.sysctl."vm.overcommit_memory" = 1;
@@ -34,7 +34,7 @@ in
         finalImageTag = version;
       };
 
-      environment.BASE_URL = "https://home.0xaa.me";
+      environment.BASE_URL = url;
 
       environmentFiles = [ config.sops.secrets.homarr.path ];
 

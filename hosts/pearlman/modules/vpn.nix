@@ -15,7 +15,7 @@ let
 
   peerKeys = {
     naitoh = "apB8TVyEJ7G/gLe5b3ckvUYJSSKv85rl1jWkZoiEQgE=";
-    shannon = "mEN17hfodGLbe58cS6r7qeegmeQlSebz2JCUIlsWdn0=";
+    shannon = "D3+XcAKleaWTA8FNUprJTmqqHnG9K9wLKnZs2/K9mGo=";
     lamarr = "vEKQ3Lpxn8JScQRMS8t6lq6dGWXiB9oyBgr2gSTfvxA=";
     mach = "z2/QJTGzNBiq4MKPqFDtuPJsCE1Tb/7VG6oYCExeYVg=";
     yoshino = "+TLwV2JKgqxaAHBv/BYrwDXEcILUt3cbuth1XY/HfTo=";

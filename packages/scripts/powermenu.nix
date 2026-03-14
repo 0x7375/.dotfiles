@@ -42,7 +42,7 @@ pkgs.writeShellApplication {
         "reboot") systemctl --no-wall reboot ;;
         "windows")
           ENTRY=$(efibootmgr | grep -i "windows" | grep -oP "Boot\K[0-9A-F]+" | head -1)
-          efibootmgr --bootnext "$ENTRY" && systemctl --no-wall reboot
+          sudo efibootmgr --bootnext "$ENTRY" && systemctl --no-wall reboot
         ;;
         "setup") systemctl --no-wall reboot --firmware-setup ;;
       esac

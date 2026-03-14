@@ -148,7 +148,7 @@ in
           };
 
         shannon = {
-          syncthing.id = "JJ62FKA-U5HTR5S-NJ7A4EJ-TMO66SZ-QNUOYUA-CCQMUIB-STDX4RE-VCGEKAB";
+          syncthing.id = "NCNYWXS-TGOZLXL-IZHMOQU-WNMNRSP-LDM5MFX-S4S5674-EYTMUAL-JB4WTQI";
           ips.vpn = "10.0.0.3";
         };
 

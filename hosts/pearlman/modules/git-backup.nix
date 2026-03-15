@@ -20,7 +20,7 @@ lib.mkIf config.me.secrets.enable {
         remote_url="https://codeberg.org"
         user="0x7E"
         remote="''${remote_url}/''${user}"
-        backup_dir="/data/backups/git"
+        backup_dir="/mnt/ssd/backups/git"
         mkdir -p "$backup_dir"
 
         export GIT_SSH_COMMAND="ssh -i /root/.ssh/id_backup_codeberg -o IdentitiesOnly=yes -o StrictHostKeyChecking=no"

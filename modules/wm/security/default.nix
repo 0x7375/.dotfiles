@@ -28,11 +28,23 @@ lib.mkIf config.me.wm.enable (mkNixos {
     type = "Application";
   };
 
-  me.wm.floating = [
+  me.wm =
+    let
+      type = "instance";
+      name = "vault.bitwarden.com";
+    in
     {
-      type = "title";
-      name = "Bitwarden Web vault";
-      enable = false;
-    }
-  ];
+      assign = [
+        {
+          inherit name type;
+          workspace = "2";
+        }
+      ];
+      floating = [
+        {
+          inherit name type;
+          enable = false;
+        }
+      ];
+    };
 })

@@ -13,7 +13,6 @@
   ++ (lib.my.filesIn ./modules);
 
   services.logind.settings.Login.HandleLidSwitch = "ignore";
-  networking.networkmanager.wifi.powersave = false;
   powerManagement.cpuFreqGovernor = "performance";
 
   hardware.graphics = {

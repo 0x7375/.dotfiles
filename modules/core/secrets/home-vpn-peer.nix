@@ -46,40 +46,22 @@ in
         configFile = config.sops.templates."home-vpn-${hostname}.conf".path;
       };
 
-      systemd.services.vpn-home-manager = {
-        description = "Auto-toggle home VPN based on network location";
-        after = [ "network-online.target" ];
-        wants = [ "network-online.target" ];
-        wantedBy = [ "multi-user.target" ];
-        path = [ pkgs.iproute2 ];
+      sops.secrets.home_ssid.owner = config.me.user;
 
-        script =
-          # bash
-          ''
-            is_home() {
-              ip route show "${config.me.networkIps.lan.subnet}" | grep -q "proto kernel"
-            }
-
-            check_and_toggle() {
-              if is_home; then
-                systemctl stop wg-quick-home.service || true
-              else
-                systemctl start wg-quick-home.service || true
-              fi
-            }
-
-            check_and_toggle
-            ip monitor route | while read -r _; do
-              check_and_toggle
-            done
+      networking.networkmanager.dispatcherScripts = [
+        {
+          source = pkgs.writeShellScript "vpn-home-manager" ''
+            home_ssid=$(cat "${config.sops.secrets.home_ssid.path}")
+            [[ "$2" = "dhcp4-change" ]] || exit 0
+            if [[ "$CONNECTION_ID" == "$home_ssid" ]]; then
+              systemctl stop wg-quick-home.service
+            else
+              systemctl start wg-quick-home.service
+            fi
           '';
-
-        serviceConfig = {
-          Type = "simple";
-          Restart = "always";
-          RestartSec = "5s";
-        };
-      };
+          type = "basic";
+        }
+      ];
     };
   });
 }

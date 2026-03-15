@@ -147,27 +147,16 @@ lib.mkIf (config.me.wm.displayServer == "xorg") (mkNixos {
     bindsym $super+Shift+9 move container to workspace $ws9
     bindsym $super+Shift+0 move container to workspace $ws10
 
-    for_window [window_role="About"] floating enable
-    for_window [window_role="Organizer"] floating enable
-    for_window [window_role="Preferences"] floating enable
-    for_window [window_role="bubble"] floating enable
-    for_window [window_role="page-info"] floating enable
-    for_window [window_role="pop-up"] floating enable
-    for_window [window_role="task_dialog"] floating enable
-    for_window [window_role="toolbox"] floating enable
-    for_window [window_role="webconsole"] floating enable
-    for_window [window_type="dialog"] floating enable
-    for_window [window_type="menu"] floating enable
+    for_window [window_role="^(About|Organizer|Preferences|bubble|page-info|pop-up|task_dialog|toolbox|webconsole|Popup)$"] floating enable
+    for_window [window_type="^(dialog|menu)$"] floating enable
 
-    for_window [class="Main"] floating enable
-    for_window [class="Matplotlib"] floating enable
+    for_window [title="PIN required"] border none
+
+    for_window [class="^(Main|Matplotlib)$"] floating enable
 
     for_window [class=".*"] border pixel 1
     for_window [floating] move position center
     for_window [window_role="Popup"] border pixel 0
-
-    for_window [title="^Friends List$"] floating enable
-    for_window [title="Steam - Update News"] floating enable
 
     $exec ${getExe' pkgs.i3 "i3-msg"} workspace 1
 

@@ -59,13 +59,15 @@ lib.mkIf config.me.wm.enable (mkNixos {
       }
     );
     value = palette: rec {
-      global = {
+      global = let
+        inherit (config.me) flakeDir wm;
+      in {
         background = palette.bg0;
         foreground = palette.fg0;
         highlight = palette.fg0;
         frame_color = palette.bg1;
 
-        icon_path = "${config.me.flakeDir}/.assets/dunst/output/${palette._theme}";
+        icon_path = "${flakeDir}/.assets/dunst/output/${palette._theme}";
         monitor = 0;
         follow = "none";
         width = 400;
@@ -73,7 +75,7 @@ lib.mkIf config.me.wm.enable (mkNixos {
         origin = "top-center";
         offset = "0x${
           toString (
-            if config.me.wm.displayServer == "xorg" then config.me.barHeight + 10 else config.me.barHeight
+            if wm.displayServer == "xorg" then wm.barHeight + 10 else wm.barHeight
           )
         }";
         scale = 0;

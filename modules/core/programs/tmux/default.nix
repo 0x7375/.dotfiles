@@ -11,7 +11,6 @@ let
     fzf-tmux-url
     yank
   ];
-  cfg = config.me;
 in
 {
   # nixpkgs.overlays = [
@@ -41,7 +40,7 @@ in
     enable = true;
     extraConfig =
       let
-        inherit (config.me.wm) copy;
+        inherit (config.me.wm) copy terminal;
       in
       # tmux
       ''
@@ -52,7 +51,7 @@ in
         set -g @plugin 'tmux-plugins/tmux-yank'
 
         set  -g default-terminal "tmux-256color"
-        set -ga terminal-overrides ",${lib.optionalString (cfg.wm.terminal != null) cfg.wm.terminal}:RGB"
+        set -ga terminal-overrides ",${lib.optionalString (terminal != null) terminal}:RGB"
 
         unbind C-b
         set -g prefix C-s

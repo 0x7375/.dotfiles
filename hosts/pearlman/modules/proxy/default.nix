@@ -70,9 +70,21 @@ in
       "${domain}" = {
         forceSSL = true;
         enableACME = true;
-        locations."/" = {
-          root = "/var/www";
-          index = "index.html";
+        locations = {
+          "/" = {
+            proxyPass = "http://127.0.0.1:${toString config.me.services.homarr.port}";
+            proxyWebsockets = true;
+            extraConfig = ''
+              proxy_connect_timeout 5s;
+              proxy_read_timeout 5s;
+              proxy_set_header X-Forwarded-Host $host;
+              error_page 502 504 = @fallback;
+            '';
+          };
+          "@fallback" = {
+            root = "/var/www";
+            tryFiles = "/index.html =404";
+          };
         };
       };
 

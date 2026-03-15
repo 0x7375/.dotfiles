@@ -22,9 +22,17 @@ lib.mkIf (wm.enable && secrets.enable) (mkNixos {
   packages = [ pkgs.token2-cli ];
 
   me.wm.bindings."Mod+u" = pkgs.writeShellScript "totp-menu" ''
-    tokens=$(sudo ${lib.getExe pkgs.token2-cli} get_all 2>&1 | grep -iv "touch")
+    tokens=$(${lib.getExe pkgs.token2-cli} get_all 2>&1 | grep -iv "touch")
     selected=$(echo "$tokens" | awk -F'] | - ' '{print $2}' | bemenu -i -l 10 -p "TOTP")
-    echo "$tokens" | grep -F "$selected" | head -n 1 | awk '{print $NF}' | tr -d '\r\n' | ${config.me.wm.copy}
+
+    [ -z "$selected" ] && exit 0
+
+    app="''${selected%% / *}"
+    account="''${selected#* / }"
+
+    notify-send -i key -t 0 "Touch required"
+    ${lib.getExe pkgs.token2-cli} read_entry --app-name "$app" --account-name "$account" 2>&1 | tail -n 1 | awk '{print $NF}' | tr -d '\r\n' | ${config.me.wm.copy}
+    dunstctl close-all
   '';
 
   nixpkgs.config.permittedInsecurePackages = [

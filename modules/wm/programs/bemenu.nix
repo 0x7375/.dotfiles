@@ -33,7 +33,7 @@ lib.mkIf config.me.wm.enable (mkNixos {
   vars.BEMENU_OPTS = lib.cli.toCommandLineShellGNU { } {
     border = 7;
     hp = 10;
-    fn = "Mononoki Nerd Font ${toString config.me.barFontSize}";
+    fn = "Mononoki Nerd Font ${toString config.me.wm.barFontSize}";
     ignorecase = true;
   };
 

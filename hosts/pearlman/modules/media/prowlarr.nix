@@ -1,5 +1,8 @@
-{ pkgs, ... }:
+{ config, pkgs, ... }:
 
+let
+  inherit (config.me.services.flaresolverr) port;
+in
 {
   services.prowlarr = {
     enable = true;
@@ -23,6 +26,6 @@
         finalImageTag = version;
       };
 
-      ports = [ "8191:8191" ];
+      ports = [ "${toString port}:${toString port}" ];
     };
 }

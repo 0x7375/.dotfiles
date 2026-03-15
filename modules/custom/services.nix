@@ -62,14 +62,14 @@ in
         homarr = {
           subdomain = "home";
           port = 7575;
-          webSockets = true;
-          extraConfig = ''
-            proxy_set_header X-Forwarded-Host $host;
-          '';
         };
         dashdot = {
           subdomain = "dash";
           port = 3001;
+        };
+        flaresolverr = {
+          subdomain = "solver";
+          port = 8191;
         };
         bazarr = {
           subdomain = "subtitles";

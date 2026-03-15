@@ -9,7 +9,6 @@
 let
   inherit (config.me) hostname;
   mkHostSecret = lib.my.mkHostSecret hostname;
-  syncthingRoot = "/data/syncthing";
 in
 lib.mkIf config.me.secrets.enable {
   packages = with pkgs; [
@@ -28,19 +27,7 @@ lib.mkIf config.me.secrets.enable {
 
   services.restic.backups =
     let
-      syncthingDirs = map (path: "${syncthingRoot}/${path}") [
-        "documents"
-        "games/ds"
-        "perso"
-        "photos"
-        "pictures"
-        "uni"
-        "notes"
-        "windows"
-      ];
-
       mediaDirs = [
-        config.services.jellyseerr.configDir
         config.services.jellyfin.dataDir
         (config.services.qbittorrent.profileDir + "/qBittorrent")
         config.services.radarr.dataDir
@@ -48,20 +35,15 @@ lib.mkIf config.me.secrets.enable {
         config.services.prowlarr.dataDir
         config.services.bazarr.dataDir
         "/var/lib/cleanuparr"
+        "/var/lib/seerr"
       ];
-
-      gitRepos = [ "/data/git" ];
 
       backupConfig =
         let
           remotes = {
             local = {
               time = "18:00:00";
-              path = "/data/backups/restic";
-            };
-            proton = {
-              time = "20:00:00";
-              path = "rclone:proton:";
+              path = "/mnt/ssd/backups/restic/";
             };
             backblaze = {
               time = "22:00:00";
@@ -102,10 +84,7 @@ lib.mkIf config.me.secrets.enable {
         {
           paths,
           day,
-          exclude ? [
-            ".*"
-            "node_modules"
-          ],
+          exclude ? [ ],
         }:
         builtins.listToAttrs (
           map
@@ -128,22 +107,21 @@ lib.mkIf config.me.secrets.enable {
         );
     in
     (createBackups "syncthing" {
-      paths = syncthingDirs;
+      paths = [ "/mnt/ssd/syncthing" ];
       day = "Sat";
+      exclude = [
+        ".stfolder"
+        ".stversions"
+        ".stignore"
+      ];
     })
     // (createBackups "media" {
       paths = mediaDirs;
       day = "Sun";
     })
     // (createBackups "git" {
-      paths = gitRepos;
+      paths = [ "/mnt/ssd/backups/git" ];
       day = "Mon";
-      exclude = [
-        ".DS_Store"
-        "desktop.ini"
-        ".localized"
-        "node_modules"
-      ];
     });
 
   systemd.services = lib.mkMerge (

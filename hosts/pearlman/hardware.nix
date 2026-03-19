@@ -18,7 +18,6 @@
     options = [
       "nofail"
       "noatime"
-      "commit=600"
     ];
   };
 
@@ -28,7 +27,6 @@
     options = [
       "nofail"
       "noatime"
-      "commit=600"
     ];
   };
 
@@ -65,8 +63,18 @@
   boot.kernelModules = [ "kvm-intel" ];
   boot.extraModulePackages = [ ];
 
-  # disable broken UAS for ssh and hdd
-  boot.kernelParams = [ "usb-storage.quirks=0bda:9201:u,152d:0578:u" ];
+  # rely on zram
+  swapDevices = lib.mkForce [ ];
+
+  boot.kernelParams = [
+    # disable broken UAS for ssh and hdd
+    "usb-storage.quirks=0bda:9201:u,152d:0578:u"
+
+    # maybe fix unstable eMMC issues?
+    # kernel: mmc0: mmc_hs400_to_hs200 failed, error -110
+    "sdhci.debug_quirks2=4"
+    "sdhci.debug_quirks=0x40"
+  ];
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
   hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;

@@ -11,7 +11,7 @@ let
     hosts
     host
     ;
-  wgPort = 51820;
+  wgPort = 1637;
 
   peerKeys = {
     naitoh = "apB8TVyEJ7G/gLe5b3ckvUYJSSKv85rl1jWkZoiEQgE=";

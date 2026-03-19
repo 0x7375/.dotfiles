@@ -47,6 +47,12 @@ in
       description = "My domain name";
     };
 
+    vpnPort = mkOption {
+      type = types.int;
+      default = 19598;
+      description = "VPN Forwarded port";
+    };
+
     services = mkOption {
       description = "Central server services definition";
       internal = true;

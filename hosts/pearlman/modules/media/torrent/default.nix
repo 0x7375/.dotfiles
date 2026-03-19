@@ -7,7 +7,6 @@
 
 let
   template = "@guiPassword@";
-  portTemplate = "@port@";
   inherit (config.me) hostname;
   mkHostSecret = lib.my.mkHostSecret hostname;
 in
@@ -30,12 +29,9 @@ in
     };
     preStart = ''
       secret=$(cat "${config.sops.secrets."qbittorrent/pw_hash".path}")
-      port=00000
-      [ -f /var/lib/proton-vpn-port ] && port=$(< /var/lib/proton-vpn-port)
       configFile=${config.services.qbittorrent.profileDir}/qBittorrent/config/qBittorrent.conf
 
       ${lib.getExe' pkgs.gnused "sed"} -i "s#${template}#$secret#" "$configFile"
-      ${lib.getExe' pkgs.gnused "sed"} -i "s#${portTemplate}#$port#" "$configFile"
     '';
   };
 
@@ -49,14 +45,14 @@ in
       AutoRun = {
         OnTorrentAdded = {
           Enabled = true;
-          Program = "systemctl start wg-quick-proton";
+          Program = "systemctl start wg-quick-airvpn";
         };
       };
       BitTorrent = {
         ExcludedFileNamesEnabled = true;
         Session = {
           BTProtocol = "TCP";
-          Port = portTemplate;
+          Port = config.me.vpnPort;
           DefaultSavePath = "/data/torrents";
           DisableAutoTMMByDefault = false;
           DisableAutoTMMTriggers = {
@@ -64,7 +60,7 @@ in
             DefaultSavePathChanged = false;
           };
           ExcludedFileNames = (builtins.readFile ./blacklist.txt);
-          Interface = "proton";
+          Interface = "airvpn";
           MaxConnections = 150;
           MaxConnectionsPerTorrent = 50;
           MaxUploads = 15;
@@ -94,7 +90,7 @@ in
     ''
       polkit.addRule(function(action, subject) {
         if (action.id == "org.freedesktop.systemd1.manage-units" &&
-            action.lookup("unit") == "wg-quick-proton.service" &&
+            action.lookup("unit") == "wg-quick-airvpn.service" &&
             subject.user == "${config.services.qbittorrent.user}") {
           return polkit.Result.YES;
         }

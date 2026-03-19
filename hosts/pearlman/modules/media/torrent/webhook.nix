@@ -5,7 +5,15 @@
   ...
 }:
 
+let
+  inherit (config.me) hostname;
+  mkHostSecret = lib.my.mkHostSecret hostname;
+in
 lib.mkIf config.me.secrets.enable {
+  sops.secrets."qbittorrent/pw" = mkHostSecret "qbittorrent/pw" {
+    owner = config.services.qbittorrent.user;
+  };
+
   systemd.services.jellyfin-torrent-controller = {
     description = "Automatically pause torrents when starting jellyfin playback";
     after = [

@@ -33,7 +33,8 @@ mkBundle {
             }
 
             mkfifo -- "$FIFO_UEBERZUG"
-            while [ -p "$FIFO_UEBERZUG" ] && ! ueberzugpp layer -s <"$FIFO_UEBERZUG"; do :; done &
+            # empty the LD_LIBRARY_PATH var so there is no conflict when I override it inside devShells
+            while [ -p "$FIFO_UEBERZUG" ] && ! LD_LIBRARY_PATH="" ueberzugpp layer -s <"$FIFO_UEBERZUG"; do :; done &
             exec 3>"$FIFO_UEBERZUG"
             trap cleanup EXIT
             lf "$@" 3>&-

@@ -27,6 +27,7 @@ let
         ".cache"
         "bin"
         "node_modules"
+        ".venv"
         ".expo"
         "*.class"
         "*.o"

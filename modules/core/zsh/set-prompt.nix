@@ -25,10 +25,10 @@
       }
 
       function get_env() {
-          if [[ -n $DIRENV_DIR ]]; then
-              msg=direnv
-          elif [[ -n $VIRTUAL_ENV ]]; then
+          if [[ -n $VIRTUAL_ENV ]]; then
               msg=venv
+          elif [[ -n $DIRENV_DIR ]]; then
+              msg=direnv
           elif [[ -n $NIX_SHELL_PACKAGES ]]; then
               local pkgs=$(echo "$NIX_SHELL_PACKAGES" | tr ' ' '\n' | sed 's/-[0-9].*//' | sort -u)
               local count=$(echo "$pkgs" | wc -l)

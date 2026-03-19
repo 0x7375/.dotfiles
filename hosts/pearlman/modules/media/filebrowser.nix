@@ -6,6 +6,11 @@
 }:
 
 {
+  me.services.filebrowser = {
+    subdomain = "file";
+    port = 8081;
+  };
+
   services.filebrowser = {
     enable = true;
     package = pkgs.auto.filebrowser;

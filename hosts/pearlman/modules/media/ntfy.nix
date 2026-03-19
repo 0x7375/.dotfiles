@@ -10,6 +10,12 @@ let
   inherit (services.ntfy) url port;
 in
 {
+  me.services.ntfy = {
+    subdomain = "notify";
+    port = 8719;
+    webSockets = true;
+  };
+
   services.ntfy-sh = {
     enable = true;
     settings = {

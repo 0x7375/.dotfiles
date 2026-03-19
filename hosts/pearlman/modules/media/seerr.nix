@@ -8,6 +8,11 @@ let
   stateDir = "/var/lib/seerr";
 in
 {
+  me.services.seerr = {
+    subdomain = "request";
+    port = 5055;
+  };
+
   virtualisation.oci-containers.containers.seerr =
     let
       name = "ghcr.io/seerr-team/seerr";

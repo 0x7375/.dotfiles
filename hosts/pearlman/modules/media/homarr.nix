@@ -10,6 +10,11 @@ let
   inherit (config.me.services.homarr) port url;
 in
 {
+  me.services.homarr = {
+    subdomain = "home";
+    port = 7575;
+  };
+
   boot.kernel.sysctl."vm.overcommit_memory" = 1;
 
   sops.secrets.homarr = {

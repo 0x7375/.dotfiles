@@ -7,7 +7,6 @@
 }:
 
 let
-  gw-ip = "10.2.0.1";
   inherit (config.me) secrets hostname server;
   isServer = hostname == server;
 in

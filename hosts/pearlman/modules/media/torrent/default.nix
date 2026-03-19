@@ -11,6 +11,11 @@ let
   mkHostSecret = lib.my.mkHostSecret hostname;
 in
 {
+  me.services.qBittorrent = {
+    subdomain = "torrent";
+    port = 8080;
+  };
+
   sops.secrets."qbittorrent/pw_hash" = mkHostSecret "qbittorrent/pw_hash" {
     owner = config.services.qbittorrent.user;
   };

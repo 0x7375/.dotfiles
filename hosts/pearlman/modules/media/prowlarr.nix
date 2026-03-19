@@ -4,6 +4,17 @@ let
   inherit (config.me.services.flaresolverr) port;
 in
 {
+  me = {
+    flaresolverr = {
+      subdomain = "solver";
+      port = 8191;
+    };
+    prowlarr = {
+      subdomain = "indexer";
+      port = 9696;
+    };
+  };
+
   services.prowlarr = {
     enable = true;
     package = pkgs.auto.prowlarr;

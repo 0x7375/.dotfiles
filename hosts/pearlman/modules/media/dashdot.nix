@@ -8,6 +8,11 @@ let
   inherit (config.me.services.dashdot) port;
 in
 {
+  me.dashdot = {
+    subdomain = "dash";
+    port = 3001;
+  };
+
   virtualisation.oci-containers.containers.dashdot =
     let
       name = "ghcr.io/mauricenino/dashdot";

@@ -8,6 +8,12 @@ let
   inherit (config.me.services.cleanuparr) port;
 in
 {
+  me.services.cleanuparr = {
+    subdomain = "cleanup";
+    port = 11011;
+    webSockets = true;
+  };
+
   systemd.tmpfiles.settings.cleanuparr."/var/lib/cleanuparr".d = {
     group = "root";
     user = "root";

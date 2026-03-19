@@ -1,6 +1,11 @@
 { pkgs, config, ... }:
 
 {
+  me.services.jellyfin = {
+    subdomain = "media";
+    port = 8096;
+  };
+
   users.users.jellyfin.extraGroups = [
     "render"
     "video"

@@ -93,10 +93,10 @@ lib.mkIf (config.me.wm.displayServer == "xorg") (mkNixos {
       format-charging=<label-charging>
       format-discharging=<label-discharging>
       label-charging=pow: ~%percentage%%
-      label-discharging=pow: %percentage%%
+      label-discharging=pow: %percentage%% - %consumption%W
       label-full=pow: %percentage%%
       label-low=pow: %percentage%%
-      poll-interval=0
+      poll-interval=5
       type=internal/battery
 
       [module/cpu]
@@ -165,7 +165,7 @@ lib.mkIf (config.me.wm.displayServer == "xorg") (mkNixos {
 
       [module/datetime]
       type=custom/ipc
-      hook-0=date '+%a %d %b - %H:%M'
+      hook-0=date '+%d/%m - %H:%M'
       initial=1
 
       [module/tray]

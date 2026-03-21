@@ -17,7 +17,8 @@ lib.mkIf config.me.secrets.enable (mkNixos {
   systemd.services.attic-watch-store = {
     description = "Attic watch store";
     wantedBy = [ "multi-user.target" ];
-    after = [ "network.target" ];
+    after = [ "sops-install-secrets.service" ];
+    requires = [ "sops-install-secrets.service" ];
     environment.ATTIC_SERVER = url;
     serviceConfig = {
       LoadCredential = [ "token:${config.sops.secrets.attic_access_token.path}" ];

@@ -46,6 +46,6 @@ in
       [[ ! -d ~/repos/home-manager ]] && git clone https://github.com/nix-community/home-manager "''${SHALLOW[@]}"
       [[ ! -d ~/repos/nix-darwin ]] && git clone https://github.com/nix-darwin/nix-darwin "''${SHALLOW[@]}"
       [[ ! -d ~/repos/nixpkgs ]] && git clone https://github.com/nixos/nixpkgs "''${SHALLOW[@]}"
-      [[ ! -d ~/repos/nur ]] && git clone https://github.com/nix-community/nur-combined "''${SHALLOW[@]}"
+      [[ ! -d ~/repos/nur-combined ]] && git clone https://github.com/nix-community/nur-combined "''${SHALLOW[@]}"
     '';
 }

@@ -2,6 +2,7 @@
   pkgs,
   config,
   lib,
+  mkBundle,
   ...
 }:
 
@@ -18,6 +19,11 @@ let
     detachTab = "jalaajddhemiiilfhmenogfbpkbgglkk";
     captchaBuster = "mpbjkejclgfgadiemmefgebjfooflfhl";
   };
+
+  flags = [
+    "--enable-features=HeliumMiddleClickAutoscroll"
+    "--no-first-run"
+  ];
 
   policies =
     let
@@ -135,42 +141,50 @@ let
       "Microphone"
       "Popups"
     ];
+
+  overlay = final: prev: {
+    helium = pkgs.nur.repos.forkprince.helium-nightly.overrideAttrs (
+      old:
+      if (!pkgs.stdenv.isDarwin) then
+        {
+          buildCommand =
+            let
+              bwrapPath = builtins.head (builtins.match ".*ln -s ([^ ]+) [$]out/bin/helium.*" old.buildCommand);
+            in
+            ''
+              mkdir -p $out/bin
+              cp ${bwrapPath} $out/bin/helium
+              sed -i 's|--tmpfs /etc|--tmpfs /etc --ro-bind /etc/chromium /etc/chromium|' $out/bin/helium
+              sed -i 's|-container-init "\$@"|-container-init ${builtins.concatStringsSep " " flags} "\$@"|' $out/bin/helium
+            ''
+            +
+              builtins.replaceStrings [ "mkdir -p $out/bin\nln -s ${bwrapPath} $out/bin/helium\n" ] [ "" ]
+                old.buildCommand;
+        }
+      else
+        { }
+    );
+  };
 in
-lib.mkIf config.me.wm.enable {
-  # patched for compatibility with nixos module, add cli flags
-  nixpkgs.overlays = [
-    (final: prev: {
-      helium = pkgs.nur.repos.Ev357.helium.overrideAttrs (old: {
-        buildCommand =
-          let
-            bwrapPath = builtins.head (builtins.match ".*ln -s ([^ ]+) [$]out/bin/helium.*" old.buildCommand);
-            flags = [
-              "--enable-features=HeliumMiddleClickAutoscroll"
-              "--no-first-run"
-            ];
-          in
-          ''
-            mkdir -p $out/bin
-            cp ${bwrapPath} $out/bin/helium
-            sed -i 's|--tmpfs /etc|--tmpfs /etc --ro-bind /etc/chromium /etc/chromium|' $out/bin/helium
+lib.mkIf config.me.wm.enable (mkBundle {
+  nixpkgs.overlays = [ overlay ];
 
-            # enable autoscroll
-            sed -i 's|-container-init "\$@"|-container-init ${builtins.concatStringsSep " " flags} "\$@"|' $out/bin/helium
-          ''
-          +
-            builtins.replaceStrings [ "mkdir -p $out/bin\nln -s ${bwrapPath} $out/bin/helium\n" ] [ "" ]
-              old.buildCommand;
-      });
-    })
-  ];
+  packages = [ pkgs.helium ];
 
-  packages = [
-    pkgs.helium
-  ];
-
-  programs.chromium = {
+  nixos.programs.chromium = {
     enable = true;
     extensions = lib.attrValues extensions;
     extraOpts = policies;
   };
-}
+
+  darwin.activation =
+    let
+      managedPlist = pkgs.writeText "net.imput.helium.plist" (
+        lib.generators.toPlist { escape = true; } policies
+      );
+    in
+    ''
+      install -d -m 0755 "/Library/Managed Preferences"
+      install -m 0644 ${managedPlist} "/Library/Managed Preferences/net.imput.helium.plist"
+    '';
+})

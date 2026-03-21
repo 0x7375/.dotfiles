@@ -17,7 +17,6 @@ pkgs.writeShellApplication {
     [
       procps
       fd
-      darkman
     ]
     ++ lib.optionals (config.me.wm.displayServer == "xorg") (
       with pkgs;
@@ -26,7 +25,8 @@ pkgs.writeShellApplication {
         dunst
         xorg.xrdb
       ]
-    );
+    )
+    ++ lib.optionals (config.me.wm.displayServer != "macos") (with pkgs; [ darkman ]);
   text =
     let
       inherit (config.me.wm) theme iconTheme;

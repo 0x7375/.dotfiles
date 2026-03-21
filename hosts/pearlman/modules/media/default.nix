@@ -18,7 +18,7 @@
         mkDir = user: {
           user = user;
           group = "media";
-          mode = "0755";
+          mode = "0775";
         };
 
         mkMediaDirs = base: {

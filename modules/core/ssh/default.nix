@@ -28,14 +28,11 @@ lib.mkMerge [
 
     services.openssh = {
       enable = true;
-      settings = {
-        AllowUsers = [
-          config.me.user
-          "root"
-        ];
-        PasswordAuthentication = false;
-        KbdInteractiveAuthentication = false;
-      };
+      extraConfig = ''
+        AllowUsers ${config.me.user} root
+        PasswordAuthentication no
+        KbdInteractiveAuthentication no
+      '';
     };
 
     # darwin.programs.ssh.extraConfig =
@@ -55,27 +52,31 @@ lib.mkMerge [
   })
 
   (lib.mkIf config.me.secrets.enable {
-    sops.secrets."server_uni/server" = { };
-    sops.secrets."server_uni/user" = { };
+    sops.secrets."uni_web_server/url" = { };
+    sops.secrets."uni_web_server/user" = { };
 
-    activation =
-      let
-        target = "/etc/ssh/ssh_config.d/999-secrets.conf";
-        targetDir = dirOf target;
-      in
-      ''
-        mkdir -p "${targetDir}"
+    system.activationScripts.sshConfigFromSecrets = {
+      deps = [ "setupSecrets" ];
+      text =
+        let
+          target = "/etc/ssh/ssh_config.d/999-secrets.conf";
+          targetDir = dirOf target;
+        in
+        # bash
+        ''
+          mkdir -p "${targetDir}"
 
-        server=$(cat "${config.sops.secrets."server_uni/server".path}")
-        user=$(cat "${config.sops.secrets."server_uni/user".path}")
+          url=$(cat "${config.sops.secrets."uni_web_server/url".path}")
+          user=$(cat "${config.sops.secrets."uni_web_server/user".path}")
 
-        cat <<EOF > "${target}"
-        Host web
-          HostName $server
-          User $user
-        EOF
+          cat <<EOF > "${target}"
+          Host web
+            HostName $url
+            User $user
+          EOF
 
-        chmod g+r,o+r "${target}"
-      '';
+          chmod g+r,o+r "${target}"
+        '';
+    };
   })
 ]

@@ -1,5 +1,6 @@
 {
   pkgs,
+  lib,
   mkBundle,
   config,
   inputs,
@@ -18,6 +19,11 @@ mkBundle {
     })
   ];
 
+  nixpkgs.flake = {
+    setFlakeRegistry = false;
+    setNixPath = false;
+  };
+
   nix = {
     extraOptions = ''
       warn-dirty = false
@@ -27,7 +33,7 @@ mkBundle {
       # still build when a cache fails
       fallback = true
     '';
-    nixPath = [ "nixpkgs=${inputs.nixpkgs}" ];
+    nixPath = pkgs.lib.mapAttrsToList (key: value: "${key}=${value}") inputs;
     channel.enable = false;
     settings = {
       flake-registry = "";
@@ -39,18 +45,19 @@ mkBundle {
       keep-going = true;
       log-lines = 20;
     };
-    registry = {
-      nixpkgs.flake = inputs.nixpkgs;
-      unstable.flake = inputs.nixpkgs-unstable;
-      auto.flake = inputs.auto-update;
-      n.flake = inputs.nixpkgs;
-      t = {
-        from.type = "indirect";
-        from.id = "tmpl";
-        to.type = "git";
-        to.url = "https://codeberg.org/0x7E/templates";
+    registry =
+      pkgs.lib.mapAttrs (_: flake: { inherit flake; }) (pkgs.lib.filterAttrs (_: v: v ? outputs) inputs)
+      // {
+        unstable.flake = inputs.nixpkgs-unstable;
+        auto.flake = inputs.auto-update;
+        n.flake = inputs.nixpkgs;
+        t = {
+          from.type = "indirect";
+          from.id = "tmpl";
+          to.type = "git";
+          to.url = "https://codeberg.org/0x7E/templates";
+        };
       };
-    };
   };
 
   activation = # bash

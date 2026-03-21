@@ -33,9 +33,9 @@
               local pkgs=$(echo "$NIX_SHELL_PACKAGES" | tr ' ' '\n' | sed 's/-[0-9].*//' | sort -u)
               local count=$(echo "$pkgs" | wc -l)
               if [ "$count" -le 3 ]; then
-                  msg=$(echo "$pkgs" | paste -sd,)
+                  msg=$(echo "$pkgs" | paste -sd, -)
               else
-                  local first=$(echo "$pkgs" | head -3 | paste -sd,)
+                  local first=$(echo "$pkgs" | head -3 | paste -sd, -)
                   msg="$first+$((count - 3))"
               fi
           elif [[ -n $NIX_BUILD_TOP ]]; then

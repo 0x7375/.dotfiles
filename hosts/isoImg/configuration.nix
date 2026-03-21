@@ -20,7 +20,6 @@
     settings = {
       PermitRootLogin = lib.mkForce "yes";
       KbdInteractiveAuthentication = lib.mkForce true;
-      AllowUsers = lib.mkForce null;
     };
     extraConfig = lib.mkForce "";
   };

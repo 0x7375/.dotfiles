@@ -6,9 +6,8 @@
 }:
 
 let
-  inherit (config.me) user home;
-  inherit (lib.my) mkHostSecret;
-
+  inherit (config.me) user home hostname;
+  mkHostSecret = lib.my.mkHostSecret hostname;
 in
 lib.mkIf config.me.secrets.enable {
   sops.secrets."syncthing/config" = {
@@ -18,22 +17,29 @@ lib.mkIf config.me.secrets.enable {
     key = "";
   };
 
-  sops.secrets."syncthing/cert" = mkHostSecret "syncthing/cert" { owner = user; };
   sops.secrets."syncthing/key" = mkHostSecret "syncthing/key" { owner = user; };
+  hj.files."Library/Application Support/Syncthing/cert.pem".text = ''
+    -----BEGIN CERTIFICATE-----
+    ${config.me.host.syncthing.cert}
+    -----END CERTIFICATE-----
+  '';
 
-  activation =
-    let
-      inherit (config.sops) secrets;
-    in
-    ''
-      stDir="${home}/Library/Application Support/Syncthing"
-      mkdir -p "${home}/Library/Application Support/Syncthing"
+  system.activationScripts.sshConfigFromSecrets = {
+    deps = [ "setupSecrets" ];
+    text =
+      let
+        inherit (config.sops) secrets;
+      in
+      # bash
+      ''
+        dir="${home}/Library/Application Support/Syncthing"
+        mkdir -p "${home}/Library/Application Support/Syncthing"
 
-      cp -f ${secrets."syncthing/config".path} "$stDir/config.xml"
-      cp -f ${secrets."syncthing/key".path} "$stDir/key.pem"
-      cp -f ${secrets."syncthing/cert".path} "$stDir/cert.pem"
+        cp -f ${secrets."syncthing/config".path} "$dir/config.xml"
+        cp -f ${secrets."syncthing/key".path} "$dir/key.pem"
 
-      chown -R ${user}: "$stDir"
-      chmod 600 "$stDir/config.xml" "$stDir/key.pem" "$stDir/cert.pem"
-    '';
+        chown -R ${user}: "$dir"
+        chmod 600 "$dir/config.xml" "$dir/key.pem"
+      '';
+  };
 }

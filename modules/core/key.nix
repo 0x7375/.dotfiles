@@ -21,8 +21,6 @@ mkNixos {
       root:${main}:${backup}
     '';
 
-  packages = [ pkgs.age-plugin-fido2-hmac ];
-
   security.pam = {
     rssh.enable = true;
     u2f = {

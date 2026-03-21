@@ -10,6 +10,7 @@ let
 in
 {
   services.aerospace = {
+    package = pkgs.unstable.aerospace;
     enable = true;
     settings =
       let
@@ -52,7 +53,7 @@ in
             super = "alt-ctrl";
           in
           {
-            "${super}-shift-esc" = [
+            "${super}-shift-r" = [
               "reload-config"
               "mode main"
             ];
@@ -72,14 +73,16 @@ in
             "${super}-shift-e" = "exec-and-forget open -na ${terminal} --args -e sudo ${getExe pkgs.lf}";
 
             "${super}-m" = "exec-and-forget ${pkgs.writeShellScript "open-note" ''
-              cd ~/notes
-              note=$(ls *.md | sed 's/\.md$//' | ${lib.getExe pkgs.choose-gui})
+              tmp=$(mktemp)
+              ${lib.getExe pkgs.alacritty} e zsh -c "ls ~/notes/*.md | sed 's|.*/||; s/\.md$//' | ${lib.getExe pkgs.fzf} --no-mouse > $tmp"
+              note=$(cat $tmp)
+              rm -f $tmp
               [ -n "$note" ] && open -na ${terminal} --args -e zsh -lc "nvim '$HOME/notes/$note.md'"
             ''}";
 
             "${super}-shift-t" = "exec-and-forget open -na ${terminal}";
             "${super}-shift-s" = "exec-and-forget ${getExe pkgs.my.swap-theme}";
-            "${super}-w" = "exec-and-forget open -a Zen";
+            "${super}-w" = "exec-and-forget open -a Helium";
 
             "${super}-h" = "focus left";
             "${super}-j" = "focus down";

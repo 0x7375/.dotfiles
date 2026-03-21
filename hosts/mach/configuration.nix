@@ -33,12 +33,10 @@
 
   homebrew = {
     enable = true;
-    brews = [
-      "choose-gui"
-    ];
+    brews = [ ];
     casks = [
+      "vesktop"
       "secretive"
-      "google-chrome"
       "unnaturalscrollwheels"
       "jellyfin-media-player"
       "karabiner-elements"
@@ -47,17 +45,13 @@
       "font-0xproto-nerd-font"
       "raycast"
     ];
-    onActivation = {
-      cleanup = "zap";
-      extraFlags = [ "--quiet" ];
-    };
+    onActivation.cleanup = "zap";
   };
 
   packages = with pkgs; [
-    vesktop
     syncthing
     mas
-    pear-desktop
+    unstable.pear-desktop
     wireguard-tools
 
     (pkgs.stdenv.mkDerivation rec {

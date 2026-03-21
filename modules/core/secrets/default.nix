@@ -1,5 +1,6 @@
 {
   pkgs,
+  inputs,
   secrets,
   config,
   lib,
@@ -19,29 +20,34 @@
   };
 
   config = lib.mkIf config.me.secrets.enable (mkBundle {
-    packages = [ pkgs.sops ];
+    packages = with pkgs; [
+      sops
+      age-plugin-fido2-hmac
+    ];
 
     sops.defaultSopsFile = "${secrets}/default.yaml";
     sops.gnupg.sshKeyPaths = [ ];
     sops.age.sshKeyPaths = [ ];
+    sops.age.plugins = [ pkgs.age-plugin-fido2-hmac ];
+
+    hj.xdg.config.files."sops/age/sk_backup" = {
+      text = builtins.readFile ./age-fido2-backup.txt;
+      type = "copy";
+      permissions = "0600";
+    };
+
+    hj.xdg.config.files."sops/age/sk_main" = {
+      text = builtins.readFile ./age-fido2-main.txt;
+      type = "copy";
+      permissions = "0600";
+    };
+
+    vars.SOPS_AGE_KEY_FILE = "${config.me.home}/.config/sops/age/${config.me.host.sopsDecryptionKey}";
 
     nixos = lib.mkMerge [
       {
         sops.useSystemdActivation = true;
 
-        hj.xdg.config.files."sops/age/sk_backup" = {
-          text = builtins.readFile ./age-fido2-backup.txt;
-          type = "copy";
-          permissions = "0600";
-        };
-
-        hj.xdg.config.files."sops/age/sk_main" = {
-          text = builtins.readFile ./age-fido2-main.txt;
-          type = "copy";
-          permissions = "0600";
-        };
-
-        vars.SOPS_AGE_KEY_FILE = "${config.me.home}/.config/sops/age/${config.me.host.sopsDecryptionKey}";
       }
       (lib.mkIf config.me.secrets.tpm.enable {
         sops.age = {

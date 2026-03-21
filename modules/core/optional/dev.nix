@@ -17,7 +17,6 @@
       delve
 
       # nodePackages.eas-cli
-
       nodejs_24
 
       # haskell

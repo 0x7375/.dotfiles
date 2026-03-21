@@ -123,11 +123,11 @@
         "nixpkgs": "nixpkgs"
       },
       "locked": {
-        "lastModified": 1771158954,
-        "narHash": "sha256-SwanW1K5BhyjCoG2qua75hzVNnGzSZcSWbgD6bH0QNw=",
+        "lastModified": 1773848015,
+        "narHash": "sha256-w+lCeHZPf8/BNPMyV8Vqwe/u91E+V1XxvrfpI7ukLU0=",
         "ref": "refs/heads/main",
-        "rev": "469e50bd9c37b1cf809c4176a7f588946d319829",
-        "revCount": 6,
+        "rev": "0a8543cc4b5f626d6b88aa111ae828bac6331262",
+        "revCount": 7,
         "type": "git",
         "url": "https://codeberg.org/0x7E/karabiner-ts"
       },
@@ -216,20 +216,20 @@
     "nix-darwin_2": {
       "inputs": {
         "nixpkgs": [
-          "nixpkgs"
+          "nixpkgs-darwin"
         ]
       },
       "locked": {
-        "lastModified": 1768561867,
-        "narHash": "sha256-prGOZ+w3pZfGTRxworKcJliCNsewF0L4HUPjgU/6eaw=",
+        "lastModified": 1772129556,
+        "narHash": "sha256-Utk0zd8STPsUJPyjabhzPc5BpPodLTXrwkpXBHYnpeg=",
         "owner": "nix-darwin",
         "repo": "nix-darwin",
-        "rev": "8b720b9662d4dd19048664b7e4216ce530591adc",
+        "rev": "ebec37af18215214173c98cf6356d0aca24a2585",
         "type": "github"
       },
       "original": {
         "owner": "nix-darwin",
-        "ref": "master",
+        "ref": "nix-darwin-25.11",
         "repo": "nix-darwin",
         "type": "github"
       }
@@ -284,6 +284,22 @@
       "original": {
         "owner": "NixOS",
         "ref": "nixos-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "nixpkgs-darwin": {
+      "locked": {
+        "lastModified": 1773831496,
+        "narHash": "sha256-JW2/QPyCVzmouqEp1H9kNa8JXd7xEhlam9sy3TYfhDY=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "826430a188181a750ffa5948daff334039c5d741",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "ref": "nixpkgs-25.11-darwin",
         "repo": "nixpkgs",
         "type": "github"
       }
@@ -369,6 +385,7 @@
         "nix-homebrew": "nix-homebrew",
         "nix-index-database": "nix-index-database",
         "nixpkgs": "nixpkgs_3",
+        "nixpkgs-darwin": "nixpkgs-darwin",
         "nixpkgs-unstable": "nixpkgs-unstable",
         "nur": "nur",
         "secrets": "secrets",
@@ -403,11 +420,11 @@
     "secrets": {
       "flake": false,
       "locked": {
-        "lastModified": 1773879870,
-        "narHash": "sha256-BTeUvR18LnV0nyZvph8SxcIkRBCDwAIMyMNDo2PmXK8=",
+        "lastModified": 1774105124,
+        "narHash": "sha256-XlqnobkHTyhodY8D7KNOoaCmEX6HdP6B67M3D18RT9I=",
         "ref": "refs/heads/main",
-        "rev": "eefc888eac0ea4d5a0faed783bd6b1f215656a54",
-        "revCount": 8,
+        "rev": "ac6a9b68da027b220be8293822fc4dae8a1ef89c",
+        "revCount": 11,
         "type": "git",
         "url": "ssh://git@codeberg.org/0x7E/nix-secrets"
       },

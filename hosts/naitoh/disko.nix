@@ -43,9 +43,6 @@
                     mountOptions = [
                       "compress=zstd"
                       "noatime"
-
-                      # prevents decryption pw prompt from timing out: https://github.com/NixOS/nixpkgs/issues/250003
-                      "x-systemd.device-timeout=0"
                     ];
                   };
                   "@home" = {

@@ -17,7 +17,10 @@ in
 
   hardware.graphics.enable = true;
 
-  vars.WINIT_X11_SCALE_FACTOR = "1.11";
+  #  x1.125 scaling
+  tinted.files.".config/X11/xresources".text = _: ''
+    Xft.dpi: 108
+  '';
 
   hardware.brillo.enable = true;
   services.udev.extraRules = # bash

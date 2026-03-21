@@ -32,7 +32,7 @@ in
         PublicKey = PpCxUOTz7Heh3B29OnI3XNZAKJ8abUETMzFNj3gpTyo=
         PresharedKey = ${config.sops.placeholder."${hostname}/vpn/psk"}
         AllowedIPs = ${networkIps.vpn.subnet},${networkIps.lan.subnet}
-        Endpoint = ${config.sops.placeholder.server_vpn_endpoint}
+        Endpoint = ${config.sops.placeholder.server_vpn_endpoint}:1637
       '';
 
     darwin = {

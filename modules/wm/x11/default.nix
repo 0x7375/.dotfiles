@@ -50,13 +50,13 @@ lib.mkIf (config.me.wm.displayServer == "xorg") (mkNixos {
       };
     };
   };
+
   systemd.user.services.numlock = {
     description = "Numlock";
     after = [ "graphical-session.target" ];
     wantedBy = [ "default.target" ];
     serviceConfig = {
-      ExecStart = "${pkgs.numlockx}/bin/numlockx on";
-      StandardInput = "tty";
+      ExecStart = "${lib.getExe pkgs.numlockx} on";
       RemainAfterExit = "yes";
     };
   };

@@ -8,15 +8,14 @@ let
   cfg = config.tinted;
   home = config.me.home;
   tintedDir = ".local/state/tinted";
+  themes = [
+    "dark"
+    "light"
+  ];
 
   applyIfFn = f: arg: if lib.isFunction f then f arg else f;
-
-  palette =
-    theme: prefix:
-    let
-      base = if prefix then "palette" else "hex";
-    in
-    config.me.${base}.${theme};
+  dirname = path: lib.concatStringsSep "/" (lib.init (lib.splitString "/" path));
+  palette = theme: prefix: config.me.${if prefix then "palette" else "hex"}.${theme};
 
   mkThemeFile =
     fileCfg: themePalette:
@@ -26,53 +25,38 @@ let
         inherit (fileCfg) generator;
       }
     else if fileCfg.source != null then
-      {
-        source = applyIfFn fileCfg.source themePalette;
-      }
+      { source = applyIfFn fileCfg.source themePalette; }
     else if fileCfg.text != null then
-      {
-        text = applyIfFn fileCfg.text themePalette;
-      }
+      { text = fileCfg.text themePalette; }
     else
       throw "must specify one of text, source, or generator";
 
-  mkTintedFile =
+  themeFiles = lib.concatMapAttrs (
     targetPath: fileCfg:
+    lib.listToAttrs (
+      map (
+        theme:
+        lib.nameValuePair "${tintedDir}/${targetPath}-${theme}" (
+          mkThemeFile fileCfg (palette theme fileCfg.prefix)
+        )
+      ) themes
+    )
+  ) cfg.files;
+
+  activations = lib.mapAttrs (
+    targetPath: _:
     let
       sourcePath = "${tintedDir}/${targetPath}";
-      dirParts = lib.splitString "/" targetPath;
-      dir = lib.concatStringsSep "/" (lib.init dirParts);
-      sourceDir = lib.concatStringsSep "/" (lib.init (lib.splitString "/" sourcePath));
-
-      absTarget = "${home}/${targetPath}";
-      absSource = "${home}/${sourcePath}-${cfg.defaultTheme}";
-      absDirs = [
-        "${home}/${dir}"
-        "${home}/${sourceDir}"
-      ];
     in
     {
-      files =
-        lib.mapAttrs'
-          (
-            theme: _:
-            lib.nameValuePair "${sourcePath}-${theme}" (mkThemeFile fileCfg (palette theme fileCfg.prefix))
-          )
-          {
-            dark = null;
-            light = null;
-          };
-
-      activation = {
-        dirs = absDirs;
-        link = {
-          source = absSource;
-          target = absTarget;
-        };
-      };
-    };
-
-  processed = lib.mapAttrs mkTintedFile cfg.files;
+      dirs = [
+        "${home}/${dirname targetPath}"
+        "${home}/${dirname sourcePath}"
+      ];
+      source = "${home}/${sourcePath}-${cfg.defaultTheme}";
+      target = "${home}/${targetPath}";
+    }
+  ) cfg.files;
 in
 {
   options.tinted = {
@@ -87,13 +71,24 @@ in
     files =
       let
         inherit (lib) types;
+        paletteTextType = lib.types.mkOptionType {
+          name = "paletteText";
+          description = "palette -> string, or plain string";
+          check = v: lib.isFunction v || lib.isString v;
+          merge =
+            _loc: defs:
+            let
+              fns = map (d: if lib.isFunction d.value then d.value else _: d.value) defs;
+            in
+            palette: lib.concatMapStrings (f: f palette) fns;
+        };
       in
       lib.mkOption {
         type = types.attrsOf (
           types.submodule {
             options = {
               text = lib.mkOption {
-                type = types.nullOr (types.functionTo (types.either types.str types.lines));
+                type = lib.types.nullOr paletteTextType;
                 default = null;
               };
               source = lib.mkOption {
@@ -116,31 +111,25 @@ in
           }
         );
         default = { };
-        example = {
-          ".Xresources" = {
-            text = palette: ''
-              *bg0: ${palette.bg0}
-            '';
-          };
-        };
+        example.".Xresources".text = palette: ''
+          *bg0: ''${palette.red}
+          *red: ''${palette.red}
+        '';
       };
   };
 
   config = lib.mkIf cfg.enable (mkBundle {
-    hj.files = lib.mergeAttrsList (lib.attrValues (lib.mapAttrs (_: v: v.files) processed));
+    hj.files = themeFiles;
 
     nixos.systemd.user.tmpfiles.rules = lib.concatMap (
       v:
-      (map (d: "d ${d} 0755 ${config.me.user} users - -") v.activation.dirs)
-      ++ [ "L ${v.activation.link.target} - - - - ${v.activation.link.source}" ]
-    ) (lib.attrValues processed);
+      map (d: "d ${d} 0755 ${config.me.user} users - -") v.dirs ++ [ "L ${v.target} - - - - ${v.source}" ]
+    ) (lib.attrValues activations);
 
-    darwin.activation = ''
-      ${lib.concatMapStringsSep "\n" (v: ''
-        ${lib.concatMapStringsSep "\n" (d: "mkdir -p ${d}") v.activation.dirs}
-        ln -s ${v.activation.link.source} ${v.activation.link.target} 2> /dev/null || true
-        chown -h ${config.me.user} ${v.activation.link.target}
-      '') (lib.attrValues processed)}
-    '';
+    darwin.activation = lib.concatMapStringsSep "\n" (v: ''
+      ${lib.concatMapStringsSep "\n" (d: "mkdir -p ${d}") v.dirs}
+      ln -s ${v.source} ${v.target} 2> /dev/null || true
+      chown -h ${config.me.user} ${v.target}
+    '') (lib.attrValues activations);
   });
 }

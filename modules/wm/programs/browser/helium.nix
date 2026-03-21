@@ -39,6 +39,7 @@ let
         "https://monkeytype.com"
         "https://youtube.com"
         "https://claude.ai"
+        "https://gemini.google.com"
         "https://brave.com"
         "https://keybr.com"
         "https://vault.bitwarden.com"

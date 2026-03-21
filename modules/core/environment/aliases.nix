@@ -76,6 +76,7 @@ mkBundle {
     "switch"
     "worktree"
     "checkout"
+    "fetch"
   ] (name: "${git} ${name}"));
 
   environment.shellInit =

@@ -209,22 +209,18 @@ in
     };
 
     tinted.files = {
-      ".config/gtk-3.0/gtk.css" = {
-        text =
-          palette:
-          cssContent {
-            colorScheme = palette._theme;
-            version = "3";
-          };
-      };
-      ".config/gtk-4.0/gtk.css" = {
-        text =
-          palette:
-          cssContent {
-            colorScheme = palette._theme;
-            version = "4";
-          };
-      };
+      ".config/gtk-3.0/gtk.css".text =
+        palette:
+        cssContent {
+          colorScheme = palette._theme;
+          version = "3";
+        };
+      ".config/gtk-4.0/gtk.css".text =
+        palette:
+        cssContent {
+          colorScheme = palette._theme;
+          version = "4";
+        };
     };
   });
 }

@@ -17,6 +17,6 @@ mkNixos {
   systemd.services.clean-old-trash.serviceConfig = {
     Type = "oneshot";
     User = "root";
-    ExecStart = "${lib.getExe' pkgs.trash-cli " trash-empty "} 15";
+    ExecStart = "${lib.getExe' pkgs.trash-cli "trash-empty"} 15";
   };
 }

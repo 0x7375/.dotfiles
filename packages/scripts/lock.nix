@@ -17,6 +17,7 @@ pkgs.writeShellApplication {
         [
           i3lock-color
           xorg.xrdb
+          xorg.xrefresh
         ]
     );
   text =
@@ -29,8 +30,18 @@ pkgs.writeShellApplication {
       pgrep -x ${browser} > /dev/null && browser_was_open=true
       pkill -x ${browser} || true
 
-      ( sleep 300 && systemctl hibernate ) &
+      do_hibernate() {
+        systemctl hibernate
+        [[ $XDG_SESSION_TYPE == "x11" ]] && xrefresh
+      }
+
+      ( sleep 300 && do_hibernate ) &
       HIBERNATE_PID=$!
+
+      if grep -q "closed" /proc/acpi/button/lid/*/state 2> /dev/null; then
+        do_hibernate
+      fi
+        
 
       if [[ $XDG_SESSION_TYPE == "x11" ]]; then
         xget() {

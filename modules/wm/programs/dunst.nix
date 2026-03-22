@@ -29,15 +29,15 @@ lib.mkIf config.me.wm.enable (mkNixos {
     description = "Dunst notification daemon";
     after = [ "graphical-session.target" ];
     partOf = [ "graphical-session.target" ];
-    # reloadTriggers = [ "${config.hj.files.".config/dunst/dunstrc".source}" ];
 
     serviceConfig = {
       Type = "dbus";
       BusName = "org.freedesktop.Notifications";
       ExecStart = lib.escapeShellArgs [
         (lib.getExe pkgs.dunst)
+        "-print"
       ];
-      ExecReload = "${pkgs.dunst}/bin/dunstctl reload";
+      ExecReload = "${lib.getExe' pkgs.dunst "dunsctl"} reload";
     };
   };
 
@@ -59,75 +59,73 @@ lib.mkIf config.me.wm.enable (mkNixos {
       }
     );
     value = palette: rec {
-      global = let
-        inherit (config.me) flakeDir wm;
-      in {
-        background = palette.bg0;
-        foreground = palette.fg0;
-        highlight = palette.fg0;
-        frame_color = palette.bg1;
+      global =
+        let
+          inherit (config.me) flakeDir wm;
+        in
+        {
+          background = palette.bg0;
+          foreground = palette.fg0;
+          highlight = palette.fg0;
+          frame_color = palette.bg1;
 
-        icon_path = "${flakeDir}/.assets/dunst/output/${palette._theme}";
-        monitor = 0;
-        follow = "none";
-        width = 400;
-        height = 200;
-        origin = "top-center";
-        offset = "0x${
-          toString (
-            if wm.displayServer == "xorg" then wm.barHeight + 10 else wm.barHeight
-          )
-        }";
-        scale = 0;
-        notification_limit = 20;
+          icon_path = "${flakeDir}/.assets/dunst/output/${palette._theme}";
+          monitor = 0;
+          follow = "none";
+          width = 400;
+          height = 200;
+          origin = "top-center";
+          offset = "0x${toString (if wm.displayServer == "xorg" then wm.barHeight + 10 else wm.barHeight)}";
+          scale = 0;
+          notification_limit = 20;
 
-        progress_bar = true;
-        progress_bar_height = 10;
-        progress_bar_frame_width = 0;
-        progress_bar_min_width = 400;
-        progress_bar_max_width = 400;
-        progress_bar_corner_radius = 0;
+          progress_bar = true;
+          progress_bar_height = 10;
+          progress_bar_frame_width = 0;
+          progress_bar_min_width = 400;
+          progress_bar_max_width = 400;
+          progress_bar_corner_radius = 0;
 
-        default_icon = "bell";
-        icon_corner_radius = 0;
-        indicate_hidden = true;
-        transparency = 0;
-        separator_height = 2;
-        padding = 12;
-        horizontal_padding = 24;
-        text_icon_padding = 24;
-        frame_width = 3;
-        gap_size = 0;
-        separator_color = "frame";
-        sort = true;
-        font = "Cartograph CF 14";
-        line_height = 6;
-        markup = "full";
-        format = "<b>%s</b>\\n%b";
-        alignment = "left";
-        vertical_alignment = "center";
-        show_age_threshold = 60;
-        ellipsize = "middle";
-        ignore_newline = false;
-        stack_duplicates = true;
-        hide_duplicate_count = false;
-        show_indicators = false;
-        icon_position = "left";
-        min_icon_size = 80;
-        max_icon_size = 80;
-        sticky_history = true;
-        history_length = 20;
-        browser = config.me.wm.open;
-        always_run_script = true;
-        title = "Dunst";
-        class = "Dunst";
-        corner_radius = 0;
-        ignore_dbusclose = false;
-        force_xwayland = false;
-        force_xinerama = false;
-        mouse_left_click = "do_action";
-        mouse_right_click = "close_current";
-      };
+          default_icon = "bell";
+          icon_corner_radius = 0;
+          indicate_hidden = true;
+          transparency = 0;
+          separator_height = 2;
+          padding = 12;
+          horizontal_padding = 24;
+          text_icon_padding = 24;
+          frame_width = 3;
+          gap_size = 0;
+          separator_color = "frame";
+          sort = true;
+          font = "Cartograph CF 14";
+          line_height = 6;
+          markup = "full";
+          format = "<b>%s</b>\\n%b";
+          alignment = "left";
+          vertical_alignment = "center";
+          show_age_threshold = 60;
+          ellipsize = "middle";
+          ignore_newline = false;
+          stack_duplicates = true;
+          hide_duplicate_count = false;
+          show_indicators = false;
+          icon_position = "left";
+          min_icon_size = 80;
+          max_icon_size = 80;
+          sticky_history = true;
+          history_length = 20;
+          browser = config.me.wm.open;
+          always_run_script = true;
+          title = "Dunst";
+          class = "Dunst";
+          corner_radius = 0;
+          ignore_dbusclose = false;
+          force_xwayland = false;
+          force_xinerama = false;
+          mouse_left_click = "do_action";
+          mouse_right_click = "close_current";
+        };
       urgency_low = urgency_normal;
       urgency_normal = {
         timeout = 3;
@@ -150,9 +148,17 @@ lib.mkIf config.me.wm.enable (mkNixos {
         frame_color = palette.green;
         foreground = palette.green;
       };
-      volume = {
+      z_volume = {
         appname = "volume";
         history_ignore = true;
+      };
+      z_discord = {
+        appname = "discord";
+        format = "<b>%s</b>\\nReceived a new message";
+      };
+      z_vesktop = {
+        appname = "vesktop";
+        format = "<b>%s</b>\\nReceived a new message";
       };
     };
   };

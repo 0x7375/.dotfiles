@@ -5,7 +5,7 @@
 }:
 
 {
-  me.radarr = {
+  me.services.radarr = {
     subdomain = "movies";
     port = 7878;
   };

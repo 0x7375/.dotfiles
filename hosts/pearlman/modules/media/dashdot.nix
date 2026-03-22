@@ -8,7 +8,7 @@ let
   inherit (config.me.services.dashdot) port;
 in
 {
-  me.dashdot = {
+  me.services.dashdot = {
     subdomain = "dash";
     port = 3001;
   };

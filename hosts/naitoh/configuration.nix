@@ -18,7 +18,7 @@ in
   hardware.graphics.enable = true;
 
   #  x1.125 scaling
-  tinted.files.".config/X11/xresources".text = _: ''
+  tinted.files.".config/X11/xresources".text = ''
     Xft.dpi: 108
   '';
 

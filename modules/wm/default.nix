@@ -235,7 +235,8 @@ in
             "Mod+n" =
               "${term} -e ${getExe pkgs.zsh} -c '${getExe' pkgs.networkmanager "nmcli"} device wifi rescan && unset COLORTERM && TERM=xterm-old ${getExe' pkgs.networkmanager "nmtui"}'";
             "Mod+Shift+b" = btToggle;
-            "Mod+d" = "${getExe pkgs.j4-dmenu-desktop} --no-generic -d '${getExe pkgs.bemenu} -p \"DESKTOP\"'";
+            # "Mod+d" = "${getExe pkgs.j4-dmenu-desktop} --no-generic -d '${getExe pkgs.bemenu} -p \"DESKTOP\"'";
+            "Mod+d" = "${lib.getExe pkgs.vicinae} open";
             "Mod+p" = getExe pkgs.my.powermenu;
             "Mod+Shift+i" = getExe wizToggle;
 

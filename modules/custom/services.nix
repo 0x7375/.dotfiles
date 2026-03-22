@@ -57,13 +57,14 @@ in
       description = "Central server services definition";
       internal = true;
       type = types.attrsOf (types.submodule serviceSubmodule);
-      default.attic = {
-        subdomain = "cache";
-        port = 8082;
-        extraConfig = ''
-          client_max_body_size 0;
-        '';
-      };
     };
+  };
+
+  config.me.services.attic = {
+    subdomain = "cache";
+    port = 8082;
+    extraConfig = ''
+      client_max_body_size 0;
+    '';
   };
 }

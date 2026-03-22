@@ -4,7 +4,7 @@ let
   inherit (config.me.services.flaresolverr) port;
 in
 {
-  me = {
+  me.services = {
     flaresolverr = {
       subdomain = "solver";
       port = 8191;

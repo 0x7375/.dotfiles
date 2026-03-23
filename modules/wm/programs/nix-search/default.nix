@@ -1,5 +1,6 @@
 {
   pkgs,
+  config,
   lib,
   inputs,
   ...
@@ -9,7 +10,7 @@ let
   inherit (pkgs.stdenv.hostPlatform) system;
   nst = (pkgs.writeShellScriptBin "nst" (builtins.readFile ./nix-search-fzf.sh));
 in
-{
+lib.mkIf config.me.wm.enable {
   packages = [
     (pkgs.nix-search-tv.overrideAttrs (old: {
       src = pkgs.fetchFromGitHub {
@@ -39,13 +40,15 @@ in
 
   userActivation = # bash
     ''
+      export PATH=${pkgs.git}/bin:$PATH
+
       mkdir -p $HOME/repos
       cd $HOME/repos
 
       SHALLOW=("--depth=1" "--single-branch" "--no-tags")
-      [[ ! -d ~/repos/home-manager ]] && git clone https://github.com/nix-community/home-manager "''${SHALLOW[@]}"
-      [[ ! -d ~/repos/nix-darwin ]] && git clone https://github.com/nix-darwin/nix-darwin "''${SHALLOW[@]}"
-      [[ ! -d ~/repos/nixpkgs ]] && git clone https://github.com/nixos/nixpkgs "''${SHALLOW[@]}"
-      [[ ! -d ~/repos/nur-combined ]] && git clone https://github.com/nix-community/nur-combined "''${SHALLOW[@]}"
+      [[ ! -d ~/repos/home-manager ]] && echo "Cloning home-manager..." && git clone https://github.com/nix-community/home-manager "''${SHALLOW[@]}"
+      [[ ! -d ~/repos/nix-darwin ]] && echo "Cloning nix-darwin..." && git clone https://github.com/nix-darwin/nix-darwin "''${SHALLOW[@]}"
+      [[ ! -d ~/repos/nixpkgs ]] && echo "Cloning nixpkgs..." && git clone https://github.com/nixos/nixpkgs "''${SHALLOW[@]}"
+      [[ ! -d ~/repos/nur-combined ]] && echo "Cloning nix-darwin..." && git clone https://github.com/nix-community/nur-combined "''${SHALLOW[@]}"
     '';
 }

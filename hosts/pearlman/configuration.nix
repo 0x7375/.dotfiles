@@ -23,7 +23,6 @@
     ];
   };
 
-  users.users.root.openssh.authorizedKeys.keys = config.me.hosts.yubikey.sshPublicKeys;
   users.users.${config.me.user}.openssh.authorizedKeys.keys = config.me.hosts.mach.sshPublicKeys;
 
   security.pam.services = lib.genAttrs [ "sudo" "su" "polkit-1" "login" ] (_: {

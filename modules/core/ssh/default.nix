@@ -5,6 +5,7 @@
 }:
 
 mkBundle {
+  users.users.root.openssh.authorizedKeys.keys = config.me.hosts.yubikey.sshPublicKeys;
   users.users.${config.me.user}.openssh.authorizedKeys.keys = config.me.hosts.yubikey.sshPublicKeys;
 
   programs.ssh.extraConfig = ''

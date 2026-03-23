@@ -253,7 +253,7 @@ lib.mkIf (config.me.wm.displayServer == "wayland") {
         bindm = SUPER, mouse:273, resizewindow
 
         exec = ${getExe pkgs.swaybg} -c "${p.bg0}"
-        exec = "${getExe pkgs.bash} -c '${getExe pkgs.my.swap-theme} < $HOME/.local/state/tinted/theme'";
+        exec = "${getExe pkgs.bash} -c '${getExe pkgs.my.swap-theme} $($HOME/.local/state/tinted/theme)'";
         exec-once = ${getExe' pkgs.hyprland "hyprctl"} dispatch workspace 1
         exec-once = ${getExe pkgs.kanshi}
 

@@ -17,6 +17,10 @@ pkgs.writeShellApplication {
     in
     # bash
     ''
+      if pidof hyprlock > /dev/null; then
+        exit 0
+      fi
+
       browser_was_open=false
       pgrep -x ${browser} > /dev/null && browser_was_open=true
       pkill -x ${browser} || true
@@ -31,6 +35,6 @@ pkgs.writeShellApplication {
       hyprlock
 
       kill "$HIBERNATE_PID" 2>/dev/null || true
-      $browser_was_open && ${browser} &
+      $browser_was_open && hyprctl dispatch exec -- ${browser}
     '';
 }

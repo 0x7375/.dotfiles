@@ -52,7 +52,7 @@ in
       ENV{PRODUCT}=="349e/24/100",\
       ENV{WAYLAND_DISPLAY}="wayland-1", \
       ENV{XDG_RUNTIME_DIR}="/run/user/${toString config.me.uid}", \
-      RUN+="${lib.getExe' pkgs.xorg.xset "xset"} s activate"
+      RUN+="${lib.getExe' pkgs.systemd "loginctl"} lock-sessions"
     '';
 
   packages = with pkgs; [ acpi ];
@@ -92,17 +92,11 @@ in
 
   services.auto-cpufreq.enable = true;
 
-  services.libinput.touchpad = {
-    naturalScrolling = true;
-    tapping = true;
-    tappingDragLock = false;
-    disableWhileTyping = true;
-  };
-
   services.hypridle.enable = true;
 
   hj.xdg.config.files."hypr/hypridle.conf".text = ''
     general {
+      lock_cmd = ${lib.getExe pkgs.my.lock}
       before_sleep_cmd = ${lib.getExe pkgs.my.lock}
     }
 

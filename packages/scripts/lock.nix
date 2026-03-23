@@ -10,6 +10,7 @@ pkgs.writeShellApplication {
   runtimeInputs = with pkgs; [
     procps
     hyprlock
+    hyprland
   ];
   text =
     let

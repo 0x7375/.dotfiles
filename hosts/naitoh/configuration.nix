@@ -59,16 +59,33 @@ in
 
   services.acpid = {
     enable = true;
-    handlers.lid = {
-      event = "button/lid LID close";
-      action =
-        # bash
-        ''
-          if ${lib.getExe' pkgs.procps "pgrep"} -x hyprlock > /dev/null; then
-            systemctl hibernate
-          fi
-        '';
-    };
+    handlers =
+      let
+        inherit (config.me) uid;
+        turnOffScreen = # bash
+          ''
+            HYPRLAND_INSTANCE_SIGNATURE=$(ls /run/user/${toString uid}/hypr/ | head -1) \
+              ${lib.getExe' pkgs.hyprland "hyprctl"} dispatch dpms off
+          '';
+      in
+      {
+        lid-close = {
+          event = "button/lid LID close";
+          action =
+            # bash
+            ''
+              ${turnOffScreen}
+
+              if ${lib.getExe' pkgs.procps "pgrep"} -x hyprlock > /dev/null; then
+                systemctl hibernate
+              fi
+            '';
+        };
+        lid-open = {
+          event = "button/lid LID open";
+          action = turnOffScreen;
+        };
+      };
   };
 
   services.logind.settings.Login.HandleLidSwitch = "ignore";
@@ -80,7 +97,7 @@ in
   '';
 
   systemd.services.disable-lid-wakeup = {
-    description = "Disable lid switch as wake source";
+    description = "Disable lid switch as wake source for suspend/hibernate";
     wantedBy = [ "multi-user.target" ];
     after = [ "multi-user.target" ];
     serviceConfig = {
@@ -94,17 +111,25 @@ in
 
   services.hypridle.enable = true;
 
-  hj.xdg.config.files."hypr/hypridle.conf".text = ''
-    general {
-      lock_cmd = ${lib.getExe pkgs.my.lock}
-      before_sleep_cmd = ${lib.getExe pkgs.my.lock}
-    }
+  hj.xdg.config.files."hypr/hypridle.conf".text =
+    # hyprlang
+    ''
+      general {
+        lock_cmd = ${lib.getExe pkgs.my.lock}
+        before_sleep_cmd = ${lib.getExe pkgs.my.lock}
+      }
 
-    listener {
-      timeout = 600
-      on-timeout = ${lib.getExe pkgs.my.lock}
-    }
-  '';
+      listener {
+        timeout = 300
+        on-timeout = ${lib.getExe' pkgs.hyprland "hyprctl"} dispatch dpms off
+        on-resume = ${lib.getExe' pkgs.hyprland "hyprctl"} dispatch dpms on
+      }
+
+      listener {
+        timeout = 600
+        on-timeout = ${lib.getExe pkgs.my.lock}
+      }
+    '';
 
   security.pam.services.hyprlock = {
     u2fAuth = true;

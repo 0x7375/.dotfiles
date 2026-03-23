@@ -72,8 +72,14 @@
       url = "github:nix-community/nix-index-database";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    nd.url = "git+https://codeberg.org/0x7E/nd";
-    karabiner-ts.url = "git+https://codeberg.org/0x7E/karabiner-ts";
+    nd = {
+      url = "git+https://codeberg.org/0x7E/nd";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    karabiner-ts = {
+      url = "git+https://codeberg.org/0x7E/karabiner-ts";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
   outputs =
     { ... }@inputs:

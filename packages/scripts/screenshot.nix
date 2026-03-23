@@ -20,7 +20,7 @@ pkgs.writeShellApplication {
       function send_notification() {
           local -r action=$(notify-send --icon "$folder$file" "Screenshot saved" "You can paste the image from the clipboard" -A open=open)
           if [[ $action == *open* ]]; then
-              ${config.me.wm.terminal} -e lf "$(xdg-user-dir SCREENSHOTS)"
+              ${config.me.wm.terminalCmd} -e lf "$(xdg-user-dir SCREENSHOTS)"
           fi
       }
 

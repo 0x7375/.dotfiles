@@ -7,7 +7,7 @@
     in
     {
       TERM = cfg.wm.terminal;
-      TERMINAL = "${cfg.wm.terminal} -e";
+      TERMINAL = "${cfg.wm.terminalCmd} -e";
       HOSTNAME = cfg.hostname;
       EDITOR = "nvim";
       VISUAL = "nvim";

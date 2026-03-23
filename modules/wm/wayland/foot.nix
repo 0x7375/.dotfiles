@@ -29,13 +29,11 @@ let
   };
 in
 lib.mkIf (config.me.wm.displayServer == "wayland") (mkNixos {
-  programs.foot.enable = true;
+  me.wm.startup.foot = "${lib.getExe pkgs.foot} --server";
 
-  tinted.files.".config/foot/foot.ini" = {
-    prefix = false;
-    generator = lib.generators.toINI { };
-    value =
-      p:
+  programs.foot = {
+    enable = true;
+    settings =
       let
         inherit (config.me.hex) dark light;
       in
@@ -50,7 +48,7 @@ lib.mkIf (config.me.wm.displayServer == "wayland") (mkNixos {
             vertical-letter-offset = 0;
             pad = "20x20 center";
             selection-target = "clipboard";
-            dpi-aware = "yes";
+            dpi-aware = "no";
           };
 
         bell = {

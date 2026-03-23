@@ -113,9 +113,11 @@ lib.mkIf (config.me.wm.displayServer == "wayland") {
     };
 
     battery = {
+      interval = 5;
       bat = "BAT0";
       format = "pow: {capacity}%";
       format-charging = "pow: ~{capacity}%";
+      format-discharging = "pow: ~{capacity}% - {power:.1f}W";
     };
 
     "custom/network" = {

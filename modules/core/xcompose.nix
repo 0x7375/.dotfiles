@@ -1,6 +1,16 @@
 { mkNixos, ... }:
 
 mkNixos {
+  i18n.inputMethod = {
+    enable = true;
+    type = "fcitx5";
+  };
+
+  environment.sessionVariables = {
+    QT_IM_MODULE = "fcitx";
+    XMODIFIERS = "@im=fcitx";
+  };
+
   hj.files.".XCompose".text = # xcompose
     ''
       <Multi_key> <w> : "è"

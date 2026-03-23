@@ -218,7 +218,7 @@ lib.mkIf config.me.wm.enable {
             "security.workspace.trust.startupPrompt": "never",
             "security.workspace.trust.enabled": false,
             "workbench.activityBar.location": "hidden",
-            "terminal.external.linuxExec": "${config.me.wm.terminal} -e tmux",
+            "terminal.external.linuxExec": "${config.me.wm.terminalCmd} -e tmux",
             "explorer.confirmDelete": false,
             "breadcrumbs.enabled": false,
             "editor.scrollbar.verticalScrollbarSize": 0,

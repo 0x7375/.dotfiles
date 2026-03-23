@@ -11,12 +11,10 @@
     boot.encryption.enable = true;
     wm = {
       enable = true;
-      scaling = 1.125;
-      displayServer = "xorg";
-      optional = {
-        virtualBox.enable = true;
-        gaming.enable = false;
-      };
+      scaling = 1.2;
+      displayServer = "wayland";
+      optional.virtualBox.enable = true;
+      barFontSize = 11;
     };
     dev.enable = true;
     minecraft.enable = false;

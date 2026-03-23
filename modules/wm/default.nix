@@ -125,6 +125,18 @@ in
         description = "Default terminal emulator";
       };
 
+      terminalCmd = mkOption {
+        type = types.nullOr types.str;
+        default =
+          if cfg.displayServer == "wayland" then
+            "footclient"
+          else if cfg.displayServer == "macos" then
+            "alacritty"
+          else
+            "xterm";
+        description = "Default terminal emulator";
+      };
+
       barFontSize = mkOption {
         type = types.int;
         default = 13;
@@ -167,7 +179,7 @@ in
           let
             change-brightness = getExe pkgs.my.change-brightness;
             screenshot = getExe pkgs.my.screenshot;
-            term = getExe pkgs.${cfg.terminal};
+            term = pkgs.${cfg.terminal} + "/bin/" + cfg.terminalCmd;
 
             openNote =
               let

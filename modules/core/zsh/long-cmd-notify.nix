@@ -8,15 +8,16 @@
 let
   inherit (lib) getExe getExe';
 in
-{
+lib.mkIf (config.me.wm.displayServer == "wayland") {
   hj.xdg.config.files."zsh/longcmd-notify.zsh" = {
-    enable = config.me.wm.displayServer == "wayland";
     text =
       let
         activeWindow = "${getExe' pkgs.hyprland "hyprctl"} activewindow -j | ${getExe pkgs.jq} -r .address";
       in
       # bash
       ''
+        [[ -z $WAYLAND_DISPLAY ]] && return 0
+
         time_threshold=10
         time_taken=0
         cmd=""

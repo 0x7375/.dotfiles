@@ -1,15 +1,10 @@
 { mkNixos, ... }:
 
 mkNixos {
-  i18n.inputMethod = {
-    enable = true;
-    type = "fcitx5";
-  };
-
-  environment.sessionVariables = {
-    QT_IM_MODULE = "fcitx";
-    XMODIFIERS = "@im=fcitx";
-  };
+  # i18n.inputMethod = {
+  #   enable = true;
+  #   type = "fcitx5";
+  # };
 
   hj.files.".XCompose".text = # xcompose
     ''

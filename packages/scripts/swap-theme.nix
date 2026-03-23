@@ -43,6 +43,9 @@ pkgs.writeShellApplication {
           theme=light
           defaults read -g AppleInterfaceStyle &>/dev/null && theme=dark
           ;;
+        light|dark)
+          theme=$1
+          ;;
         *)
           [[ $current_theme == light ]] && theme=dark || theme=light
           ;;

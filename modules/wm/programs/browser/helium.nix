@@ -23,6 +23,7 @@ let
   flags = [
     "--enable-features=HeliumMiddleClickAutoscroll"
     "--no-first-run"
+    "--enable-wayland-ime=true"
   ];
 
   policies =

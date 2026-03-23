@@ -99,18 +99,18 @@ in
     disableWhileTyping = true;
   };
 
-  services.hypridle = {
-    enable = true;
-    settings = {
-      general.before-sleep = lib.getExe pkgs.my.lock;
-      listener = [
-        {
-          timeout = 600;
-          on-timeout = lib.getExe pkgs.my.lock;
-        }
-      ];
-    };
-  };
+  services.hypridle.enable = true;
+
+  hj.xdg.config.files."hypr/hypridle.conf".text = ''
+    general {
+      before_sleep_cmd = ${lib.getExe pkgs.my.lock}
+    }
+
+    listener {
+      timeout = 600
+      on-timeout = ${lib.getExe pkgs.my.lock}
+    }
+  '';
 
   security.pam.services.hyprlock = {
     u2fAuth = true;

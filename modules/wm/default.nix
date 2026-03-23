@@ -46,8 +46,26 @@ in
             // extraOpts;
           }
         );
+
+      defaultTerm =
+        if cfg.displayServer == "wayland" then
+          {
+            name = "foot";
+            cmd = "footclient";
+          }
+        else if cfg.displayServer == "macos" then
+          {
+            name = "alacritty";
+            cmd = "alacritty";
+          }
+        else
+          {
+            name = null;
+            cmd = null;
+          };
     in
     {
+
       enable = mkEnableOption "Enable graphical config";
 
       bindings = mkOption {
@@ -113,28 +131,17 @@ in
           default = if pkgs.stdenv.isDarwin then "pbcopy" else getExe' pkgs.wl-clipboard "wl-copy";
         };
 
-      terminal = mkOption {
-        type = types.nullOr types.str;
-        default =
-          if cfg.displayServer == "wayland" then
-            "foot"
-          else if cfg.displayServer == "macos" then
-            "alacritty"
-          else
-            "xterm";
-        description = "Default terminal emulator";
-      };
-
-      terminalCmd = mkOption {
-        type = types.nullOr types.str;
-        default =
-          if cfg.displayServer == "wayland" then
-            "footclient"
-          else if cfg.displayServer == "macos" then
-            "alacritty"
-          else
-            "xterm";
-        description = "Default terminal emulator";
+      terminal = {
+        name = mkOption {
+          type = types.nullOr types.str;
+          default = defaultTerm.name;
+          description = "Default terminal emulator";
+        };
+        cmd = mkOption {
+          type = types.nullOr types.str;
+          default = defaultTerm.cmd;
+          description = "Default terminal command";
+        };
       };
 
       barFontSize = mkOption {
@@ -179,7 +186,7 @@ in
           let
             change-brightness = getExe pkgs.my.change-brightness;
             screenshot = getExe pkgs.my.screenshot;
-            term = pkgs.${cfg.terminal} + "/bin/" + cfg.terminalCmd;
+            term = pkgs.${cfg.terminal.name} + "/bin/" + cfg.terminal.cmd;
 
             openNote =
               let

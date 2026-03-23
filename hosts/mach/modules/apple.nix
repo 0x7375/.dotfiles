@@ -170,7 +170,7 @@ lib.mkMerge [
 
       nvimShim = mkMacApp {
         name = "Nvim";
-        terminalName = config.me.wm.terminal;
+        terminalName = config.me.wm.terminal.name;
       };
     in
     {

@@ -90,7 +90,7 @@ pkgs.writeShellApplication {
       }
 
       pkill -USR1 nvim
-      ${lib.optionalString (config.me.wm.terminal == "foot")
+      ${lib.optionalString (config.me.wm.terminal.name == "foot")
         # bash
         ''
           if [[ "$theme" == "dark" ]]; then

@@ -40,7 +40,7 @@ lib.mkIf (config.me.wm.displayServer == "wayland") (mkNixos {
       {
         main =
           let
-            inherit (config.me.wm.terminalFont) family size;
+            inherit (config.me.wm.terminal.font) family size;
           in
           {
             font = "${family}:size=${toString size}";

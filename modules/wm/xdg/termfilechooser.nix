@@ -70,13 +70,13 @@ lib.mkIf config.me.wm.enable (mkNixos {
           git
         ];
       };
-      inherit (config.me.wm) terminal terminalCmd;
+      inherit (config.me.wm) terminal;
     in
     # ini
     ''
       [filechooser]
       env=PATH='${env}/bin'
-      env=TERMCMD='${pkgs.${terminal}}/bin/${terminalCmd} -T filechooser -e'
+      env=TERMCMD='${pkgs.${terminal.name}}/bin/${terminal.cmd} -T filechooser -e'
       cmd='${pkgs.xdg-desktop-portal-termfilechooser}/share/xdg-desktop-portal-termfilechooser/lf-wrapper.sh'
       default_dir=$XDG_DOWNLOAD_DIR
     '';

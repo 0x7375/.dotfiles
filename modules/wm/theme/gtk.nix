@@ -64,29 +64,6 @@ in
             default = package;
           };
         };
-
-      mkFontOption =
-        {
-          family,
-          size,
-          package,
-        }:
-        {
-          family = mkOption {
-            type = types.str;
-            default = family;
-          };
-
-          size = mkOption {
-            type = types.int;
-            default = size;
-          };
-
-          package = mkOption {
-            type = types.package;
-            default = package;
-          };
-        };
     in
     {
       theme = mkThemeOption {
@@ -115,18 +92,6 @@ in
             default = 24;
           };
         };
-
-      font = mkFontOption {
-        family = "Lexend";
-        package = pkgs.lexend;
-        size = 11;
-      };
-
-      terminalFont = mkFontOption {
-        family = "0xproto Nerd Font";
-        size = 18;
-        package = pkgs.nerd-fonts._0xproto;
-      };
     };
 
   config = lib.mkIf config.me.wm.enable (mkNixos {

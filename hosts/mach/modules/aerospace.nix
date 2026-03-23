@@ -14,7 +14,7 @@ in
     enable = true;
     settings =
       let
-        inherit (config.me.wm) terminal;
+        terminal = config.wm.terminal.name;
       in
       {
         config-version = 2;

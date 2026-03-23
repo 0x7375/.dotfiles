@@ -51,7 +51,9 @@ in
         set -g @plugin 'tmux-plugins/tmux-yank'
 
         set -g default-terminal "tmux-256color"
-        set -ga terminal-overrides ",${lib.optionalString (terminal != null) terminal}:RGB"
+        ${lib.optionalString (terminal.name != null) ''
+          set -ga terminal-overrides ",${terminal.name}:RGB"
+        ''}
 
         unbind C-b
         set -g prefix C-s

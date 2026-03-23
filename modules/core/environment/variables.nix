@@ -1,13 +1,14 @@
-{ config, ... }:
+{ lib, config, ... }:
 
 {
   vars =
     let
       cfg = config.me;
+      hasTerm = cfg.wm.terminal.cmd != null;
     in
     {
-      TERM = cfg.wm.terminal;
-      TERMINAL = "${cfg.wm.terminalCmd} -e";
+      TERM = lib.mkIf hasTerm cfg.wm.terminal.name;
+      TERMINAL = lib.mkIf hasTerm "${cfg.wm.terminal.cmd} -e";
       HOSTNAME = cfg.hostname;
       EDITOR = "nvim";
       VISUAL = "nvim";

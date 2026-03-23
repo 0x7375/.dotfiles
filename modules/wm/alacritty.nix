@@ -9,7 +9,7 @@
 let
   inherit (pkgs.stdenv) isDarwin;
 in
-lib.mkIf (config.me.wm.terminal == "alacritty") (mkBundle {
+lib.mkIf (config.me.wm.terminal.name == "alacritty") (mkBundle {
   nixos.packages = [ pkgs.alacritty ];
   darwin.homebrew.casks = [ "alacritty" ];
 
@@ -98,7 +98,7 @@ lib.mkIf (config.me.wm.terminal == "alacritty") (mkBundle {
       };
       font =
         let
-          inherit (config.me.wm.terminalFont) family size;
+          inherit (config.me.wm.terminal.font) family size;
         in
         {
           builtin_box_drawing = true;

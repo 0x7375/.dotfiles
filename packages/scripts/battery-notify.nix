@@ -12,7 +12,6 @@ pkgs.writeShellApplication {
     systemd
   ];
   text = ''
-    export DISPLAY=:0
     export DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/${toString config.me.uid}/bus"
 
     warning_level=15

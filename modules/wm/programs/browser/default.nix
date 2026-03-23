@@ -46,7 +46,7 @@
           file="$HOME/notes/Bookmarks.md"
           [[ ! -f $file ]] && exit
 
-          selection=$(awk -F': ' '{print $1}' "$file" | bemenu -i -p "BOOKMARK")
+          selection=$(awk -F': ' '{print $1}' "$file" | vicinae dmenu --no-quick-look -p "BOOKMARK")
           [[ -z "$selection" ]] && exit
 
           if [[ $selection == !* ]]; then

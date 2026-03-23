@@ -17,11 +17,6 @@ in
 
   hardware.graphics.enable = true;
 
-  #  x1.125 scaling
-  tinted.files.".config/X11/xresources".text = ''
-    Xft.dpi: 108
-  '';
-
   hardware.brillo.enable = true;
   services.udev.extraRules = # bash
     ''
@@ -37,16 +32,16 @@ in
       SUBSYSTEM=="power_supply", \
       ATTR{type}=="Mains", \
       ATTR{online}=="0", \
-      ENV{DISPLAY}=":0", \
-      ENV{XAUTHORITY}="/run/user/${toString config.me.uid}/Xauthority", \
+      ENV{WAYLAND_DISPLAY}="wayland-1", \
+      ENV{XDG_RUNTIME_DIR}="/run/user/${toString config.me.uid}", \
       RUN+="${getExe' pkgs.su "su"} ${config.me.user} -c '${getExe pkgs.my.charging-notify} 0'"
 
       ACTION=="change", \
       SUBSYSTEM=="power_supply", \
       ATTR{type}=="Mains", \
       ATTR{online}=="1", \
-      ENV{DISPLAY}=":0", \
-      ENV{XAUTHORITY}="/run/user/${toString config.me.uid}/Xauthority", \
+      ENV{WAYLAND_DISPLAY}="wayland-1", \
+      ENV{XDG_RUNTIME_DIR}="/run/user/${toString config.me.uid}", \
       RUN+="${getExe' pkgs.su "su"} ${config.me.user} -c '${getExe pkgs.my.charging-notify} 1'"
 
       # Automatically lock when security key is unplugged
@@ -55,8 +50,8 @@ in
       ENV{DEVTYPE}=="usb_interface",\
       ENV{INTERFACE}=="11/0/0",\
       ENV{PRODUCT}=="349e/24/100",\
-      ENV{DISPLAY}=":0", \
-      ENV{XAUTHORITY}="/run/user/${toString config.me.uid}/Xauthority", \
+      ENV{WAYLAND_DISPLAY}="wayland-1", \
+      ENV{XDG_RUNTIME_DIR}="/run/user/${toString config.me.uid}", \
       RUN+="${lib.getExe' pkgs.xorg.xset "xset"} s activate"
     '';
 
@@ -69,7 +64,7 @@ in
       action =
         # bash
         ''
-          if ${lib.getExe' pkgs.procps "pgrep"} -x i3lock > /dev/null; then
+          if ${lib.getExe' pkgs.procps "pgrep"} -x hyprlock > /dev/null; then
             systemctl hibernate
           fi
         '';
@@ -104,16 +99,22 @@ in
     disableWhileTyping = true;
   };
 
-  me.wm.startup.xss-lock = "while true; do ${lib.getExe pkgs.xss-lock} --transfer-sleep-lock -- ${lib.getExe pkgs.my.lock}; sleep 1; done";
-
-  security.pam.services.i3lock = {
-    u2fAuth = true;
-    unixAuth = false;
+  services.hypridle = {
+    enable = true;
+    settings = {
+      general.before-sleep = lib.getExe pkgs.my.lock;
+      listener = [
+        {
+          timeout = 600;
+          on-timeout = lib.getExe pkgs.my.lock;
+        }
+      ];
+    };
   };
 
-  programs.i3lock = {
-    enable = true;
-    u2fSupport = true;
+  security.pam.services.hyprlock = {
+    u2fAuth = true;
+    unixAuth = false;
   };
 
   # do not change

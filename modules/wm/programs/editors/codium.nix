@@ -16,20 +16,22 @@ lib.mkIf config.me.wm.enable {
           jnoortheen.nix-ide
           haskell.haskell
           justusadam.language-haskell
-          asvetliakov.vscode-neovim
+          # asvetliakov.vscode-neovim
           ms-python.python
           redhat.java
           mkhl.direnv
           golang.go
           llvm-vs-code-extensions.vscode-clangd
+          ms-toolsai.jupyter
+          jdinhlife.gruvbox
         ]
         ++ vscode-utils.extensionsFromVscodeMarketplace [
-          {
-            name = "everforest";
-            publisher = "sainnhe";
-            version = "0.3.0";
-            sha256 = "nZirzVvM160ZTpBLTimL2X35sIGy5j2LQOok7a2Yc7U=";
-          }
+          # {
+          #   name = "everforest";
+          #   publisher = "sainnhe";
+          #   version = "0.3.0";
+          #   sha256 = "nZirzVvM160ZTpBLTimL2X35sIGy5j2LQOok7a2Yc7U=";
+          # }
           {
             name = "debug";
             publisher = "webfreak";
@@ -54,66 +56,97 @@ lib.mkIf config.me.wm.enable {
     })
   ];
 
-  hj.xdg.config.files."VSCodium/User/keybindings.json" = {
-    type = "copy";
-    permissions = "0644";
-    text = # jsonc
-      ''
-        [
-          {
-            "key": "ctrl+y",
-            "command": "acceptSelectedCodeAction",
-            "when": "codeActionMenuVisible"
-          },
-          {
-            "command": "vscode-neovim.send",
-            "key": "ctrl+u",
-            "when": "editorTextFocus",
-            "args": "<C-u>"
-          },
-          {
-            "command": "vscode-neovim.send",
-            "key": "ctrl+d",
-            "when": "editorTextFocus",
-            "args": "<C-d>"
-          },
-          {
-            "key": "shift+escape",
-            "command": "workbench.action.closePanel"
-          },
-          {
-            "key": "tab",
-            "command": "-acceptSelectedSuggestion",
-            "when": "suggestWidgetHasFocusedSuggestion && suggestWidgetVisible && textInputFocus"
-          },
-          {
-            "key": "tab",
-            "command": "acceptSelectedSuggestion",
-            "when": "suggestWidgetHasFocusedSuggestion && suggestWidgetVisible && textInputFocus && !neovim.init"
-          },
-          {
-            "key": "enter",
-            "command": "-acceptSelectedSuggestion",
-            "when": "acceptSuggestionOnEnter && suggestWidgetHasFocusedSuggestion && suggestWidgetVisible && suggestionMakesTextEdit && textInputFocus"
-          },
-          {
-            "key": "enter",
-              "command": "acceptSelectedSuggestion",
-              "when": "acceptSuggestionOnEnter && suggestWidgetHasFocusedSuggestion && suggestWidgetVisible && suggestionMakesTextEdit && textInputFocus && !neovim.init"
-          },
-          {
-            "key": "ctrl+shift+r",
-            "command": "vscode-neovim.restart"
-          },
-          {
-            "key": "ctrl+y",
-            "command": "acceptSelectedSuggestion",
-            "when": "acceptSuggestionOnEnter && suggestWidgetHasFocusedSuggestion && suggestWidgetVisible && suggestionMakesTextEdit && textInputFocus"
-          }
-        ]
-      '';
-  };
+  # hj.xdg.config.files."VSCodium/User/keybindings.json" = {
+  #   type = "copy";
+  #   permissions = "0644";
+  #   text = # jsonc
+  #     ''
+  #       [
+  #         {
+  #           "key": "ctrl+y",
+  #           "command": "acceptSelectedCodeAction",
+  #           "when": "codeActionMenuVisible"
+  #         },
+  #         {
+  #           "command": "vscode-neovim.send",
+  #           "key": "ctrl+u",
+  #           "when": "editorTextFocus",
+  #           "args": "<C-u>"
+  #         },
+  #         {
+  #           "command": "vscode-neovim.send",
+  #           "key": "ctrl+d",
+  #           "when": "editorTextFocus",
+  #           "args": "<C-d>"
+  #         },
+  #         {
+  #           "key": "shift+escape",
+  #           "command": "workbench.action.closePanel"
+  #         },
+  #         {
+  #           "key": "tab",
+  #           "command": "-acceptSelectedSuggestion",
+  #           "when": "suggestWidgetHasFocusedSuggestion && suggestWidgetVisible && textInputFocus"
+  #         },
+  #         {
+  #           "key": "tab",
+  #           "command": "acceptSelectedSuggestion",
+  #           "when": "suggestWidgetHasFocusedSuggestion && suggestWidgetVisible && textInputFocus && !neovim.init"
+  #         },
+  #         {
+  #           "key": "enter",
+  #           "command": "-acceptSelectedSuggestion",
+  #           "when": "acceptSuggestionOnEnter && suggestWidgetHasFocusedSuggestion && suggestWidgetVisible && suggestionMakesTextEdit && textInputFocus"
+  #         },
+  #         {
+  #           "key": "enter",
+  #             "command": "acceptSelectedSuggestion",
+  #             "when": "acceptSuggestionOnEnter && suggestWidgetHasFocusedSuggestion && suggestWidgetVisible && suggestionMakesTextEdit && textInputFocus && !neovim.init"
+  #         },
+  #         {
+  #           "key": "ctrl+shift+r",
+  #           "command": "vscode-neovim.restart"
+  #         },
+  #         {
+  #           "key": "ctrl+y",
+  #           "command": "acceptSelectedSuggestion",
+  #           "when": "acceptSuggestionOnEnter && suggestWidgetHasFocusedSuggestion && suggestWidgetVisible && suggestionMakesTextEdit && textInputFocus"
+  #         }
+  #         // notebook
+  #         {
+  #           "key": "ctrl+shift+a",
+  #           "command": "notebook.cell.insertCodeCellAbove",
+  #           "when": "notebookEditorFocused"
+  #         },
+  #         {
+  #           "key": "ctrl+shift+b",
+  #           "command": "notebook.cell.insertCodeCellBelow",
+  #           "when": "notebookEditorFocused"
+  #         },
+  #         {
+  #           "key": "ctrl+shift+d",
+  #           "command": "notebook.cell.delete",
+  #           "when": "notebookEditorFocused && !inputFocus"
+  #         },
+  #         {
+  #           "key": "ctrl+shift+y",
+  #           "command": "notebook.cell.copy",
+  #           "when": "notebookEditorFocused && !inputFocus"
+  #         },
+  #         {
+  #           "key": "ctrl+shift+p",
+  #           "command": "notebook.cell.paste",
+  #           "when": "notebookEditorFocused && !inputFocus"
+  #         },
+  #       ]
+  #     '';
+  # };
 
+  # remettre plus tard
+  # "notebook.cellToolbarLocation": {
+  #     "default": "right",
+  #     "jupyter-notebook": "hidden"
+  # },
   hj.xdg.config.files."VSCodium/User/settings.json" = {
     type = "copy";
     permissions = "0644";
@@ -169,10 +202,6 @@ lib.mkIf config.me.wm.enable {
             "editor.fontFamily": "'${config.me.wm.terminalFont.family}', 'serif'",
             "editor.wordSeparators": "`~!@#$%^&*()-=+[{]}\\|;:'\",.<>/?_",
             "editor.minimap.enabled": false,
-            "notebook.cellToolbarLocation": {
-                "default": "right",
-                "jupyter-notebook": "hidden"
-            },
             "editor.scrollbar.horizontal": "hidden",
             "editor.scrollbar.vertical": "hidden",
             "window.zoomLevel": 3,
@@ -222,9 +251,8 @@ lib.mkIf config.me.wm.enable {
             "editor.inlayHints.enabled": "on",
             "redhat.telemetry.enabled": false,
             "window.autoDetectColorScheme": true,
-            "workbench.preferredDarkColorTheme": "Monochromator Dark Amber",
-            "workbench.preferredHighContrastColorTheme": "Monochromator Light Amber",
-            "workbench.preferredLightColorTheme": "Monochromator Light Amber"
+            "workbench.preferredDarkColorTheme": "Gruvbox Dark Medium",
+            "workbench.preferredLightColorTheme": "Gruvbox Light Medium"
         }
       '';
   };

@@ -46,10 +46,7 @@
     runroot = "/run/containers/storage";
   };
 
-  packages = with pkgs; [
-    ncdu
-    xclip
-  ];
+  packages = with pkgs; [ ncdu ];
 
   services.journald.extraConfig = ''
     SystemMaxFileSize=40M

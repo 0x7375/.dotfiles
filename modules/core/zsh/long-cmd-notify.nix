@@ -10,13 +10,13 @@ let
 in
 {
   hj.xdg.config.files."zsh/longcmd-notify.zsh" = {
-    enable = config.me.wm.displayServer == "xorg";
-    text = # bash
+    enable = config.me.wm.displayServer == "wayland";
+    text =
+      let
+        activeWindow = "${getExe' pkgs.hyprland "hyprctl"} activewindow -j | ${getExe pkgs.jq} -r .address";
+      in
+      # bash
       ''
-        if [[ -z $DISPLAY && "$XDG_SESSION_TYPE" != "x11"  ]]; then
-          return 0
-        fi
-
         time_threshold=10
         time_taken=0
         cmd=""
@@ -25,7 +25,7 @@ in
         long_command_alert_start() {
           time_taken=$(${getExe' pkgs.coreutils "date"} +%s)
           cmd="$1"
-          start_window_id=$(${getExe pkgs.xdotool} getactivewindow 2>/dev/null || echo "0")
+          start_window_id=$(${activeWindow})
         }
 
         long_command_alert_end() {
@@ -58,7 +58,7 @@ in
         }
 
         original_window_is_focused() {
-          local current_window_id=$(${getExe pkgs.xdotool} getactivewindow)
+          local current_window_id=$(${activeWindow})
           [[ $current_window_id == $start_window_id ]]
         }
 

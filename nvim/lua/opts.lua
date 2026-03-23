@@ -87,3 +87,27 @@ vim.opt.laststatus = 0
 vim.opt.cmdheight = 0
 
 vim.cmd("set statusline=%{repeat('─',winwidth('.'))}")
+
+if os.getenv("SSH_TTY") ~= nil then
+  vim.g.clipboard = {
+    name = 'OSC 52',
+    copy = {
+      ['+'] = require('vim.ui.clipboard.osc52').copy('+'),
+    },
+    paste = {
+      ['+'] = require('vim.ui.clipboard.osc52').paste('+'),
+    },
+    cache_enabled = 0,
+  }
+else
+  vim.g.clipboard = {
+    name = 'wl-clipboard',
+    copy = {
+      ['+'] = 'wl-copy',
+    },
+    paste = {
+      ['+'] = { 'wl-paste', '--no-newline' },
+    },
+    cache_enabled = 0,
+  }
+end

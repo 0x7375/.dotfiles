@@ -17,15 +17,8 @@ pkgs.writeShellApplication {
     [
       procps
       fd
+      dunst
     ]
-    ++ lib.optionals (config.me.wm.displayServer == "xorg") (
-      with pkgs;
-      [
-        i3
-        dunst
-        xorg.xrdb
-      ]
-    )
     ++ lib.optionals (config.me.wm.displayServer != "macos") (with pkgs; [ darkman ]);
   text =
     let
@@ -82,12 +75,10 @@ pkgs.writeShellApplication {
           ln -sfT "${theme.package}/share/themes/${theme.name}-''${theme^}" "$share_dir/themes/${theme.name}"
           ln -sfT "${iconTheme.package}/share/icons/${iconTheme.name}-''${theme^}" "$share_dir/icons/${iconTheme.name}"
 
-          xrdb -load "$HOME/.config/X11/xresources"
           sleep .5
 
           darkman set "$theme"
           dunstctl reload
-          i3-msg restart
         ''
       }
 
@@ -99,5 +90,15 @@ pkgs.writeShellApplication {
       }
 
       pkill -USR1 nvim
+      ${lib.optionalString (config.me.wm.terminal == "foot")
+        # bash
+        ''
+          if [[ "$theme" == "dark" ]]; then
+            pkill -USR1 foot
+          else
+            pkill -USR2 foot
+          fi
+        ''
+      }
     '';
 }

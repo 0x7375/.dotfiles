@@ -7,12 +7,10 @@
 }:
 
 lib.mkIf config.me.wm.enable (mkNixos {
-  hj.xdg.config.files."i3/config".text =
-    "$exec_always ${lib.getExe' pkgs.systemd "systemctl"} --user restart keyd-application-mapper";
-
-  # wayland.windowManager.hyprland.settings.exec = [
-  #   "${lib.getExe' pkgs.systemd "systemctl"} --user restart keyd-application-mapper"
-  # ];
+  me.wm.startup.keyd-application-mapper = {
+    cmd = "${lib.getExe' pkgs.systemd "systemctl"} --user restart keyd-application-mapper";
+    always = true;
+  };
 
   systemd.user.services.keyd-application-mapper = {
     description = "keyd application mapper";
@@ -47,8 +45,6 @@ lib.mkIf config.me.wm.enable (mkNixos {
       apps = [
         "vesktop"
         "discord"
-        "ssh-askpass"
-        "polkit-gnome-authentication-agent-1"
       ];
 
       appConfigs = builtins.concatStringsSep "\n\n" (map (app: "[${app}]\n${defaultWithEnter}") apps);

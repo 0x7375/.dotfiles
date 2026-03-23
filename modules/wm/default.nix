@@ -38,7 +38,6 @@ in
                 type = types.enum [
                   "class"
                   "title"
-                  "instance"
                 ];
                 default = "class";
               };
@@ -94,6 +93,12 @@ in
         description = "Display server to use";
       };
 
+      scaling = mkOption {
+        type = lib.types.float;
+        default = 1.0;
+        description = "Scaling factor";
+      };
+
       open = mkOption {
         type = lib.types.str;
         default = if pkgs.stdenv.isDarwin then "open" else lib.getExe' pkgs.xdg-utils "xdg-open";
@@ -101,36 +106,23 @@ in
 
       copy =
         let
-          inherit (lib) getExe' getExe;
+          inherit (lib) getExe';
         in
         mkOption {
           type = lib.types.str;
-          default =
-            if pkgs.stdenv.isDarwin then
-              "pbcopy"
-            else if cfg.displayServer == "wayland" then
-              getExe' pkgs.wl-clipboard "wl-copy"
-            else
-              "${getExe pkgs.xsel} -ib";
+          default = if pkgs.stdenv.isDarwin then "pbcopy" else getExe' pkgs.wl-clipboard "wl-copy";
         };
 
       terminal = mkOption {
         type = types.nullOr types.str;
         default =
-          if cfg.displayServer == "xorg" then
-            "alacritty"
-          else if cfg.displayServer == "wayland" then
+          if cfg.displayServer == "wayland" then
             "foot"
+          else if cfg.displayServer == "macos" then
+            "alacritty"
           else
-            "xterm-256color";
+            "xterm";
         description = "Default terminal emulator";
-      };
-
-      barHeight = mkOption {
-        type = types.int;
-        default = 35;
-        description = "Top bar height";
-        internal = true;
       };
 
       barFontSize = mkOption {
@@ -154,6 +146,13 @@ in
       ];
 
       nixos = {
+        hardware.i2c.enable = true;
+
+        users.users.${config.me.user}.extraGroups = [
+          "i2c"
+          "video"
+        ];
+
         zramSwap.memoryPercent = lib.mkForce 100;
 
         xdg.terminal-exec = {
@@ -177,7 +176,7 @@ in
               pkgs.writeShellScript "open-note"
                 # bash
                 ''
-                  note=$(ls ${dir} | sed 's/\.md$//' | ${getExe pkgs.bemenu} -p "NOTE")
+                  note=$(ls ${dir} | sed 's/\.md$//' | ${getExe pkgs.vicinae} dmenu --no-quick-look -p "NOTE")
                   [ -n "$note" ] && echo $EDITOR "${dir}/$note.md"
                 '';
 
@@ -235,7 +234,6 @@ in
             "Mod+n" =
               "${term} -e ${getExe pkgs.zsh} -c '${getExe' pkgs.networkmanager "nmcli"} device wifi rescan && unset COLORTERM && TERM=xterm-old ${getExe' pkgs.networkmanager "nmtui"}'";
             "Mod+Shift+b" = btToggle;
-            # "Mod+d" = "${getExe pkgs.j4-dmenu-desktop} --no-generic -d '${getExe pkgs.bemenu} -p \"DESKTOP\"'";
             "Mod+d" = "${lib.getExe pkgs.vicinae} open";
             "Mod+p" = getExe pkgs.my.powermenu;
             "Mod+Shift+i" = getExe wizToggle;

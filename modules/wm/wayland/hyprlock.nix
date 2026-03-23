@@ -1,19 +1,20 @@
 {
   config,
-  myLib,
+  pkgs,
   lib,
   ...
 }:
 
 let
   rgba = color: alpha: "rgba(${color}${alpha})";
-  inherit (myLib) hex;
 in
 lib.mkIf (config.me.wm.displayServer == "wayland") {
-  programs.hyprlock = {
-    enable = true;
+  programs.hyprlock.enable = true;
 
-    settings = {
+  tinted.files.".config/hypr/hyprlock.conf" = {
+    prefix = false;
+    generator = (pkgs.formats.toml { }).generate "hyprlock.conf";
+    value = p: {
       general = {
         no_fade_in = true;
         hide_cursor = true;
@@ -21,17 +22,16 @@ lib.mkIf (config.me.wm.displayServer == "wayland") {
         text_trim = true;
         fail_timeout = 1000;
       };
-
-      background.color = rgba hex.bg0_dark "ff";
+      background.color = rgba p.bg0_dark "ff";
       animations.enabled = false;
       input-field = {
         size = "350, 60";
         outline_thickness = 0;
-        outer_color = rgba hex.bg0_dark "ff";
-        check_color = rgba hex.bg0_dark "ff";
-        fail_color = rgba hex.bg0_dark "ff";
-        inner_color = rgba hex.bg0_dark "ff";
-        font_color = rgba hex.fg0 "ff";
+        outer_color = rgba p.bg0_dark "ff";
+        check_color = rgba p.bg0_dark "ff";
+        fail_color = rgba p.bg0_dark "ff";
+        inner_color = rgba p.bg0_dark "ff";
+        font_color = rgba p.fg0 "ff";
         fade_on_empty = false;
         fade_timeout = 0;
         dots_size = 0.3;
@@ -42,10 +42,9 @@ lib.mkIf (config.me.wm.displayServer == "wayland") {
         font_family = "Mononoki Nerd Font";
         placeholder_text = "";
       };
-
       label = {
         text = "~locked";
-        color = rgba hex.fg0 "ff";
+        color = rgba p.fg0 "ff";
         font_family = "Mononoki Nerd Font";
         valign = "top";
         halign = "center";

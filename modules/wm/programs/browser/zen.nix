@@ -262,7 +262,8 @@ let
         # force hardware acceleration
         "media.hardware-video-decoding.force-enabled" = true;
         "widget.dmabuf.force-enabled" = true;
-        "gfx.x11-egl.force-enabled" = true;
+        "gfx.webrender.all" = true;
+        "media.ffmpeg.vaapi.enabled" = true;
       }
     )}";
   profiles = {

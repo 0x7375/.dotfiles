@@ -43,7 +43,7 @@ lib.mkIf config.me.wm.enable (mkNixos {
     set statusbar-v-padding	"0"
 
     map <C-N> exec 'zathura "$FILE"'
-    map <C-P> feedkeys ":exec sh -c \"pdftotext \\\"$FILE\\\" - | xclip -sel clip\"<Return>"
+    map <C-P> feedkeys ":exec sh -c \"pdftotext \\\"$FILE\\\" - | wl-copy\"<Return>"
     map <C-j> navigate next
     map <C-k> navigate previous
     map <C-p> print
@@ -107,4 +107,3 @@ lib.mkIf config.me.wm.enable (mkNixos {
     set statusbar-fg	"${palette.fg0}"
   '';
 })
-

@@ -50,7 +50,7 @@ in
 
         set -g @plugin 'tmux-plugins/tmux-yank'
 
-        set  -g default-terminal "tmux-256color"
+        set -g default-terminal "tmux-256color"
         set -ga terminal-overrides ",${lib.optionalString (terminal != null) terminal}:RGB"
 
         unbind C-b
@@ -61,6 +61,7 @@ in
         set -g mouse on
         set -g focus-events on
         set -g detach-on-destroy off
+        set -g set-clipboard on
 
         set -g set-titles on
         set -g set-titles-string '#S'

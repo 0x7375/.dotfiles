@@ -30,7 +30,7 @@ lib.mkIf config.me.wm.enable (mkNixos {
 
   me.wm =
     let
-      type = "instance";
+      type = "class";
       name = "vault.bitwarden.com";
     in
     {

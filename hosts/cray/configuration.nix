@@ -1,24 +1,19 @@
 {
-  lib,
-  ...
-}:
-
-{
   imports = [
     ./hardware.nix
     ./options.nix
-  ]
-  ++ (lib.my.filesIn ./modules);
-
-  services.picom.enable = lib.mkForce false;
-
-  powerManagement.cpuFreqGovernor = "performance";
+    ./kanshi.nix
+  ];
 
   boot.supportedFilesystems = [ "ntfs" ];
 
   boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
 
-  vars.LIBVA_DRIVER_NAME = "nvidia";
+  vars = {
+    LIBVA_DRIVER_NAME = "nvidia";
+    GBM_BACKEND = "nvidia-drm";
+    __GLX_VENDOR_LIBRARY_NAME = "nvidia";
+  };
 
   services.xserver.videoDrivers = [ "nvidia" ];
   unfree-packages = [
@@ -31,9 +26,13 @@
     max-jobs = 4;
   };
 
-  # wayland.windowManager.hyprland.settings.input = {
-  #   accel_profile = "flat";
-  # };
+  tinted.files.".config/hypr/hyprland.conf".text =
+    # hyprlang
+    ''
+      input {
+        accel_profile = flat
+      }
+    '';
 
   time.hardwareClockInLocalTime = true;
 

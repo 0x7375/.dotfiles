@@ -242,7 +242,7 @@ mkBundle {
                       $(printf " -e 'set end of theFileList to (POSIX file \"%s\") as alias'" $fx) \
                       -e "set the clipboard to theFileList"
         else
-          echo -en "$fx" | sed 's|^|file://|' | tr ' ' '\n' | ${getExe pkgs.xclip} -i -sel clip -t text/uri-list
+          echo -en "$fx" | sed 's|^|file://|' | tr ' ' '\n' | ${getExe' pkgs.wl-clipboard "wl-copy"} --type text/uri-list
         fi
         ${getExe pkgs.lf} -remote 'send unselect'
         ${getExe pkgs.lf} -remote 'send echo "Files copied to clipboard"'

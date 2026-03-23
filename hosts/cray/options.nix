@@ -11,7 +11,7 @@
     btrfs.enable = true;
     wm = {
       enable = true;
-      displayServer = "xorg";
+      displayServer = "wayland";
       refreshRate = 240;
     };
     dev.enable = true;

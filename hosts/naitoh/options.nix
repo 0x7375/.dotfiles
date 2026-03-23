@@ -11,6 +11,7 @@
     boot.encryption.enable = true;
     wm = {
       enable = true;
+      scaling = 1.125;
       displayServer = "xorg";
       optional = {
         virtualBox.enable = true;

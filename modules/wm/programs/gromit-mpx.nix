@@ -12,7 +12,6 @@ lib.mkIf config.me.wm.enable (mkNixos {
       gromit = lib.getExe pkgs.gromit-mpx;
     in
     {
-      startup.gromit = gromit;
       bindings = {
         "Mod+o" = "${gromit} --toggle";
         "Mod+Shift+o" = "${gromit} --clear";

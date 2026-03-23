@@ -9,7 +9,7 @@ pkgs.writeShellApplication {
   runtimeInputs = with pkgs; [
     systemd
     my.lock
-    bemenu
+    vicinae
     procps
   ];
   bashOptions = [
@@ -25,13 +25,13 @@ pkgs.writeShellApplication {
         options+=(windows)
       fi
 
-      chosen="$(printf "%s\n" "''${options[@]}" | bemenu -p 'POWER')"
+      chosen="$(printf "%s\n" "''${options[@]}" | vicinae dmenu --no-quick-look -p 'POWER')"
 
       case $chosen in
         "kill") ps --no-headers -u "$USER" -o comm,%mem,%cpu --sort=-%mem,-%cpu |\
           awk '{$1=$1}1' |\
           awk '!seen[$1]++' | \
-          bemenu -i -p KILL |\
+          vicinae dmenu --no-quick-look -p KILL |\
           awk '{print $1}' |\
           xargs -r pkill
         ;;

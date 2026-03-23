@@ -1,5 +1,6 @@
 {
   config,
+  pkgs,
   mkNixos,
   lib,
   ...
@@ -10,6 +11,10 @@ lib.mkIf config.me.wm.enable (mkNixos {
     enable = true;
     shutdownTimeout = 1;
     qemu.swtpm.enable = true;
+    qemu.ovmf = {
+      enable = true;
+      packages = [ pkgs.OVMFFull.fd ];
+    };
   };
   programs.virt-manager.enable = true;
   virtualisation.spiceUSBRedirection.enable = true;

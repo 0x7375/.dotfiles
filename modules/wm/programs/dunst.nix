@@ -61,7 +61,7 @@ lib.mkIf config.me.wm.enable (mkNixos {
     value = palette: rec {
       global =
         let
-          inherit (config.me) flakeDir wm;
+          inherit (config.me) flakeDir;
         in
         {
           background = palette.bg0;
@@ -75,7 +75,7 @@ lib.mkIf config.me.wm.enable (mkNixos {
           width = 400;
           height = 200;
           origin = "top-center";
-          offset = "0x${toString (if wm.displayServer == "xorg" then wm.barHeight + 10 else wm.barHeight)}";
+          offset = "0x10";
           scale = 0;
           notification_limit = 20;
 

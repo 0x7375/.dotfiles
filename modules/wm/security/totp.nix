@@ -23,7 +23,7 @@ lib.mkIf (wm.enable && secrets.enable) (mkNixos {
 
   me.wm.bindings."Mod+u" = pkgs.writeShellScript "totp-menu" ''
     tokens=$(${lib.getExe pkgs.token2-cli} get_all 2>&1 | grep -iv "touch")
-    selected=$(echo "$tokens" | awk -F'] | - ' '{print $2}' | bemenu -i -l 10 -p "TOTP")
+    selected=$(echo "$tokens" | awk -F'] | - ' '{print $2}' | vicinae dmenu --no-quick-look -p "TOTP")
 
     [ -z "$selected" ] && exit 0
 

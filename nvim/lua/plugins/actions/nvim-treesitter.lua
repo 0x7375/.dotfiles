@@ -1,122 +1,122 @@
 return {
-    'nvim-treesitter/nvim-treesitter',
-    cond = not vim.g.rpi,
-    build = ":TSUpdate",
-    main = "nvim-treesitter.configs",
-    lazy = false,
-    dependencies = {
-        "nvim-treesitter/nvim-treesitter-textobjects",
-        'nvim-treesitter/nvim-treesitter-refactor',
-        {
-            'Wansmer/treesj',
-            cond = not vim.g.rpi,
-            keys = {
-                { '<leader>nj', function() require('treesj').join() end,  desc = "Join node" },
-                { '<leader>ns', function() require('treesj').split() end, desc = "Split node" },
-            },
-            opts = {
-                use_default_keymaps = false,
-            },
-        },
-        {
-            "HiPhish/rainbow-delimiters.nvim",
-            config = function()
-                require('rainbow-delimiters.setup').setup {
-                    blacklist = {
-                        "html",
-                    },
-                    highlight = {
-                        "RainbowOrange",
-                        "RainbowYellow",
-                        "RainbowCyan",
-                        "RainbowViolet",
-                        "RainbowGreen",
-                        "RainbowBlue",
-                    },
-                }
-            end
+  'nvim-treesitter/nvim-treesitter',
+  cond = not vim.g.rpi,
+  build = ":TSUpdate",
+  main = "nvim-treesitter.configs",
+  lazy = false,
+  dependencies = {
+    "nvim-treesitter/nvim-treesitter-textobjects",
+    'nvim-treesitter/nvim-treesitter-refactor',
+    {
+      'Wansmer/treesj',
+      cond = not vim.g.rpi,
+      keys = {
+        { '<leader>nj', function() require('treesj').join() end,  desc = "Join node" },
+        { '<leader>ns', function() require('treesj').split() end, desc = "Split node" },
+      },
+      opts = {
+        use_default_keymaps = false,
+      },
+    },
+    {
+      "HiPhish/rainbow-delimiters.nvim",
+      config = function()
+        require('rainbow-delimiters.setup').setup {
+          blacklist = {
+            "html",
+          },
+          highlight = {
+            "RainbowOrange",
+            "RainbowYellow",
+            "RainbowCyan",
+            "RainbowViolet",
+            "RainbowGreen",
+            "RainbowBlue",
+          },
         }
+      end
+    }
+  },
+  opts = {
+    ensure_installed = not vim.g.windows and {
+      "c", "go", "java", "python", "sql", "nix", "bash",
+
+      "vim", "vimdoc", "query", "regex", "markdown", "markdown_inline",
+      "gitignore", "gitcommit", "cmake", "make", "diff", "comment",
+      "tmux", "hyprlang",
+
+      "json", "jsonc", "yaml", "xml", "ini", "toml",
+
+      "html", "css", "javascript", "tsx", "typescript", "php", "graphql",
+      "latex", "typst",
+    } or {},
+    auto_install = vim.g.windows,
+    highlight = {
+      enable = true,
+      disable = function(lang, buf)
+        if vim.tbl_contains({ "csv" }, lang) then
+          return true
+        end
+
+        local max_filesize = 100 * 1024         -- 100 KB
+        local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
+        if ok and stats and stats.size > max_filesize then
+          return true
+        end
+      end,
     },
-    opts = {
-        ensure_installed = not vim.g.windows and {
-            "c", "go", "java", "python", "sql", "nix", "bash",
-
-            "vim", "vimdoc", "query", "regex", "markdown", "markdown_inline",
-            "gitignore", "gitcommit", "cmake", "make", "diff", "comment",
-            "tmux",
-
-            "json", "jsonc", "yaml", "xml", "ini", "toml",
-
-            "html", "css", "javascript", "tsx", "typescript", "php", "graphql",
-            "latex", "typst",
-        } or {},
-        auto_install = vim.g.windows,
-        highlight = {
-            enable = true,
-            disable = function(lang, buf)
-                if vim.tbl_contains({ "csv" }, lang) then
-                    return true
-                end
-
-                local max_filesize = 100 * 1024 -- 100 KB
-                local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
-                if ok and stats and stats.size > max_filesize then
-                    return true
-                end
-            end,
+    indent = { enable = true },
+    refactor = {
+      smart_rename = {
+        enable = true,
+        keymaps = {
+          smart_rename = "<leader>t",
         },
-        indent = { enable = true },
-        refactor = {
-            smart_rename = {
-                enable = true,
-                keymaps = {
-                    smart_rename = "<leader>t",
-                },
-            },
-        },
-        textobjects = {
-            select = {
-                enable = true,
-                lookahead = true, -- Automatically jump forward to textobj, similar to targets.vim
-                keymaps = {
-                    -- You can use the capture groups defined in textobjects.scm
-                    ['aa'] = '@parameter.outer',
-                    ['ia'] = '@parameter.inner',
-                    ['af'] = '@function.outer',
-                    ['if'] = '@function.inner',
-                    ['ac'] = '@class.outer',
-                    ['ic'] = '@class.inner',
-                },
-            },
-            move = {
-                enable = true,
-                set_jumps = true, -- whether to set jumps in the jumplist
-                goto_next_start = {
-                    [']m'] = '@function.outer',
-                    [']c'] = '@class.outer',
-                },
-                goto_next_end = {
-                    [']M'] = '@function.outer',
-                    [']C'] = '@class.outer',
-                },
-                goto_previous_start = {
-                    ['[m'] = '@function.outer',
-                    ['[c'] = '@class.outer',
-                },
-                goto_previous_end = {
-                    ['[M'] = '@function.outer',
-                    ['[C'] = '@class.outer',
-                },
-            },
-            swap = {
-                enable = true,
-                swap_next = {
-                    ['<leader>i'] = '@parameter.inner',
-                },
-                swap_previous = {
-                    ['<leader>I'] = '@parameter.inner',
-                },
-            },
-        },
+      },
     },
+    textobjects = {
+      select = {
+        enable = true,
+        lookahead = true,         -- Automatically jump forward to textobj, similar to targets.vim
+        keymaps = {
+          -- You can use the capture groups defined in textobjects.scm
+          ['aa'] = '@parameter.outer',
+          ['ia'] = '@parameter.inner',
+          ['af'] = '@function.outer',
+          ['if'] = '@function.inner',
+          ['ac'] = '@class.outer',
+          ['ic'] = '@class.inner',
+        },
+      },
+      move = {
+        enable = true,
+        set_jumps = true,         -- whether to set jumps in the jumplist
+        goto_next_start = {
+          [']m'] = '@function.outer',
+          [']c'] = '@class.outer',
+        },
+        goto_next_end = {
+          [']M'] = '@function.outer',
+          [']C'] = '@class.outer',
+        },
+        goto_previous_start = {
+          ['[m'] = '@function.outer',
+          ['[c'] = '@class.outer',
+        },
+        goto_previous_end = {
+          ['[M'] = '@function.outer',
+          ['[C'] = '@class.outer',
+        },
+      },
+      swap = {
+        enable = true,
+        swap_next = {
+          ['<leader>i'] = '@parameter.inner',
+        },
+        swap_previous = {
+          ['<leader>I'] = '@parameter.inner',
+        },
+      },
+    },
+  },
 }

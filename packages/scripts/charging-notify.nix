@@ -10,8 +10,6 @@ pkgs.writeShellApplication {
   text = ''
     [[ $# != 1 ]] && printf '0 or 1 must be passed as an argument.\nUsage: %s 0|1\n' "$0" && exit
 
-    export XAUTHORITY=/run/user/${toString config.me.uid}/Xauthority
-    export DISPLAY=:0
     export DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/${toString config.me.uid}/bus"
 
     battery_charging=$1

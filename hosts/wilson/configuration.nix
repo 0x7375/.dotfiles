@@ -29,10 +29,7 @@
     unixAuth = lib.mkForce true;
   });
 
-  packages = with pkgs; [
-    ncdu
-    xclip
-  ];
+  packages = with pkgs; [ ncdu ];
 
   services.journald.extraConfig = ''
     SystemMaxFileSize=40M

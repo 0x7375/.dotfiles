@@ -1,68 +1,100 @@
 {
-  config,
-  lib,
-  pkgs,
+  self,
   inputs,
-  mkBundle,
   ...
 }:
 
-{
-  imports = with lib; [
-    (mkAliasOptionModule [ "packages" ] [ "environment" "systemPackages" ])
-    (mkAliasOptionModule [ "vars" ] [ "environment" "variables" ])
-    (mkAliasOptionModule [ "aliases" ] [ "environment" "shellAliases" ])
-    (mkAliasOptionModule [ "activation" ] [ "system" "activationScripts" "postActivation" "text" ])
-    (mkAliasOptionModule [ "preActivation" ] [ "system" "activationScripts" "preActivation" "text" ])
-  ];
-
-  options = {
-    unfree-packages = lib.mkOption {
-      type = lib.types.listOf lib.types.str;
-      default = [ ];
-      description = "List of unfree packages to allow installing.";
-    };
-
-    userActivation = lib.mkOption {
-      type = lib.types.lines;
-      default = "";
-      description = "Alias for respective user activation method on macos/nixos, don't use single quotes on macos";
-    };
-  };
-
-  config = mkBundle {
-    security.sudo.extraConfig = ''
-      Defaults env_keep += "HOME XDG_CONFIG_HOME XDG_DATA_HOME XDG_CACHE_HOME"
-    '';
-
-    environment.etc.nixcfg.source = pkgs.lib.cleanSource inputs.self;
-
-    darwin.system.activationScripts.postActivation.text = lib.mkIf (config.userActivation != "") ''
-      sudo -H -u ${config.me.user} ${lib.getExe pkgs.bash} -c '
-        ${config.userActivation}
-      '
-    '';
-
-    nixos = {
-      security.polkit.enable = true;
-
-      system.userActivationScripts.userActivation.text = config.userActivation;
-
-      systemd.user.services.dotfiles-setup = {
-        description = "Clone dotfiles repository";
-        after = [ "network-online.target" ];
-        wants = [ "network-online.target" ];
-        serviceConfig = {
-          Type = "oneshot";
-          ExecStart = pkgs.writeShellScript "clone-dotfiles" ''
-            if [[ ! -e ${config.me.flakeDir} ]]; then
-              ${lib.getExe pkgs.git} -c core.sshCommand="${lib.getExe' pkgs.openssh "ssh"} -o StrictHostKeyChecking=accept-new" clone codeberg:0x7E/.dotfiles ${config.me.flakeDir}
-            fi
-          '';
-          RemainAfterExit = true;
-        };
-        wantedBy = [ "default.target" ];
+let
+  lib = inputs.nixpkgs.lib;
+  mkHost =
+    type: name: extraModules:
+    let
+      isNixos = type == "nixos";
+      mkSystem = if isNixos then lib.nixosSystem else inputs.nix-darwin.lib.darwinSystem;
+      mod = if isNixos then "nixosModules" else "darwinModules";
+      modName = if isNixos then "nixos" else "darwin";
+    in
+    mkSystem {
+      inherit lib;
+      specialArgs = {
+        inherit inputs;
+        inherit (inputs) secrets;
       };
+      modules = [
+        inputs.sops-nix.${mod}.sops
+        inputs.nix-index-database.${mod}.nix-index
+        inputs.hjem.${mod}.default
+
+        self.${modName}.${name}
+        self.${modName}.core
+        self.shared.custom
+        { networking.hostName = name; }
+      ]
+      ++ lib.optionals isNixos [
+        inputs.disko.nixosModules.disko
+        self.nixos.custom
+        self.nixos.overrides
+      ]
+      ++ extraModules;
+    };
+in
+{
+  # allow these options to be merged
+  options.flake =
+    let
+      attrsOption = lib.mkOption {
+        type = lib.types.lazyAttrsOf lib.types.deferredModule;
+        default = { };
+      };
+    in
+    {
+      nixos = attrsOption;
+      darwin = attrsOption;
+      shared = attrsOption;
+    };
+
+  config = {
+    flake.nixosConfigurations = {
+      cray = mkHost "nixos" "cray" (
+        (with self.nixos; [
+          boot
+          secrets
+          networkEnvironment
+          keyd
+          btrfs
+          syncthingClient
+        ])
+        ++ (with self.shared; [
+          dev
+        ])
+      );
+      naitoh = mkHost "nixos" "naitoh" (
+        (with self.nixos; [
+          boot
+          secrets
+          networkEnvironment
+          keyd
+          btrfs
+          syncthingClient
+          vpnPeer
+        ])
+        ++ (with self.shared; [
+          dev
+        ])
+      );
+    };
+
+    flake.darwinConfigurations = {
+      mach =
+        mkHost "darwin" "mach" [
+          inputs.nix-homebrew.darwinModules.nix-homebrew
+        ]
+        ++ (with self.darwin; [
+          vpnPeer
+          network
+          secrets
+          vpnPeer
+        ]);
     };
   };
 }

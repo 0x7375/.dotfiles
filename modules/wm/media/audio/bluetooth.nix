@@ -1,25 +1,24 @@
 {
-  lib,
-  config,
-  mkNixos,
-  pkgs,
-  ...
-}:
+  flake.nixos.wm =
+    {
+      pkgs,
+      ...
+    }:
+    {
+      packages = [ pkgs.adw-bluetooth ];
 
-lib.mkIf config.me.wm.enable (mkNixos {
-  packages = [ pkgs.adw-bluetooth ];
-
-  hardware.bluetooth = {
-    enable = true;
-    settings = {
-      General = {
-        MultiProfile = "multiple";
-        Privacy = "device";
-        FastConnectable = true;
-        Enable = "Control,Gateway,Headset,Media,Sink,Socket,Source";
-        # Uncomment on first connection airpods
-        # ControllerMode = "bredr";
+      hardware.bluetooth = {
+        enable = true;
+        settings = {
+          General = {
+            MultiProfile = "multiple";
+            Privacy = "device";
+            FastConnectable = true;
+            Enable = "Control,Gateway,Headset,Media,Sink,Socket,Source";
+            # Uncomment on first connection airpods
+            # ControllerMode = "bredr";
+          };
+        };
       };
     };
-  };
-})
+}

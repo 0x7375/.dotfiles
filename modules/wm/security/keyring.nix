@@ -1,45 +1,45 @@
 {
-  config,
-  mkNixos,
-  pkgs,
-  lib,
-  ...
-}:
+  flake.nixos.wm =
+    {
+      pkgs,
+      lib,
+      ...
+    }:
+    {
+      nixpkgs.overlays = [
+        (final: prev: {
+          pass-secret-service-rs = prev.callPackage ./_pass-secret-service-rs.nix { };
+        })
+      ];
 
-lib.mkIf config.me.wm.enable (mkNixos {
-  nixpkgs.overlays = [
-    (final: prev: {
-      pass-secret-service-rs = prev.callPackage ./_pass-secret-service-rs.nix { };
-    })
-  ];
+      services.passSecretService = {
+        enable = true;
+        package = pkgs.pass-secret-service-rs;
+      };
 
-  services.passSecretService = {
-    enable = true;
-    package = pkgs.pass-secret-service-rs;
-  };
+      packages = with pkgs; [
+        pass
+        gnupg
+        seahorse
+      ];
 
-  packages = with pkgs; [
-    pass
-    gnupg
-    seahorse
-  ];
-
-  userActivation =
-    # bash
-    ''
-      if ! ${lib.getExe pkgs.gnupg} --list-secret-keys "secrets@localhost" &>/dev/null; then
-        ${lib.getExe pkgs.gnupg} --batch --gen-key <<EOF
-      %no-protection
-      Key-Type: EdDSA
-      Key-Curve: ed25519
-      Subkey-Type: ECDH
-      Subkey-Curve: cv25519
-      Name-Real: Secrets
-      Name-Email: secrets@localhost
-      Expire-Date: 0
-      %commit
-      EOF
-        ${lib.getExe pkgs.pass} init "secrets@localhost"
-      fi
-    '';
-})
+      userActivation =
+        # bash
+        ''
+          if ! ${lib.getExe pkgs.gnupg} --list-secret-keys "secrets@localhost" &>/dev/null; then
+            ${lib.getExe pkgs.gnupg} --batch --gen-key <<EOF
+          %no-protection
+          Key-Type: EdDSA
+          Key-Curve: ed25519
+          Subkey-Type: ECDH
+          Subkey-Curve: cv25519
+          Name-Real: Secrets
+          Name-Email: secrets@localhost
+          Expire-Date: 0
+          %commit
+          EOF
+            ${lib.getExe pkgs.pass} init "secrets@localhost"
+          fi
+        '';
+    };
+}

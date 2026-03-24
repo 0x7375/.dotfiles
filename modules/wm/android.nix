@@ -1,19 +1,22 @@
 {
-  lib,
-  config,
-  pkgs,
-  mkBundle,
-  ...
-}:
+  flake.nixos.wm =
+    { config, ... }:
+    {
+      users.users.${config.me.user}.extraGroups = [ "adbusers" ];
+    };
 
-lib.mkIf config.me.wm.enable (mkBundle {
-  nixos.users.users.${config.me.user}.extraGroups = [ "adbusers" ];
+  flake.shared.wm =
+    {
+      pkgs,
+      ...
+    }:
+    {
+      unfree-packages = [ "android-studio-stable" ];
 
-  unfree-packages = [ "android-studio-stable" ];
-
-  packages = with pkgs; [
-    android-tools
-    # android-studio
-    scrcpy
-  ];
-})
+      packages = with pkgs; [
+        android-tools
+        # android-studio
+        scrcpy
+      ];
+    };
+}

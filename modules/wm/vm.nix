@@ -1,38 +1,38 @@
 {
-  config,
-  mkNixos,
-  lib,
-  ...
-}:
+  flake.nixos.wm =
+    {
+      config,
+      ...
+    }:
+    {
+      virtualisation.libvirtd = {
+        enable = true;
+        shutdownTimeout = 1;
+        qemu.swtpm.enable = true;
+      };
+      programs.virt-manager.enable = true;
+      virtualisation.spiceUSBRedirection.enable = true;
 
-lib.mkIf config.me.wm.enable (mkNixos {
-  virtualisation.libvirtd = {
-    enable = true;
-    shutdownTimeout = 1;
-    qemu.swtpm.enable = true;
-  };
-  programs.virt-manager.enable = true;
-  virtualisation.spiceUSBRedirection.enable = true;
-
-  virtualisation.vmVariant = {
-    virtualisation = {
-      memorySize = 8192;
-      cores = 8;
-    };
-  };
-
-  users.users.${config.me.user}.extraGroups = [ "libvirtd" ];
-
-  programs.dconf.profiles = {
-    user.databases = [
-      {
-        settings = {
-          "org/virt-manager/virt-manager/connections" = {
-            autoconnect = [ "qemu:///system" ];
-            uris = [ "qemu:///system" ];
-          };
+      virtualisation.vmVariant = {
+        virtualisation = {
+          memorySize = 8192;
+          cores = 8;
         };
-      }
-    ];
-  };
-})
+      };
+
+      users.users.${config.me.user}.extraGroups = [ "libvirtd" ];
+
+      programs.dconf.profiles = {
+        user.databases = [
+          {
+            settings = {
+              "org/virt-manager/virt-manager/connections" = {
+                autoconnect = [ "qemu:///system" ];
+                uris = [ "qemu:///system" ];
+              };
+            };
+          }
+        ];
+      };
+    };
+}

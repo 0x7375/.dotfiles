@@ -1,130 +1,141 @@
 {
-  lib,
-  pkgs,
-  config,
-  mkBundle,
-  secrets,
-  ...
-}:
+  flake.shared.core =
+    {
+      lib,
+      pkgs,
+      config,
+      ...
+    }:
+    let
+      inherit (config.me)
+        hosts
+        host
+        ;
 
-let
-  inherit (config.me)
-    hosts
-    host
-    home
-    user
-    ;
+      github = pkgs.writeText "github" ''
+        [user]
+          email = "github.little@0xaa.me"
+          name = "0x7375"
+      '';
+      sourcehut = pkgs.writeText "sourcehut" ''
+        [user]
+          email = "sourcehut.buckshot@0xaa.me"
+          name = "ayko"
+      '';
+      codeberg = pkgs.writeText "codeberg" ''
+        [user]
+          email = "codeberg.unmapped@0xaa.me"
+          name = "0x7E"
+      '';
 
-  github = pkgs.writeText "github" ''
-    [user]
-      email = "github.little@0xaa.me"
-      name = "0x7375"
-  '';
-  sourcehut = pkgs.writeText "sourcehut" ''
-    [user]
-      email = "sourcehut.buckshot@0xaa.me"
-      name = "ayko"
-  '';
-  codeberg = pkgs.writeText "codeberg" ''
-    [user]
-      email = "codeberg.unmapped@0xaa.me"
-      name = "0x7E"
-  '';
+      allSigningKeys = hosts.yubikey.sshPublicKeys ++ hosts.mach.sshPublicKeys;
+    in
+    {
+      packages = [ pkgs.git ];
 
-  allSigningKeys = hosts.yubikey.sshPublicKeys ++ hosts.mach.sshPublicKeys;
-in
-lib.mkMerge [
-  (mkBundle {
-    packages = [ pkgs.git ];
+      hj.xdg.config.files."git/ignore".text = ''
+        .DS_Store
+      '';
 
-    hj.xdg.config.files."git/ignore".text = ''
-      .DS_Store
-    '';
+      hj.xdg.config.files."git/config".text =
+        # git_config
+        ''
+          [commit]
+            gpgsign = true
 
-    hj.xdg.config.files."git/config".text = ''
-      [commit]
-        gpgsign = true
+          [credential]
+            helper = "store"
 
-      [credential]
-        helper = "store"
+          [gpg]
+            format = "ssh"
 
-      [gpg]
-        format = "ssh"
+          [gpg "openpgp"]
+            program = "${lib.getExe' pkgs.gnupg "gpg"}"
 
-      [gpg "openpgp"]
-        program = "${lib.getExe' pkgs.gnupg "gpg"}"
+          [gpg "ssh"]
+            allowedSignersFile = "~/.ssh/allowed_signers"
 
-      [gpg "ssh"]
-        allowedSignersFile = "~/.ssh/allowed_signers"
+          [init]
+            defaultBranch = "main"
 
-      [init]
-        defaultBranch = "main"
+          [url "git@codeberg.org:"]
+            insteadOf = "codeberg:"
 
-      [url "git@codeberg.org:"]
-        insteadOf = "codeberg:"
+          [url "git@git.sr.ht:"]
+            insteadOf = "sourcehut:"
 
-      [url "git@git.sr.ht:"]
-        insteadOf = "sourcehut:"
+          [url "git@git.unicaen.fr:"]
+            insteadOf = "uni:"
 
-      [url "git@git.unicaen.fr:"]
-        insteadOf = "uni:"
+          [url "git@github.com:"]
+            insteadOf = "github:"
 
-      [url "git@github.com:"]
-        insteadOf = "github:"
+          [url "https://codeberg.org/"]
+            insteadOf = "cb:"
 
-      [url "https://codeberg.org/"]
-        insteadOf = "cb:"
+          [url "https://git.sr.ht/"]
+            insteadOf = "sh:"
 
-      [url "https://git.sr.ht/"]
-        insteadOf = "sh:"
+          [url "https://github.com/"]
+            insteadOf = "gh:"
 
-      [url "https://github.com/"]
-        insteadOf = "gh:"
+          [url "https://redmine-etu.unicaen.fr/git/"]
+            insteadOf = "forge:"
 
-      [url "https://redmine-etu.unicaen.fr/git/"]
-        insteadOf = "forge:"
+          [user]
+            signingkey = "${pkgs.writeText "key.pub" host.sshSigning.key}"
 
-      [user]
-        signingkey = "${pkgs.writeText "key.pub" host.sshSigning.key}"
+          [includeIf "hasconfig:remote.*.url:github:*/**"]
+            path = "${github}"
 
-      [includeIf "hasconfig:remote.*.url:github:*/**"]
-        path = "${github}"
+          [includeIf "hasconfig:remote.*.url:gh:*/**"]
+            path = "${github}"
 
-      [includeIf "hasconfig:remote.*.url:gh:*/**"]
-        path = "${github}"
+          [includeIf "hasconfig:remote.*.url:sourcehut:*/**"]
+            path = "${sourcehut}"
 
-      [includeIf "hasconfig:remote.*.url:sourcehut:*/**"]
-        path = "${sourcehut}"
+          [includeIf "hasconfig:remote.*.url:sh:*/**"]
+            path = "${sourcehut}"
 
-      [includeIf "hasconfig:remote.*.url:sh:*/**"]
-        path = "${sourcehut}"
+          [includeIf "hasconfig:remote.*.url:codeberg:*/**"]
+            path = "${codeberg}"
 
-      [includeIf "hasconfig:remote.*.url:codeberg:*/**"]
-        path = "${codeberg}"
-
-      [includeIf "hasconfig:remote.*.url:cb:*/**"]
-        path = "${codeberg}"
-    '';
-
-    hj.files.".ssh/allowed_signers".text = lib.concatMapStrings (k: "* ${k}\n") allSigningKeys;
-
-    darwin =
-      let
-        secretivePath = "${home}/Library/Containers/com.maxgoedjen.Secretive.SecretAgent/Data/socket.ssh";
-      in
-      {
-        hj.xdg.config.files."ssh/config".text = ''
-          Host *
-            IdentityAgent ${secretivePath}
+          [includeIf "hasconfig:remote.*.url:cb:*/**"]
+            path = "${codeberg}"
         '';
 
-        environment.shellInit = ''
-          export SSH_AUTH_SOCK=${secretivePath}
-        '';
-      };
+      hj.files.".ssh/allowed_signers".text = lib.concatMapStrings (k: "* ${k}\n") allSigningKeys;
+    };
 
-    nixos = {
-      systemd.user.services.ssh-add = lib.mkIf config.me.secrets.enable {
+  flake.darwin.core =
+    { config, ... }:
+    let
+      inherit (config.me) home;
+      secretivePath = "${home}/Library/Containers/com.maxgoedjen.Secretive.SecretAgent/Data/socket.ssh";
+    in
+    {
+      hj.xdg.config.files."ssh/config".text = ''
+        Host *
+          IdentityAgent ${secretivePath}
+      '';
+
+      environment.shellInit = ''
+        export SSH_AUTH_SOCK=${secretivePath}
+      '';
+    };
+
+  flake.nixos.secrets =
+    {
+      pkgs,
+      lib,
+      config,
+      ...
+    }:
+    let
+      inherit (config.me) host;
+    in
+    {
+      systemd.user.services.ssh-add = {
         description = "Add keys to SSH agent";
         after = [ "ssh-agent.service" ];
         bindsTo = [ "ssh-agent.service" ];
@@ -139,7 +150,7 @@ lib.mkMerge [
         };
       };
 
-      systemd.user.services.ssh-agent = lib.mkIf config.me.secrets.enable {
+      systemd.user.services.ssh-agent = {
         wantedBy = [ "default.target" ];
         description = "SSH authentication agent";
         documentation = [ "man:ssh-agent(1)" ];
@@ -154,19 +165,29 @@ lib.mkMerge [
           fi
         '';
     };
-  })
-  (lib.mkIf config.me.secrets.enable {
-    sops.secrets.git-config = {
-      sopsFile = "${secrets}/uni-git-config.ini";
-      format = "ini";
-      owner = user;
-    };
 
-    hj.xdg.config.files."git/config".text = lib.mkAfter ''
-      [includeIf "hasconfig:remote.*.url:uni:*/**"]
-        path = ${config.sops.secrets.git-config.path}
-      [includeIf "hasconfig:remote.*.url:forge:**"]
-        path = ${config.sops.secrets.git-config.path}
-    '';
-  })
-]
+  flake.shared.secrets =
+    {
+      config,
+      lib,
+      secrets,
+      ...
+    }:
+    let
+      inherit (config.me) user;
+    in
+    {
+      sops.secrets.git-config = {
+        sopsFile = "${secrets}/uni-git-config.ini";
+        format = "ini";
+        owner = user;
+      };
+
+      hj.xdg.config.files."git/config".text = lib.mkAfter ''
+        [includeIf "hasconfig:remote.*.url:uni:*/**"]
+          path = ${config.sops.secrets.git-config.path}
+        [includeIf "hasconfig:remote.*.url:forge:**"]
+          path = ${config.sops.secrets.git-config.path}
+      '';
+    };
+}

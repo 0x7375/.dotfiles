@@ -1,13 +1,11 @@
 {
-  pkgs,
-  config,
-  mkNixos,
-  lib,
-  ...
-}:
-
-lib.mkIf config.me.wm.enable (
-  mkNixos (
+  flake.nixos.wm =
+    {
+      pkgs,
+      config,
+      lib,
+      ...
+    }:
     lib.mkMerge [
       {
         nixpkgs.overlays = [
@@ -126,6 +124,5 @@ lib.mkIf config.me.wm.enable (
           };
         };
       })
-    ]
-  )
-)
+    ];
+}

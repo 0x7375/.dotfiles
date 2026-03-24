@@ -1,12 +1,10 @@
 {
-  config,
+  isDesktop,
+  isLinux,
   pkgs,
   ...
 }:
 
-let
-  desktop = config.me.wm.enable;
-in
 pkgs.writeShellApplication {
   name = "previewer";
   runtimeInputs =
@@ -21,13 +19,13 @@ pkgs.writeShellApplication {
       ffmpegthumbnailer
       poppler-utils
     ]
-    ++ lib.optionals desktop (
+    ++ lib.optionals isDesktop (
       with pkgs;
       [
         fontforge
       ]
     )
-    ++ lib.optionals (desktop && !pkgs.stdenv.isDarwin) (
+    ++ lib.optionals (isDesktop && isLinux) (
       with pkgs;
       [
         libreoffice

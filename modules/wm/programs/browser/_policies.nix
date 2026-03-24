@@ -1,6 +1,4 @@
-{ lib, config, ... }:
-
-{
+lib: {
   Cookies = {
     Allow = [
       "https://reddit.com"
@@ -8,106 +6,13 @@
       "https://monkeytype.com"
       "https://youtube.com"
       "https://claude.ai"
+      "https://gemini.google.com"
+      "https://brave.com"
       "https://keybr.com"
+      "https://vault.bitwarden.com"
     ];
   };
-  SearchEngines = {
-    Add = [
-      {
-        Name = "Google";
-        URLTemplate = "https://google.com/search?q={searchTerms}";
-        Method = "GET";
-        IconURL = "https://icons.duckduckgo.com/ip3/google.com.ico";
-        Alias = "!g";
-      }
-      {
-        Name = "Google Images";
-        URLTemplate = "https://google.com/search?q={searchTerms}&tbm=isch";
-        Method = "GET";
-        IconURL = "https://icons.duckduckgo.com/ip3/google.com.ico";
-        Alias = "!gi";
-      }
-      {
-        Name = "Startpage";
-        URLTemplate = "https://www.startpage.com/do/dsearch?prfe=d7a6edf2bdae7d159fd3c7281470fb1b1611b9ebc58099d433766aab83750a24485b18c6615e9979c5ef4f823efb2326568630359a4cfaca9f87b8eda4b78324a831f096405c6b39160f84ca&query={searchTerms}";
-        Method = "GET";
-        IconURL = "https://icons.duckduckgo.com/ip3/startpage.com.ico";
-        Alias = "!s";
-      }
-      {
-        Name = "Brave";
-        URLTemplate = "https://search.brave.com/search?q={searchTerms}";
-        Method = "GET";
-        IconURL = "https://icons.duckduckgo.com/ip3/brave.com.ico";
-        Alias = "!b";
-      }
-      {
-        Name = "Brave Images";
-        URLTemplate = "https://search.brave.com/images?q={searchTerms}";
-        Method = "GET";
-        IconURL = "https://icons.duckduckgo.com/ip3/brave.com.ico";
-        Alias = "!bi";
-      }
-      {
-        Name = "Nix Packages";
-        URLTemplate = "https://mynixos.com/search?q=package+{searchTerms}";
-        Method = "GET";
-        IconURL = "https://icons.duckduckgo.com/ip3/mynixos.com.ico";
-        Alias = "!p";
-      }
-      {
-        Name = "Nix Options";
-        URLTemplate = "https://mynixos.com/search?q=option+{searchTerms}";
-        Method = "GET";
-        IconURL = "https://icons.duckduckgo.com/ip3/mynixos.com.ico";
-        Alias = "!o";
-      }
-      {
-        Name = "Nix Functions";
-        URLTemplate = "https://noogle.dev/q?term={searchTerms}";
-        Method = "GET";
-        IconURL = "https://icons.duckduckgo.com/ip3/noogle.dev.ico";
-        Alias = "!n";
-      }
-      {
-        Name = "Nixpkgs history";
-        URLTemplate = "https://history.nix-packages.com/search?search={searchTerms}";
-        Method = "GET";
-        IconURL = "https://icons.duckduckgo.com/ip3/mynixos.com.ico";
-        Alias = "!u";
-      }
-      {
-        Name = "Youtube";
-        URLTemplate = "https://www.youtube.com/results?search_query={searchTerms}";
-        Method = "GET";
-        IconURL = "https://icons.duckduckgo.com/ip3/youtube.com.ico";
-        Alias = "!y";
-      }
-      {
-        Name = "Github";
-        URLTemplate = "https://github.com/search?type=code&q={searchTerms}";
-        Method = "GET";
-        IconURL = "https://icons.duckduckgo.com/ip3/github.com.ico";
-        Alias = "!h";
-      }
-      {
-        Name = "Wikipedia";
-        URLTemplate = "https://en.wikipedia.org/wiki/Special:Search?search={searchTerms}";
-        Method = "GET";
-        IconURL = "https://icons.duckduckgo.com/ip3/wikipedia.org.ico";
-        Alias = "!w";
-      }
-      {
-        Name = "Conjugaison";
-        URLTemplate = "https://conjugaison.bescherelle.com/verbes/{searchTerms}";
-        Method = "GET";
-        IconURL = "https://icons.duckduckgo.com/ip3/conjugaison.bescherelle.com.ico";
-        Alias = "!c";
-      }
-    ];
-    Default = "Google";
-    PreventInstalls = true;
-  };
+  SearchEngines.Default = "Google";
   ExtensionSettings =
     with builtins;
     let
@@ -139,7 +44,7 @@
     "uBlock0@raymondhill.net".adminSettings = {
       userSettings = {
         uiAccentCustom = true;
-        uiAccentCustom0 = config.me.palette.dark.cyan;
+        uiAccentCustom0 = "#98971a";
         cloudStorageEnabled = lib.mkForce false;
         importedLists = [ ];
         advancedUserEnabled = true;

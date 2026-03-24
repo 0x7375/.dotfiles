@@ -1,11 +1,3 @@
-{
-  pkgs,
-  config,
-  lib,
-  mkBundle,
-  ...
-}:
-
 let
   extensions = {
     ublock = "cjpalhdlnbpafiamejdnhcphjbkeiagm";
@@ -27,6 +19,7 @@ let
   ];
 
   policies =
+    lib:
     let
       mkDisabledPermissions = perms: lib.genAttrs (map (p: "Default${p}Setting") perms) (_: 2);
     in
@@ -86,7 +79,7 @@ let
         ${extensions.ublock}.adminSettings = builtins.toJSON {
           userSettings = {
             uiAccentCustom = true;
-            uiAccentCustom0 = config.me.palette.dark.cyan;
+            uiAccentCustom0 = "#98971a";
             cloudStorageEnabled = lib.mkForce false;
             importedLists = [ ];
             advancedUserEnabled = true;
@@ -142,50 +135,70 @@ let
       "Microphone"
       "Popups"
     ];
-
-  overlay = final: prev: {
-    helium = pkgs.nur.repos.forkprince.helium-nightly.overrideAttrs (
-      old:
-      if (!pkgs.stdenv.isDarwin) then
-        {
-          buildCommand =
-            let
-              bwrapPath = builtins.head (builtins.match ".*ln -s ([^ ]+) [$]out/bin/helium.*" old.buildCommand);
-            in
-            ''
-              mkdir -p $out/bin
-              cp ${bwrapPath} $out/bin/helium
-              sed -i 's|--tmpfs /etc|--tmpfs /etc --ro-bind /etc/chromium /etc/chromium|' $out/bin/helium
-              sed -i 's|-container-init "\$@"|-container-init ${builtins.concatStringsSep " " flags} "\$@"|' $out/bin/helium
-            ''
-            +
-              builtins.replaceStrings [ "mkdir -p $out/bin\nln -s ${bwrapPath} $out/bin/helium\n" ] [ "" ]
-                old.buildCommand;
-        }
-      else
-        { }
-    );
-  };
 in
-lib.mkIf config.me.wm.enable (mkBundle {
-  nixpkgs.overlays = [ overlay ];
-
-  packages = [ pkgs.helium ];
-
-  nixos.programs.chromium = {
-    enable = true;
-    extensions = lib.attrValues extensions;
-    extraOpts = policies;
-  };
-
-  darwin.activation =
+{
+  flake.shared.wm =
+    {
+      pkgs,
+      ...
+    }:
     let
-      managedPlist = pkgs.writeText "net.imput.helium.plist" (
-        lib.generators.toPlist { escape = true; } policies
-      );
+      overlay = final: prev: {
+        helium = pkgs.nur.repos.forkprince.helium-nightly.overrideAttrs (
+          old:
+          if (!pkgs.stdenv.isDarwin) then
+            {
+              buildCommand =
+                let
+                  bwrapPath = builtins.head (builtins.match ".*ln -s ([^ ]+) [$]out/bin/helium.*" old.buildCommand);
+                in
+                ''
+                  mkdir -p $out/bin
+                  cp ${bwrapPath} $out/bin/helium
+                  sed -i 's|--tmpfs /etc|--tmpfs /etc --ro-bind /etc/chromium /etc/chromium|' $out/bin/helium
+                  sed -i 's|-container-init "\$@"|-container-init ${builtins.concatStringsSep " " flags} "\$@"|' $out/bin/helium
+                ''
+                +
+                  builtins.replaceStrings [ "mkdir -p $out/bin\nln -s ${bwrapPath} $out/bin/helium\n" ] [ "" ]
+                    old.buildCommand;
+            }
+          else
+            { }
+        );
+      };
     in
-    ''
-      install -d -m 0755 "/Library/Managed Preferences"
-      install -m 0644 ${managedPlist} "/Library/Managed Preferences/net.imput.helium.plist"
-    '';
-})
+    {
+      nixpkgs.overlays = [ overlay ];
+
+      packages = [ pkgs.helium ];
+    };
+
+  flake.nixos.wm =
+    { lib, ... }:
+    {
+      programs.chromium = {
+        enable = true;
+        extensions = lib.attrValues extensions;
+        extraOpts = policies lib;
+      };
+    };
+
+  flake.darwin.wm =
+    {
+      lib,
+      pkgs,
+      ...
+    }:
+    {
+      activation =
+        let
+          managedPlist = pkgs.writeText "net.imput.helium.plist" (
+            lib.generators.toPlist { escape = true; } (policies lib)
+          );
+        in
+        ''
+          install -d -m 0755 "/Library/Managed Preferences"
+          install -m 0644 ${managedPlist} "/Library/Managed Preferences/net.imput.helium.plist"
+        '';
+    };
+}

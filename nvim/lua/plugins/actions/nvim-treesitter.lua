@@ -43,7 +43,7 @@ return {
 
       "vim", "vimdoc", "query", "regex", "markdown", "markdown_inline",
       "gitignore", "gitcommit", "cmake", "make", "diff", "comment",
-      "tmux", "hyprlang",
+      "tmux", "hyprlang", "xcompose", "git_config",
 
       "json", "jsonc", "yaml", "xml", "ini", "toml",
 
@@ -58,7 +58,7 @@ return {
           return true
         end
 
-        local max_filesize = 100 * 1024         -- 100 KB
+        local max_filesize = 100 * 1024 -- 100 KB
         local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
         if ok and stats and stats.size > max_filesize then
           return true
@@ -77,7 +77,7 @@ return {
     textobjects = {
       select = {
         enable = true,
-        lookahead = true,         -- Automatically jump forward to textobj, similar to targets.vim
+        lookahead = true, -- Automatically jump forward to textobj, similar to targets.vim
         keymaps = {
           -- You can use the capture groups defined in textobjects.scm
           ['aa'] = '@parameter.outer',
@@ -90,7 +90,7 @@ return {
       },
       move = {
         enable = true,
-        set_jumps = true,         -- whether to set jumps in the jumplist
+        set_jumps = true, -- whether to set jumps in the jumplist
         goto_next_start = {
           [']m'] = '@function.outer',
           [']c'] = '@class.outer',

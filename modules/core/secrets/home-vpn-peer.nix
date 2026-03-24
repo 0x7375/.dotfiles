@@ -1,46 +1,53 @@
 {
-  lib,
-  pkgs,
-  config,
-  mkBundle,
-  ...
-}:
+  flake.shared.vpnPeer =
+    {
+      lib,
+      config,
+      ...
+    }:
+    let
+      inherit (config.me) hostname host;
+      mkHostSecret = lib.my.mkHostSecret hostname;
+    in
+    {
+      sops.secrets.server_vpn_endpoint.owner = config.me.user;
+      sops.secrets."vpn/pk" = mkHostSecret "vpn/pk" { owner = config.me.user; };
+      sops.secrets."${hostname}/vpn/psk".owner = config.me.user;
 
-let
-  inherit (config.me) hostname host;
-  cfg = config.me;
-  mkHostSecret = lib.my.mkHostSecret hostname;
-in
-{
-  options.me.vpnPeer.enable = lib.mkEnableOption "Setup wireguard vpn peer";
+      sops.templates."home-vpn-${hostname}.conf".content =
+        let
+          inherit (config.me) networkIps;
+        in
+        ''
+          [Interface]
+          Address = ${host.ips.vpn}/24
+          PrivateKey = ${config.sops.placeholder."vpn/pk"}
 
-  config = lib.mkIf (cfg.secrets.enable && cfg.vpnPeer.enable) (mkBundle {
-    sops.secrets.server_vpn_endpoint.owner = config.me.user;
-    sops.secrets."vpn/pk" = mkHostSecret "vpn/pk" { owner = config.me.user; };
-    sops.secrets."${hostname}/vpn/psk".owner = config.me.user;
+          [Peer]
+          PublicKey = PpCxUOTz7Heh3B29OnI3XNZAKJ8abUETMzFNj3gpTyo=
+          PresharedKey = ${config.sops.placeholder."${hostname}/vpn/psk"}
+          AllowedIPs = ${networkIps.vpn.subnet},${networkIps.lan.subnet}
+          Endpoint = ${config.sops.placeholder.server_vpn_endpoint}:1637
+        '';
 
-    sops.templates."home-vpn-${hostname}.conf".content =
-      let
-        inherit (config.me) networkIps;
-      in
-      ''
-        [Interface]
-        Address = ${host.ips.vpn}/24
-        PrivateKey = ${config.sops.placeholder."vpn/pk"}
+    };
 
-        [Peer]
-        PublicKey = PpCxUOTz7Heh3B29OnI3XNZAKJ8abUETMzFNj3gpTyo=
-        PresharedKey = ${config.sops.placeholder."${hostname}/vpn/psk"}
-        AllowedIPs = ${networkIps.vpn.subnet},${networkIps.lan.subnet}
-        Endpoint = ${config.sops.placeholder.server_vpn_endpoint}:1637
-      '';
-
-    darwin = {
+  flake.darwin.vpnPeer =
+    { config, pkgs, ... }:
+    let
+      inherit (config.me) hostname;
+    in
+    {
       packages = [ pkgs.wireguard-tools ];
       sops.templates."home-vpn-${hostname}.conf".path = "/etc/wireguard/home.conf";
     };
 
-    nixos = {
+  flake.nixos.vpnPeer =
+    { config, pkgs, ... }:
+    let
+      inherit (config.me) hostname;
+    in
+    {
       networking.wg-quick.interfaces.home = {
         autostart = false;
         configFile = config.sops.templates."home-vpn-${hostname}.conf".path;
@@ -63,5 +70,4 @@ in
         }
       ];
     };
-  });
 }

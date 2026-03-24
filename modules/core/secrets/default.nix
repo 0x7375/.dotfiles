@@ -1,76 +1,102 @@
-{
-  pkgs,
-  secrets,
-  config,
-  lib,
-  mkBundle,
-  ...
-}:
+{ self, ... }:
 
 {
-  options.me.secrets = {
-    enable = lib.mkOption {
-      type = lib.types.bool;
-      default = true;
-      description = "Deploy secrets using sops-nix";
-    };
+  flake.shared.secrets =
+    {
+      pkgs,
+      secrets,
+      config,
+      lib,
+      ...
+    }:
+    {
+      options.me.hostSecrets = lib.mkOption {
+        type = lib.types.attrsOf lib.types.attrs;
+        default = { };
+        description = "Secrets that automatically map to the host's sops default.yaml";
+      };
 
-    tpm.enable = lib.mkEnableOption "Use tmp to decrypt sops secrets";
-  };
-
-  config = lib.mkIf config.me.secrets.enable (mkBundle {
-    packages = with pkgs; [
-      sops
-      age-plugin-fido2-hmac
-    ];
-
-    sops.defaultSopsFile = "${secrets}/default.yaml";
-    sops.gnupg.sshKeyPaths = [ ];
-    sops.age.sshKeyPaths = [ ];
-    sops.age.plugins = [ pkgs.age-plugin-fido2-hmac ];
-
-    hj.xdg.config.files."sops/age/sk_backup" = {
-      text = builtins.readFile ./age-fido2-backup.txt;
-      type = "copy";
-      permissions = "0600";
-    };
-
-    hj.xdg.config.files."sops/age/sk_main" = {
-      text = builtins.readFile ./age-fido2-main.txt;
-      type = "copy";
-      permissions = "0600";
-    };
-
-    vars.SOPS_AGE_KEY_FILE = "${config.me.home}/.config/sops/age/${config.me.host.sopsDecryptionKey}";
-
-    nixos = lib.mkMerge [
-      {
-        sops.useSystemdActivation = true;
-
-      }
-      (lib.mkIf config.me.secrets.tpm.enable {
-        sops.age = {
-          keyFile = "/etc/tpm_key";
-          plugins = with pkgs; [ unstable.age-plugin-tpm ];
-        };
+      config = {
+        sops.secrets = lib.mapAttrs (
+          name: extra:
+          {
+            sopsFile = "${secrets}/${config.me.hostname}/default.yaml";
+            key = name;
+          }
+          // extra
+        ) config.me.hostSecrets;
 
         packages = with pkgs; [
-          unstable.age-plugin-tpm
-          tpm2-tools
+          sops
+          age-plugin-fido2-hmac
         ];
 
-        security.tpm2 = {
-          enable = true;
-          pkcs11.enable = true;
-          tctiEnvironment.enable = true;
-        };
-      })
-      (lib.mkIf (!config.me.secrets.tpm.enable) {
-        sops.age.sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
-      })
-    ];
+        sops.defaultSopsFile = "${secrets}/default.yaml";
+        sops.gnupg.sshKeyPaths = [ ];
+        sops.age.sshKeyPaths = [ ];
+        sops.age.plugins = [ pkgs.age-plugin-fido2-hmac ];
 
-    darwin = {
+        hj.xdg.config.files."sops/age/sk_backup" = {
+          text = builtins.readFile ./age-fido2-backup.txt;
+          type = "copy";
+          permissions = "0600";
+        };
+
+        hj.xdg.config.files."sops/age/sk_main" = {
+          text = builtins.readFile ./age-fido2-main.txt;
+          type = "copy";
+          permissions = "0600";
+        };
+
+        vars.SOPS_AGE_KEY_FILE = "${config.me.home}/.config/sops/age/${config.me.host.sopsDecryptionKey}";
+      };
+    };
+
+  flake.nixos.secrets =
+    {
+      pkgs,
+      config,
+      lib,
+      ...
+    }:
+    {
+      imports = [ self.shared.secrets ];
+
+      options.me.tpm.enable = lib.mkEnableOption "Setup tpm and decrypt sops-nix secrets using tpm";
+
+      config = lib.mkMerge [
+        {
+
+          sops.useSystemdActivation = true;
+        }
+        (lib.mkIf config.me.tpm.enable {
+          sops.age = {
+            keyFile = "/etc/tpm_key";
+            plugins = with pkgs; [ unstable.age-plugin-tpm ];
+          };
+
+          packages = with pkgs; [
+            unstable.age-plugin-tpm
+            tpm2-tools
+          ];
+
+          security.tpm2 = {
+            enable = true;
+            pkcs11.enable = true;
+            tctiEnvironment.enable = true;
+          };
+        })
+        (lib.mkIf (!config.me.tpm.enable) {
+          sops.age.sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
+        })
+      ];
+    };
+
+  flake.darwin.secrets =
+    { pkgs, ... }:
+    {
+      imports = [ self.shared.secrets ];
+
       packages = [ pkgs.age-plugin-se ];
 
       sops.age = {
@@ -78,5 +104,4 @@
         plugins = with pkgs; [ age-plugin-se ];
       };
     };
-  });
 }

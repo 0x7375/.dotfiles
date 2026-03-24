@@ -1,6 +1,8 @@
-# Dotfiles
+# NixOS configuration
 
-NixOS configuration for various machines, uses
+NixOS configuration for various machines that follows the dendritic pattern, uses
+[flake-parts](https://github.com/hercules-ci/flake-parts) for structuring the flake itself,
+[nix-wrappers-modules](https://github.com/BirdeeHub/nix-wrapper-modules) for wrapping packages,
 [hjem](https://github.com/feel-co/hjem) for user file management,
 [sops-nix](https://github.com/Mic92/sops-nix) for secrets and
 [disko](https://github.com/nix-community/disko) for disk partitioning.
@@ -139,7 +141,7 @@ swapon /dev/disk/by-label/NIXSWAP
 Connect to wifi if needed, `nmtui`, and clone the repo
 
 ```bash
-git clone https://codeberg.org/0x7E/.dotfiles ~/.config/nixcfg
+git clone https://codeberg.org/0x7E/nixcfg ~/.config/nixcfg
 ```
 
 Copy ssh key over from another machine (or just disable secrets in options

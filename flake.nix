@@ -1,12 +1,13 @@
 {
-  description = "NixOS";
-
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-25.11";
     nixpkgs-darwin.url = "github:nixos/nixpkgs/nixpkgs-25.11-darwin";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
 
     auto-update.url = "github:nixos/nixpkgs/nixos-unstable";
+
+    flake-parts.url = "github:hercules-ci/flake-parts";
+    wrappers.url = "github:BirdeeHub/nix-wrapper-modules";
 
     nur = {
       url = "github:nix-community/NUR";
@@ -25,10 +26,6 @@
 
     hjem = {
       url = "github:feel-co/hjem";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    wrappers = {
-      url = "github:Lassulus/wrappers";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -81,65 +78,37 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
+
   outputs =
-    { ... }@inputs:
+    inputs:
     let
-      lib = inputs.nixpkgs.lib.extend (
-        self: super: {
-          my = import ./lib {
-            lib = self;
-            inherit (inputs) secrets;
-          };
-        }
-      );
-
-      mkHost =
-        type: name:
+      import-tree =
+        path:
         let
-          isNixos = type == "nixos";
-
-          builder = if isNixos then lib.nixosSystem else inputs.nix-darwin.lib.darwinSystem;
-          modules = if isNixos then "nixosModules" else "darwinModules";
+          inherit (inputs.nixpkgs.lib) fileset hasInfix;
+          nixFiles = fileset.toList (fileset.fileFilter (f: f.hasExt "nix") path);
         in
-        builder {
-          inherit lib;
-          specialArgs = {
-            inherit (inputs) secrets;
-            inherit inputs;
-            mkNixos = if isNixos then (a: a) else (a: { });
-            mkDarwin = if !isNixos then (a: a) else (a: { });
-            mkBundle =
-              attrs:
-              lib.mkMerge [
-                (removeAttrs attrs [
-                  "nixos"
-                  "darwin"
-                ])
-                (attrs.${if isNixos then "nixos" else "darwin"} or { })
-              ];
-          };
-          modules = [
-            ./hosts/${name}/configuration.nix
-            inputs.sops-nix.${modules}.sops
-            inputs.nix-index-database.${modules}.nix-index
-            inputs.hjem.${modules}.default
-            {
-              imports = lib.my.filesIn ./modules;
-              networking.hostName = name;
-            }
-          ]
-          ++ lib.optionals isNixos [ inputs.disko.nixosModules.disko ]
-          ++ lib.optionals (!isNixos) [ inputs.nix-homebrew.darwinModules.nix-homebrew ];
-        };
+        builtins.filter (p: !(hasInfix "/_" (toString p))) nixFiles;
     in
-    {
-      nixosConfigurations = lib.genAttrs [
-        "cray"
-        "naitoh"
-        "pearlman"
-        "isoImg"
-        # "julliard"
-      ] (mkHost "nixos");
-      darwinConfigurations = lib.genAttrs [ "mach" ] (mkHost "darwin");
+    inputs.flake-parts.lib.mkFlake { inherit inputs; } {
+      imports = [
+        inputs.wrappers.flakeModules.wrappers
+      ]
+      ++ (import-tree ./modules);
+
+      flake.lib.import-tree = import-tree;
+
+      systems = [
+        "x86_64-linux"
+        "aarch64-linux"
+        "aarch64-darwin"
+      ];
+
+      perSystem =
+        { ... }:
+        {
+          wrappers.control_type = "exclude";
+          wrappers.packages = { };
+        };
     };
 }

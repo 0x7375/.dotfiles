@@ -1,18 +1,9 @@
-{
-  lib,
-  inputs,
-  pkgs,
-  config,
-  mkBundle,
-  ...
-}:
-
 let
-  inherit (config.me.palette) dark;
   profile = "nix";
-  policies = import ./_policies.nix { inherit config lib; };
+  policies = lib: import ./_policies.nix lib;
   shortcuts = builtins.readFile ./zen-keyboard-shortcuts.json;
   js =
+    refreshRate: lib:
     let
       userPrefValue =
         pref:
@@ -32,7 +23,7 @@ let
       peskyfox = import ./_peskyfox.nix;
       securefox = import ./_securefox.nix;
       smoothfox =
-        if config.me.wm.refreshRate == 60 then
+        if refreshRate == 60 then
           {
             "general.smoothScroll" = true;
             "mousewheel.default.delta_multiplier_y" = 275; # 250-400
@@ -61,7 +52,7 @@ let
         "zen.theme.content-element-separation" = 1;
         "zen.glance.activation-method" = "ctrl";
         "zen.theme.color-prefs.use-workspace-colors" = false;
-        "zen.theme.accent-color" = dark.fg0;
+        # "zen.theme.accent-color" = dark.fg0;
         "zen.welcome-screen.seen" = true;
         "zen.view.experimental-no-window-controls" = true;
         "zen.tabs.vertical.right-side" = true;
@@ -202,7 +193,7 @@ let
         "network.http.max-persistent-connections-per-server" = 10;
 
         # change blank pages background color
-        "browser.display.background_color.dark" = dark.bg0;
+        # "browser.display.background_color.dark" = dark.bg0;
 
         # middlemouse paste
         "middlemouse.paste" = false;
@@ -266,14 +257,14 @@ let
         "media.ffmpeg.vaapi.enabled" = true;
       }
     )}";
-  profiles = {
+  profiles = lib: isDarwin: {
     type = "copy";
     generator = lib.generators.toINI { };
     value = {
       Profile0 = {
         Name = profile;
         IsRelative = 1;
-        Path = "${lib.optionalString pkgs.stdenv.isDarwin "Profiles/"}${profile}";
+        Path = "${lib.optionalString isDarwin "Profiles/"}${profile}";
         Default = 1;
       };
 
@@ -282,7 +273,7 @@ let
         Version = 2;
       };
     }
-    // lib.optionalAttrs pkgs.stdenv.isDarwin {
+    // lib.optionalAttrs isDarwin {
       "Install6ED35B3CA1B5D3AF" = {
         Default = "Profiles/${profile}";
         Locked = 1;
@@ -291,24 +282,6 @@ let
   };
   css = # css
     ''
-      /* change selected urlbar result font color */
-      /* .urlbarView-row { */
-      /*   &[selected] { */
-      /*     & * { */
-      /*       color: red !important; */
-      /*     } */
-      /*   } */
-      /* } */
-
-      /* change selected urlbar result icon bg color */
-      /* .urlbarView-row { */
-      /*   &[selected] { */
-      /*     & .urlbarView-favicon { */
-      /*       background-color: transparent !important; */
-      /*     } */
-      /*   } */
-      /* } */
-
       /* hide current workspace indicator */
       .zen-current-workspace-indicator {
         display: none !important;
@@ -330,61 +303,85 @@ let
       }
     '';
 in
-lib.mkIf config.me.wm.enable (mkBundle {
-  darwin = {
-    homebrew.casks = [ "zen" ];
+{
+  flake.shared.wm = {
+    # required for zen to load the custom profile
+    vars.MOZ_LEGACY_PROFILES = "1";
+  };
 
-    environment.etc."zen-policies.plist".text = lib.generators.toPlist { escape = true; } (
-      policies // { EnterprisePoliciesEnabled = true; }
-    );
+  flake.darwin.wm =
+    {
+      config,
+      pkgs,
+      lib,
+      ...
+    }:
+    let
+      inherit (pkgs.stdenv) isDarwin;
+    in
+    {
+      homebrew.casks = [ "zen" ];
 
-    activation = ''
-      cp -f "/etc/zen-policies.plist" "/Library/Preferences/app.zen-browser.zen.plist"
-    '';
+      environment.etc."zen-policies.plist".text = lib.generators.toPlist { escape = true; } (
+        policies // { EnterprisePoliciesEnabled = true; }
+      );
 
-    hj.files."Library/Application Support/zen-browser/Policies/Managed/policies.json".source =
-      "/etc/zen-policies.plist";
+      activation = ''
+        cp -f "/etc/zen-policies.plist" "/Library/Preferences/app.zen-browser.zen.plist"
+      '';
 
-    hj.files."Library/Application Support/zen/installs.ini" = {
-      type = "copy";
-      generator = lib.generators.toINI { };
-      value = {
-        "6ED35B3CA1B5D3AF" = {
-          Default = "Profiles/${profile}";
-          Locked = 1;
+      hj.files."Library/Application Support/zen-browser/Policies/Managed/policies.json".source =
+        "/etc/zen-policies.plist";
+
+      hj.files."Library/Application Support/zen/installs.ini" = {
+        type = "copy";
+        generator = lib.generators.toINI { };
+        value = {
+          "6ED35B3CA1B5D3AF" = {
+            Default = "Profiles/${profile}";
+            Locked = 1;
+          };
         };
       };
+
+      hj.files."Library/Application Support/zen/profiles.ini" = profiles lib isDarwin;
+      hj.files."Library/Application Support/zen/Profiles/${profile}/chrome/userChrome.css".text = css;
+      hj.files."Library/Application Support/zen/Profiles/${profile}/zen-keyboard-shortcuts.json".text =
+        shortcuts;
+      hj.files."Library/Application Support/zen/Profiles/${profile}/user.js".text =
+        js config.me.wm.refreshRate lib;
     };
 
-    hj.files."Library/Application Support/zen/profiles.ini" = profiles;
-    hj.files."Library/Application Support/zen/Profiles/${profile}/chrome/userChrome.css".text = css;
-    hj.files."Library/Application Support/zen/Profiles/${profile}/zen-keyboard-shortcuts.json".text =
-      shortcuts;
-    hj.files."Library/Application Support/zen/Profiles/${profile}/user.js".text = js;
-  };
+  flake.nixos.wm =
+    {
+      inputs,
+      config,
+      pkgs,
+      lib,
+      ...
+    }:
+    let
+      inherit (pkgs.stdenv) isDarwin;
+    in
+    {
+      # for hardware acceleration
+      vars.MOZ_DISABLE_RDD_SANDBOX = "1";
 
-  nixos = {
-    # for hardware acceleration
-    vars.MOZ_DISABLE_RDD_SANDBOX = "1";
+      packages = [
+        (pkgs.wrapFirefox
+          inputs.zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.zen-browser-unwrapped
+          {
+            pname = "zen-browser";
+            extraPolicies = policies;
+          }
+        )
+      ];
 
-    packages = [
-      (pkgs.wrapFirefox
-        inputs.zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.zen-browser-unwrapped
-        {
-          pname = "zen-browser";
-          extraPolicies = policies;
-        }
-      )
-    ];
-
-    hj.files.".zen/profiles.ini" = profiles;
-    hj.files.".zen/${profile}/chrome/userChrome.css".text = css;
-    hj.files.".zen/${profile}/zen-keyboard-shortcuts.json".text = shortcuts;
-    hj.files.".zen/${profile}/user.js".text = js;
-    # TODO declarative zen mods
-    # hj.files.".zen/${profile}/zen-themes.json".text = (builtins.readFile ./zen-themes.json);
-  };
-
-  # required for zen to load the custom profile
-  vars.MOZ_LEGACY_PROFILES = "1";
-})
+      hj.files.".zen/profiles.ini" = profiles lib isDarwin;
+      hj.files.".zen/${profile}/chrome/userChrome.css".text = css;
+      hj.files.".zen/${profile}/zen-keyboard-shortcuts.json".text = shortcuts;
+      hj.files.".zen/${profile}/user.js".text = js config.me.wm.refreshRate lib;
+      # TODO declarative zen mods
+      # hj.files.".zen/${profile}/zen-themes.json".text = (builtins.readFile ./zen-themes.json);
+    };
+}

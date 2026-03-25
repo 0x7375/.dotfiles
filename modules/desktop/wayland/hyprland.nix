@@ -131,7 +131,7 @@
             }
 
             input {
-              kb_options = compose:ralt
+              kb_options = compose:menu
               repeat_rate = 30
               repeat_delay = 200
               follow_mouse = 2

@@ -7,6 +7,8 @@
       ...
     }:
     {
+      systemd.services.keyd.serviceConfig.Group = "keyd";
+
       services.keyd = {
         enable = true;
         keyboards =
@@ -20,6 +22,8 @@
 
             settings = {
               main = {
+                rightalt = "oneshot(compose)";
+
                 shift = "layer(pwerty_shift)";
                 "`" = "^";
                 "1" = "+";
@@ -75,6 +79,56 @@
                 "equal" = "=";
                 "[" = "[";
                 "]" = "]";
+              };
+
+              compose = {
+                rightalt = "oneshot(compose)";
+                shift = "layer(compose_shift)";
+
+                a = "macro(compose ` a)";
+                c = "macro(compose , c)";
+                e = "macro(compose S-6 e)";
+                i = "macro(compose S-6 i)";
+                o = "macro(compose S-6 o)";
+                r = "macro(compose ' e)";
+                u = "macro(compose S-6 u)";
+                w = "macro(compose ` e)";
+                x = "macro(compose x x)";
+                y = "macro(compose ` u)";
+
+                "0" = "oneshot(compose_zero)";
+                "8" = "oneshot(compose_eight)";
+                equal = "oneshot(compose_equal)";
+              };
+
+              compose_zero_shift.e = "macro(compose S-o S-e)";
+              compose_eight."8" = "macro(compose 8 8)";
+
+              compose_shift = {
+                a = "macro(compose S-6 a)";
+                c = "macro(compose , S-c)";
+                e = "macro(compose S-' e)";
+                i = "macro(compose S-' i)";
+                o = "macro(compose S-' o)";
+                r = "macro(compose ' S-e)";
+                u = "macro(compose m u)";
+                w = "macro(compose ` S-e)";
+
+                "," = "macro(compose S-, S-,)";
+                "." = "macro(compose S-. S-.)";
+              };
+
+              compose_equal = {
+                e = "macro(compose = e)";
+                l = "macro(compose - l)";
+                y = "macro(compose - y)";
+              };
+
+              compose_zero = {
+                "0" = "macro(compose o o)";
+                c = "macro(compose o c)";
+                e = "macro(compose o e)";
+                shift = "layer(compose_zero_shift)";
               };
 
               alt = mapModNumbers "A";
@@ -139,7 +193,9 @@
         AttrKeyboardIntegration=internal
       '';
 
-      packages = [ pkgs.keyd ];
+      packages = with pkgs; [
+        keyd
+      ];
 
       users.users.${config.me.user}.extraGroups = [ "keyd" ];
       users.groups.keyd = { };
@@ -151,9 +207,5 @@
           ATTR{name}!="keyd virtual*", \
           RUN+="${lib.getExe' pkgs.systemd "systemctl"} try-restart keyd.service", \
         '';
-
-      systemd.services.keyd.serviceConfig = {
-        Group = "keyd";
-      };
     };
 }

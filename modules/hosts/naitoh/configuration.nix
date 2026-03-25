@@ -129,6 +129,35 @@
         unixAuth = false;
       };
 
+      services.clight = {
+        enable = true;
+        settings = {
+          restore_on_exit = true;
+
+          keyboard.disabled = true;
+          gamma.disabled = true;
+          dpms.disabled = true;
+          screen.disabled = true;
+          dimmer.disabled = true;
+
+          sensor.camera_dev = "/dev/video0";
+
+          backlight = {
+            ac_timeouts = [
+              600
+              600
+              600
+            ];
+            batt_timeouts = [
+              300
+              300
+              300
+            ];
+            capture_on_lid_opened = true;
+          };
+        };
+      };
+
       # do not change
       # For more information, see `man configuration.nix` or https://nixos.org/manual/nixos/stable/options#opt-system.stateVersion .
       system.stateVersion = "23.11"; # Did you read the comment?

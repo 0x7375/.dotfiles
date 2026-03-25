@@ -45,29 +45,21 @@
           apps = [
             "vesktop"
             "discord"
+            "vicinae"
           ];
 
           appConfigs = builtins.concatStringsSep "\n\n" (map (app: "[${app}]\n${defaultWithEnter}") apps);
         in
         # toml
         ''
-          # arc raiders
-          [steam-app-1808500]
-          1 = 1
-          2 = 2
-          3 = 3
-          4 = 4
-
           [${config.me.desktop.browser}]
           ${defaultWithEnter}
           control.e = f6
 
+          [zen-browser]
+          control.e = f6
           # make fullscreen toggle compact mode aswell
           meta.f = macro(A-c M-f)
-
-          [copyq]
-          ${default}
-          control.m = macro(enter 20ms M-q)
 
           ${appConfigs}
         '';

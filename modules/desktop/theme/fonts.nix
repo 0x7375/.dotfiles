@@ -48,8 +48,7 @@
         };
 
       config = {
-        packages =
-          with pkgs;
+        fonts.packages =
           let
             inherit (config.me.desktop) font terminal;
           in

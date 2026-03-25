@@ -6,19 +6,19 @@
     {
       environment.etc.hosts.text =
         let
-          lanHosts =
-            lib.filterAttrs (_: v: v.ips.lan != null) config.me.hosts
-            |> lib.mapAttrsToList (h: v: "${v.ips.lan} ${h}");
-          vpnHosts =
-            lib.filterAttrs (_: v: v.ips.vpn != null) config.me.hosts
-            |> lib.mapAttrsToList (h: v: "${v.ips.vpn} ${h}.vpn");
+          hosts = lib.flatten (
+            lib.mapAttrsToList (
+              h: v:
+              (lib.optional (v.ips.lan != null) "${v.ips.lan} ${h}")
+              ++ (lib.optional (v.ips.vpn != null) "${v.ips.vpn} ${h}.vpn")
+            ) config.me.hosts
+          );
         in
         lib.mkForce ''
           127.0.0.1 localhost
           255.255.255.255 broadcasthost
           ::1 localhost
-          ${builtins.concatStringsSep "\n" lanHosts}
-          ${builtins.concatStringsSep "\n" vpnHosts}
+          ${builtins.concatStringsSep "\n" hosts}
         '';
     };
 

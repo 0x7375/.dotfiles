@@ -1,5 +1,5 @@
 {
-  flake.nixos.naitoh =
+  flake.nixos.minecraft =
     {
       config,
       lib,
@@ -13,6 +13,10 @@
       # users.users.${user} = {
       #   extraGroups = [ "minecraft" ];
       # };
+
+      unfree-packages = [
+        "minecraft-server"
+      ];
 
       packages = with pkgs; [
         git

@@ -24,12 +24,13 @@
       };
 
       peerNames = builtins.attrNames peerKeys;
+
     in
     {
-      sops.secrets = {
-        "vpn/pk" = lib.my.mkHostSecret hostname "vpn/pk" { owner = config.me.user; };
-      }
-      // builtins.listToAttrs (
+      me.hostSecrets."vpn/pk" = {
+        owner = config.me.user;
+      };
+      sops.secrets = builtins.listToAttrs (
         map (name: {
           name = "${name}/vpn/psk";
           value = {

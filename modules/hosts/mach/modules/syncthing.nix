@@ -1,14 +1,12 @@
 {
   flake.darwin.mach =
     {
-      lib,
       secrets,
       config,
       ...
     }:
     let
-      inherit (config.me) user home hostname;
-      mkHostSecret = lib.my.mkHostSecret hostname;
+      inherit (config.me) user home;
     in
     {
       sops.secrets."syncthing/config" = {
@@ -18,7 +16,9 @@
         key = "";
       };
 
-      sops.secrets."syncthing/key" = mkHostSecret "syncthing/key" { owner = user; };
+      me.hostSecrets."syncthing/key" = {
+        owner = user;
+      };
       hj.files."Library/Application Support/Syncthing/cert.pem".text = ''
         -----BEGIN CERTIFICATE-----
         ${config.me.host.syncthing.cert}

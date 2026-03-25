@@ -35,7 +35,7 @@
           # ffmpeg = prev.ffmpeg.override { withFullDeps = true; };
 
           # nix =
-          #   if config.me.wm.enable then
+          #   if config.me.desktop.enable then
           #     prev.nix.overrideAttrs (old: {
           #       postPatch = ''
           #         for file in \

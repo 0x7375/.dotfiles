@@ -138,7 +138,7 @@
         command = "${lib.getExe pkgs.dark-mode-notify} ${lib.getExe pkgs.my.swap-theme} sync";
       };
 
-      launchd.user.agents.syncthing = lib.my.mkLaunchdAgent {
+      launchd.user.agents.syncthing = self.lib.mkLaunchdAgent {
         name = "syncthing";
         command = "${lib.getExe pkgs.syncthing} --no-browser --no-restart";
         background = true;

@@ -1,10 +1,10 @@
 {
-  flake.nixos.core =
+  flake.shared.core =
     {
-      lib,
-      config,
-      inputs,
       pkgs,
+      config,
+      lib,
+      inputs,
       ...
     }:
     {
@@ -12,6 +12,21 @@
         (lib.mkAliasOptionModule [ "hj" ] [ "hjem" "users" config.me.user ])
       ];
 
+      hjem = {
+        linker = inputs.hjem.packages.${pkgs.stdenv.hostPlatform.system}.smfh;
+        users.${config.me.user}.enable = true;
+        clobberByDefault = true;
+      };
+    };
+
+  flake.nixos.core =
+    {
+      lib,
+      config,
+      pkgs,
+      ...
+    }:
+    {
       users.users.${config.me.user} = {
         isNormalUser = true;
         home = config.me.home;
@@ -28,12 +43,6 @@
       users.users.root = {
         initialPassword = "root";
         initialHashedPassword = lib.mkForce null;
-      };
-
-      hjem = {
-        linker = inputs.hjem.packages.${pkgs.stdenv.hostPlatform.system}.smfh;
-        users.${config.me.user}.enable = true;
-        clobberByDefault = true;
       };
     };
 

@@ -111,7 +111,7 @@
         key = "";
       };
 
-      security.acme = lib.mkIf config.me.secrets.enable {
+      security.acme = {
         acceptTerms = true;
         defaults.email = "acme.ranked@0xaa.me";
         certs."${domain}" = {

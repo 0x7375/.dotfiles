@@ -1,8 +1,6 @@
 {
   flake.lib.notifyOnServiceFailure = service: {
-    ${service} = {
-      unitConfig.OnFailure = "service-failure-notify@%N.service";
-    };
+    ${service}.unitConfig.OnFailure = "service-failure-notify@%N.service";
   };
 
   flake.nixos.pearlman =

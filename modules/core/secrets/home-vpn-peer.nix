@@ -1,17 +1,19 @@
+{ self, ... }:
+
 {
   flake.shared.vpnPeer =
     {
-      lib,
       config,
       ...
     }:
     let
       inherit (config.me) hostname host;
-      mkHostSecret = lib.my.mkHostSecret hostname;
     in
     {
       sops.secrets.server_vpn_endpoint.owner = config.me.user;
-      sops.secrets."vpn/pk" = mkHostSecret "vpn/pk" { owner = config.me.user; };
+      me.hostSecrets."vpn/pk" = {
+        owner = config.me.user;
+      };
       sops.secrets."${hostname}/vpn/psk".owner = config.me.user;
 
       sops.templates."home-vpn-${hostname}.conf".content =
@@ -38,6 +40,8 @@
       inherit (config.me) hostname;
     in
     {
+      imports = [ self.shared.vpnPeer ];
+
       packages = [ pkgs.wireguard-tools ];
       sops.templates."home-vpn-${hostname}.conf".path = "/etc/wireguard/home.conf";
     };
@@ -48,6 +52,8 @@
       inherit (config.me) hostname;
     in
     {
+      imports = [ self.shared.vpnPeer ];
+
       networking.wg-quick.interfaces.home = {
         autostart = false;
         configFile = config.sops.templates."home-vpn-${hostname}.conf".path;

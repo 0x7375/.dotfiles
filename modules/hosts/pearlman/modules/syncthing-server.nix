@@ -32,7 +32,6 @@
           lamarr
         ];
       };
-      mkHostSecret = lib.my.mkHostSecret hostname;
     in
     {
       me.services.syncthing = {
@@ -40,7 +39,9 @@
         port = 8384;
       };
 
-      sops.secrets."syncthing/key" = mkHostSecret "syncthing/key" { owner = "syncthing"; };
+      me.hostSecrets."syncthing/key" = {
+        owner = "syncthing";
+      };
       sops.secrets.syncthing_pw.owner = "syncthing";
 
       users.users.syncthing.extraGroups = [ "media" ];

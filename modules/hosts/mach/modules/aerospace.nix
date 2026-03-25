@@ -15,7 +15,7 @@
         enable = true;
         settings =
           let
-            terminal = config.wm.terminal.name;
+            terminal = config.me.desktop.terminal.name;
           in
           {
             config-version = 2;

@@ -7,7 +7,10 @@
     auto-update.url = "github:nixos/nixpkgs/nixos-unstable";
 
     flake-parts.url = "github:hercules-ci/flake-parts";
-    wrappers.url = "github:BirdeeHub/nix-wrapper-modules";
+    wrappers = {
+      url = "github:BirdeeHub/nix-wrapper-modules";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     nur = {
       url = "github:nix-community/NUR";

@@ -51,6 +51,10 @@ in
       nixos = attrsOption;
       darwin = attrsOption;
       shared = attrsOption;
+      lib = lib.mkOption {
+        type = lib.types.lazyAttrsOf lib.types.raw;
+        default = { };
+      };
     };
 
   config = {
@@ -62,12 +66,16 @@ in
           networkEnvironment
           keyd
           btrfs
+          vpnPeer
           syncthingClient
+          desktop
+          wayland
         ])
         ++ (with self.shared; [
           dev
         ])
       );
+
       naitoh = mkHost "nixos" "naitoh" (
         (with self.nixos; [
           boot
@@ -77,24 +85,41 @@ in
           btrfs
           syncthingClient
           vpnPeer
+          desktop
+          wayland
         ])
         ++ (with self.shared; [
           dev
         ])
       );
+
+      pearlman = mkHost "nixos" "pearlman" (
+        with self.nixos;
+        [
+          boot
+          secrets
+          syncthing
+        ]
+      );
+
+      isoImg = mkHost "nixos" "isoImg" [ self.nixos.keyd ];
     };
 
     flake.darwinConfigurations = {
-      mach =
-        mkHost "darwin" "mach" [
+      mach = mkHost "darwin" "mach" (
+        [
           inputs.nix-homebrew.darwinModules.nix-homebrew
         ]
         ++ (with self.darwin; [
-          vpnPeer
-          network
           secrets
           vpnPeer
-        ]);
+          desktop
+          alacritty
+        ])
+        ++ (with self.shared; [
+          dev
+        ])
+      );
     };
   };
 }

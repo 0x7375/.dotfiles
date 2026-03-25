@@ -8,10 +8,7 @@
       ...
     }:
     {
-      imports = [
-        (modulesPath + "/installer/scan/not-detected.nix")
-        ./disko.nix
-      ];
+      imports = [ (modulesPath + "/installer/scan/not-detected.nix") ];
 
       fileSystems."/mnt/ssd" = {
         device = "/dev/disk/by-uuid/44444444-4444-4444-8888-888888888888";

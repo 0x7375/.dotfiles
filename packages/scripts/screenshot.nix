@@ -6,7 +6,7 @@ pkgs.writeShellApplication {
     coreutils
     xdg-user-dirs
     libnotify
-    config.me.wm.terminal.name
+    config.me.desktop.terminal.name
     lf
     hyprshot
   ];
@@ -20,7 +20,7 @@ pkgs.writeShellApplication {
       function send_notification() {
           local -r action=$(notify-send --icon "$folder$file" "Screenshot saved" "You can paste the image from the clipboard" -A open=open)
           if [[ $action == *open* ]]; then
-              ${config.me.wm.terminal.cmd} -e lf "$(xdg-user-dir SCREENSHOTS)"
+              ${config.me.desktop.terminal.cmd} -e lf "$(xdg-user-dir SCREENSHOTS)"
           fi
       }
 

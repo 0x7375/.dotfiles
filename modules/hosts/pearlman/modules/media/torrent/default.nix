@@ -8,8 +8,6 @@
     }:
     let
       template = "@guiPassword@";
-      inherit (config.me) hostname;
-      mkHostSecret = lib.my.mkHostSecret hostname;
     in
     {
       me.services.qBittorrent = {
@@ -17,7 +15,7 @@
         port = 8080;
       };
 
-      sops.secrets."qbittorrent/pw_hash" = mkHostSecret "qbittorrent/pw_hash" {
+      me.hostSecrets."qbittorrent/pw_hash" = {
         owner = config.services.qbittorrent.user;
       };
 

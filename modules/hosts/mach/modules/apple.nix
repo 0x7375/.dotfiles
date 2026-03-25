@@ -171,7 +171,7 @@
 
           nvimShim = mkMacApp {
             name = "Nvim";
-            terminalName = config.me.wm.terminal.name;
+            terminalName = config.me.desktop.terminal.name;
           };
         in
         {

@@ -1,17 +1,12 @@
 {
   flake.nixos.pearlman =
     {
-      lib,
       config,
       pkgs,
       ...
     }:
-    let
-      inherit (config.me) hostname;
-      mkHostSecret = lib.my.mkHostSecret hostname;
-    in
     {
-      sops.secrets."qbittorrent/pw" = mkHostSecret "qbittorrent/pw" {
+      me.hostSecrets."qbittorrent/pw" = {
         owner = config.services.qbittorrent.user;
       };
 

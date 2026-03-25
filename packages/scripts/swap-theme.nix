@@ -17,12 +17,17 @@ pkgs.writeShellApplication {
     [
       procps
       fd
-      dunst
     ]
-    ++ lib.optionals (config.me.wm.displayServer != "macos") (with pkgs; [ darkman ]);
+    ++ lib.optionals (!isDarwin) (
+      with pkgs;
+      [
+        dunst
+        darkman
+      ]
+    );
   text =
     let
-      inherit (config.me.wm) theme iconTheme;
+      inherit (config.me.desktop) theme iconTheme;
     in
     # bash
     ''
@@ -89,7 +94,7 @@ pkgs.writeShellApplication {
       }
 
       pkill -USR1 nvim
-      ${lib.optionalString (config.me.wm.terminal.name == "foot")
+      ${lib.optionalString (config.me.desktop.terminal.name == "foot")
         # bash
         ''
           if [[ "$theme" == "dark" ]]; then

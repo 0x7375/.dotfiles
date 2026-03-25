@@ -59,7 +59,7 @@
             if [[ -n "$SSH_TTY" ]]; then
               printf '\033]52;c;%s\a' "$(printf '%s' "$data" | base64 | tr -d '\n')" > "$SSH_TTY"
             else
-              printf '%s' "$data" | ${lib.optionalString (options ? me.wm) config.me.wm.copy}
+              printf '%s' "$data" | ${lib.optionalString (options ? me.desktop) config.me.desktop.copy}
             fi
           }
 
@@ -130,7 +130,7 @@
 
       hj.xdg.config.files."zsh/longcmd-notify.zsh".text =
         let
-          activeWindow = "${getExe' pkgs.hyprland "hyprctl"} activewindow -j | ${getExe pkgs.jq} -r .address";
+          activeWindow = lib.optionalString pkgs.stdenv.isLinux "${getExe' pkgs.hyprland "hyprctl"} activewindow -j | ${getExe pkgs.jq} -r .address";
         in
         # bash
         ''

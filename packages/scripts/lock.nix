@@ -14,7 +14,7 @@ pkgs.writeShellApplication {
   ];
   text =
     let
-      inherit (config.me.wm) browser;
+      inherit (config.me.desktop) browser;
     in
     # bash
     ''

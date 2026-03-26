@@ -36,7 +36,7 @@
 
       nix.settings = {
         substituters = [ "${url}/cache" ];
-        trusted-public-keys = [ "cache:Xz8qsbtj34UcTg4kOCrJT3FuPTE+t7YM2iabg/qK/TQ=" ];
+        trusted-public-keys = [ "cache:Vi/f16RngGbWkPLDlM/TBMOE+DEQcnvw8OFCUKdYgC4=" ];
       };
     };
 }

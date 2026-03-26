@@ -204,7 +204,6 @@
               '';
             }
           );
-          screenshot = getExe pkgs.my.screenshot;
           term = pkgs.${cfg.terminal.name} + "/bin/" + cfg.terminal.cmd;
 
           openNote =
@@ -255,6 +254,25 @@
 
                 asyncio.run(main())
               '';
+
+          screenshot = pkgs.writeShellApplication {
+            name = "screenshot";
+            runtimeInputs = with pkgs; [
+              coreutils
+              xdg-user-dirs
+              libnotify
+              hyprshot
+            ];
+            text = ''
+              time=$(date -u "+%s" | cut -c 7-)
+              file="Screenshot-$(date -u +%d-%m-%Y-"$time").png"
+              folder="$(xdg-user-dir SCREENSHOTS)/"
+
+              [[ -z $1 ]] && echo "Usage: screenshot {region|window|monitor}" && exit 1
+
+              hyprshot -o "$folder" -f "$file" -m "$1"
+            '';
+          };
         in
         {
           XF86MonBrightnessUp = "${change-brightness} up";
@@ -279,27 +297,24 @@
           "Mod+p" = getExe pkgs.my.powermenu;
           "Mod+Shift+i" = getExe wizToggle;
 
-          "Mod+Shift+c" = {
-            cmd = getExe (
-              pkgs.writeShellApplication {
-                name = "color-picker";
-                runtimeInputs = with pkgs; [
-                  coreutils-full
-                  libnotify
-                  imagemagick
-                  hyprpicker
-                ];
-                text = ''
-                  size="80x80"
-                  color=$(hyprpicker -ra) && {
-                    notify-send --icon "/tmp/color.png" "Copied $color to clipboard"
-                    convert -size "$size" xc:"$color" /tmp/color.png
-                  }
-                '';
-              }
-            );
-            release = true;
-          };
+          "Mod+Shift+c" = getExe (
+            pkgs.writeShellApplication {
+              name = "color-picker";
+              runtimeInputs = with pkgs; [
+                coreutils-full
+                libnotify
+                imagemagick
+                hyprpicker
+              ];
+              text = ''
+                size="80x80"
+                color=$(hyprpicker -ra) && {
+                  notify-send --icon "/tmp/color.png" "Copied $color to clipboard"
+                  convert -size "$size" xc:"$color" /tmp/color.png
+                }
+              '';
+            }
+          );
         };
 
       services.dbus.enable = true;

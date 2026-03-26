@@ -61,7 +61,7 @@
     };
     vicinae-extensions = {
       url = "github:vicinaehq/extensions";
-      inputs.nixpkgs.follows = "auto-update";
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
 
     zen-browser = {

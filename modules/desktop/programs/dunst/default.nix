@@ -71,7 +71,7 @@
               highlight = palette.fg0;
               frame_color = palette.bg1;
 
-              icon_path = "${flakeDir}/misc/output/${palette._theme}";
+              icon_path = "${flakeDir}/misc/dunst/output/${palette._theme}";
               monitor = 0;
               follow = "none";
               width = 400;

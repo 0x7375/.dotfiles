@@ -182,6 +182,8 @@
           nix
           wifi-commander
           process-manager
+
+          # TODO: check upstream if it stops being blacklisted
           # systemd
         ]
         ++ (with inputs.vicinae.packages.${system}; [
@@ -268,6 +270,14 @@
                   manage-saved-networks.alias = "n";
                 };
 
+                "@knoopx/store.vicinae.systemd".entrypoints = {
+                  services.alias = "s";
+                };
+                # TODO: use this
+                # "@knoopx/vicinae-extension-systemd-0".entrypoints = {
+                #   services.alias = "s";
+                # };
+
                 "@Gelei/vicinae-extension-bluetooth-0" = {
                   preferences.connectionToggleable = true;
                   entrypoints = {
@@ -288,10 +298,6 @@
                     processes.alias = "k";
                     kill.enabled = false;
                   };
-                };
-
-                "@knoopx/vicinae-extension-systemd-0".entrypoints = {
-                  services.alias = "s";
                 };
 
                 "@josephschmitt/gif-search".entrypoints = {

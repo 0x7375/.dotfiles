@@ -1,6 +1,6 @@
 {
-  config,
   pkgs,
+  server ? "pearlman",
   ...
 }:
 
@@ -11,7 +11,7 @@ pkgs.writeShellApplication {
     # bash
     ''
       REMOTE_PATH=/data/backups/vault-export
-      REMOTE="root@${config.me.server}"
+      REMOTE="root@${server}"
 
       USAGE="Usage: backup-vault <export.json> <usb-mount-path>"
       EXPORT_FILE="''${1:?$USAGE}"

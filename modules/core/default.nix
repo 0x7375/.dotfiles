@@ -1,4 +1,4 @@
-{ self, ... }:
+{ inputs, self, ... }:
 
 {
   flake.shared.core =
@@ -32,8 +32,6 @@
       };
 
       config = {
-        _module.args.wrappers = inputs.self.packages.${pkgs.stdenv.hostPlatform.system};
-
         security.sudo.extraConfig = ''
           Defaults env_keep += "HOME XDG_CONFIG_HOME XDG_DATA_HOME XDG_CACHE_HOME"
         '';
@@ -96,5 +94,31 @@
         };
         wantedBy = [ "default.target" ];
       };
+    };
+
+  perSystem =
+    {
+      pkgs,
+      lib,
+      config,
+      ...
+    }:
+    {
+      packages =
+        let
+          dir = ../../scripts;
+          files = builtins.readDir dir;
+          nixFiles = lib.filterAttrs (name: type: type == "regular" && lib.hasSuffix ".nix" name) files;
+        in
+        lib.mapAttrs' (
+          name: _:
+          lib.nameValuePair (lib.removeSuffix ".nix" name) (
+            pkgs.callPackage (dir + "/${name}") {
+              inherit inputs;
+              my = config.packages;
+              unstable = inputs.nixpkgs-unstable.legacyPackages.${pkgs.stdenv.hostPlatform.system};
+            }
+          )
+        ) nixFiles;
     };
 }

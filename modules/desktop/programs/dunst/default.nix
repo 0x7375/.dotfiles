@@ -12,6 +12,8 @@
         dunst
       ];
 
+      activation = lib.getExe (import ./_generate-icons.nix { inherit config pkgs; });
+
       me.desktop.bindings =
         let
           dunst = lib.getExe' pkgs.dunst "dunstctl";
@@ -69,7 +71,7 @@
               highlight = palette.fg0;
               frame_color = palette.bg1;
 
-              icon_path = "${flakeDir}/.assets/dunst/output/${palette._theme}";
+              icon_path = "${flakeDir}/misc/output/${palette._theme}";
               monitor = 0;
               follow = "none";
               width = 400;

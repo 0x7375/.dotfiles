@@ -1,7 +1,4 @@
-{
-  pkgs,
-  ...
-}:
+{ pkgs, ... }:
 
 pkgs.writers.writePython3 "check" { } ''
   import json

@@ -14,6 +14,30 @@
 
       hardware.brillo.enable = true;
       services.udev.extraRules = # bash
+        let
+          notify = pkgs.writeShellApplication {
+            name = "charging-notify";
+            runtimeInputs = with pkgs; [
+              gnugrep
+              acpi
+              libnotify
+            ];
+            text = ''
+              [[ $# != 1 ]] && printf '0 or 1 must be passed as an argument.\nUsage: %s 0|1\n' "$0" && exit
+
+              export DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/$UID/bus"
+
+              battery_charging=$1
+              battery_level=$(acpi -b | grep -E "remaining|zero|until" | grep -P -o '[0-9]+(?=%)')
+
+              if [[ $battery_charging -eq 1 ]]; then
+                notify-send "Charging" "$battery_level% of battery charged." -a "charging" -i "battery-charging" -r 9991
+              elif [[ $battery_charging -eq 0 ]]; then
+                notify-send "Discharging" "$battery_level% of battery remaining." -a "charging" -i "battery" -r 9991
+              fi
+            '';
+          };
+        in
         ''
           # Allow video group to change screen brightness
           ACTION=="add", \
@@ -29,7 +53,7 @@
           ATTR{online}=="0", \
           ENV{WAYLAND_DISPLAY}="wayland-1", \
           ENV{XDG_RUNTIME_DIR}="/run/user/${toString config.me.uid}", \
-          RUN+="${getExe' pkgs.su "su"} ${config.me.user} -c '${getExe pkgs.my.charging-notify} 0'"
+          RUN+="${getExe' pkgs.su "su"} ${config.me.user} -c '${getExe notify} 0'"
 
           ACTION=="change", \
           SUBSYSTEM=="power_supply", \
@@ -37,7 +61,7 @@
           ATTR{online}=="1", \
           ENV{WAYLAND_DISPLAY}="wayland-1", \
           ENV{XDG_RUNTIME_DIR}="/run/user/${toString config.me.uid}", \
-          RUN+="${getExe' pkgs.su "su"} ${config.me.user} -c '${getExe pkgs.my.charging-notify} 1'"
+          RUN+="${getExe' pkgs.su "su"} ${config.me.user} -c '${getExe notify} 1'"
 
           # Automatically lock when security key is unplugged
           ACTION=="remove",\

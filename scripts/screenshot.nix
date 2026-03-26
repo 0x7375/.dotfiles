@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ pkgs, ... }:
 
 pkgs.writeShellApplication {
   name = "screenshot";
@@ -6,7 +6,6 @@ pkgs.writeShellApplication {
     coreutils
     xdg-user-dirs
     libnotify
-    config.me.desktop.terminal.name
     lf
     hyprshot
   ];
@@ -20,7 +19,7 @@ pkgs.writeShellApplication {
       function send_notification() {
           local -r action=$(notify-send --icon "$folder$file" "Screenshot saved" "You can paste the image from the clipboard" -A open=open)
           if [[ $action == *open* ]]; then
-              ${config.me.desktop.terminal.cmd} -e lf "$(xdg-user-dir SCREENSHOTS)"
+              $TERMINAL lf "$(xdg-user-dir SCREENSHOTS)"
           fi
       }
 
@@ -32,7 +31,7 @@ pkgs.writeShellApplication {
               window) hypr_mode="window" ;;
               monitor) hypr_mode="output" ;;
           esac
-          hyprshot -o "$folder" -f "$file" -m "$hypr_mode" -sc
+          hyprshot -o "$folder" -f "$file" -m "$hypr_mode" --clipboard
           send_notification
       }
 

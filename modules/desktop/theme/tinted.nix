@@ -3,6 +3,7 @@
     {
       lib,
       config,
+      pkgs,
       ...
     }:
     let
@@ -79,6 +80,17 @@
       };
 
       config = {
+        nixpkgs.overlays = [
+          (final: prev: {
+            my = (prev.my or { }) // {
+              swap-theme = import ./_swap-theme.nix {
+                inherit lib config;
+                pkgs = final;
+              };
+            };
+          })
+        ];
+
         tinted.enable = true;
         vars.TINTED_FILE = path;
       };

@@ -36,6 +36,8 @@
 
       me.desktop.startup.foot = "${lib.getExe pkgs.foot} --server";
 
+      xdg.terminal-exec.settings.default = [ "Alacritty.destop" ];
+
       programs.foot = {
         enable = true;
         settings =

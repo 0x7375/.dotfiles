@@ -3,7 +3,6 @@
     { inputs, pkgs, ... }:
     {
       packages = with pkgs; [
-        my.dump-dotfiles
         wireguard-tools
         gcc
         unzip
@@ -24,6 +23,7 @@
         # my.nd
         inputs.nd.packages.${pkgs.stdenv.hostPlatform.system}.default
         my.nlink
+        my.dump-dotfiles
         dix
       ];
     };

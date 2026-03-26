@@ -2,7 +2,6 @@
   flake.nixos.naitoh =
     {
       lib,
-      config,
       pkgs,
       ...
     }:
@@ -24,15 +23,56 @@
         wantedBy = [ "multi-user.target" ];
       };
 
-      systemd.services.battery-notify.serviceConfig = {
-        Type = "oneshot";
-        User = config.me.user;
-        ExecStart = lib.getExe pkgs.my.battery-notify;
+      systemd.services.battery-notify = {
+        path = with pkgs; [
+          gnugrep
+          acpi
+          libnotify
+          systemd
+        ];
+        script = ''
+          warning_level=15
+          full_level=90
+
+          empty_file=/tmp/batteryempty
+          full_file=/tmp/batteryfull
+
+          battery_discharging=$(acpi -b | grep -E "remaining|charged|zero" | grep -c "Discharging" )
+          battery_level=$(acpi -b | grep -E "remaining|charged|zero" | grep -P -o '[0-9]+(?=%)')
+
+          if [[ $battery_discharging -eq 1 ]] && [[ -f $full_file ]]; then
+              rm $full_file
+          elif [[ $battery_discharging -eq 0 ]] && [[ -f $empty_file ]]; then
+              rm $empty_file
+          fi
+
+          if [[ $battery_level -ge $full_level && $battery_discharging -eq 0 && ! -f $full_file ]]; then
+              notify-send "Battery Charged" "Battery is fully charged." -i "battery-full" -a "charged" -r 9991
+              touch $full_file
+          elif [[ $battery_level -le $warning_level ]] && [[ $battery_discharging -eq 1 ]] && [[ ! -f $empty_file ]]; then
+              notify-send "Low Battery" "$battery_level% of battery remaining." -u critical -i "battery-low" -r 9991
+              touch $empty_file
+          fi
+        '';
+        serviceConfig.Type = "oneshot";
       };
 
-      systemd.services."battery-check".serviceConfig = {
-        Type = "oneshot";
-        ExecStart = lib.getExe pkgs.my.battery-check;
+      systemd.services."battery-check" = {
+        path = with pkgs; [
+          gnugrep
+          acpi
+          systemd
+        ];
+        script = ''
+          hibernate_level=3
+          battery_discharging=$(acpi -b | grep -E "remaining|charged|zero" | grep -c "Discharging" )
+          battery_level=$(acpi -b | grep -E "remaining|charged|zero" | grep -P -o '[0-9]+(?=%)')
+
+          if [[ $battery_level -le $hibernate_level ]] && [[ $battery_discharging -eq 1 ]]; then
+              systemctl hibernate
+          fi
+        '';
+        serviceConfig.Type = "oneshot";
       };
     };
 }

@@ -1,8 +1,4 @@
-{
-  config,
-  pkgs,
-  ...
-}:
+{ pkgs, ... }:
 
 pkgs.writeShellApplication {
   name = "lock";
@@ -13,9 +9,6 @@ pkgs.writeShellApplication {
     hyprland
   ];
   text =
-    let
-      inherit (config.me.desktop) browser;
-    in
     # bash
     ''
       if pidof hyprlock > /dev/null; then
@@ -23,8 +16,8 @@ pkgs.writeShellApplication {
       fi
 
       browser_was_open=false
-      pgrep -x ${browser} > /dev/null && browser_was_open=true
-      pkill -x ${browser} || true
+      pgrep -x "$BROWSER" > /dev/null && browser_was_open=true
+      pkill -x "$BROWSER" || true
 
       ( sleep 300 && systemctl hibernate ) &
       HIBERNATE_PID=$!
@@ -36,6 +29,6 @@ pkgs.writeShellApplication {
       hyprlock
 
       kill "$HIBERNATE_PID" 2>/dev/null || true
-      $browser_was_open && hyprctl dispatch exec -- ${browser}
+      $browser_was_open && hyprctl dispatch exec -- "$BROWSER"
     '';
 }

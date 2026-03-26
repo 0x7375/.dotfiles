@@ -48,6 +48,15 @@
         };
 
       config = {
+        nixpkgs.overlays = [
+          (final: prev: {
+            fonts = {
+              CartographCF = final.callPackage ./_fonts/CartographCF.nix { };
+              InconsolataNF = final.callPackage ./_fonts/InconsolataNF.nix { };
+            };
+          })
+        ];
+
         fonts.packages =
           let
             inherit (config.me.desktop) font terminal;

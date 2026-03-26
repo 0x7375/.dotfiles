@@ -30,6 +30,7 @@
               control.h = backspace
               control.p = up
               control.n = down
+              control.m = enter
               f7 = A-right
               f8 = A-left
               control.j = C-tab
@@ -43,6 +44,8 @@
           apps = [
             "vesktop"
             "discord"
+            # empty-app-id
+            "|vicinae-launcher"
           ];
         in
         # toml

@@ -57,7 +57,6 @@
           #   withVencord = true;
           # })
           vesktop
-          my.generate-icons
           omnissa-horizon-client
           auto.signal-desktop
           # jetbrains.idea-community

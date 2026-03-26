@@ -29,6 +29,8 @@
         packages = with pkgs; [
           sops
           age-plugin-fido2-hmac
+          age-plugin-se
+          unstable.age-plugin-tpm
         ];
 
         sops.defaultSopsFile = "${secrets}/default.yaml";
@@ -75,10 +77,7 @@
             plugins = with pkgs; [ unstable.age-plugin-tpm ];
           };
 
-          packages = with pkgs; [
-            unstable.age-plugin-tpm
-            tpm2-tools
-          ];
+          packages = with pkgs; [ tpm2-tools ];
 
           security.tpm2 = {
             enable = true;
@@ -96,8 +95,6 @@
     { pkgs, ... }:
     {
       imports = [ self.shared.secrets ];
-
-      packages = [ pkgs.age-plugin-se ];
 
       sops.age = {
         keyFile = "/var/lib/sops-nix/se-identity.txt";

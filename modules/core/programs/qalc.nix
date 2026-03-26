@@ -2,9 +2,9 @@
 
 {
   flake.shared.core =
-    { wrappers, ... }:
+    { pkgs, ... }:
     {
-      packages = [ wrappers.qalc ];
+      packages = [ pkgs.my.qalc ];
     };
 
   perSystem =

@@ -4,17 +4,32 @@
       pkgs,
       config,
       inputs,
+      lib,
       ...
     }:
     {
+      nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) config.unfree-packages;
+
       nixpkgs.overlays = [
         (final: prev: {
           # adapted from: https://github.com/NixOS/nix/pull/15297
           lix = prev.lix.overrideAttrs (old: {
             patches = (old.patches or [ ]) ++ [ ./nix_shell_packages_env_var.patch ];
           });
+
+          unstable = import inputs.nixpkgs-unstable {
+            system = final.stdenv.hostPlatform.system;
+            config.allowUnfreePredicate = config.nixpkgs.config.allowUnfreePredicate;
+          };
+          auto = import inputs.auto-update {
+            system = final.stdenv.hostPlatform.system;
+            config.allowUnfreePredicate = config.nixpkgs.config.allowUnfreePredicate;
+          };
+
+          my = prev.my or { } // inputs.self.packages.${final.stdenv.hostPlatform.system};
         })
-      ];
+      ]
+      ++ [ inputs.nur.overlays.default ];
 
       nixpkgs.flake = {
         setFlakeRegistry = false;

@@ -120,11 +120,9 @@
           };
         };
 
-      config = {
-        vars = {
-          TERM = cfg.terminal.name;
-          TERMINAL = "${cfg.terminal.cmd} -e";
-        };
+      config.vars = {
+        TERM = cfg.terminal.name;
+        TERMINAL = "${cfg.terminal.cmd} -e";
       };
     };
 
@@ -155,17 +153,57 @@
 
       zramSwap.memoryPercent = lib.mkForce 100;
 
-      xdg.terminal-exec = {
-        enable = true;
-        settings.default = [
-          "foot.desktop"
-          "Alacritty.desktop"
-        ];
-      };
+      xdg.terminal-exec.enable = true;
 
       me.desktop.bindings =
         let
-          change-brightness = getExe pkgs.my.change-brightness;
+          change-brightness = getExe (
+            pkgs.writeShellApplication {
+              name = "change-brightness";
+              runtimeInputs = with pkgs; [
+                brillo
+                ddcutil
+              ];
+              text = ''
+                fade=150000
+
+                get_brightness() {
+                  local -r device="dev:$1"
+                  ddccontrol -r 0x10 "$device" 2>/dev/null | grep "Control 0x10:" | cut -d'/' -f2
+                }
+
+                set_brightness() {
+                  local -r device="dev:$1"
+                  local -ri value=$2
+                  ddccontrol -r 0x10 -w "$value" "$device" &> /dev/null
+                }
+
+                case $1 in
+                up)
+                    brillo -u $fade -q -A 10
+                    ;;
+                down)
+                    brillo -u $fade -q -U 10
+                    ;;
+                esac
+
+                for device in "/dev/i2c-2" "/dev/i2c-4"; do
+                  current=$(get_brightness "$device")
+                  case $1 in
+                  up)
+                      current=$(("$current" + 10))
+                      [[ $current -gt 100 ]] && current=100
+                      ;;
+                  down)
+                      current=$(("$current" - 10))
+                      [[ $current -lt 0 ]] && current=0
+                      ;;
+                  esac
+                  set_brightness "$device" "$current" &
+                done
+              '';
+            }
+          );
           screenshot = getExe pkgs.my.screenshot;
           term = pkgs.${cfg.terminal.name} + "/bin/" + cfg.terminal.cmd;
 
@@ -242,12 +280,28 @@
           "Mod+Shift+i" = getExe wizToggle;
 
           "Mod+Shift+c" = {
-            cmd = getExe pkgs.my.color-picker;
+            cmd = getExe (
+              pkgs.writeShellApplication {
+                name = "color-picker";
+                runtimeInputs = with pkgs; [
+                  coreutils-full
+                  libnotify
+                  imagemagick
+                  hyprpicker
+                ];
+                text = ''
+                  size="80x80"
+                  color=$(hyprpicker -ra) && {
+                    notify-send --icon "/tmp/color.png" "Copied $color to clipboard"
+                    convert -size "$size" xc:"$color" /tmp/color.png
+                  }
+                '';
+              }
+            );
             release = true;
           };
         };
 
-      activation = getExe pkgs.my.generate-icons;
       services.dbus.enable = true;
     };
 }

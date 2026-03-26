@@ -22,8 +22,8 @@ pkgs.writeShellApplication {
     dunst
   ];
   text = ''
-    icons_dir="${config.me.flakeDir}/.assets/dunst/output"
-    source_dir="${config.me.flakeDir}/.assets/dunst/source"
+    icons_dir="${config.me.flakeDir}/misc/dunst/output"
+    source_dir="${config.me.flakeDir}/misc/dunst/source"
 
     hash_file="$icons_dir/.palette-hash"
     current_hash="${paletteHash}"

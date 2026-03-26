@@ -21,8 +21,6 @@
             mapNumbers = lib.genAttrs (map toString (lib.range 0 9)) (x: x);
 
             settings = {
-              control.m = "enter";
-
               main = {
                 rightalt = "oneshot(compose)";
 

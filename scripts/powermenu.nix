@@ -1,5 +1,6 @@
 {
-  config,
+  my,
+  unstable,
   pkgs,
   ...
 }:
@@ -9,7 +10,7 @@ pkgs.writeShellApplication {
   runtimeInputs = with pkgs; [
     systemd
     my.lock
-    vicinae
+    unstable.vicinae
     procps
   ];
   bashOptions = [
@@ -36,7 +37,7 @@ pkgs.writeShellApplication {
         #   xargs -r pkill
         # ;;
         "lock") lock ;;
-        "logout") loginctl terminate-user ${toString config.me.uid} ;;
+        "logout") loginctl terminate-user "$USER" ;;
         "hibernate") systemctl hibernate ;;
         "shutdown") systemctl poweroff ;;
         "reboot") systemctl --no-wall reboot ;;

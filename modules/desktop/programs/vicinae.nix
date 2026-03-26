@@ -4,6 +4,7 @@
       pkgs,
       config,
       inputs,
+      secrets,
       lib,
       ...
     }:
@@ -147,14 +148,16 @@
         "('shortcut-${s.alias}', '${s.name}', '${iconUrl}', '${finalUrl}', '${browser}', 0, 0, 0, 0)"
       ) shortcuts;
 
-      shortcutProviders = builtins.listToAttrs (
-        map (s: {
-          name = "shortcuts.shortcut-${s.alias}";
-          value = {
-            alias = s.alias;
-          };
-        }) shortcuts
-      );
+      shortcutProviders = {
+        shortcuts.entrypoints = builtins.listToAttrs (
+          map (s: {
+            name = "shortcut-${s.alias}";
+            value = {
+              alias = s.alias;
+            };
+          }) shortcuts
+        );
+      };
 
       vicinaeServerWrapper = pkgs.writeShellScript "vicinae-server" ''
         DB_PATH="$HOME/.local/share/vicinae/vicinae.db"
@@ -195,11 +198,22 @@
         ]);
     in
     {
+      nixpkgs.overlays = [
+        (final: prev: { vicinae = final.unstable.vicinae; })
+      ];
+
       packages = [ pkgs.vicinae ];
 
       me.desktop.startup = {
         autocutsel = "${lib.getExe pkgs.autocutsel} -fork";
         vicinae = toString vicinaeServerWrapper;
+      };
+
+      sops.secrets.vicinae = {
+        sopsFile = "${secrets}/vicinae.json";
+        format = "json";
+        key = "";
+        owner = config.me.user;
       };
 
       hj.files =
@@ -210,25 +224,32 @@
           }) extensions
         )
         // {
-
-          # {"id":"extension.store.raycast.deepcast.englishUK","alias":"te"},
-          # {"id":"extension.store.raycast.deepcast.french","alias":"tf"},
-
-          ".config/vicinae/vicinae.json" = {
+          ".config/vicinae/settings.json" = {
             generator = lib.generators.toJSON { };
             value = {
-              closeOnFocusLoss = true;
-              keybinding = "emacs";
-              popToRootOnClose = true;
-              theme.name = "gruvbox";
+              imports = [ config.sops.secrets.vicinae.path ];
+
+              close_on_focus_loss = true;
+              keybinding = "default";
+              pop_to_root_on_close = true;
+              theme = {
+                enabled = false;
+                light.name = "gruvbox";
+                dark.name = "gruvbox";
+              };
               escape_key_behavior = "close_window";
 
-              window = {
-                csd = true;
-                opacity = 1;
-                rounding = 0;
-                dim_around = false;
+              launcher_window = {
                 blur.enabled = false;
+                opacity = 1;
+                dim_around = false;
+
+                client_side_decorations = {
+                  enabled = true;
+                  rounding = 0;
+                };
+
+                layer_shell.enabled = false;
               };
 
               providers = {
@@ -237,7 +258,9 @@
                   launchPrefix = "uwsm app --";
                 };
 
-                "@dagimg-dot/wifi-commander".entrypoints = {
+                browser-extension.enabled = false;
+
+                "@dagimg-dot/vicinae-extension-wifi-commander-0".entrypoints = {
                   scan-wifi.alias = "ns";
                   restart-wifi.enabled = false;
                   toggle-wifi-on.enabled = false;
@@ -245,7 +268,7 @@
                   manage-saved-networks.alias = "n";
                 };
 
-                "@Gelei/bluetooth" = {
+                "@Gelei/vicinae-extension-bluetooth-0" = {
                   preferences.connectionToggleable = true;
                   entrypoints = {
                     devices.alias = "bd";
@@ -256,7 +279,7 @@
                   };
                 };
 
-                "@leonkohli/process-manager" = {
+                "@leonkohli/vicinae-extension-process-manager-0" = {
                   preferences = {
                     refresh-interval = "3000";
                     sort-by-memory = true;
@@ -267,7 +290,7 @@
                   };
                 };
 
-                "@knoopx/systemd".entrypoints = {
+                "@knoopx/vicinae-extension-systemd-0".entrypoints = {
                   services.alias = "s";
                 };
 
@@ -275,7 +298,7 @@
                   search.alias = "gif";
                 };
 
-                "@knoopx/nix".entrypoints = {
+                "@knoopx/vicinae-extension-nix-0".entrypoints = {
                   home-manager-options.alias = "hm";
                   packages.alias = "pk";
                   pull-requests.alias = "pr";
@@ -283,19 +306,8 @@
                   flake-packages.enabled = false;
                 };
 
-                core.entrypoints = {
-                  join-discord-server = false;
-                  report-bug.enabled = false;
-                  sponsor.enabled = false;
-                  open-default-config.enabled = false;
-                  list-extensions.enabled = false;
-                  documentation.enabled = false;
-                  about.enabled = false;
-                };
-
                 developer.enabled = false;
 
-                theme.enabled = false;
                 system.enabled = false;
 
                 calculator.entrypoints = {
@@ -304,15 +316,6 @@
                 };
 
                 power.enabled = false;
-                # power.entrypoints = {
-                #   hibernate.enabled = false;
-                #   logout.enabled = false;
-                #   power-off.enabled = false;
-                #   reboot.enabled = false;
-                #   sleep.enabled = false;
-                #   soft-reboot.enabled = false;
-                #   suspend.enabled = false;
-                # };
 
                 files = {
                   preferences = {
@@ -325,6 +328,60 @@
                   entrypoints.history.alias = "c";
                   # preferences.encryption = true;
                 };
+
+                core.entrypoints = {
+                  join-discord-server.enabled = false;
+                  keybind-settings.enabled = false;
+                  manage-fallback.enabled = false;
+                  report-bug.enabled = false;
+                  sponsor.enabled = false;
+                  open-default-config.enabled = false;
+                  open-config-file.enabled = false;
+                  prune-memory.enabled = false;
+                  reload-scripts.enabled = false;
+                  search-builtin-icons.enabled = false;
+                  list-extensions.enabled = false;
+                  documentation.enabled = false;
+                  about.enabled = false;
+                };
+
+                "@mooxl/deepcast".entrypoints = {
+                  englishUS.alias = "te";
+                  french.alias = "tf";
+
+                  arabic.enabled = false;
+                  finnish.enabled = false;
+                  estonian.enabled = false;
+                  englishUK.enabled = false;
+                  dutch.enabled = false;
+                  danish.enabled = false;
+                  czech.enabled = false;
+                  bulgarian.enabled = false;
+                  chinese.enabled = false;
+                  german.enabled = false;
+                  greek.enabled = false;
+                  hungarian.enabled = false;
+                  index.enabled = false;
+                  indonesian.enabled = false;
+                  italian.enabled = false;
+                  japanese.enabled = false;
+                  latvian.enabled = false;
+                  lithuanian.enabled = false;
+                  norwegian.enabled = false;
+                  polish.enabled = false;
+                  portuguese.enabled = false;
+                  portugueseBrazil.enabled = false;
+                  romanian.enabled = false;
+                  russian.enabled = false;
+                  korean.enabled = false;
+                  slovak.enabled = false;
+                  slovenian.enabled = false;
+                  spanish.enabled = false;
+                  swedish.enabled = false;
+                  turkish.enabled = false;
+                  ukrainian.enabled = false;
+                };
+
               }
               // shortcutProviders;
             };

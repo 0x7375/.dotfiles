@@ -18,7 +18,7 @@ pkgs.writeShellApplication {
   ];
   text = # bash
     ''
-      options=(kill logout hibernate shutdown reboot setup)
+      options=(logout hibernate shutdown reboot setup)
       if [[ -d /sys/class/power_supply/BAT0 ]]; then
         options+=(lock)
       else
@@ -28,13 +28,13 @@ pkgs.writeShellApplication {
       chosen="$(printf "%s\n" "''${options[@]}" | vicinae dmenu --no-quick-look -p 'POWER')"
 
       case $chosen in
-        "kill") ps --no-headers -u "$USER" -o comm,%mem,%cpu --sort=-%mem,-%cpu |\
-          awk '{$1=$1}1' |\
-          awk '!seen[$1]++' | \
-          vicinae dmenu --no-quick-look -p KILL |\
-          awk '{print $1}' |\
-          xargs -r pkill
-        ;;
+        # "kill") ps --no-headers -u "$USER" -o comm,%mem,%cpu --sort=-%mem,-%cpu |\
+        #   awk '{$1=$1}1' |\
+        #   awk '!seen[$1]++' | \
+        #   vicinae dmenu --no-quick-look -p KILL |\
+        #   awk '{print $1}' |\
+        #   xargs -r pkill
+        # ;;
         "lock") lock ;;
         "logout") loginctl terminate-user ${toString config.me.uid} ;;
         "hibernate") systemctl hibernate ;;

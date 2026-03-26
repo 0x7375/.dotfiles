@@ -1,40 +1,29 @@
-diff --git a/env.cc b/env.cc
-index d91ee72d7..bb980bddd 100644
---- a/env.cc
-+++ b/env.cc
-@@ -1,5 +1,6 @@
- #include <unordered_set>
- #include <queue>
-+#include <boost/algorithm/string/join.hpp>
+--- a/lix/nix/run.cc
++++ b/lix/nix/run.cc
+@@ -140,11 +140,14 @@
+         setEnviron();
  
- #include "nix/cmd/command.hh"
- #include "nix/expr/eval.hh"
-@@ -76,9 +77,8 @@ struct CmdShell : InstallablesCommand, MixEnvironment
-         for (auto & path : outPaths)
-             todo.push(path);
- 
--        setEnviron();
--
          std::vector<std::string> pathAdditions;
 +        std::vector<std::string> packageNames;
  
          while (!todo.empty()) {
              auto path = todo.front();
-@@ -98,8 +98,17 @@ struct CmdShell : InstallablesCommand, MixEnvironment
-                 for (auto & p : tokenizeString<Paths>(state->storeFS->readFile(propPath)))
-                     todo.push(store->parseStorePath(p));
-             }
+             todo.pop();
+             if (!done.insert(path).second) continue;
 +
 +            packageNames.push_back(std::string(path.name()));
-         }
  
-+        auto existingPackagesVar = getEnvOs(OS_STR("NIX_SHELL_PACKAGES")).value_or(OS_STR(""));
+             if (true)
+                 pathAdditions.push_back(store->printStorePath(path) + "/bin");
+@@ -155,6 +158,11 @@
+                     todo.push(store->parseStorePath(p));
+             }
+         }
++
++        auto existingPackagesVar = getEnv("NIX_SHELL_PACKAGES").value_or("");
 +        if (!existingPackagesVar.empty())
 +            packageNames.push_back(existingPackagesVar);
-+        setVars["NIX_SHELL_PACKAGES"] = boost::algorithm::join(packageNames, " ");
-+
-+        setEnviron();
-+
-         // TODO: split losslessly; empty means .
-         auto unixPath = ExecutablePath::load();
-         unixPath.directories.insert(unixPath.directories.begin(), pathAdditions.begin(), pathAdditions.end());
++        setenv("NIX_SHELL_PACKAGES", concatStringsSep(" ", packageNames).c_str(), 1);
+ 
+         auto unixPath = tokenizeString<Strings>(getEnv("PATH").value_or(""), ":");
+         unixPath.insert(unixPath.begin(), pathAdditions.begin(), pathAdditions.end());

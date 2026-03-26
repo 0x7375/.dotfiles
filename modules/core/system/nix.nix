@@ -9,12 +9,10 @@
     {
       nixpkgs.overlays = [
         (final: prev: {
-          nix = final.unstable.nix.override {
-            nix-cli = final.unstable.nix.nix-cli.overrideAttrs (old: {
-              # https://github.com/NixOS/nix/pull/15297
-              patches = (old.patches or [ ]) ++ [ ./nix_shell_packages_env_var.patch ];
-            });
-          };
+          # adapted from: https://github.com/NixOS/nix/pull/15297
+          lix = prev.lix.overrideAttrs (old: {
+            patches = (old.patches or [ ]) ++ [ ./nix_shell_packages_env_var.patch ];
+          });
         })
       ];
 

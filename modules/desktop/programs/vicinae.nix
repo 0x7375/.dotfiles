@@ -2,23 +2,195 @@
   flake.nixos.desktop =
     {
       pkgs,
+      config,
       inputs,
       lib,
       ...
     }:
     let
+      inherit (pkgs.stdenv.hostPlatform) system;
+
+      shortcuts = [
+        {
+          name = "YouTube";
+          alias = "!y";
+          url = "https://www.youtube.com/results?search_query=$query";
+        }
+        {
+          name = "Google";
+          alias = "!g";
+          url = "https://google.com/search?q=$query";
+        }
+        {
+          name = "Google Images";
+          alias = "!gi";
+          url = "https://google.com/search?q=$query&tbm=isch";
+        }
+        {
+          name = "Startpage";
+          alias = "!s";
+          url = "https://startpage.com/do/dsearch?prfe=d7a6edf2bdae7d159fd3c7281470fb1b1611b9ebc58099d433766aab83750a24485b18c6615e9979c5ef4f823efb2326568630359a4cfaca9f87b8eda4b78324a831f096405c6b39160f84ca&query=$query";
+        }
+        {
+          name = "Brave";
+          alias = "!b";
+          url = "https://search.brave.com/search?q=$query";
+        }
+        {
+          name = "Brave Images";
+          alias = "!bi";
+          url = "https://search.brave.com/images?q=$query";
+        }
+        {
+          name = "MyNixOS Packages";
+          alias = "!p";
+          url = "https://mynixos.com/search?q=package+$query";
+        }
+        {
+          name = "MyNixOS Options";
+          alias = "!o";
+          url = "https://mynixos.com/search?q=option+$query";
+        }
+        {
+          name = "Noogle";
+          alias = "!n";
+          url = "https://noogle.dev/q?term=$query";
+        }
+        {
+          name = "Nix Packages History";
+          alias = "!u";
+          url = "https://history.nix-packages.com/search?search=$query";
+        }
+        {
+          name = "GitHub";
+          alias = "!h";
+          url = "https://github.com/search?type=code&q=$query";
+        }
+        {
+          name = "Wikipedia";
+          alias = "!w";
+          url = "https://en.wikipedia.org/wiki/Special:Search?search=$query";
+        }
+        {
+          name = "Bescherelle";
+          alias = "!c";
+          url = "https://conjugaison.bescherelle.com/verbes/$query";
+        }
+        {
+          name = "Youtube";
+          alias = "y";
+          url = "https://youtube.com";
+        }
+        {
+          name = "Youtube";
+          alias = "y";
+          url = "https://youtube.com";
+        }
+        {
+          name = "Monkeytype";
+          alias = "mo";
+          url = "https://monkeytype.com";
+        }
+        {
+          name = "Twitch";
+          alias = "t";
+          url = "https://twitch.tv/directory/following";
+        }
+        {
+          name = "Webmail";
+          alias = "w";
+          url = "https://webmail.unicaen.fr/#1";
+        }
+        {
+          name = "Ecampus";
+          alias = "e";
+          url = "https://ecampus-vert.unicaen.fr/my/courses.php";
+        }
+        {
+          name = "Tutanota";
+          alias = "ma";
+          url = "https://app.tuta.com/login";
+        }
+        {
+          name = "Addy";
+          alias = "a";
+          url = "https://addy.io";
+        }
+        {
+          name = "Send";
+          alias = "se";
+          url = "https://send.vis.ee/";
+        }
+        {
+          name = "Devhints";
+          alias = "dh";
+          url = "https://devhints.io/";
+        }
+      ];
+
+      sqlValues = lib.concatMapStringsSep ",\n" (
+        s:
+        let
+          urlMatch = builtins.match "^https?://([^/]+)(/.*)?$" s.url;
+          host = s.iconHost or (if urlMatch != null then builtins.elemAt urlMatch 0 else "example.com");
+
+          browser = "${config.me.desktop.browser}.desktop";
+          queryArg = "{argument name=\"Query\"}";
+          finalUrl =
+            if lib.hasInfix "$query" s.url then
+              builtins.replaceStrings [ "$query" ] [ queryArg ] s.url
+            else
+              s.url;
+
+          iconUrl = "icon://favicon/${host}?fallback=icon://omnicast/image?fill%3Dprimary-text";
+        in
+        "('shortcut-${s.alias}', '${s.name}', '${iconUrl}', '${finalUrl}', '${browser}', 0, 0, 0, 0)"
+      ) shortcuts;
+
+      shortcutProviders = builtins.listToAttrs (
+        map (s: {
+          name = "shortcuts.shortcut-${s.alias}";
+          value = {
+            alias = s.alias;
+          };
+        }) shortcuts
+      );
+
+      vicinaeServerWrapper = pkgs.writeShellScript "vicinae-server" ''
+        DB_PATH="$HOME/.local/share/vicinae/vicinae.db"
+        mkdir -p "$(dirname "$DB_PATH")"
+
+        ${lib.getExe pkgs.sqlite} "$DB_PATH" "
+          CREATE TABLE IF NOT EXISTS shortcut (id TEXT PRIMARY KEY, name TEXT, icon TEXT, url TEXT, app TEXT, open_count INTEGER, created_at INTEGER, updated_at INTEGER, last_used_at INTEGER);
+          
+          INSERT OR IGNORE INTO shortcut 
+            (id, name, icon, url, app, open_count, created_at, updated_at, last_used_at) 
+          VALUES 
+            ${sqlValues};
+        "
+
+        exec ${lib.getExe pkgs.vicinae} server
+      '';
+
       extensions =
-        with inputs.vicinae-extensions.packages.${pkgs.stdenv.hostPlatform.system};
+        with inputs.vicinae-extensions.packages.${system};
         [
           bluetooth
           nix
           wifi-commander
+          process-manager
+          # systemd
         ]
-        ++ (with inputs.vicinae.packages.x86_64-linux; [
+        ++ (with inputs.vicinae.packages.${system}; [
           (mkRayCastExtension {
             name = "gif-search";
             sha256 = "sha256-G7il8T1L+P/2mXWJsb68n4BCbVKcrrtK8GnBNxzt73Q=";
             rev = "4d417c2dfd86a5b2bea202d4a7b48d8eb3dbaeb1";
+          })
+          (mkRayCastExtension {
+            name = "deepcast";
+            sha256 = "sha256-Q3vfBX8Js9iRUNoFNPInnUCRClrBsWI00EDdz6A4ayI=";
+            rev = "1299394665c6a4ac24e2076d9421268f6445acd0";
           })
         ]);
     in
@@ -27,7 +199,7 @@
 
       me.desktop.startup = {
         autocutsel = "${lib.getExe pkgs.autocutsel} -fork";
-        vicinae = "${lib.getExe pkgs.vicinae} server";
+        vicinae = toString vicinaeServerWrapper;
       };
 
       hj.files =
@@ -38,21 +210,123 @@
           }) extensions
         )
         // {
+
+          # {"id":"extension.store.raycast.deepcast.englishUK","alias":"te"},
+          # {"id":"extension.store.raycast.deepcast.french","alias":"tf"},
+
           ".config/vicinae/vicinae.json" = {
             generator = lib.generators.toJSON { };
             value = {
               closeOnFocusLoss = true;
+              keybinding = "emacs";
+              popToRootOnClose = true;
               theme.name = "gruvbox";
+              escape_key_behavior = "close_window";
+
               window = {
-                csd = false;
+                csd = true;
                 opacity = 1;
                 rounding = 0;
                 dim_around = false;
                 blur.enabled = false;
               };
+
               providers = {
-                "vicinae/about".enabled = false;
-              };
+                applications.preferences = {
+                  defaultAction = "launch";
+                  launchPrefix = "uwsm app --";
+                };
+
+                "@dagimg-dot/wifi-commander".entrypoints = {
+                  scan-wifi.alias = "ns";
+                  restart-wifi.enabled = false;
+                  toggle-wifi-on.enabled = false;
+                  toggle-wifi-off.enabled = false;
+                  manage-saved-networks.alias = "n";
+                };
+
+                "@Gelei/bluetooth" = {
+                  preferences.connectionToggleable = true;
+                  entrypoints = {
+                    devices.alias = "bd";
+                    discoverable.enabled = false;
+                    bluetooth-on.enabled = false;
+                    bluetooth-off.enabled = false;
+                    scan.alias = "bs";
+                  };
+                };
+
+                "@leonkohli/process-manager" = {
+                  preferences = {
+                    refresh-interval = "3000";
+                    sort-by-memory = true;
+                  };
+                  entrypoints = {
+                    processes.alias = "k";
+                    kill.enabled = false;
+                  };
+                };
+
+                "@knoopx/systemd".entrypoints = {
+                  services.alias = "s";
+                };
+
+                "@josephschmitt/gif-search".entrypoints = {
+                  search.alias = "gif";
+                };
+
+                "@knoopx/nix".entrypoints = {
+                  home-manager-options.alias = "hm";
+                  packages.alias = "pk";
+                  pull-requests.alias = "pr";
+                  options.alias = "o";
+                  flake-packages.enabled = false;
+                };
+
+                core.entrypoints = {
+                  join-discord-server = false;
+                  report-bug.enabled = false;
+                  sponsor.enabled = false;
+                  open-default-config.enabled = false;
+                  list-extensions.enabled = false;
+                  documentation.enabled = false;
+                  about.enabled = false;
+                };
+
+                developer.enabled = false;
+
+                theme.enabled = false;
+                system.enabled = false;
+
+                calculator.entrypoints = {
+                  refresh-rates.enabled = false;
+                  history.alias = "c";
+                };
+
+                power.enabled = false;
+                # power.entrypoints = {
+                #   hibernate.enabled = false;
+                #   logout.enabled = false;
+                #   power-off.enabled = false;
+                #   reboot.enabled = false;
+                #   sleep.enabled = false;
+                #   soft-reboot.enabled = false;
+                #   suspend.enabled = false;
+                # };
+
+                files = {
+                  preferences = {
+                    excludedPaths = ".venv;.git;.direnv";
+                  };
+                  entrypoints.search.alias = "f";
+                };
+
+                clipboard = {
+                  entrypoints.history.alias = "c";
+                  # preferences.encryption = true;
+                };
+              }
+              // shortcutProviders;
             };
           };
         };

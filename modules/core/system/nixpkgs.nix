@@ -1,10 +1,6 @@
-{ self, withSystem, ... }:
+{ self, ... }:
 
 {
-  flake.overlays.wrappers = final: prev: {
-    wrappers = withSystem prev.stdenv.hostPlatform.system ({ config, ... }: config.packages);
-  };
-
   flake.shared.core =
     {
       lib,
@@ -20,8 +16,6 @@
       nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) config.unfree-packages;
 
       nixpkgs.overlays = [
-        self.overlays.wrappers
-
         (final: prev: {
           unstable = import inputs.nixpkgs-unstable {
             system = final.stdenv.hostPlatform.system;

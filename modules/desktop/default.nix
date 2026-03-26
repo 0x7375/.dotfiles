@@ -177,7 +177,7 @@
               # bash
               ''
                 note=$(ls ${dir} | sed 's/\.md$//' | ${getExe pkgs.vicinae} dmenu --no-quick-look -p "NOTE")
-                [ -n "$note" ] && echo $EDITOR "${dir}/$note.md"
+                [ -n "$note" ] && ${term} -e $EDITOR "${dir}/$note.md"
               '';
 
           btToggle =
@@ -233,7 +233,7 @@
           "Mod+Shift+s" = getExe pkgs.my.swap-theme;
           "Mod+e" = "${term} -e ${getExe pkgs.lf}";
           "Mod+Shift+e" = "${term} -e sudo ${getExe pkgs.lf}";
-          "Mod+m" = "${term} -e $(${openNote})";
+          "Mod+m" = toString openNote;
           "Mod+n" =
             "${term} -e ${getExe pkgs.zsh} -c '${getExe' pkgs.networkmanager "nmcli"} device wifi rescan && unset COLORTERM && TERM=xterm-old ${getExe' pkgs.networkmanager "nmtui"}'";
           "Mod+Shift+b" = btToggle;

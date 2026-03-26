@@ -17,7 +17,6 @@
       };
 
       packages = with pkgs; [
-        protonvpn-gui
         polkit_gnome
       ];
 

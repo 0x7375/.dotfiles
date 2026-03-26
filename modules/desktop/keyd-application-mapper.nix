@@ -40,20 +40,15 @@
               alt.b = C-left
             '';
 
-          defaultWithEnter = default + "\ncontrol.m = enter";
-
           apps = [
             "vesktop"
             "discord"
-            "vicinae"
           ];
-
-          appConfigs = builtins.concatStringsSep "\n\n" (map (app: "[${app}]\n${defaultWithEnter}") apps);
         in
         # toml
         ''
           [${config.me.desktop.browser}]
-          ${defaultWithEnter}
+          ${default}
           control.e = f6
 
           [zen-browser]
@@ -61,7 +56,7 @@
           # make fullscreen toggle compact mode aswell
           meta.f = macro(A-c M-f)
 
-          ${appConfigs}
+          ${builtins.concatStringsSep "\n\n" (map (app: "[${app}]\n${default}") apps)}
         '';
     };
 }

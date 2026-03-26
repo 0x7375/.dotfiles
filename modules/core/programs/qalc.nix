@@ -14,9 +14,7 @@
         inherit pkgs;
 
         package = pkgs.libqalculate;
-        flags = {
-          "-s" = [ "autocalc" ];
-        };
+        flags."-s" = [ "autocalc" ];
       };
     };
 }

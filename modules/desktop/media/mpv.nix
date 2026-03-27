@@ -2,7 +2,7 @@
 
 {
   flake.nixos.desktop = {
-    xdg.mimeApps.defaultApplications = self.lib.mimeMapEntries [
+    xdg.mimeApps.defaultApplications = self.lib.mapMimeEntries [
       "audio/vnd.wave"
       "audio/midi"
       "audio/x-wav"

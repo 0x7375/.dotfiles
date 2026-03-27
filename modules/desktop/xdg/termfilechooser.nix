@@ -46,9 +46,7 @@
       ];
 
       xdg.portal = {
-        extraPortals = [
-          pkgs.xdg-desktop-portal-termfilechooser
-        ];
+        extraPortals = [ pkgs.xdg-desktop-portal-termfilechooser ];
         config.common."org.freedesktop.impl.portal.FileChooser" = "termfilechooser";
       };
 
@@ -87,10 +85,21 @@
           name = "filechooser";
         }
       ];
+      tinted.files.".config/hypr/hyprland.conf".text =
+        "windowrulev2 = size 800 600, title:^(filechooser)$";
 
       vars.QT_QPA_PLATFORMTHEME = "xdgdesktopportal";
 
       systemd.user.services."file-handler".serviceConfig.ExecStart = "${lib.getExe pkgs.file-handler}";
+
+      xdg.desktopEntries.lf = {
+        exec = "${lib.getExe pkgs.lf} %u";
+        terminal = true;
+        name = "Lf";
+        type = "Application";
+      };
+
+      xdg.mimeApps.defaultApplications."inode/directory" = [ "lf.desktop" ];
 
       hj.xdg.data.files."dbus-1/services/org.freedesktop.FileManager1.service".text = # ini
         ''

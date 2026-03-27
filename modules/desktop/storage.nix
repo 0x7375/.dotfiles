@@ -61,7 +61,7 @@
           ''
         ) kdeconnectHosts;
 
-      xdg.mimeApps.defaultApplications = self.lib.mimeMapEntries [
+      xdg.mimeApps.defaultApplications = self.lib.mapMimeEntries [
         "application/bzip2"
         "application/gzip"
         "application/zip"

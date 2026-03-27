@@ -38,7 +38,7 @@ in
     };
 
   flake.nixos.core = {
-    xdg.mimeApps.defaultApplications = self.lib.mimeMapEntries [
+    xdg.mimeApps.defaultApplications = self.lib.mapMimeEntries [
       "text/plain"
       "text/markdown"
       "text/x-java"

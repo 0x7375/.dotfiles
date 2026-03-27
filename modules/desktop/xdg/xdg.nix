@@ -14,7 +14,7 @@
       ...
     }:
     {
-      xdg.mimeApps.defaultApplications.enable = true;
+      xdg.mimeApps.enable = true;
 
       xdg.desktopEntries = {
         modrinth = {

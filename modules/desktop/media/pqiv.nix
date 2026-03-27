@@ -2,7 +2,7 @@
 
 {
   flake.nixos.desktop = {
-    xdg.mimeApps.defaultApplications = self.lib.mimeMapEntries [
+    xdg.mimeApps.defaultApplications = self.lib.mapMimeEntries [
       "image/png"
       "image/apng"
       "image/vnd.microsoft.icon"

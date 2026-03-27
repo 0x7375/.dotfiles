@@ -4,20 +4,20 @@
   flake.nixos.desktop =
     { config, ... }:
     {
-      xdg.mimeApps.defaultApplications =
+      xdg.mimeApps =
         let
-          inherit (self.lib) mimeMapEntries;
+          inherit (self.lib) mapMimeEntries;
           inherit (config.me.desktop) browser;
         in
         {
-          defaultApplications = mimeMapEntries [
+          defaultApplications = mapMimeEntries [
             "x-scheme-handler/http"
             "x-scheme-handler/https"
             "x-scheme-handler/chrome"
             "x-scheme-handler/mailto"
           ] browser;
 
-          associations.added = mimeMapEntries [
+          associations.added = mapMimeEntries [
             "x-scheme-handler/http"
             "x-scheme-handler/https"
             "x-scheme-handler/chrome"
@@ -27,7 +27,6 @@
 
   flake.shared.desktop =
     {
-      pkgs,
       config,
       lib,
       ...

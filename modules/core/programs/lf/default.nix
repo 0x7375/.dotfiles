@@ -497,7 +497,7 @@
         trash-cli
       ];
 
-      xdg.mimeApps.defaultApplications = self.lib.mimeMapEntries [
+      xdg.mimeApps.defaultApplications = self.lib.mapMimeEntries [
         "inode/directory"
         "application/x-directory"
       ] "lf";

@@ -240,24 +240,28 @@
             ${getExe' pkgs.coreutils "realpath"} $(where $1);
           }
 
+          _nix_eval_sanitized() {
+              local target="$1"
+              local sanitize='x: if builtins.isList x then map (builtins.mapAttrs (k: v: let res = builtins.tryEval v; in if res.success then res.value else "<error>")) x else x'
+              local result
+
+              if result=$(nix eval --json --apply "$sanitize" "$target" 2>/dev/null); then
+                  echo "$result" | jq -rC | less -R
+              else
+                  nix eval "$target" | less -R
+              fi
+          }
+
           nhv() {
-            local result
-            if result=$(nix eval --json path:$FLAKE#nixosConfigurations.''${2:-$HOST}.config.hjem.users.$USER.$1 2>/dev/null); then
-                echo "$result" | jq -r
-            else
-                nix eval path:$FLAKE#nixosConfigurations.''${2:-$HOST}.config.hjem.users.$USER.$1
-            fi
+              local target="path:$FLAKE#nixosConfigurations.''${2:-$HOST}.config.hjem.users.$USER.$1"
+              _nix_eval_sanitized "$target"
           }
 
           nv() {
-              local result
               local system=''${SYSTEM:-nixos}
               [[ $(uname) == "Darwin" ]] && system=darwin
-              if result=$(nix eval --json path:$FLAKE#''${system}Configurations.''${2:-$HOST}.config.$1 2>/dev/null); then
-                  print -r "$result" | jq -r
-              else
-                  nix eval path:$FLAKE#''${system}Configurations.''${2:-$HOST}.config.$1
-              fi
+              local target="path:$FLAKE#''${system}Configurations.''${2:-$HOST}.config.$1"
+              _nix_eval_sanitized "$target"
           }
         '';
     };

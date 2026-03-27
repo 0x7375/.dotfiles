@@ -1,5 +1,3 @@
-# In case the system uses a non-POSIX shell, like fish or nushell,
-# we want to ensure run also our forked processes in a bash environment.
 SHELL="bash"
 
 SEARCH_SNIPPET_KEY="alt-s"
@@ -9,63 +7,83 @@ OPEN_HOMEPAGE_KEY="alt-w"
 NIX_SHELL_KEY="alt-S"
 NIX_PROFILE_KEY="alt-P"
 PRINT_PREVIEW_KEY="ctrl-P"
+EVAL_OPTION_KEY="alt-V"
 
-OPENER="xdg-open"
-[[ $OSTYPE == darwin* ]] && OPENER="open"
+export OPENER="xdg-open"
+[[ $OSTYPE == darwin* ]] && export OPENER="open"
+export CMD="${NIX_SEARCH_TV:-nix-search-tv}"
+export STATE_FILE="/tmp/nix-search-tv-fzf"
 
-# ========================================
-# for debug / development
-CMD="${NIX_SEARCH_TV:-nix-search-tv}"
+echo "" > "$STATE_FILE"
 
-STATE_FILE="/tmp/nix-search-tv-fzf"
-# save_state saves the currently displayed index
-# to the $STATE_FILE. This file serves as an external script state
-# for communication between "print" and "preview" commands
+_search_snippet() {
+  local match
+  match=$(echo "$1" | tr -d "'" | awk '{ if ($2) { print $2 } else print $1 }')
+  "$OPENER" "https://github.com/search?type=code&q=lang:nix+$match"
+}
+export -f _search_snippet
 
-# reset the state
-echo "" > $STATE_FILE
+_nix_shell() {
+  local package_name="${1//nixpkgs\/ /}"
+  local cmd="nix shell nixpkgs#$package_name"
+  if [ -n "$TMUX" ]; then
+    tmux new-window -n "nix-shell-$package_name" -c "$PWD" "$cmd"
+  else
+    eval "$cmd"
+  fi
+}
+export -f _nix_shell
 
-SEARCH_SNIPPET_CMD=$'echo "{}"'
-# fzf surrounds the matched package with ', trim them
-SEARCH_SNIPPET_CMD="$SEARCH_SNIPPET_CMD | tr -d \"'\" "
-# if it's multi-index search, then we need to remote the prefix
-SEARCH_SNIPPET_CMD="$SEARCH_SNIPPET_CMD | awk '{ if (\$2) { print \$2 } else print \$1 }' "
-SEARCH_SNIPPET_CMD="$SEARCH_SNIPPET_CMD | xargs printf \"https://github.com/search?type=code&q=lang:nix+%s\" \$1 "
+_nix_profile() {
+  local package_name="${1//nixpkgs\/ /}"
+  nix profile install "nixpkgs#$package_name"
+}
+export -f _nix_profile
 
-PACKAGE_NAME="\$(echo '{}' | sed 's:nixpkgs/ ::g')"
+_open_source() {
+  local url
+  url=$($CMD source $(cat "$STATE_FILE") "$1" | sed 's|nixos/modules/nixos/modules/|nixos/modules/|g')
+  "$OPENER" "$url"
+}
+export -f _open_source
 
-NIX_SHELL_CMD="nix shell nixpkgs#$PACKAGE_NAME"
-if [ -n "$TMUX" ]; then
-  NIX_SHELL_CMD="tmux new-window -n nix-shell-$PACKAGE_NAME -c \$PWD \"$NIX_SHELL_CMD\""
-fi
+_edit_source() {
+  local source_url
+  source_url=$($CMD source $(cat "$STATE_FILE") "$1" | sed 's|nixos/modules/nixos/modules/|nixos/modules/|g')
 
-NIX_PROFILE_CMD="nix profile add nixpkgs#$PACKAGE_NAME"
+  local file_path
+  file_path=$(echo "$source_url" \
+    | sed 's|https://github.com/[^/]*/[^/]*/blob/[^/]*/||' \
+    | sed 's|https://github.com/[^/]*/[^/]*/tree/[^/]*/||' \
+    | sed 's|#L.*||')
 
-GET_SOURCE_URL="$CMD source \$(cat $STATE_FILE) {} | sed 's|nixos/modules/nixos/modules/|nixos/modules/|g'"
+  local repo_path
+  case "$source_url" in
+    *nix-community/home-manager*) repo_path="$HOME/repos/home-manager" ;;
+    *nix-darwin/nix-darwin*) repo_path="$HOME/repos/nix-darwin" ;;
+    *nix-community/nur-combined*) repo_path="$HOME/repos/nur-combined" ;;
+    *) repo_path="$HOME/repos/nixpkgs" ;;
+  esac
 
-OPEN_SOURCE_CMD="$GET_SOURCE_URL | xargs $OPENER"
+  $EDITOR "$repo_path/$file_path"
+}
+export -f _edit_source
 
-EDIT_SOURCE_CMD="
-    source_url=\$($GET_SOURCE_URL)
+_eval_option() {
+  local option
+  option=$(echo "$1" | sed -E 's|^[^/]+/ ||')
+  local system=${SYSTEM:-nixos}
+  [[ $(uname) == 'Darwin' ]] && system=darwin
 
-    # strip line number and only keep relative path
-    file_path=\$(echo \"\$source_url\" \
-        | sed 's|https://github.com/[^/]*/[^/]*/blob/[^/]*/||' \
-        | sed 's|https://github.com/[^/]*/[^/]*/tree/[^/]*/||' \
-        | sed 's|#L.*||')
+  local target="path:$FLAKE#${system}Configurations.${HOST:-$HOSTNAME}.config.$option"
+  local sanitize='x: if builtins.isList x then map (builtins.mapAttrs (k: v: let res = builtins.tryEval v; in if res.success then res.value else "<error>")) x else x'
 
-    if echo \"\$source_url\" | grep -q 'nix-community/home-manager'; then
-        repo_path=\"\$HOME/repos/home-manager\"
-    elif echo \"\$source_url\" | grep -q 'nix-darwin/nix-darwin'; then
-        repo_path=\"\$HOME/repos/nix-darwin\"
-    elif echo \"\$source_url\" | grep -q 'nix-community/nur-combined'; then
-        repo_path=\"\$HOME/repos/nur\"
-    else
-        repo_path=\"\$HOME/repos/nixpkgs\"
-    fi
-
-    \$EDITOR \"\$repo_path/\$file_path\"
-"
+  tmux popup -w 80% -h 80% -T " $option " \
+    -e "NIX_TARGET=$target" \
+    -e "NIX_SANITIZE=$sanitize" \
+    -E "bash -c 'if res=\$(nix eval --json --apply \"\$NIX_SANITIZE\" \"\$NIX_TARGET\" 2>/dev/null); then echo \"\$res\" | jq -rC | less -R; else nix eval \"\$NIX_TARGET\" | less -R; fi'"
+}
+export -f _eval_option
 
 PREVIEW_WINDOW="wrap,40%"
 [ "$(tput cols)" -lt 90 ] && PREVIEW_WINDOW="$PREVIEW_WINDOW,up"
@@ -74,13 +92,14 @@ exec "$CMD" print | fzf \
   --preview "$CMD preview \$(cat $STATE_FILE) {}" \
   --bind "ctrl-u:preview-up" \
   --bind "ctrl-d:preview-down" \
-  --bind "$OPEN_SOURCE_KEY:execute($OPEN_SOURCE_CMD)" \
-  --bind "$EDIT_SOURCE_KEY:execute($EDIT_SOURCE_CMD)" \
+  --bind "$OPEN_SOURCE_KEY:execute(_open_source {})" \
+  --bind "$EDIT_SOURCE_KEY:execute(_edit_source {})" \
   --bind "$OPEN_HOMEPAGE_KEY:execute($CMD homepage \$(cat $STATE_FILE) {} | xargs $OPENER)" \
-  --bind "$SEARCH_SNIPPET_KEY:execute($SEARCH_SNIPPET_CMD | xargs $OPENER)" \
-  --bind "$NIX_SHELL_KEY:become($NIX_SHELL_CMD)" \
-  --bind "$NIX_PROFILE_KEY:execute($NIX_PROFILE_CMD)" \
+  --bind "$SEARCH_SNIPPET_KEY:execute(_search_snippet {})" \
+  --bind "$NIX_SHELL_KEY:become(_nix_shell {})" \
+  --bind "$NIX_PROFILE_KEY:execute(_nix_profile {})" \
   --bind "$PRINT_PREVIEW_KEY:execute($CMD preview \$(cat $STATE_FILE) {} | less)" \
+  --bind "$EVAL_OPTION_KEY:execute(_eval_option {})" \
   --layout reverse \
   --scheme history \
   --border=sharp \

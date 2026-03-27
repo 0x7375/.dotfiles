@@ -2,11 +2,11 @@
   "nodes": {
     "auto-update": {
       "locked": {
-        "lastModified": 1774106199,
-        "narHash": "sha256-US5Tda2sKmjrg2lNHQL3jRQ6p96cgfWh3J1QBliQ8Ws=",
+        "lastModified": 1774386573,
+        "narHash": "sha256-4hAV26quOxdC6iyG7kYaZcM3VOskcPUrdCQd/nx8obc=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "6c9a78c09ff4d6c21d0319114873508a6ec01655",
+        "rev": "46db2e09e1d3f113a13c0d7b81e2f221c63b8ce9",
         "type": "github"
       },
       "original": {
@@ -365,11 +365,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1774389454,
-        "narHash": "sha256-kkQKhN+dnjcJ3JDvqvjEL/MTyqw4WvpG2Gpm+94IVJo=",
+        "lastModified": 1774558268,
+        "narHash": "sha256-mzJSoSK8Eob6V1wbtafSrxkwusOtOV5IPItP8vcGhZ4=",
         "owner": "nix-community",
         "repo": "NUR",
-        "rev": "937fc69582636f648e18e2dfbdfbf39d734fc952",
+        "rev": "abfc10f1e9f4b301593df325b8cdc1cc2ba1cde2",
         "type": "github"
       },
       "original": {
@@ -428,11 +428,11 @@
     "secrets": {
       "flake": false,
       "locked": {
-        "lastModified": 1774546890,
-        "narHash": "sha256-lhUxZ0Kb83arllaGR+fC/c41XKwOpwc6Jmv+3R9MO7s=",
+        "lastModified": 1774567993,
+        "narHash": "sha256-drI9UfQduRW5fKHDCw+d4OJTEQAaXL5o693WfcTae4A=",
         "ref": "refs/heads/main",
-        "rev": "5595f9f9a0238c33aa0931f6aa575b9588096a1c",
-        "revCount": 13,
+        "rev": "f3564b9ba9b3dccf8a2adcd62a49e7934d99a684",
+        "revCount": 14,
         "type": "git",
         "url": "ssh://git@codeberg.org/0x7E/nix-secrets"
       },

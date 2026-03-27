@@ -116,7 +116,6 @@
             pkgs.callPackage (dir + "/${name}") {
               inherit inputs;
               my = config.packages;
-              unstable = inputs.nixpkgs-unstable.legacyPackages.${pkgs.stdenv.hostPlatform.system};
             }
           )
         ) nixFiles;

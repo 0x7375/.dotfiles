@@ -45,7 +45,7 @@
             "vesktop"
             "discord"
             # empty-app-id
-            "|vicinae-launcher"
+            # "|vicinae-launcher"
           ];
         in
         # toml

@@ -154,6 +154,8 @@
       zramSwap.memoryPercent = lib.mkForce 100;
 
       xdg.terminal-exec.enable = true;
+      hj.xdg.config.files."xdg-terminals.list".text =
+        builtins.head config.xdg.terminal-exec.settings.default;
 
       me.desktop.bindings =
         let
@@ -205,17 +207,6 @@
             }
           );
           term = pkgs.${cfg.terminal.name} + "/bin/" + cfg.terminal.cmd;
-
-          openNote =
-            let
-              dir = "$HOME/notes";
-            in
-            pkgs.writeShellScript "open-note"
-              # bash
-              ''
-                note=$(ls ${dir} | sed 's/\.md$//' | ${getExe pkgs.vicinae} dmenu --no-quick-look -p "NOTE")
-                [ -n "$note" ] && ${term} -e $EDITOR "${dir}/$note.md"
-              '';
 
           btToggle =
             let
@@ -281,7 +272,6 @@
           "Alt+Sys_Req" = "${screenshot} window";
           "Shift+Print" = "${screenshot} monitor";
 
-          "Mod+Shift+n" = "${getExe' pkgs.networkmanager "nmcli"} device wifi rescan";
           "Mod+t" = "${term} -e ${getExe pkgs.my.tmux-sessionizer} ~/";
           "Mod+Shift+t" = term;
 
@@ -289,12 +279,10 @@
           "Mod+Shift+s" = getExe pkgs.my.swap-theme;
           "Mod+e" = "${term} -e ${getExe pkgs.lf}";
           "Mod+Shift+e" = "${term} -e sudo ${getExe pkgs.lf}";
-          "Mod+m" = toString openNote;
-          "Mod+n" =
-            "${term} -e ${getExe pkgs.zsh} -c '${getExe' pkgs.networkmanager "nmcli"} device wifi rescan && unset COLORTERM && TERM=xterm-old ${getExe' pkgs.networkmanager "nmtui"}'";
-          "Mod+Shift+b" = btToggle;
-          "Mod+d" = "${lib.getExe pkgs.vicinae} open";
-          "Mod+p" = getExe pkgs.my.powermenu;
+          # "Mod+n" =
+          #   "${term} -e ${getExe pkgs.zsh} -c '${getExe' pkgs.networkmanager "nmcli"} device wifi rescan && unset COLORTERM && TERM=xterm-old ${getExe' pkgs.networkmanager "nmtui"}'";
+          "Mod+Alt+n" = "${getExe' pkgs.networkmanager "nmcli"} device wifi rescan";
+          "Mod+Alt+b" = btToggle;
           "Mod+Shift+i" = getExe wizToggle;
 
           "Mod+Shift+c" = getExe (

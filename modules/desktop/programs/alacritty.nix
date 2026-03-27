@@ -6,7 +6,7 @@
     {
       imports = [ self.shared.alacritty ];
 
-      xdg.terminal-exec.settings.default = [ "Alacritty.destop" ];
+      xdg.terminal-exec.settings.default = [ "Alacritty.desktop" ];
 
       packages = [ pkgs.alacritty ];
     };

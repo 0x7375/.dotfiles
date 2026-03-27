@@ -66,20 +66,7 @@
               }
             ];
 
-          bindings = {
-            "Mod+w" = config.me.desktop.browser;
-            "Mod+b" = pkgs.writeShellScript "open bookmark" ''
-              file="$HOME/notes/Bookmarks.md"
-              [[ ! -f $file ]] && exit
-
-              selection=$(awk -F': ' '{print $1}' "$file" | vicinae dmenu --no-quick-look -p "BOOKMARK")
-              [[ -z "$selection" ]] && exit
-
-              url=$(awk -F': ' -v sel="$selection" '$1 == sel {print $2}' "$file")
-
-              [[ -n "$url" ]] && ${config.me.desktop.open} "$url"
-            '';
-          };
+          bindings."Mod+w" = config.me.desktop.browser;
         };
       };
     };

@@ -186,6 +186,13 @@
           # TODO: check upstream if it stops being blacklisted
           # systemd
         ]
+        ++ [
+          (inputs.vicinae.packages.${system}.mkVicinaeExtension {
+            name = "powermenu";
+            version = "1.0.0";
+            src = ./extensions/powermenu;
+          })
+        ]
         ++ (with inputs.vicinae.packages.${system}; [
           (mkRayCastExtension {
             name = "gif-search";
@@ -198,18 +205,66 @@
             rev = "1299394665c6a4ac24e2076d9421268f6445acd0";
           })
         ]);
+
+      theme = "nix";
     in
     {
       nixpkgs.overlays = [
-        (final: prev: { vicinae = final.unstable.vicinae; })
+        (final: prev: {
+          # TODO: until unstable has v0.20.8
+          vicinae = final.auto.vicinae.overrideAttrs (old: {
+            src = final.fetchFromGitHub {
+              owner = "vicinaehq";
+              repo = "vicinae";
+              tag = "v0.20.8";
+              hash = "sha256-G+ibcIvOaPE3qot4zLmHUo7cmNFNU1kw2Zhn08D26Ts=";
+            };
+          });
+        })
       ];
 
       packages = [ pkgs.vicinae ];
 
-      me.desktop.startup = {
-        autocutsel = "${lib.getExe pkgs.autocutsel} -fork";
-        vicinae = toString vicinaeServerWrapper;
-      };
+      me.desktop =
+        let
+          vicinae = lib.getExe pkgs.vicinae;
+        in
+        {
+          bindings =
+            let
+              dir = "$HOME/notes";
+              openNote =
+                pkgs.writeShellScript "open-note"
+                  # bash
+                  ''
+                    note=$(ls ${dir} | sed 's/\.md$//' | ${vicinae} dmenu --no-quick-look -p "NOTE")
+                    [ -n "$note" ] && $TERMINAL $EDITOR "${dir}/$note.md"
+                  '';
+            in
+            {
+              "Mod+d" = "${vicinae} open";
+              "Mod+p" = "${vicinae} vicinae://launch/@me/powermenu/index";
+              "Mod+b" = "${vicinae} vicinae://launch/@Gelei/vicinae-extension-bluetooth-0/devices";
+              "Mod+m" = openNote;
+              "Mod+n" =
+                "${vicinae} vicinae://launch/@dagimg-dot/vicinae-extension-wifi-commander-0/manage-saved-networks";
+              "Mod+Shift+b" = pkgs.writeShellScript "open-bookmark" ''
+                file="$HOME/notes/Bookmarks.md"
+                [[ ! -f $file ]] && exit
+
+                selection=$(awk -F': ' '{print $1}' "$file" | vicinae dmenu --no-quick-look -p "BOOKMARK")
+                [[ -z "$selection" ]] && exit
+
+                url=$(awk -F': ' -v sel="$selection" '$1 == sel {print $2}' "$file")
+
+                [[ -n "$url" ]] && ${config.me.desktop.open} "$url"
+              '';
+            };
+          startup = {
+            autocutsel = "${lib.getExe pkgs.autocutsel} -fork";
+            vicinae = toString vicinaeServerWrapper;
+          };
+        };
 
       sops.secrets.vicinae = {
         sopsFile = "${secrets}/vicinae.json";
@@ -232,12 +287,22 @@
               imports = [ config.sops.secrets.vicinae.path ];
 
               close_on_focus_loss = true;
-              keybinding = "default";
+
+              keybinding = "emacs";
+              keybinds = {
+                # leave ctrl+p for previous
+                "open-search-filter" = "super+control+shift+P";
+              };
+
               pop_to_root_on_close = true;
+              font = {
+                rendering = "native";
+                normal.family = config.me.desktop.font.family;
+              };
               theme = {
                 enabled = false;
-                light.name = "gruvbox";
-                dark.name = "gruvbox";
+                light.name = theme;
+                dark.name = theme;
               };
               escape_key_behavior = "close_window";
 
@@ -246,12 +311,17 @@
                 opacity = 1;
                 dim_around = false;
 
+                size = {
+                  width = 924;
+                  height = 576;
+                };
+
                 client_side_decorations = {
                   enabled = true;
                   rounding = 0;
                 };
 
-                layer_shell.enabled = false;
+                layer_shell.enabled = true;
               };
 
               providers = {
@@ -267,7 +337,7 @@
                   restart-wifi.enabled = false;
                   toggle-wifi-on.enabled = false;
                   toggle-wifi-off.enabled = false;
-                  manage-saved-networks.alias = "n";
+                  manage-saved-networks.alias = "nm";
                 };
 
                 "@knoopx/store.vicinae.systemd".entrypoints = {
@@ -387,21 +457,20 @@
                   turkish.enabled = false;
                   ukrainian.enabled = false;
                 };
-
               }
               // shortcutProviders;
             };
           };
         };
 
-      tinted.files.".local/share/vicinae/themes/gruvbox.toml".text =
+      tinted.files.".local/share/vicinae/themes/${theme}.toml".text =
         p:
         # ini
         ''
           [meta]
           version = 1
-          name = "Gruvbox"
-          description = "Designed as a theme with pastel 'retro groove' colors"
+          name = "${theme}"
+          description = "Automatically generated theme by nix"
           variant = "${p._theme}"
 
           [colors.core]

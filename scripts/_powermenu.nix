@@ -1,6 +1,5 @@
 {
   my,
-  unstable,
   pkgs,
   ...
 }:
@@ -10,7 +9,6 @@ pkgs.writeShellApplication {
   runtimeInputs = with pkgs; [
     systemd
     my.lock
-    unstable.vicinae
     procps
   ];
   bashOptions = [
@@ -19,11 +17,11 @@ pkgs.writeShellApplication {
   ];
   text = # bash
     ''
-      options=(logout hibernate shutdown reboot setup)
+      options=(Logout Hibernate Shutdown Reboot Setup)
       if [[ -d /sys/class/power_supply/BAT0 ]]; then
-        options+=(lock)
+        options+=(Lock)
       else
-        options+=(windows)
+        options+=(Windows)
       fi
 
       chosen="$(printf "%s\n" "''${options[@]}" | vicinae dmenu --no-quick-look -p 'POWER')"

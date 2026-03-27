@@ -1,0 +1,28 @@
+{
+  "name": "powermenu",
+  "title": "Power Menu",
+  "description": "System power actions",
+  "icon": "extension_icon.svg",
+  "author": "me",
+  "license": "MIT",
+  "commands": [
+    {
+      "name": "index",
+      "title": "Power Menu",
+      "description": "System power actions",
+      "mode": "view"
+    }
+  ],
+  "dependencies": {
+    "@vicinae/api": "0.16.8"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "@types/node": "^20.0.0",
+    "@types/react": "^19.0.0"
+  },
+  "scripts": {
+    "build": "vici build",
+    "dev": "vici develop"
+  }
+}

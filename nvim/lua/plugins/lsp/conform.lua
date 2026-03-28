@@ -1,10 +1,3 @@
---             "efm-langserver",
---             "shellcheck",
---             -- "php84Packages.php-codesniffer",
---             "deno",
---             "typstyle",
---             "libxml2",
---             "shfmt",
 return {
   "stevearc/conform.nvim",
   lazy = false,
@@ -21,22 +14,22 @@ return {
       typstyle = {
         prepend_args = { "--wrap-text" },
       },
-      shfmt = {
-        prepend_args = { "-i", "2", "-bn", "-ci", "-sr" },
-      },
-      deno_fmt = {
-        prepend_args = { "--ext", "md" },
-      },
     },
     format_on_save = function(bufnr)
-      if vim.b[bufnr].disable_autoformat or vim.bo[bufnr].filetype == "markdown" then
+      local excluded_ft = {
+        "markdown",
+        "java"
+      }
+
+      if vim.b[bufnr].disable_autoformat or vim.tbl_contains(excluded_ft, vim.bo[bufnr].filetype) then
         return
       end
+
       return { timeout_ms = 500, lsp_format = "fallback" }
     end,
   },
   keys = {
-    { "<leader>ff", function() vim.lsp.buf.format({ async = true }) end,                    desc = "Format file" },
-    { "<leader>fd", function() vim.b.disable_autoformat = not vim.b.disable_autoformat end, desc = "Toggle auto formatting" }
+    { "<leader>ff", function() require("conform").format({ async = true, lsp_format = "fallback" }) end, desc = "Format file" },
+    { "<leader>fd", function() vim.b.disable_autoformat = not vim.b.disable_autoformat end,              desc = "Toggle auto formatting" }
   },
 }

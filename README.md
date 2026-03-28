@@ -1,27 +1,30 @@
 # NixOS configuration
 
-NixOS configuration for various machines that follows the dendritic pattern, uses
-[flake-parts](https://github.com/hercules-ci/flake-parts) for structuring the flake itself,
-[nix-wrappers-modules](https://github.com/BirdeeHub/nix-wrapper-modules) for wrapping packages,
-[hjem](https://github.com/feel-co/hjem) for user file management,
-[sops-nix](https://github.com/Mic92/sops-nix) for secrets and
+NixOS configuration for various machines that follows the dendritic pattern,
+uses [flake-parts](https://github.com/hercules-ci/flake-parts) for structuring
+the flake itself,
+[nix-wrappers-modules](https://github.com/BirdeeHub/nix-wrapper-modules) for
+wrapping packages, [hjem](https://github.com/feel-co/hjem) for user file
+management, [sops-nix](https://github.com/Mic92/sops-nix) for secrets and
 [disko](https://github.com/nix-community/disko) for disk partitioning.
 
-| Name       | Role    | Description                                                                      |
-| :--------- | :------ | :------------------------------------------------------------------------------- |
-| `pearlman` | Server  | Unowhy Y13 2020 laptop (N4100). Runs syncthing, media stack and others. |
-| `wilson`   | Server  | Raspberry pi 4 2GB, previously used as a home server.                            |
-| `cray`     | Desktop | Main workstation, uses an Nvidia gpu.                                             |
-| `naitoh`   | Laptop  | Main laptop, thinkpad e14 gen4 AMD.
-| `mach`     | Laptop  | M1 Macbook, uses nix-darwin.                                                      |
-| `julliard` | WSL     | Windows WSL config.                                                                |
-| `isoImg`   | ISO     | Custom NixOS iso.                                                                 |
+| Name       | Role    | Description                                                             |
+| :--------- | :------ | :---------------------------------------------------------------------- |
+| `pearlman` | Server  | Unowhy Y13 2020 laptop (N3450). Runs syncthing, media stack and others. |
+| `wilson`   | Server  | Raspberry pi 4 2GB, previously used as a home server.                   |
+| `cray`     | Desktop | Main workstation, uses an Nvidia gpu.                                   |
+| `naitoh`   | Laptop  | Main laptop, thinkpad e14 gen4 AMD.                                     |
+| `mach`     | Laptop  | M1 Macbook, uses nix-darwin.                                            |
+| `julliard` | WSL     | Windows WSL config.                                                     |
+| `isoImg`   | ISO     | Custom NixOS iso.                                                       |
 
 ## Nixos-anywhere installation
 
 ### Pre-requisites
 
-Store password for disk encryption in a file, and create the structure for necessary files to be passed to nixos-anywhere (note: created files will be owned by root)
+Store password for disk encryption in a file, and create the structure for
+necessary files to be passed to nixos-anywhere (note: created files will be
+owned by root)
 
 ```bash
 host=naitoh
@@ -167,4 +170,3 @@ nixos-install --root /mnt --flake ~/.config/nixcfg#hostname
 - `sudo nix run github:LnL7/nix-darwin -- switch --flake .#mach`
 - `sudo darwin-rebuild switch`
 - Privacy & Security -> Allow applications from `Anywhere`
-

@@ -1,114 +1,119 @@
 {
-  flake.shared.desktop = {
-    hj.xdg.config.files."ideavim/ideavimrc".text = # vim
-      ''
-        set scrolloff=8
-        set incsearch
-        set hlsearch
-        set noshowmode
-        set number
-        set relativenumber
-        set iskeyword-=_
-        set notimeout
-        set nottimeout
+  flake.shared.ideavim =
+    { pkgs, ... }:
+    {
+      unfree-packages = [ "idea" ];
+      packages = [ pkgs.jetbrains.idea ];
 
-        let mapleader = " "
-        let g:highlightedyank_highlight_duration = "150"
+      hj.xdg.config.files."ideavim/ideavimrc".text = # vim
+        ''
+          set scrolloff=8
+          set incsearch
+          set hlsearch
+          set noshowmode
+          set number
+          set relativenumber
+          set iskeyword-=_
+          set notimeout
+          set nottimeout
 
-        " Don't use Ex mode, use Q for formatting.
-        map Q gq
+          let mapleader = " "
+          let g:highlightedyank_highlight_duration = "150"
 
-        map <c-w>q <Action>(CloseContent)
-        map <c-y> :NERDTreeToggle<CR>
+          " Don't use Ex mode, use Q for formatting.
+          map Q gq
 
-        imap <c-y> <Action>(EditorChooseLookupItem)
-        imap <c-e> <Action>(EditorEscape)
+          map <c-w>q <Action>(CloseContent)
+          map <c-y> :NERDTreeToggle<CR>
 
-        map <leader>a <Action>(AddToHarpoon)
-        map <c-e> <Action>(ShowHarpoon)
+          imap <c-y> <Action>(EditorChooseLookupItem)
+          imap <c-e> <Action>(EditorEscape)
 
-        map gl <Action>(ShowHoverInfo)
-        map [d <Action>(GotoPreviousError)
-        map ]d <Action>(GotoNextError)
-        map gi <Action>(GotoImplementation)
-        map gD <Action>(GotoSuperMethod)
+          map <leader>a <Action>(AddToHarpoon)
+          map <c-e> <Action>(ShowHarpoon)
 
-        map gn <Action>(FindUsages)
-        map <leader>cr <Action>(RenameElement)
-        map <leader>ca <Action>(ShowIntentionActions)
+          map gl <Action>(ShowHoverInfo)
+          map [d <Action>(GotoPreviousError)
+          map ]d <Action>(GotoNextError)
+          map gi <Action>(GotoImplementation)
+          map gD <Action>(GotoSuperMethod)
 
-        map <leader>pf <Action>(GotoFile)
-        map <leader>ps <Action>(GotoSymbol)
-        map <leader>pg <Action>(TextSearchAction)
-        map <leader>pp <Action>(SearchEverywhere)
+          map gn <Action>(FindUsages)
+          map <leader>cr <Action>(RenameElement)
+          map <leader>ca <Action>(ShowIntentionActions)
 
-        map <leader>t <Action>(ActivateProblemsViewToolWindow)
-        map <leader>rp <Action>(Run)
-        map <leader>rt <Action>(RunClass)
-        map <leader>dr <Action>(Debug)
-        map <leader>db <Action>(ToggleLineBreakpoint)
-        map <leader>s <Action>(Stop)
+          map <leader>pf <Action>(GotoFile)
+          map <leader>ps <Action>(GotoSymbol)
+          map <leader>pg <Action>(TextSearchAction)
+          map <leader>pp <Action>(SearchEverywhere)
 
-        map <leader>ff <Action>(ReformatCode)
-        map <leader>fi <Action>(Generate)
-        map <leader>fa <Action>(CodeFormatGroup)
+          map <leader>t <Action>(ActivateProblemsViewToolWindow)
+          map <leader>rp <Action>(Run)
+          map <leader>rt <Action>(RunClass)
+          map <leader>dr <Action>(Debug)
+          map <leader>db <Action>(ToggleLineBreakpoint)
+          map <leader>s <Action>(Stop)
 
-        xmap s V
-        map s V
+          map <leader>ff <Action>(ReformatCode)
+          map <leader>fi <Action>(Generate)
+          map <leader>fa <Action>(CodeFormatGroup)
 
-        map gp `[v`]
-        map + "+
+          xmap s V
+          map s V
 
-        map U <c-r>
-        xmap > >gv
-        xmap < <gv
-        xmap gb <Action>(CommentByBlockComment)
+          map gp `[v`]
+          map + "+
 
-        xmap H ^
-        map H ^
-        xmap L $
-        map L $
+          map U <c-r>
+          xmap > >gv
+          xmap < <gv
+          xmap gb <Action>(CommentByBlockComment)
 
-        vmap <space> <nop>
-        map <space> <nop>
+          xmap H ^
+          map H ^
+          xmap L $
+          map L $
 
-        map <S-Tab> <C-^>
+          vmap <space> <nop>
+          map <space> <nop>
 
-        map ! :!
+          map <S-Tab> <C-^>
 
-        xmap J :m '>+1<CR>gv=gv
-        xmap K :m '<-2<CR>gv=gv
+          map ! :!
 
-        map <ESC> :nohlsearch<CR>
+          xmap J :m '>+1<CR>gv=gv
+          xmap K :m '<-2<CR>gv=gv
 
-        cnoremap <silent><expr> <enter> index(['/', '?'], getcmdtype()) >= 0 ? '<enter>zz' : '<enter>'
+          map <ESC> :nohlsearch<CR>
 
-        map n nzz
-        map N Nzz
-        map * *zz
-        map # #zz
-        map <C-o> <Action>(Back)zz
-        map <C-i> <Action>(Forward)zz
-        map <C-d> <C-d>zz
-        map <C-u> <C-u>zz
-        map <C-f> <C-f>zz
-        map <C-b> <C-b>zz
-        map { {zz
-        map } }zz
-        map G Gzz
+          cnoremap <silent><expr> <enter> index(['/', '?'], getcmdtype()) >= 0 ? '<enter>zz' : '<enter>'
 
-        " --- Enable IdeaVim plugins https://jb.gg/ideavim-plugins
+          map n nzz
+          map N Nzz
+          map * *zz
+          map # #zz
+          map <C-o> <Action>(Back)zz
+          map <C-i> <Action>(Forward)zz
+          map <C-d> <C-d>zz
+          map <C-u> <C-u>zz
+          map <C-f> <C-f>zz
+          map <C-b> <C-b>zz
+          map { {zz
+          map } }zz
+          map G Gzz
 
-        Plug '<plugin-github-reference>'
+          " --- Enable IdeaVim plugins https://jb.gg/ideavim-plugins
 
-        Plug 'machakann/vim-highlightedyank'
-        Plug 'tpope/vim-commentary'
-        Plug 'tpope/vim-surround'
-        Plug 'vim-scripts/ReplaceWithRegister'
-        Plug 'preservim/nerdtree'
-        Plug 'michaeljsmith/vim-indent-object'
+          Plug '<plugin-github-reference>'
 
-        Plug 'chaoren/vim-wordmotion'
-      '';
-  };
+          Plug 'machakann/vim-highlightedyank'
+          Plug 'tpope/vim-commentary'
+          Plug 'tpope/vim-surround'
+          Plug 'vim-scripts/ReplaceWithRegister'
+          Plug 'preservim/nerdtree'
+          Plug 'michaeljsmith/vim-indent-object'
+
+          Plug 'chaoren/vim-wordmotion'
+        '';
+    };
 }

@@ -5,7 +5,6 @@
       config = {
         packages = with pkgs; [
           gnumake
-          deno
 
           go
           delve

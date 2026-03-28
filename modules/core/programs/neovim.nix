@@ -7,11 +7,55 @@ let
 
     settings.config_directory = configDir;
 
-    extraPackages = with pkgs; [
-      nixd
-      nixfmt
-      shfmt
+    specs.treesitter = {
+      lazy = false;
+      data = [
+        (pkgs.vimPlugins.nvim-treesitter.withPlugins (
+          p: with p; [
+            c
+            go
+            java
+            python
+            sql
+            nix
+            bash
+            vim
+            vimdoc
+            query
+            regex
+            markdown
+            markdown_inline
+            gitignore
+            gitcommit
+            cmake
+            make
+            diff
+            comment
+            tmux
+            hyprlang
+            xcompose
+            git_config
+            json
+            jsonc
+            yaml
+            xml
+            ini
+            toml
+            html
+            css
+            javascript
+            tsx
+            typescript
+            php
+            graphql
+            latex
+            typst
+          ]
+        ))
+      ];
+    };
 
+    extraPackages = with pkgs; [
       tree-sitter
       gnumake
 
@@ -19,6 +63,15 @@ let
       lynx
       # peek.nvim
       deno
+
+      # LSPs
+      lua-language-server
+      nixd
+      jdt-language-server
+
+      # Formatters
+      nixfmt
+      shfmt
     ];
   };
 in

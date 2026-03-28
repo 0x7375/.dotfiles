@@ -13,6 +13,13 @@ vim.api.nvim_create_autocmd("BufEnter", {
   end
 })
 
+-- delete lsp log file past 50MB
+local log_path = vim.lsp.log.get_filename()
+local stat = vim.uv.fs_stat(log_path)
+if stat and stat.size > 50 * 1024 * 1024 then
+  io.open(log_path, "w+"):close()
+end
+
 vim.filetype.add({ extension = { lock = 'json' }, })
 vim.filetype.add({ extension = { g4 = 'antlr4' }, })
 vim.filetype.add({ extension = { code = 'c' }, })

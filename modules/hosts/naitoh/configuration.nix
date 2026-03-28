@@ -13,7 +13,7 @@
       hardware.graphics.enable = true;
 
       hardware.brillo.enable = true;
-      services.udev.extraRules = # bash
+      services.udev.extraRules =
         let
           notify = pkgs.writeShellApplication {
             name = "charging-notify";
@@ -38,6 +38,7 @@
             '';
           };
         in
+        # bash
         ''
           # Allow video group to change screen brightness
           ACTION=="add", \
@@ -69,7 +70,7 @@
           ENV{DEVTYPE}=="usb_interface",\
           ENV{INTERFACE}=="11/0/0",\
           ENV{PRODUCT}=="349e/24/100",\
-          RUN+="${lib.getExe' pkgs.systemd "loginctl"} lock-sessions"
+          RUN+="${getExe' pkgs.systemd "loginctl"} lock-sessions"
         '';
 
       packages = with pkgs; [ acpi ];
@@ -129,22 +130,64 @@
       services.hypridle.enable = true;
 
       hj.xdg.config.files."hypr/hypridle.conf".text =
+        let
+          screen = state: "${lib.getExe' pkgs.hyprland "hyprctl"} dispatch dpms ${state}";
+
+          lock = pkgs.writeShellApplication {
+            name = "lock";
+            bashOptions = [ ];
+            runtimeInputs = with pkgs; [
+              procps
+              hyprlock
+              hyprland
+            ];
+            text =
+              # bash
+              ''
+                if pidof hyprlock > /dev/null; then
+                  exit 0
+                fi
+
+                current_ssid=$(${getExe' pkgs.wirelesstools "iwgetid"} -r)
+                home_ssid=$(cat "${config.sops.secrets.home_ssid.path}")
+
+                [[ "$current_ssid" == "$home_ssid" ]] && exit 0
+
+                browser_was_open=false
+                pgrep -x "$BROWSER" > /dev/null && browser_was_open=true
+                pkill -x "$BROWSER" || true
+
+                ( sleep 300 && systemctl hibernate ) &
+                HIBERNATE_PID=$!
+
+                if grep -q "closed" /proc/acpi/button/lid/*/state 2> /dev/null; then
+                  systemctl hibernate
+                fi
+                  
+                hyprlock
+
+                kill "$HIBERNATE_PID" 2>/dev/null || true
+                $browser_was_open && hyprctl dispatch exec -- "$BROWSER"
+              '';
+          };
+        in 
         # hyprlang
         ''
           general {
-            lock_cmd = ${lib.getExe pkgs.my.lock}
-            before_sleep_cmd = ${lib.getExe pkgs.my.lock}
+            lock_cmd = ${getExe lock}
+            before_sleep_cmd = ${getExe lock}
+            after_sleep_cmd = ${screen "on"}
           }
 
           listener {
             timeout = 300
-            on-timeout = ${lib.getExe' pkgs.hyprland "hyprctl"} dispatch dpms off
-            on-resume = ${lib.getExe' pkgs.hyprland "hyprctl"} dispatch dpms on
+            on-timeout = ${screen "off"}
+            on-resume = ${screen "on"}
           }
 
           listener {
             timeout = 600
-            on-timeout = ${lib.getExe pkgs.my.lock}
+            on-timeout = ${getExe lock}
           }
         '';
 

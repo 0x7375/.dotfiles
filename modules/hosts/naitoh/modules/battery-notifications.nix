@@ -37,8 +37,8 @@
           empty_file=/tmp/batteryempty
           full_file=/tmp/batteryfull
 
-          battery_discharging=$(acpi -b | grep -E "remaining|charged|zero" | grep -c "Discharging" )
-          battery_level=$(acpi -b | grep -E "remaining|charged|zero" | grep -P -o '[0-9]+(?=%)')
+          battery_discharging=$(acpi -b | grep -E "remaining|charged|zero" | grep -c "Discharging" || true)
+          battery_level=$(acpi -b | grep -E "remaining|charged|zero" | grep -P -o '[0-9]+(?=%)' || echo 0)
 
           if [[ $battery_discharging -eq 1 ]] && [[ -f $full_file ]]; then
               rm $full_file
@@ -65,8 +65,9 @@
         ];
         script = ''
           hibernate_level=3
-          battery_discharging=$(acpi -b | grep -E "remaining|charged|zero" | grep -c "Discharging" )
-          battery_level=$(acpi -b | grep -E "remaining|charged|zero" | grep -P -o '[0-9]+(?=%)')
+
+          battery_discharging=$(acpi -b | grep -E "remaining|charged|zero" | grep -c "Discharging" || true)
+          battery_level=$(acpi -b | grep -E "remaining|charged|zero" | grep -P -o '[0-9]+(?=%)' || echo 0)
 
           if [[ $battery_level -le $hibernate_level ]] && [[ $battery_discharging -eq 1 ]]; then
               systemctl hibernate

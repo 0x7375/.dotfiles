@@ -6,6 +6,12 @@
       ...
     }:
     {
+      nixpkgs.overlays = [
+        (final: prev: {
+          gromit-mpx = final.unstable.gromit-mpx;
+        })
+      ];
+
       me.desktop =
         let
           gromit = lib.getExe pkgs.gromit-mpx;
@@ -18,6 +24,21 @@
             F9 = "${gromit} --toggle";
           };
         };
+
+      tinted.files.".config/hypr/hyprland.conf".text =
+        # hyprlang
+        ''
+          workspace = special:gromit, gapsin:0, gapsout:0, on-created-empty:${lib.getExe pkgs.gromit-mpx} -a
+
+          bind = SUPER, o, togglespecialworkspace, gromit
+          bind = , F9, togglespecialworkspace, gromit
+
+          windowrulev2 = noblur, class:^(Gromit-mpx)$
+          windowrulev2 = opacity 1 override 1 override, class:^(Gromit-mpx)$
+          windowrulev2 = noshadow, class:^(Gromit-mpx)$
+          windowrulev2 = suppressevent fullscreen, class:^(Gromit-mpx)$
+          windowrulev2 = size 100% 100%, class:^(Gromit-mpx)$
+        '';
 
       hj.xdg.config.files."gromit-mpx.ini" = {
         generator = lib.generators.toINI { };

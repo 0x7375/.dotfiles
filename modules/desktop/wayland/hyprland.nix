@@ -172,17 +172,9 @@
             windowrulev2 = suppressevent maximize, class:^(${config.me.desktop.browser})$
             windowrulev2 = center, floating:1
 
-            windowrulev2 = noblur, class:^(Gromit-mpx)$
-            windowrulev2 = opacity 1 override 1 override, class:^(Gromit-mpx)$
-            windowrulev2 = noshadow, class:^(Gromit-mpx)$
-            windowrulev2 = suppressevent fullscreen, class:^(Gromit-mpx)$
-            windowrulev2 = size 100% 100%, class:^(Gromit-mpx)$
-
             workspace = w[t1], gapsout:0, gapsin:0
             workspace = w[tg1], gapsout:0, gapsin:0
             workspace = f[1], gapsout:0, gapsin:0
-
-            workspace = special:gromit, gapsin:0, gapsout:0, on-created-empty:${getExe pkgs.gromit-mpx} -a
 
             windowrulev2 = bordersize 0, floating:0, onworkspace:w[t1]
             windowrulev2 = rounding 0, floating:0, onworkspace:w[t1]
@@ -195,9 +187,6 @@
             ${extraBinds}
 
             bind = SUPER, i, exec, ${getExe' pkgs.procps "pkill"} -USR1 waybar
-
-            bind = SUPER, o, togglespecialworkspace, gromit
-            bind = , F9, togglespecialworkspace, gromit
 
             bind = SUPER, q, killactive
             bind = SUPER, f, fullscreen, 0

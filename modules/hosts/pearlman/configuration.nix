@@ -24,7 +24,17 @@
         unixAuth = lib.mkForce true;
       });
 
-      boot.kernelParams = [ "consoleblank=60" ];
+      systemd.services.blank-tty = {
+        wantedBy = [ "multi-user.target" ];
+        after = [ "getty.target" ];
+        serviceConfig = {
+          Type = "oneshot";
+          Environment = "TERM=linux";
+          StandardOutput = "tty";
+          TTYPath = "/dev/tty1";
+          ExecStart = "${lib.getExe' pkgs.util-linux "setterm"} --blank 1 --powerdown 2";
+        };
+      };
 
       # because bios settings are unreliable
       services.timesyncd.servers = [

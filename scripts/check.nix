@@ -1,6 +1,6 @@
 { pkgs, ... }:
 
-pkgs.writers.writePython3 "check" { } ''
+pkgs.writers.writePython3Bin "check" { } ''
   import json
   import os
   import sys

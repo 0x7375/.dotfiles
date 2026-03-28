@@ -3,6 +3,7 @@ return {
   cond = not vim.g.rpi,
   dir = require("nix-info")(nil, "plugins", "start", "nvim-treesitter"),
   lazy = false,
+  main = "nvim-treesitter.configs",
   dependencies = {
     {
       "nix-ts-grammars",

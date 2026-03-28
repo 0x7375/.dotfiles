@@ -268,9 +268,9 @@
         {
           XF86MonBrightnessUp = "${change-brightness} up";
           XF86MonBrightnessDown = "${change-brightness} down";
-          Print = "${screenshot} region";
-          "Alt+Sys_Req" = "${screenshot} window";
-          "Shift+Print" = "${screenshot} monitor";
+          Print = "${getExe screenshot} region";
+          "Alt+Sys_Req" = "${getExe screenshot} window";
+          "Shift+Print" = "${getExe screenshot} monitor";
 
           "Mod+t" = "${term} -e ${getExe pkgs.my.tmux-sessionizer} ~/";
           "Mod+Shift+t" = term;

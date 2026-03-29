@@ -60,6 +60,8 @@
             }
           '';
 
+      packages = [ pkgs.wl-clipboard ];
+
       programs.hyprland = {
         enable = true;
         withUWSM = true;

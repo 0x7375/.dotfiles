@@ -120,10 +120,7 @@
           };
         };
 
-      config.vars = {
-        TERM = cfg.terminal.name;
-        TERMINAL = "${cfg.terminal.cmd} -e";
-      };
+      config.vars.TERMINAL = "${cfg.terminal.cmd} -e";
     };
 
   flake.darwin.desktop = {

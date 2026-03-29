@@ -13,7 +13,7 @@
 
       services.syncthing = {
         enable = true;
-        package = pkgs.auto.syncthing;
+        package = pkgs.syncthing;
         overrideDevices = true;
         overrideFolders = true;
         guiPasswordFile = config.sops.secrets.syncthing_pw.path;

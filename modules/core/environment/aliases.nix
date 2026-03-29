@@ -1,5 +1,5 @@
 {
-  flake.darwin.core =
+  flake.nixos.core =
     { pkgs, lib, ... }:
     {
       aliases.open = "${lib.getExe' pkgs.xdg-utils "xdg-open"}";
@@ -14,7 +14,6 @@
     }:
     let
       inherit (lib) getExe getExe';
-      tput = "${getExe' pkgs.ncurses "tput"}";
       git = "${getExe' pkgs.git "git"}";
     in
     {
@@ -22,7 +21,7 @@
         np = "nix profile";
         ns = "nix shell";
         nb = "nix build";
-        nr = "nix repl .";
+        nr = "nix run";
 
         v = "$EDITOR";
 
@@ -45,17 +44,12 @@
         ll = "${getExe' pkgs.coreutils "ls"} -lha --color --group-directories-first";
         lsblk = "${getExe' pkgs.util-linux "lsblk"} -o NAME,FSTYPE,SIZE,MOUNTPOINTS";
         tree = "${getExe pkgs.tree} -L 4";
-        difff = "${getExe' pkgs.diffutils "diff"} --color";
+        dif = "${getExe' pkgs.diffutils "diff"} --color";
         bc = "${getExe pkgs.bc} -l";
 
         so = "exec $SHELL";
 
-        mount-web = "${getExe pkgs.sshfs} -o gid=1000,uid=1000,noauto,_netdev,reconnect,auto_cache,ServerAliveInterval=5,ServerAliveCountMax=3 web:/www-dev/ ~/uni/web";
-        unmount-web = "${getExe' pkgs.fuse "fusermount"} -uz ~/uni/web";
-
         py = "python";
-
-        tm = "${getExe pkgs.my.tmux-sessionizer}";
 
         temp = "cd $(mktemp -d)";
         ".." = "cd ..";
@@ -83,7 +77,7 @@
         "fetch"
       ] (name: "${git} ${name}"));
 
-      environment.shellInit =
+      environment.interactiveShellInit =
         let
           cdDotfiles =
             string:
@@ -96,15 +90,6 @@
         in
         # bash
         ''
-          blue=$(${tput} setaf 4)
-          reset=$(${tput} sgr0)
-          green=$(${tput} setaf 2)
-          hide=$(${tput} civis)
-          show=$(${tput} cnorm)
-          dots="''${green}::''${reset}"
-
-          export SUDO_PROMPT="''${dots} Password for %p: "
-
           fixpdf() {
               ${getExe' pkgs.poppler-utils "pdftocairo"} -pdf "$1" "''${1%.pdf}-fixed.pdf"
           }
@@ -113,9 +98,8 @@
             ${cdDotfiles
               # bash
               ''
-                echo -n "''${dots} Discard changes? [y/N]''${hide}"
+                echo -n "Discard changes? [y/N]"
                 read -s -r -k 1 answer
-                echo "$show"
 
                 [[ $answer == "y" ]] && {
                   ${git} restore .
@@ -202,7 +186,6 @@
             local is_darwin=0
             [[ $(uname) == "Darwin" ]] && is_darwin=1
 
-            # TODO: support darwin
             case "$action" in
               start|stop|restart)
                 if [[ $# -eq 0 ]]; then

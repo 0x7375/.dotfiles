@@ -142,7 +142,7 @@ in
       ];
     };
 
-  flake.desktop.core =
+  flake.shared.desktop =
     {
       lib,
       pkgs,

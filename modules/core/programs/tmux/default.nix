@@ -11,7 +11,6 @@
       inherit (lib) getExe;
       plugins = with pkgs.tmuxPlugins; [
         fzf-tmux-url
-        yank
       ];
     in
     {
@@ -41,8 +40,6 @@
             set -g @plugin 'wfxr/tmux-fzf-url'
             set -g @fzf-url-history-limit '2000'
             set -g @fzf-url-fzf-options '-w 60% -h 50% --multi -0 --no-preview --border=sharp --tac'
-
-            set -g @plugin 'tmux-plugins/tmux-yank'
 
             set -g default-terminal "tmux-256color"
             ${lib.optionalString (options ? me.desktop) ''
@@ -148,23 +145,22 @@
             bind -T copy-mode-vi 'C-v'  send -X rectangle-toggle
             bind -T copy-mode-vi 's'    send -X select-line
 
-            # don't cancel mouse selection on release
             bind -T copy-mode-vi MouseDragEnd1Pane \
               select-pane \; \
-              send -X copy-pipe-no-clear
+              send -X copy-selection-no-clear
 
             bind -T copy-mode-vi DoubleClick1Pane \
               select-pane \; \
               send -X select-word \; \
-              send -X copy-pipe-no-clear
+              send -X copy-selection-no-clear
 
             bind -T copy-mode-vi TripleClick1Pane \
               select-pane \; \
               send -X select-line \; \
-              send -X copy-pipe-no-clear
+              send -X copy-selection-no-clear
 
             bind -T copy-mode-vi 'y' \
-              send -X copy-pipe-and-cancel
+              send -X copy-selection-and-cancel
 
             ${lib.concatMapStringsSep "\n" (x: "run-shell ${x.rtp}") plugins}
           '';

@@ -67,8 +67,8 @@ map("n", "{", "{zz", { noremap = true })
 map("n", "<C-o>", "<C-o>zz", { noremap = true })
 map("n", "<C-i>", "<C-i>zz", { noremap = true })
 
-map("n", "<leader>s", ":%s#\\v", { noremap = true })
-map("n", "<leader>S", ":%g#\\v", { noremap = true })
+map("n", "<leader>s", ":%s#", { noremap = true })
+map("n", "<leader>S", ":%g#", { noremap = true })
 
 vim.keymap.set('c', '<CR>', function()
   local cmdtype = vim.fn.getcmdtype()

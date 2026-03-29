@@ -1,13 +1,17 @@
+local ts_dir = require("nix-info")(nil, "plugins", "start", "nvim-treesitter")
+local grammars_dir = require("nix-info")(nil, "plugins", "start", "COLLATED_TS_GRAMMARS")
+
 return {
   "nvim-treesitter/nvim-treesitter",
-  cond = not vim.g.rpi,
-  dir = require("nix-info")(nil, "plugins", "start", "nvim-treesitter"),
+  enabled = ts_dir ~= nil,
+  dir = ts_dir,
   lazy = false,
   main = "nvim-treesitter.configs",
   dependencies = {
     {
       "nix-ts-grammars",
-      dir = require("nix-info")(nil, "plugins", "start", "COLLATED_TS_GRAMMARS"),
+      dir = grammars_dir,
+      enabled = grammars_dir ~= nil,
     },
     {
       "nvim-treesitter/nvim-treesitter-textobjects",

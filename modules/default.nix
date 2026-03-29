@@ -99,6 +99,7 @@ in
           boot
           secrets
           syncthing
+          network
         ]
       );
 

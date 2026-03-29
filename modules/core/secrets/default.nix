@@ -29,7 +29,6 @@
         packages = with pkgs; [
           sops
           age-plugin-fido2-hmac
-          age-plugin-se
           unstable.age-plugin-tpm
         ];
 
@@ -52,6 +51,13 @@
 
         vars.SOPS_AGE_KEY_FILE = "${config.me.home}/.config/sops/age/${config.me.host.sopsDecryptionKey}";
       };
+    };
+
+  flake.shared.desktop =
+    { pkgs, ... }:
+    {
+
+      packages = [ pkgs.age-plugin-se ];
     };
 
   flake.nixos.secrets =

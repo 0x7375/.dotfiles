@@ -25,18 +25,13 @@
       #   })
       # ];
 
-      packages =
-        with pkgs;
-        [
-          my.tmux-sessionizer
-          my.tmux-sshr
-          less
-          fzf
-          coreutils
-        ]
-        ++ lib.optionals pkgs.stdenv.isLinux [
-          wl-clipboard
-        ];
+      packages = with pkgs; [
+        my.tmux-sessionizer
+        my.tmux-sshr
+        less
+        fzf
+        coreutils
+      ];
 
       programs.tmux = {
         enable = true;

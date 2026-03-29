@@ -1,11 +1,13 @@
 { inputs, self, ... }:
 
 let
-  neovimBase =
+  neovimWrapperBase =
     {
       pkgs,
+      lib,
       configDir,
       unfree ? false,
+      dev ? true,
     }:
     {
       inherit pkgs;
@@ -13,6 +15,54 @@ let
 
       package = inputs.neovim-nightly-overlay.packages.${pkgs.stdenv.hostPlatform.system}.default;
 
+      hosts = {
+        python3.nvim-host.enable = dev;
+        node.nvim-host.enable = dev;
+        ruby.nvim-host.enable = dev;
+      };
+
+      extraPackages = lib.optionals dev (
+        with pkgs;
+        [
+          tree-sitter
+          gnumake
+
+          lua54Packages.tiktoken_core
+          lynx
+          # peek.nvim
+          deno
+
+          # LSPs
+          lua-language-server
+          nixd
+          jdt-language-server
+          bash-language-server
+          emmet-language-server
+          vscode-langservers-extracted
+          gopls
+          typescript-language-server
+          texlab
+          sqls
+          ruff
+          pyright
+          phpactor
+
+          # Formatters
+          nixfmt
+          shfmt
+          phpPackages.php-codesniffer
+          typstyle
+          libxml2
+
+          # Linters
+          shellcheck
+        ]
+        ++ (lib.optionals unfree [
+          pkgs.intelephense
+        ])
+      );
+    }
+    // lib.optionalAttrs dev {
       specs.treesitter = {
         lazy = false;
         data = [
@@ -60,67 +110,51 @@ let
           ))
         ];
       };
-
-      extraPackages =
-        with pkgs;
-        [
-          tree-sitter
-          gnumake
-
-          lua54Packages.tiktoken_core
-          lynx
-          # peek.nvim
-          deno
-
-          # LSPs
-          lua-language-server
-          nixd
-          jdt-language-server
-          bash-language-server
-          emmet-language-server
-          vscode-langservers-extracted
-          gopls
-          typescript-language-server
-          texlab
-          sqls
-          ruff
-          pyright
-          phpactor
-
-          # Formatters
-          nixfmt
-          shfmt
-          phpPackages.php-codesniffer
-          typstyle
-          libxml2
-
-          # Linters
-          shellcheck
-        ]
-        ++ (lib.optionals unfree [
-          pkgs.intelephense
-        ]);
     };
+
+  inherit (inputs.wrappers.wrappers) neovim;
 in
 {
   perSystem =
-    { pkgs, ... }:
+    { lib, pkgs, ... }:
     {
       packages.neovim =
-        (inputs.wrappers.wrappers.neovim.apply (neovimBase {
-          inherit pkgs;
+        (neovim.apply (neovimWrapperBase {
+          inherit pkgs lib;
           configDir = ../../../nvim;
         })).wrapper;
     };
 
   flake.shared.core =
-    { pkgs, config, ... }:
+    {
+      pkgs,
+      lib,
+      config,
+      ...
+    }:
+    {
+      packages = [
+        (neovim.apply (neovimWrapperBase {
+          inherit pkgs lib;
+          configDir = "${config.me.flakeDir}/nvim";
+          dev = false;
+        })).wrapper
+      ];
+    };
+
+  flake.desktop.core =
+    {
+      lib,
+      pkgs,
+      config,
+      ...
+    }:
     {
       unfree-packages = [ "intelephense" ];
 
       packages = [
-        (inputs.wrappers.wrappers.neovim.apply (neovimBase {
-          inherit pkgs;
+        (neovim.apply (neovimWrapperBase {
+          inherit pkgs lib;
           configDir = "${config.me.flakeDir}/nvim";
           unfree = true;
         })).wrapper

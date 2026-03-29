@@ -22,10 +22,17 @@
         (final: prev: {
           lf = prev.writeShellApplication {
             name = "lf";
-            runtimeInputs = with prev; [
-              lf
-              ueberzugpp
-            ];
+            runtimeInputs =
+              with prev;
+              [
+                lf
+              ]
+              ++ lib.optionals isDesktop (
+                with prev;
+                [
+                  ueberzugpp
+                ]
+              );
             text = ''
               if [ -n "''${DISPLAY-}" ] && [ -z "''${FIFO_UEBERZUG-}" ]; then
                 export FIFO_UEBERZUG="''${TMPDIR:-/tmp}/lf-ueberzug-$$"

@@ -27,12 +27,11 @@ let
 
         self.${modName}.${name}
         self.${modName}.core
-        self.shared.custom
+        self.${modName}.custom
         { networking.hostName = name; }
       ]
       ++ lib.optionals isNixos [
         inputs.disko.nixosModules.disko
-        self.nixos.custom
         self.nixos.overrides
       ]
       ++ extraModules;
@@ -116,6 +115,7 @@ in
           vpnPeer
           desktop
           alacritty
+          network
         ])
         ++ (with self.shared; [
           dev

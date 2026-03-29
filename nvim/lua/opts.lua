@@ -16,8 +16,8 @@ vim.o.sessionoptions = "blank,buffers,curdir,folds,help,tabpages,winsize,winpos,
 -- hide search hit bottom
 vim.opt.shortmess:append("Is")
 
-vim.opt.nu = true
-vim.opt.relativenumber = true
+vim.opt.number = false
+vim.opt.relativenumber = false
 
 vim.opt.showmode = false
 
@@ -40,7 +40,7 @@ vim.opt.undofile = true
 vim.opt.hlsearch = true
 vim.opt.incsearch = true
 
-vim.opt.numberwidth = 2
+-- vim.opt.numberwidth = 2
 vim.opt.signcolumn = "yes"
 
 vim.opt.scrolloff = 8

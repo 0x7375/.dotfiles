@@ -1,5 +1,5 @@
 {
-  flake.nixos.desktop =
+  flake.shared.desktop =
     {
       lib,
       config,

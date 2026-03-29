@@ -104,7 +104,15 @@
 
       sops.age = {
         keyFile = "/var/lib/sops-nix/se-identity.txt";
-        plugins = with pkgs; [ age-plugin-se ];
+        plugins = with pkgs; [
+          # sometimes needed I don't get it
+          # (pkgs.runCommand "sops-darwin-paths" { } ''
+          #   mkdir -p $out/bin
+          #   ln -s /usr/bin/hdiutil $out/bin/hdiutil
+          #   ln -s /usr/bin/getconf $out/bin/getconf
+          # '')
+          age-plugin-se
+        ];
       };
     };
 }

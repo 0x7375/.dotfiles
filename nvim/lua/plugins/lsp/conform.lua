@@ -37,7 +37,13 @@ return {
     },
     {
       "<leader>fd",
-      function() vim.b.disable_autoformat = not vim.b.disable_autoformat end,
+      function()
+        vim.notify(
+          string.format("%s formatting...", vim.b.disable_autoformat and "Enabling" or "Disabling"),
+          vim.log.levels.INFO
+        )
+        vim.b.disable_autoformat = not vim.b.disable_autoformat
+      end,
       desc = "Toggle auto formatting",
     },
   },

@@ -1,56 +1,8 @@
 return {
   "ibhagwan/fzf-lua",
-  cmd = "FzfLua",
-  keys = {
-    { "<leader>p<esc>", "<nop>" },
-    {
-      "<leader>pD",
-      function() vim.cmd.FzfLua("lsp_workspace_diagnostics") end,
-      desc = "Search for workspace diagnostics",
-    },
-    { "<leader>pd", function() vim.cmd.FzfLua("lsp_document_diagnostics") end, desc = "Search file diagnostics" },
-    { "<leader>pf", function() vim.cmd.FzfLua("files") end, desc = "Search for file" },
-    { "<leader>pg", function() vim.cmd.FzfLua("live_grep") end, desc = "Search for string" },
-    {
-      mode = { "n", "x" },
-      "<leader>pG",
-      function() vim.cmd.FzfLua("grep_cword") end,
-      desc = "Search for word under cursor",
-    },
-    { "<leader>ph", function() vim.cmd.FzfLua("help_tags") end, desc = "Search for help documentation" },
-    { "<leader>pH", function() vim.cmd.FzfLua("highlights") end, desc = "Search for highlight groups" },
-    { "<leader>pk", function() vim.cmd.FzfLua("keymaps") end, desc = "Search for keymaps" },
-    { "<leader>pp", function() vim.cmd.FzfLua("resume") end, desc = "Resume last FzfLua search" },
-    { "<leader>pr", function() vim.cmd.FzfLua("lsp_references") end, desc = "Search for symbol references" },
-    { "<leader>ps", function() vim.cmd.FzfLua("lsp_document_symbols") end, desc = "Search for file symbols" },
-    {
-      "<leader>pi",
-      function() vim.cmd.FzfLua("lsp_implementations") end,
-      desc = "Search for symbol implementations",
-    },
-    { "<leader>pI", function() vim.cmd.FzfLua("lsp_incoming_calls") end, desc = "Search for symbol incoming calls" },
-    { "<leader>po", function() vim.cmd.FzfLua("lsp_outgoing_calls") end, desc = "Search for symbol outgoing calls" },
-    { "<leader>pT", function() vim.cmd.FzfLua("lsp_typedefs") end, desc = "Search for type definitions" },
-    { "<leader>pS", function() vim.cmd.FzfLua("lsp_workspace_symbols") end, desc = "Search for workspace symbols" },
-    { "<leader>pb", function() vim.cmd.FzfLua("buffers") end, desc = "Search for buffers" },
-    { "<leader>pq", function() vim.cmd.FzfLua("oldfiles") end, desc = "Search recently opened files" },
-    { "<leader>pc", function() vim.cmd.FzfLua("registers") end, desc = "Search registers" },
-    { "<leader>ca", function() vim.cmd.FzfLua("lsp_code_actions") end, desc = "Search code actions" },
-    -- { '<leader>pb', function()
-    --     require('fzf-lua').lgrep_curbuf {
-    --         winopts = {
-    --             height = 0.6,
-    --             width = 0.5,
-    --             preview = { vertical = 'up:70%' },
-    --         },
-    --     }
-    -- end }
-  },
-  init = function() require("fzf-lua").register_ui_select() end,
   opts = {
     actions = {
       files = {
-        -- focus first qf item on accept
         ["default"] = function(selected, opts)
           require("fzf-lua.actions").file_edit_or_qf(selected, opts)
           if #selected > 1 then
@@ -65,7 +17,7 @@ return {
     },
     previewers = {
       builtin = {
-        syntax_limit_b = 1024 * 500, -- 500KB
+        syntax_limit_b = 1024 * 500,
       },
     },
     keymap = {
@@ -125,4 +77,47 @@ return {
       "bin/",
     },
   },
+  config = function(_, opts)
+    local fzf = require("fzf-lua")
+    local map = vim.keymap.set
+
+    fzf.setup(opts)
+    fzf.register_ui_select()
+
+    map("n", "<leader>p<esc>", "<nop>")
+    map(
+      "n",
+      "<leader>pD",
+      function() fzf.lsp_workspace_diagnostics() end,
+      { desc = "Search for workspace diagnostics" }
+    )
+    map("n", "<leader>pd", function() fzf.lsp_document_diagnostics() end, { desc = "Search file diagnostics" })
+    map("n", "<leader>pf", function() fzf.files() end, { desc = "Search for file" })
+    map("n", "<leader>pg", function() fzf.live_grep() end, { desc = "Search for string" })
+    map({ "n", "x" }, "<leader>pG", function() fzf.grep_cword() end, { desc = "Search for word under cursor" })
+    map("n", "<leader>ph", function() fzf.help_tags() end, { desc = "Search for help documentation" })
+    map("n", "<leader>pH", function() fzf.highlights() end, { desc = "Search for highlight groups" })
+    map("n", "<leader>pk", function() fzf.keymaps() end, { desc = "Search for keymaps" })
+    map("n", "<leader>pp", function() fzf.resume() end, { desc = "Resume last FzfLua search" })
+    map("n", "<leader>pr", function() fzf.lsp_references() end, { desc = "Search for symbol references" })
+    map("n", "<leader>ps", function() fzf.lsp_document_symbols() end, { desc = "Search for file symbols" })
+    map("n", "<leader>pi", function() fzf.lsp_implementations() end, { desc = "Search for symbol implementations" })
+    map("n", "<leader>pI", function() fzf.lsp_incoming_calls() end, { desc = "Search for symbol incoming calls" })
+    map("n", "<leader>po", function() fzf.lsp_outgoing_calls() end, { desc = "Search for symbol outgoing calls" })
+    map("n", "<leader>pT", function() fzf.lsp_typedefs() end, { desc = "Search for type definitions" })
+    map("n", "<leader>pS", function() fzf.lsp_workspace_symbols() end, { desc = "Search for workspace symbols" })
+    map("n", "<leader>pb", function() fzf.buffers() end, { desc = "Search for buffers" })
+    map("n", "<leader>pq", function() fzf.oldfiles() end, { desc = "Search recently opened files" })
+    map("n", "<leader>pc", function() fzf.registers() end, { desc = "Search registers" })
+    map("n", "<leader>ca", function() fzf.lsp_code_actions() end, { desc = "Search code actions" })
+    -- map("n", "<leader>pb", function()
+    --   fzf.lgrep_curbuf {
+    --     winopts = {
+    --       height = 0.6,
+    --       width = 0.5,
+    --       preview = { vertical = "up:70%" },
+    --     },
+    --   }
+    -- end)
+  end,
 }

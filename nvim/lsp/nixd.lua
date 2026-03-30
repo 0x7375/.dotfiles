@@ -1,3 +1,4 @@
+---@type vim.lsp.Config
 return {
   cmd = { "nixd", "--semantic-tokens=true", "--inlay-hints=true" },
   settings = {

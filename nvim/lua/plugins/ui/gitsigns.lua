@@ -1,6 +1,7 @@
 return {
   "lewis6991/gitsigns.nvim",
   cond = not vim.g.rpi,
+  lazy = false,
   keys = {
     { "[h", desc = "Goto previous hunk" },
     { "]h", desc = "Goto next hunk" },

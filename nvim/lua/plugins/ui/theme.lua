@@ -42,8 +42,8 @@ return {
 
           -- consistent borders
           Pmenu = { link = "NonText" },
-          FloatBorder = { link = "NonText" },
           FzfLuaBorder = { link = "NonText" },
+          FloatBorder = { link = "NonText" },
           LspInfoBorder = { link = "NonText" },
           TelescopeBorder = { link = "NonText" },
           TelescopePromptBorder = { link = "NonText" },
@@ -58,6 +58,9 @@ return {
           StatusLineNC = { link = "WinSeparator" },
           WinBar = { link = "WinSeparator" },
           WinBarNC = { link = "WinSeparator" },
+
+          -- regular bg color for floating windows
+          NormalFloat = { link = "Normal" },
 
           BlinkCmpDoc = { link = "Normal" },
           BlinkCmpDocBorder = { link = "NonText" },

@@ -74,8 +74,6 @@ M.build_bar = function()
     end
   end
 
-  local mode_letter = " " .. mode:upper() .. " |"
-
   local recording = ""
   local reg = vim.fn.reg_recording()
   if reg ~= "" then
@@ -84,7 +82,6 @@ M.build_bar = function()
 
   return table.concat({
     set_normal,
-    -- mode_letter,
     file_name,
     modified,
     recording,
@@ -99,6 +96,7 @@ end
 
 local filetype_exclude = {
   "fugitive",
+  "nvim-pack",
   "dap-view",
   "dap-repl",
 }

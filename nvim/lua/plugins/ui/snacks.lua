@@ -66,8 +66,5 @@ return {
         trace = "",
       },
     },
-    quickfile = {
-      enabled = true,
-    },
   },
 }

@@ -1,9 +1,8 @@
+---@type vim.lsp.Config
 return {
   settings = {
     Lua = {
-      diagnostics = {
-        globals = { "vim" },
-      },
+      format = { enable = false }, -- using stylua
       hint = {
         enable = true,
         arrayIndex = "Disable",

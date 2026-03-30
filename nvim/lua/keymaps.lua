@@ -161,3 +161,30 @@ map("n", "<leader>xl", ":.lua<CR>", { desc = "Run current line with lua" })
 map("x", "<leader>xl", ":lua<CR>", { desc = "Run visual selection with lua" })
 
 map("n", "<leader>N", vim.cmd.restart, { desc = "Restart neovim" })
+
+map("n", '<leader>"', function()
+  local buf = vim.api.nvim_create_buf(false, true)
+
+  local width = math.floor(vim.o.columns * 0.8)
+  local height = math.floor(vim.o.lines * 0.8)
+
+  vim.api.nvim_open_win(buf, true, {
+    relative = "editor",
+    width = width,
+    height = height,
+    row = math.floor((vim.o.lines - height) / 2),
+    col = math.floor((vim.o.columns - width) / 2),
+    style = "minimal",
+    border = "single",
+  })
+
+  for name, value in pairs({
+    filetype = "scratch",
+    buftype = "nofile",
+    bufhidden = "wipe",
+    swapfile = false,
+    modifiable = true,
+  }) do
+    vim.api.nvim_set_option_value(name, value, { buf = buf })
+  end
+end, { desc = "Open a scratch buffer" })

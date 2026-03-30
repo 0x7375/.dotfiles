@@ -1,4 +1,5 @@
 return {
+  cond = false,
   "mfussenegger/nvim-dap",
   keys = {
     { "<leader>dc", function() require("dap").continue() end, desc = "DAP Continue" },

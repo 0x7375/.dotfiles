@@ -3,7 +3,7 @@ vim.g.windows = vim.fn.has("unix") ~= 1
 vim.g.rpi = vim.fn.system("uname -m"):match("aarch64")
 
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-if not vim.loop.fs_stat(lazypath) then
+if not vim.uv.fs_stat(lazypath) then
   vim.fn.system({
     "git",
     "clone",
@@ -29,6 +29,9 @@ local opts = {
   },
   dev = {
     path = "~/repos",
+  },
+  rocks = {
+    enabled = false,
   },
   performance = {
     rtp = {
@@ -94,4 +97,13 @@ require("lazy").setup({
 
 -- experimental ui that avoid hit-enter prompts g< to open buffer
 -- disabled for now, shows a notification for every write/undo
--- require('vim._extui').enable({})
+require("vim._core.ui2").enable({})
+
+-- remove default conflicting lsp mappings
+-- del({ "n", "x" }, "gra")
+-- del("n", "gri")
+-- del("n", "grn")
+-- del("n", "grr")
+-- del("n", "grt")
+
+-- vim.pack.add({ "https://github.com/vim-scripts/ReplaceWithRegister" })

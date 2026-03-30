@@ -126,6 +126,7 @@
           wrappers.packages = { };
 
           pre-commit.settings.hooks = {
+            stylua.enable = true;
             nixfmt.enable = true;
             statix = {
               enable = true;

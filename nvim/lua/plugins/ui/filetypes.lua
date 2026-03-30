@@ -1,43 +1,39 @@
 return {
-    {
-        'VebbNix/lf-vim',
-        ft = "lf"
+  {
+    "VebbNix/lf-vim",
+    ft = "lf",
+  },
+  {
+    "alker0/chezmoi.vim",
+    lazy = false,
+    init = function() vim.g["chezmoi#use_tmp_buffer"] = true end,
+  },
+  {
+    "dylon/vim-antlr",
+    ft = "antlr4",
+  },
+  {
+    "MTDL9/vim-log-highlighting",
+    ft = "log",
+  },
+  {
+    "cameron-wags/rainbow_csv.nvim",
+    init = function() vim.g.disable_rainbow_statusline = 1 end,
+    config = true,
+    ft = {
+      "csv",
+      "tsv",
+      "csv_semicolon",
+      "csv_whitespace",
+      "csv_pipe",
+      "rfc_csv",
+      "rfc_semicolon",
     },
-    {
-        'alker0/chezmoi.vim',
-        lazy = false,
-        init = function()
-            vim.g['chezmoi#use_tmp_buffer'] = true
-        end,
+    cmd = {
+      "RainbowDelim",
+      "RainbowDelimSimple",
+      "RainbowDelimQuoted",
+      "RainbowMultiDelim",
     },
-    {
-        "dylon/vim-antlr",
-        ft = "antlr4",
-    },
-    {
-        "MTDL9/vim-log-highlighting",
-        ft = "log",
-    },
-    {
-        'cameron-wags/rainbow_csv.nvim',
-        init = function()
-            vim.g.disable_rainbow_statusline = 1
-        end,
-        config = true,
-        ft = {
-            'csv',
-            'tsv',
-            'csv_semicolon',
-            'csv_whitespace',
-            'csv_pipe',
-            'rfc_csv',
-            'rfc_semicolon'
-        },
-        cmd = {
-            'RainbowDelim',
-            'RainbowDelimSimple',
-            'RainbowDelimQuoted',
-            'RainbowMultiDelim'
-        }
-    },
+  },
 }

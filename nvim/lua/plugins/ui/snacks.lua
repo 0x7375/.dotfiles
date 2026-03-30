@@ -8,8 +8,7 @@ return {
       ---@param ev {data: {client_id: integer, params: lsp.ProgressParams}}
       callback = function(ev)
         local client = vim.lsp.get_client_by_id(ev.data.client_id)
-        local value = ev.data.params
-            .value --[[@as {percentage?: number, title?: string, message?: string, kind: "begin" | "report" | "end"}]]
+        local value = ev.data.params.value --[[@as {percentage?: number, title?: string, message?: string, kind: "begin" | "report" | "end"}]]
         if not client or type(value) ~= "table" then
           return
         end
@@ -31,9 +30,7 @@ return {
         end
 
         local msg = {} ---@type string[]
-        progress[client.id] = vim.tbl_filter(function(v)
-          return table.insert(msg, v.msg) or not v.done
-        end, p)
+        progress[client.id] = vim.tbl_filter(function(v) return table.insert(msg, v.msg) or not v.done end, p)
 
         local spinner = { "⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏" }
         vim.notify(table.concat(msg, "\n"), "info", {
@@ -41,7 +38,7 @@ return {
           title = client.name,
           opts = function(notif)
             notif.icon = #progress[client.id] == 0 and " "
-                or spinner[math.floor(vim.uv.hrtime() / (1e6 * 80)) % #spinner + 1]
+              or spinner[math.floor(vim.uv.hrtime() / (1e6 * 80)) % #spinner + 1]
           end,
         })
       end,
@@ -72,5 +69,5 @@ return {
     quickfile = {
       enabled = true,
     },
-  }
+  },
 }

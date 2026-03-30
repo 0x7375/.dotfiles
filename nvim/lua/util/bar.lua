@@ -3,22 +3,20 @@ local M = {}
 local git_cache = ""
 
 local function setup_git_watch()
-  local git_dir = vim.fn.finddir('.git', '.;')
+  local git_dir = vim.fn.finddir(".git", ".;")
 
   if not git_dir then
     return
   end
 
-  local head_file = git_dir .. '/HEAD'
+  local head_file = git_dir .. "/HEAD"
   local event = vim.uv.new_fs_event()
 
   if not event then
     return
   end
 
-  vim.uv.fs_event_start(event, head_file, {}, vim.schedule_wrap(function()
-    M.refresh()
-  end))
+  vim.uv.fs_event_start(event, head_file, {}, vim.schedule_wrap(function() M.refresh() end))
 end
 
 setup_git_watch()
@@ -45,18 +43,18 @@ vim.api.nvim_create_autocmd("DirChanged", {
     git_cache = ""
     setup_git_watch()
     M.refresh()
-  end
+  end,
 })
 
 M.build_bar = function()
   local branch = git_branch()
-  branch = ' ' .. branch
+  branch = " " .. branch
 
   local set_green = "%#GruvboxGreen#"
   local set_normal = "%#Dim#"
   local file_name = " " .. vim.fn.expand("%:~:.")
 
-  local modified = ''
+  local modified = ""
   if vim.bo.readonly then
     modified = " "
   elseif vim.bo.modified then
@@ -69,7 +67,7 @@ M.build_bar = function()
   local search_count = ""
   local mode = vim.api.nvim_get_mode().mode
 
-  if mode ~= 'i' and vim.v.hlsearch == 1 and vim.fn.getreg('/') ~= '' then
+  if mode ~= "i" and vim.v.hlsearch == 1 and vim.fn.getreg("/") ~= "" then
     local s_count = vim.fn.searchcount({ recompute = 1, maxcount = 999 })
     if s_count and s_count.total and s_count.total > 0 then
       search_count = string.format(" [%d/%d]", s_count.current, s_count.total)
@@ -115,12 +113,16 @@ local function validate_buffer()
 end
 
 M.refresh = function()
-  if not validate_buffer() then return end
+  if not validate_buffer() then
+    return
+  end
   vim.wo.winbar = M.build_bar()
 end
 
 M.init = function()
-  if not validate_buffer() then return end
+  if not validate_buffer() then
+    return
+  end
   vim.opt.winbar = M.build_bar()
 end
 

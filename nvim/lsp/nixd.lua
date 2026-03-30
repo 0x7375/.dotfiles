@@ -7,7 +7,7 @@ return {
         return
       end
 
-      flake = "(builtins.getFlake \"" .. flake .. "\")"
+      flake = '(builtins.getFlake "' .. flake .. '")'
 
       local uname = io.popen("uname"):read("*l")
       local sys = (uname == "Linux") and "nixos" or "darwin"
@@ -20,10 +20,10 @@ return {
         },
         options = {
           [sys] = {
-            expr = string.format('%s.%sConfigurations.%s.options', flake, sys, host),
+            expr = string.format("%s.%sConfigurations.%s.options", flake, sys, host),
           },
         },
       }
     end)(),
-  }
+  },
 }

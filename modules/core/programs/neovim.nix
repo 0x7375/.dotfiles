@@ -49,6 +49,7 @@ let
 
           # Formatters
           nixfmt
+          stylua
           shfmt
           phpPackages.php-codesniffer
           typstyle

@@ -10,13 +10,18 @@ return {
         "clangd",
         "gopls",
         "jdtls",
-        "pyright", "ruff",
+        "pyright",
+        "ruff",
         "sqls",
         "bashls",
-        "ts_ls", "eslint",
-        "html", "cssls", "emmet_language_server",
+        "ts_ls",
+        "eslint",
+        "html",
+        "cssls",
+        "emmet_language_server",
         "graphql",
-        "intelephense", "phpactor",
+        "intelephense",
+        "phpactor",
         "jsonls",
         "yamlls",
         "taplo",
@@ -51,30 +56,29 @@ return {
         end
       end, { desc = "Toggle virtual text" })
 
-
       -- non rounded and max size to 60 preview
       local orig_util_open_floating_preview = vim.lsp.util.open_floating_preview
       function vim.lsp.util.open_floating_preview(contents, syntax, opts, ...)
         opts = opts or {}
-        opts.border = opts.border or 'single'
+        opts.border = opts.border or "single"
         opts.max_width = opts.max_width or 60
         return orig_util_open_floating_preview(contents, syntax, opts, ...)
       end
 
       map("n", "gl", vim.diagnostic.open_float, { desc = "Open diagnostic float" })
-      map("n", "[d", function() vim.diagnostic.jump({ count = -1, float = true }) end,
-        { desc = "Go to previous diagnostic" })
-      map("n", "]d", function() vim.diagnostic.jump({ count = 1, float = true }) end,
-        { desc = "Go to next diagnostic" })
 
-      vim.api.nvim_create_autocmd('LspAttach', {
-        group = vim.api.nvim_create_augroup('UserLspConfig', {}),
+      local jump = vim.diagnostic.jump
+      map("n", "[d", function() jump({ count = -1, float = true }) end, { desc = "Go to previous diagnostic" })
+      map("n", "]d", function() jump({ count = 1, float = true }) end, { desc = "Go to next diagnostic" })
+
+      vim.api.nvim_create_autocmd("LspAttach", {
+        group = vim.api.nvim_create_augroup("UserLspConfig", {}),
         callback = function(ev)
           local opts = { buffer = ev.buf }
           map("n", "gd", vim.lsp.buf.definition, opts)
           map("n", "gD", vim.lsp.buf.declaration, opts)
-          map('n', 'gI', vim.lsp.buf.implementation, opts)
-          map('n', 'gn', vim.lsp.buf.references, opts)
+          map("n", "gI", vim.lsp.buf.implementation, opts)
+          map("n", "gn", vim.lsp.buf.references, opts)
           map("n", "K", vim.lsp.buf.hover, opts)
           map("n", "<leader>cr", function()
             local current_iskeyword = vim.opt.iskeyword:get()

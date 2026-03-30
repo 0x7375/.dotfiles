@@ -1,16 +1,16 @@
 -- Remove new line comments behaviour on every file
 vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {
   pattern = "*",
-  command = "setlocal formatoptions-=cro"
+  command = "setlocal formatoptions-=cro",
 })
 
 -- comment vimv lines
 vim.api.nvim_create_autocmd("BufEnter", {
   callback = function()
     if vim.env.VIMV then
-      vim.api.nvim_set_option_value('commentstring', '# %s', { buf = 0 })
+      vim.api.nvim_set_option_value("commentstring", "# %s", { buf = 0 })
     end
-  end
+  end,
 })
 
 -- delete lsp log file past 50MB
@@ -20,14 +20,12 @@ if stat and stat.size > 50 * 1024 * 1024 then
   io.open(log_path, "w+"):close()
 end
 
-vim.filetype.add({ extension = { lock = 'json' }, })
-vim.filetype.add({ extension = { g4 = 'antlr4' }, })
-vim.filetype.add({ extension = { code = 'c' }, })
+vim.filetype.add({ extension = { lock = "json" } })
+vim.filetype.add({ extension = { g4 = "antlr4" } })
+vim.filetype.add({ extension = { code = "c" } })
 
 -- go to last loc when opening a buffer
-local function augroup(name)
-  return vim.api.nvim_create_augroup("lazyvim_" .. name, { clear = true })
-end
+local function augroup(name) return vim.api.nvim_create_augroup("lazyvim_" .. name, { clear = true }) end
 
 vim.api.nvim_create_autocmd("BufReadPost", {
   group = augroup("last_loc"),
@@ -48,28 +46,23 @@ vim.api.nvim_create_autocmd("BufReadPost", {
 
 -- update winbar when needed
 vim.api.nvim_create_autocmd({
-    "BufEnter",
-    "BufWritePost",
-    "BufModifiedSet",
+  "BufEnter",
+  "BufWritePost",
+  "BufModifiedSet",
 
-    "WinEnter",
-    "VimEnter",
+  "WinEnter",
+  "VimEnter",
 
-    "ModeChanged",
-    "DirChanged",
-    "RecordingEnter",
-  },
-  {
-    callback = function()
-      require("util.bar").refresh()
-    end
-  })
+  "ModeChanged",
+  "DirChanged",
+  "RecordingEnter",
+}, {
+  callback = function() require("util.bar").refresh() end,
+})
 vim.api.nvim_create_autocmd("RecordingLeave", {
   callback = function()
-    vim.schedule(function()
-      require("util.bar").refresh()
-    end)
-  end
+    vim.schedule(function() require("util.bar").refresh() end)
+  end,
 })
 
 -- set pwd to first argument if said argument is a directory
@@ -94,8 +87,8 @@ vim.api.nvim_create_autocmd("Signal", {
 
 -- open binary files with default application
 local function open()
-  local prev_buf = vim.fn.bufnr('%')
-  local fn = vim.fn.expand('%:p')
+  local prev_buf = vim.fn.bufnr("%")
+  local fn = vim.fn.expand("%:p")
   vim.ui.open(fn)
   print(string.format("Opening file: %s", fn))
 
@@ -109,15 +102,27 @@ end
 local bin_files = vim.api.nvim_create_augroup("binFiles", { clear = true })
 
 local file_types = {
-  "pdf", "jpg", "jpeg", "webp", "png", "mp3", "mp4",
-  "xls", "xlsx", "xopp", "gif", "doc", "docx", "gaphor"
+  "pdf",
+  "jpg",
+  "jpeg",
+  "webp",
+  "png",
+  "mp3",
+  "mp4",
+  "xls",
+  "xlsx",
+  "xopp",
+  "gif",
+  "doc",
+  "docx",
+  "gaphor",
 }
 
 for _, ext in ipairs(file_types) do
   vim.api.nvim_create_autocmd({ "BufReadCmd" }, {
     pattern = "*." .. ext,
     group = bin_files,
-    callback = open
+    callback = open,
   })
 end
 
@@ -125,7 +130,5 @@ vim.api.nvim_create_autocmd("TextYankPost", {
   group = vim.api.nvim_create_augroup("highlight_yank", { clear = true }),
   desc = "Highlight yanked text",
   pattern = "*",
-  callback = function()
-    vim.highlight.on_yank { higroup = "IncSearch", timeout = 100 }
-  end,
+  callback = function() vim.highlight.on_yank({ higroup = "IncSearch", timeout = 100 }) end,
 })

@@ -54,14 +54,14 @@ return {
 
         map("n", "<leader>i", function() swap.swap_next("@parameter.inner") end)
         map("n", "<leader>I", function() swap.swap_previous("@parameter.inner") end)
-      end
+      end,
     },
     {
-      'Wansmer/treesj',
+      "Wansmer/treesj",
       cond = not vim.g.rpi,
       keys = {
-        { '<leader>nj', function() require('treesj').join() end,  desc = "Join node" },
-        { '<leader>ns', function() require('treesj').split() end, desc = "Split node" },
+        { "<leader>nj", function() require("treesj").join() end, desc = "Join node" },
+        { "<leader>ns", function() require("treesj").split() end, desc = "Split node" },
       },
       opts = {
         use_default_keymaps = false,
@@ -70,7 +70,7 @@ return {
     {
       "HiPhish/rainbow-delimiters.nvim",
       config = function()
-        require('rainbow-delimiters.setup').setup {
+        require("rainbow-delimiters.setup").setup({
           blacklist = {
             "html",
           },
@@ -82,9 +82,9 @@ return {
             "RainbowGreen",
             "RainbowBlue",
           },
-        }
-      end
-    }
+        })
+      end,
+    },
   },
   opts = {
     indent = { enable = true },

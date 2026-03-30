@@ -9,6 +9,7 @@ return {
       php = { "phpcbf" },
       -- TODO check if the prettier pr is merged
       markdown = { "deno_fmt" },
+      lua = { "stylua" },
     },
     formatters = {
       typstyle = {
@@ -18,7 +19,7 @@ return {
     format_on_save = function(bufnr)
       local excluded_ft = {
         "markdown",
-        "java"
+        "java",
       }
 
       if vim.b[bufnr].disable_autoformat or vim.tbl_contains(excluded_ft, vim.bo[bufnr].filetype) then
@@ -29,7 +30,15 @@ return {
     end,
   },
   keys = {
-    { "<leader>ff", function() require("conform").format({ async = true, lsp_format = "fallback" }) end, desc = "Format file" },
-    { "<leader>fd", function() vim.b.disable_autoformat = not vim.b.disable_autoformat end,              desc = "Toggle auto formatting" }
+    {
+      "<leader>ff",
+      function() require("conform").format({ async = true, lsp_format = "fallback" }) end,
+      desc = "Format file",
+    },
+    {
+      "<leader>fd",
+      function() vim.b.disable_autoformat = not vim.b.disable_autoformat end,
+      desc = "Toggle auto formatting",
+    },
   },
 }

@@ -1,36 +1,41 @@
 return {
-  'ibhagwan/fzf-lua',
+  "ibhagwan/fzf-lua",
   cmd = "FzfLua",
   keys = {
     { "<leader>p<esc>", "<nop>" },
-    { "<leader>pD",     function() vim.cmd.FzfLua("lsp_workspace_diagnostics") end, desc = "Search for workspace diagnostics" },
-    { "<leader>pd",     function() vim.cmd.FzfLua("lsp_document_diagnostics") end,  desc = "Search file diagnostics" },
-    { "<leader>pf",     function() vim.cmd.FzfLua("files") end,                     desc = "Search for file" },
-    { "<leader>pg",     function() vim.cmd.FzfLua("live_grep") end,                 desc = "Search for string" },
+    {
+      "<leader>pD",
+      function() vim.cmd.FzfLua("lsp_workspace_diagnostics") end,
+      desc = "Search for workspace diagnostics",
+    },
+    { "<leader>pd", function() vim.cmd.FzfLua("lsp_document_diagnostics") end, desc = "Search file diagnostics" },
+    { "<leader>pf", function() vim.cmd.FzfLua("files") end, desc = "Search for file" },
+    { "<leader>pg", function() vim.cmd.FzfLua("live_grep") end, desc = "Search for string" },
     {
       mode = { "n", "x" },
       "<leader>pG",
-      function()
-        vim.cmd.FzfLua(
-          "grep_cword")
-      end,
-      desc = "Search for word under cursor"
+      function() vim.cmd.FzfLua("grep_cword") end,
+      desc = "Search for word under cursor",
     },
-    { "<leader>ph", function() vim.cmd.FzfLua("help_tags") end,             desc = "Search for help documentation" },
-    { "<leader>pH", function() vim.cmd.FzfLua("highlights") end,            desc = "Search for highlight groups" },
-    { "<leader>pk", function() vim.cmd.FzfLua("keymaps") end,               desc = "Search for keymaps" },
-    { "<leader>pp", function() vim.cmd.FzfLua("resume") end,                desc = "Resume last FzfLua search" },
-    { "<leader>pr", function() vim.cmd.FzfLua("lsp_references") end,        desc = "Search for symbol references" },
-    { "<leader>ps", function() vim.cmd.FzfLua("lsp_document_symbols") end,  desc = "Search for file symbols" },
-    { "<leader>pi", function() vim.cmd.FzfLua("lsp_implementations") end,   desc = "Search for symbol implementations" },
-    { "<leader>pI", function() vim.cmd.FzfLua("lsp_incoming_calls") end,    desc = "Search for symbol incoming calls" },
-    { "<leader>po", function() vim.cmd.FzfLua("lsp_outgoing_calls") end,    desc = "Search for symbol outgoing calls" },
-    { "<leader>pT", function() vim.cmd.FzfLua("lsp_typedefs") end,          desc = "Search for type definitions" },
+    { "<leader>ph", function() vim.cmd.FzfLua("help_tags") end, desc = "Search for help documentation" },
+    { "<leader>pH", function() vim.cmd.FzfLua("highlights") end, desc = "Search for highlight groups" },
+    { "<leader>pk", function() vim.cmd.FzfLua("keymaps") end, desc = "Search for keymaps" },
+    { "<leader>pp", function() vim.cmd.FzfLua("resume") end, desc = "Resume last FzfLua search" },
+    { "<leader>pr", function() vim.cmd.FzfLua("lsp_references") end, desc = "Search for symbol references" },
+    { "<leader>ps", function() vim.cmd.FzfLua("lsp_document_symbols") end, desc = "Search for file symbols" },
+    {
+      "<leader>pi",
+      function() vim.cmd.FzfLua("lsp_implementations") end,
+      desc = "Search for symbol implementations",
+    },
+    { "<leader>pI", function() vim.cmd.FzfLua("lsp_incoming_calls") end, desc = "Search for symbol incoming calls" },
+    { "<leader>po", function() vim.cmd.FzfLua("lsp_outgoing_calls") end, desc = "Search for symbol outgoing calls" },
+    { "<leader>pT", function() vim.cmd.FzfLua("lsp_typedefs") end, desc = "Search for type definitions" },
     { "<leader>pS", function() vim.cmd.FzfLua("lsp_workspace_symbols") end, desc = "Search for workspace symbols" },
-    { "<leader>pb", function() vim.cmd.FzfLua("buffers") end,               desc = "Search for buffers" },
-    { "<leader>pq", function() vim.cmd.FzfLua("oldfiles") end,              desc = "Search recently opened files" },
-    { "<leader>pc", function() vim.cmd.FzfLua("registers") end,             desc = "Search registers" },
-    { "<leader>ca", function() vim.cmd.FzfLua("lsp_code_actions") end,      desc = "Search code actions" },
+    { "<leader>pb", function() vim.cmd.FzfLua("buffers") end, desc = "Search for buffers" },
+    { "<leader>pq", function() vim.cmd.FzfLua("oldfiles") end, desc = "Search recently opened files" },
+    { "<leader>pc", function() vim.cmd.FzfLua("registers") end, desc = "Search registers" },
+    { "<leader>ca", function() vim.cmd.FzfLua("lsp_code_actions") end, desc = "Search code actions" },
     -- { '<leader>pb', function()
     --     require('fzf-lua').lgrep_curbuf {
     --         winopts = {
@@ -41,9 +46,7 @@ return {
     --     }
     -- end }
   },
-  init = function()
-    require("fzf-lua").register_ui_select()
-  end,
+  init = function() require("fzf-lua").register_ui_select() end,
   opts = {
     actions = {
       files = {
@@ -57,8 +60,8 @@ return {
       },
     },
     fzf_opts = {
-      ['--info'] = 'default',
-      ['--layout'] = 'reverse',
+      ["--info"] = "default",
+      ["--layout"] = "reverse",
     },
     previewers = {
       builtin = {
@@ -67,14 +70,14 @@ return {
     },
     keymap = {
       builtin = {
-        ['<C-/>'] = 'toggle-help',
-        ['<C-a>'] = 'toggle-fullscreen',
-        ['<C-i>'] = 'toggle-preview',
-        ['<C-d>'] = 'preview-page-down',
-        ['<C-u>'] = 'preview-page-up',
+        ["<C-/>"] = "toggle-help",
+        ["<C-a>"] = "toggle-fullscreen",
+        ["<C-i>"] = "toggle-preview",
+        ["<C-d>"] = "preview-page-down",
+        ["<C-u>"] = "preview-page-up",
       },
       fzf = {
-        ['alt-a'] = 'toggle-all+accept',
+        ["alt-a"] = "toggle-all+accept",
       },
     },
     winopts = {
@@ -83,8 +86,8 @@ return {
       backdrop = 100,
       preview = {
         scrollbar = false,
-        layout = 'vertical',
-        vertical = 'up:70%',
+        layout = "vertical",
+        vertical = "up:70%",
         border = "single",
       },
       border = "single",
@@ -96,7 +99,7 @@ return {
     },
     lsp = {
       code_actions = {
-        previewer = 'codeaction',
+        previewer = "codeaction",
       },
     },
     oldfiles = {
@@ -121,5 +124,5 @@ return {
       ".cache/",
       "bin/",
     },
-  }
+  },
 }

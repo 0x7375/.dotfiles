@@ -5,7 +5,7 @@ vim.opt.indentkeys:remove("0#")
 
 vim.opt.modeline = false
 
-vim.opt.winborder = "single";
+vim.opt.winborder = "single"
 vim.opt.pumheight = 8
 vim.opt.pummaxwidth = 60
 vim.opt.pumborder = "single"
@@ -22,7 +22,7 @@ vim.opt.relativenumber = false
 vim.opt.showmode = false
 
 vim.opt.ignorecase = true -- ignore case in search patterns
-vim.opt.smartcase = true  -- smart case
+vim.opt.smartcase = true -- smart case
 
 vim.opt.conceallevel = 0
 
@@ -68,8 +68,8 @@ vim.opt.ttimeout = true
 vim.opt.ttimeoutlen = 10
 
 -- Use ripgrep for grepping.
-vim.opt.grepprg = 'rg --vimgrep'
-vim.opt.grepformat = '%f:%l:%c:%m'
+vim.opt.grepprg = "rg --vimgrep"
+vim.opt.grepformat = "%f:%l:%c:%m"
 
 -- Number of recent files
 vim.opt.shada = "!,'1000,<50,s10,h,:10000"
@@ -89,15 +89,5 @@ vim.opt.cmdheight = 0
 vim.cmd("set statusline=%{repeat('─',winwidth('.'))}")
 
 if os.getenv("SSH_TTY") ~= nil then
-  vim.g.clipboard = {
-    name = 'OSC 52',
-    copy = {
-      ['+'] = require('vim.ui.clipboard.osc52').copy('+'),
-      ['*'] = require('vim.ui.clipboard.osc52').copy('*'),
-    },
-    paste = {
-      ['+'] = require('vim.ui.clipboard.osc52').paste('+'),
-      ['*'] = require('vim.ui.clipboard.osc52').paste('*'),
-    },
-  }
+  vim.g.clipboard = "osc52"
 end

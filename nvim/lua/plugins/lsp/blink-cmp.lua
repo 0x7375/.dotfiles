@@ -1,12 +1,12 @@
 return {
-  'saghen/blink.cmp',
-  dependencies = { 'rafamadriz/friendly-snippets' },
-  version = '1.*',
+  "saghen/blink.cmp",
+  dependencies = { "rafamadriz/friendly-snippets" },
+  version = "1.*",
   ---@module 'blink.cmp'
   ---@type blink.cmp.Config
   opts = {
     completion = {
-      list = { selection = { preselect = true, auto_insert = false }, },
+      list = { selection = { preselect = true, auto_insert = false } },
       documentation = {
         auto_show = true,
         auto_show_delay_ms = 50,
@@ -16,9 +16,9 @@ return {
         draw = {
           columns = {
             { "label", "label_description", gap = 1 },
-            { "kind" }
+            { "kind" },
           },
-        }
+        },
       },
     },
     signature = { enabled = true },
@@ -27,9 +27,9 @@ return {
       completion = { menu = { auto_show = true } },
     },
     sources = {
-      default = { 'lsp', 'path', 'snippets', 'buffer' },
+      default = { "lsp", "path", "snippets", "buffer" },
       per_filetype = {
-        lua = { inherit_defaults = true, 'lazydev' }
+        lua = { inherit_defaults = true, "lazydev" },
       },
       providers = {
         lsp = {
@@ -59,18 +59,25 @@ return {
 
       if items_by_source.lsp then
         table.sort(items_by_source.lsp, function(a, b)
-          if a.kind == 15 and b.kind ~= 15 then return true end
+          if a.kind == 15 and b.kind ~= 15 then
+            return true
+          end
           return false
         end)
       end
 
       for _, id in ipairs(priority) do
         if items_by_source[id] then
-          items_by_source[id] = vim.iter(items_by_source[id]):filter(function(item)
-            if seen[item.label] then return false end
-            seen[item.label] = true
-            return true
-          end):totable()
+          items_by_source[id] = vim
+            .iter(items_by_source[id])
+            :filter(function(item)
+              if seen[item.label] then
+                return false
+              end
+              seen[item.label] = true
+              return true
+            end)
+            :totable()
         end
       end
       return original(ctx, items_by_source)

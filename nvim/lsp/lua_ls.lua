@@ -8,6 +8,6 @@ return {
         enable = true,
         arrayIndex = "Disable",
       },
-    }
+    },
   },
 }

@@ -32,7 +32,7 @@ local opts = {
   },
   performance = {
     rtp = {
-        reset = false,
+      reset = false,
       disabled_plugins = {
         "2html_plugin",
         "getscript",
@@ -67,7 +67,7 @@ require("opts")
 require("keymaps")
 
 if vim.g.vscode then
-  require("lazy").setup('plugins.actions', opts)
+  require("lazy").setup("plugins.actions", opts)
   require("codium")
   return
 end
@@ -76,20 +76,20 @@ require("autocmds")
 
 if vim.g.windows or vim.g.rpi then
   require("lazy").setup({
-    { import = 'plugins.nav' },
-    { import = 'plugins.actions' },
-    { import = 'plugins.ui' },
+    { import = "plugins.nav" },
+    { import = "plugins.actions" },
+    { import = "plugins.ui" },
   }, opts)
   return
 end
 
 require("lazy").setup({
-  { import = 'plugins.nav' },
-  { import = 'plugins.lsp' },
-  { import = 'plugins.actions' },
-  { import = 'plugins.dap' },
-  { import = 'plugins.tools' },
-  { import = 'plugins.ui' },
+  { import = "plugins.nav" },
+  { import = "plugins.lsp" },
+  { import = "plugins.actions" },
+  { import = "plugins.dap" },
+  { import = "plugins.tools" },
+  { import = "plugins.ui" },
 }, opts)
 
 -- experimental ui that avoid hit-enter prompts g< to open buffer

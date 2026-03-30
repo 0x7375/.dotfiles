@@ -15,7 +15,7 @@ map("n", "<S-u>", "<C-r>")
 map("n", "!", ":!", { silent = false })
 
 -- Unbind space outside of insert
-map({ 'n', 'v' }, '<space>', '<nop>')
+map({ "n", "v" }, "<space>", "<nop>")
 
 map({ "n", "x" }, "s", "V")
 
@@ -50,13 +50,13 @@ map("n", "<C-f>", "<C-f>zz", { noremap = true })
 map("n", "*", "*zz", { noremap = true })
 map("n", "#", "#zz", { noremap = true })
 
-map('n', 'n', function()
-  vim.cmd('normal! nzz')
+map("n", "n", function()
+  vim.cmd("normal! nzz")
   bar.refresh()
 end)
 
-vim.keymap.set('n', 'N', function()
-  vim.cmd('normal! Nzz')
+vim.keymap.set("n", "N", function()
+  vim.cmd("normal! Nzz")
   bar.refresh()
 end)
 
@@ -70,19 +70,17 @@ map("n", "<C-i>", "<C-i>zz", { noremap = true })
 map("n", "<leader>s", ":%s#", { noremap = true })
 map("n", "<leader>S", ":%g#", { noremap = true })
 
-vim.keymap.set('c', '<CR>', function()
+vim.keymap.set("c", "<CR>", function()
   local cmdtype = vim.fn.getcmdtype()
   -- center and refresh winbar on search commands
-  if cmdtype == '/' or cmdtype == '?' then
+  if cmdtype == "/" or cmdtype == "?" then
     return '<CR>zz<Cmd>lua require("util.bar").refresh()<CR>'
   else
-    return '<CR>'
+    return "<CR>"
   end
 end, { expr = true })
 
-map('i', '<Esc>', function()
-  return vim.fn.pumvisible() == 1 and '<C-e>' or '<Esc>'
-end, { expr = true })
+map("i", "<Esc>", function() return vim.fn.pumvisible() == 1 and "<C-e>" or "<Esc>" end, { expr = true })
 
 -- Makes the file executable
 map("n", "<leader>xm", function() vim.cmd("!chmod +x %") end, { silent = true, desc = "Make file executable" })
@@ -97,22 +95,22 @@ map("n", "<leader>=", "mzgg=G`zzz", { desc = "Indent whole file" })
 --     { desc = "Open file in default program" })
 
 -- toggle line wrap
-map('n', '<leader>l', function() vim.cmd("set wrap!") end, { desc = "Toggle line wrap" })
+map("n", "<leader>l", function() vim.cmd("set wrap!") end, { desc = "Toggle line wrap" })
 
-map('n', '<C-w>Q', function() vim.cmd("qa") end, { desc = "Quit all" })
+map("n", "<C-w>Q", function() vim.cmd("qa") end, { desc = "Quit all" })
 
 -- insert and command line emacs keybinds
 -- cmdline
-map('c', '<C-a>', '<Home>')
-map('c', '<C-e>', '<End>')
-map('c', '<C-k>', '<C-f>D<C-c><C-c>:<Up>')
-map('c', '<A-b>', '<C-Left>')
-map('c', '<A-f>', '<C-Right>')
-map('c', '<A-d>', '<C-Right><C-w>')
-map('c', '<C-h>', '<BS>')
-map('c', '<C-d>', '<Del>')
-map('c', '<C-f>', '<Right>')
-map('c', '<C-b>', '<Left>')
+map("c", "<C-a>", "<Home>")
+map("c", "<C-e>", "<End>")
+map("c", "<C-k>", "<C-f>D<C-c><C-c>:<Up>")
+map("c", "<A-b>", "<C-Left>")
+map("c", "<A-f>", "<C-Right>")
+map("c", "<A-d>", "<C-Right><C-w>")
+map("c", "<C-h>", "<BS>")
+map("c", "<C-d>", "<Del>")
+map("c", "<C-f>", "<Right>")
+map("c", "<C-b>", "<Left>")
 
 -- direction based window resizing
 local change_width = function(d)
@@ -151,13 +149,15 @@ map("n", "<M-l>", function() change_width("right") end, { desc = "Resize window 
 map("n", "<M-k>", function() change_width("up") end, { desc = "Resize window up" })
 map("n", "<M-j>", function() change_width("down") end, { desc = "Resize window down" })
 
-map({ "x", "n" }, "+", "\"+", { desc = "+ for system clipboard register" })
-map({ "x", "n" }, "_", "\"_", { desc = "_ for void register" })
+map({ "x", "n" }, "+", '"+', { desc = "+ for system clipboard register" })
+map({ "x", "n" }, "_", '"_', { desc = "_ for void register" })
 map("x", "P", "pgv=", { desc = "Paste and indent in visual mode" })
 map("n", "gp", "`[v`]", { desc = "Select last pasted text" })
-map("n", "<leader>y", "goVG\"+y", { desc = "Copy entire file content" })
+map("n", "<leader>y", 'goVG"+y', { desc = "Copy entire file content" })
 
 map("n", "<leader>'", vim.cmd.Lazy, { desc = "Open Lazy UI" })
 
 map("n", "<leader>xl", ":.lua<CR>", { desc = "Run current line with lua" })
 map("x", "<leader>xl", ":lua<CR>", { desc = "Run visual selection with lua" })
+
+map("n", "<leader>N", vim.cmd.restart, { desc = "Restart neovim" })

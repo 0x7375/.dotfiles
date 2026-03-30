@@ -1,5 +1,9 @@
 return {
   filetypes = {
-    "php", "html", "javascript", "javascriptreact", "typescriptreact",
+    "php",
+    "html",
+    "javascript",
+    "javascriptreact",
+    "typescriptreact",
   },
 }

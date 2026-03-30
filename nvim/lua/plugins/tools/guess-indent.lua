@@ -1,5 +1,5 @@
 return {
-    'nmac427/guess-indent.nvim',
-    cond = false,
-    opts = {}
+  "nmac427/guess-indent.nvim",
+  cond = false,
+  opts = {},
 }

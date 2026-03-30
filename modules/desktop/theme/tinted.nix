@@ -68,7 +68,7 @@
           type = types.attrsOf (types.attrsOf types.str);
           default =
             let
-              map' = lib.mapAttrs (name: value: lib.removePrefix "#" value);
+              map' = lib.mapAttrs (_: value: lib.removePrefix "#" value);
             in
             {
               dark = map' cfg.palette.dark;

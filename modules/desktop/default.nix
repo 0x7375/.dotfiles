@@ -208,8 +208,6 @@
           btToggle =
             let
               inherit (lib) getExe';
-            in
-            let
               airpods = "D4:68:AA:88:8E:32";
             in
             pkgs.writeShellScript "bluetooth-toggle"

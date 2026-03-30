@@ -229,10 +229,9 @@
       };
 
       config = lib.mkIf (config.xdg.desktopEntries != { }) {
-        environment.systemPackages = (
+        environment.systemPackages =
           map lib.hiPrio # we need hiPrio to override existing entries
-            (lib.attrsets.mapAttrsToList makeFile config.xdg.desktopEntries)
-        );
+            (lib.attrsets.mapAttrsToList makeFile config.xdg.desktopEntries);
       };
     };
 }

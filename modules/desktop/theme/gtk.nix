@@ -97,8 +97,8 @@
 
       config = {
         nixpkgs.overlays = [
-          (final: prev: {
-            gruvbox-gtk-theme = final.unstable.gruvbox-gtk-theme;
+          (final: _: {
+            inherit (final.unstable) gruvbox-gtk-theme;
           })
         ];
 

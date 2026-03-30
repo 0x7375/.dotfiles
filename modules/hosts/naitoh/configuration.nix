@@ -170,7 +170,7 @@
                 $browser_was_open && hyprctl dispatch exec -- "$BROWSER"
               '';
           };
-        in 
+        in
         # hyprlang
         ''
           general {

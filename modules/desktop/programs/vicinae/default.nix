@@ -153,7 +153,7 @@
           map (s: {
             name = "shortcut-${s.alias}";
             value = {
-              alias = s.alias;
+              inherit (s) alias;
             };
           }) shortcuts
         );

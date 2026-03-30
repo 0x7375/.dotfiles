@@ -18,7 +18,7 @@
         openFirewall = true;
         group = "media";
         settings = {
-          port = config.me.services.filebrowser.port;
+          inherit (config.me.services.filebrowser) port;
           address = "0.0.0.0";
           root = "/data/";
         };

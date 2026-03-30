@@ -2,7 +2,6 @@
   flake.nixos.core =
     {
       pkgs,
-      config,
       options,
       ...
     }:

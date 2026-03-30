@@ -9,7 +9,7 @@
         let
           dir = {
             mode = "0755";
-            user = config.me.user;
+            inherit (config.me) user;
             group = "users";
           };
         in
@@ -19,7 +19,7 @@
           "${config.me.home}/.local/share/android".d = dir;
           "${config.me.home}/.local/share/gnupg".d = {
             mode = "0700";
-            user = config.me.user;
+            inherit (config.me) user;
             group = "users";
           };
         };

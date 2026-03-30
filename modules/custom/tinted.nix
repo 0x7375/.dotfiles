@@ -7,7 +7,7 @@
     }:
     let
       cfg = config.tinted;
-      home = config.me.home;
+      inherit (config.me) home;
       tintedDir = ".local/state/tinted";
       themes = [
         "dark"
@@ -85,7 +85,7 @@
               }
             );
             default = { };
-            example.".Xresources".text = palette: ''
+            example.".Xresources".text = ''
               *bg0: ''${palette.red}
               *red: ''${palette.red}
             '';

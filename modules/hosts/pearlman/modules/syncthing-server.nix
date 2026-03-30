@@ -66,7 +66,7 @@
             let
               syncthingHosts = lib.filterAttrs (n: v: v.syncthing.id != null && n != hostname) config.me.hosts;
             in
-            lib.mapAttrs (n: v: { id = v.syncthing.id; }) syncthingHosts;
+            lib.mapAttrs (_: v: { inherit (v.syncthing) id; }) syncthingHosts;
         };
       };
       me.syncthing = {

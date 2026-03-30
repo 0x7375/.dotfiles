@@ -45,7 +45,7 @@
       nix-homebrew = {
         enable = true;
         enableRosetta = true;
-        user = config.me.user;
+        inherit (config.me) user;
       };
 
       homebrew = {

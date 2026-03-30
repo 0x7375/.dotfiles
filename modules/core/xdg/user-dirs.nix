@@ -25,7 +25,7 @@
       userActivation =
         let
           directoriesList = lib.attrValues directories;
-          mkdir = (dir: ''[[ -L "${dir}" ]] || mkdir -p $VERBOSE_ARG "${dir}"'');
+          mkdir = dir: ''[[ -L "${dir}" ]] || mkdir -p $VERBOSE_ARG "${dir}"'';
         in
         lib.strings.concatMapStringsSep "\n" mkdir directoriesList;
     };

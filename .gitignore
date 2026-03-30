@@ -2,3 +2,4 @@ result
 result-man
 *.qcow2
 .assets/dunst/output
+.pre-commit-config.yaml

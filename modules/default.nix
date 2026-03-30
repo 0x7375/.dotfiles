@@ -5,7 +5,7 @@
 }:
 
 let
-  lib = inputs.nixpkgs.lib;
+  inherit (inputs.nixpkgs) lib;
   mkHost =
     type: name: extraModules:
     let

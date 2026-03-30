@@ -26,36 +26,19 @@ return {
 
       local map = vim.keymap.set
 
-      -- highlight line number with diagnostic color instead of showing a letter
-      local base_config = {
-        signs = {
-          text = {
-            [vim.diagnostic.severity.ERROR] = "",
-            [vim.diagnostic.severity.WARN] = "",
-            [vim.diagnostic.severity.INFO] = "",
-            [vim.diagnostic.severity.HINT] = "",
-          },
-          numhl = {
-            [vim.diagnostic.severity.ERROR] = "DiagnosticSignError",
-            [vim.diagnostic.severity.WARN] = "DiagnosticSignWarn",
-            [vim.diagnostic.severity.HINT] = "DiagnosticSignHint",
-            [vim.diagnostic.severity.INFO] = "DiagnosticSignInfo",
-          },
-        },
-        update_in_insert = false,
-      }
-
       -- toggle virtual text
-      local virtual_text_on = vim.tbl_extend("keep", base_config, {
+      local virtual_text_on = {
         virtual_text = { current_line = true },
         signs = true,
         underline = true,
-      })
+        update_in_insert = false,
+      }
 
-      local virtual_text_off = vim.tbl_extend("keep", base_config, {
+      local virtual_text_off = {
         virtual_text = false,
         underline = false,
-      })
+        update_in_insert = false,
+      }
 
       vim.diagnostic.config(virtual_text_on)
 

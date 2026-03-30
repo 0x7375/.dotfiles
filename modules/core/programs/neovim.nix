@@ -56,6 +56,8 @@ let
 
           # Linters
           shellcheck
+          statix
+          deadnix
         ]
         ++ (lib.optionals unfree [
           pkgs.intelephense

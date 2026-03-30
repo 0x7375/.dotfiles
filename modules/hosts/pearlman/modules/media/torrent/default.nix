@@ -63,7 +63,7 @@
                 CategorySavePathChanged = false;
                 DefaultSavePathChanged = false;
               };
-              ExcludedFileNames = (builtins.readFile ./blacklist.txt);
+              ExcludedFileNames = builtins.readFile ./blacklist.txt;
               Interface = "airvpn";
               MaxConnections = 150;
               MaxConnectionsPerTorrent = 50;

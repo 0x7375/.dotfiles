@@ -4,6 +4,7 @@ return {
   config = function()
     require("lint").linters_by_ft = {
       sh = { "shellcheck" },
+      nix = { "statix", "deadnix" },
     }
 
     vim.api.nvim_create_autocmd({ "BufWritePost", "BufReadPost", "InsertLeave" }, {

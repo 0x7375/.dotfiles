@@ -8,7 +8,6 @@
     let
       home = "home";
       inherit (config.me)
-        hostname
         hosts
         host
         ;

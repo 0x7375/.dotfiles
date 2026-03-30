@@ -14,8 +14,8 @@
               (old: rec {
                 version = "caf24e77189f500b6a27ef502ef01d3a96196510";
                 src = pkgs.fetchFromGitHub {
-                  owner = old.src.owner;
-                  repo = old.src.repo;
+                  inherit (old.src) owner;
+                  inherit (old.src) repo;
                   rev = "${version}";
                   sha256 = "2A+y6twdfLl/Fy4Feop3tMGfTytxX80acTrFQ56kjS4=";
                 };

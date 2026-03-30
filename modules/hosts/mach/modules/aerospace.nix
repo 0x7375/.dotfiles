@@ -52,8 +52,34 @@
             mode.main.binding =
               let
                 super = "alt-ctrl";
+                fmenu = pkgs.writeShellScript "fmenu" ''
+                  #!/usr/bin/env bash
+
+                  TMP_IN=$(mktemp)
+                  TMP_OUT=$(mktemp)
+
+                  cat >"$TMP_IN"
+
+                      /Applications/Alacritty.app/Contents/MacOS/alacritty \
+                      -T "fmenu" \
+                      -o window.dimensions.columns=80 \
+                      -o window.dimensions.lines=15 \
+                      -o window.decorations=\"buttonless\" \
+                      -e sh -c "${lib.getExe pkgs.fzf} < \"$TMP_IN\" > \"$TMP_OUT\""
+
+                  cat "$TMP_OUT"
+                  rm "$TMP_IN" "$TMP_OUT"
+                '';
               in
               {
+                "${super}-m" = "exec-and-forget ${pkgs.writeShellScript "open-note" ''
+                  tmp=$(mktemp)
+                  ${lib.getExe pkgs.alacritty} -e zsh -c "ls ~/notes/*.md | sed 's|.*/||; s/\.md$//' | ${fmenu} > $tmp"
+                  note=$(cat $tmp)
+                  rm -f $tmp
+                  [ -n "$note" ] && open -na ${terminal} --args -e zsh -lc "nvim '$HOME/notes/$note.md'"
+                ''}";
+
                 "${super}-shift-r" = [
                   "reload-config"
                   "mode main"
@@ -70,16 +96,7 @@
                   "exec-and-forget open -na ${terminal} --args -e ${getExe pkgs.my.tmux-sessionizer} ~/";
                 "${super}-s" = "exec-and-forget open -na ${terminal} --args -e ${getExe pkgs.my.tmux-sshr}";
                 "${super}-e" = "exec-and-forget open -na ${terminal} --args -e ${getExe pkgs.lf}";
-                # "${super}-e" = "exec-and-forget osascript -e 'tell application \"Finder\" to make new Finder window to home'";
                 "${super}-shift-e" = "exec-and-forget open -na ${terminal} --args -e sudo ${getExe pkgs.lf}";
-
-                "${super}-m" = "exec-and-forget ${pkgs.writeShellScript "open-note" ''
-                  tmp=$(mktemp)
-                  ${lib.getExe pkgs.alacritty} e zsh -c "ls ~/notes/*.md | sed 's|.*/||; s/\.md$//' | ${lib.getExe pkgs.fzf} --no-mouse > $tmp"
-                  note=$(cat $tmp)
-                  rm -f $tmp
-                  [ -n "$note" ] && open -na ${terminal} --args -e zsh -lc "nvim '$HOME/notes/$note.md'"
-                ''}";
 
                 "${super}-shift-t" = "exec-and-forget open -na ${terminal}";
                 "${super}-shift-s" = "exec-and-forget ${getExe pkgs.my.swap-theme}";
@@ -125,20 +142,25 @@
             on-window-detected = [
               {
                 "if" = {
-                  app-id = "app.zen-browser.zen";
+                  app-id = "org.alacritty";
+                  window-title-regex-substring = "dmenu";
                 };
+                run = "layout floating";
+              }
+              {
+                "if".app-id = "app.zen-browser.zen";
                 run = "move-node-to-workspace 3";
               }
               {
-                "if" = {
-                  app-id = "com.hnc.Discord";
-                };
+                "if".app-id = "net.imput.helium";
+                run = "move-node-to-workspace 3";
+              }
+              {
+                "if".app-id = "dev.vencord.vesktop";
                 run = "move-node-to-workspace 4";
               }
               {
-                "if" = {
-                  app-id = "com.github.th-ch.youtube-music";
-                };
+                "if".app-id = "com.github.th-ch.youtube-music";
                 run = "move-node-to-workspace 4";
               }
             ];

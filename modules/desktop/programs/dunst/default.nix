@@ -44,22 +44,20 @@
       };
 
       tinted.files.".config/dunst/dunstrc" = {
-        generator = (
-          lib.generators.toINI {
-            mkKeyValue =
-              key: value:
-              let
-                value' =
-                  if lib.isBool value then
-                    (if value then "yes" else "no")
-                  else if lib.isString value then
-                    ''"${value}"''
-                  else
-                    toString value;
-              in
-              "${key}=${value'}";
-          }
-        );
+        generator = lib.generators.toINI {
+          mkKeyValue =
+            key: value:
+            let
+              value' =
+                if lib.isBool value then
+                  (if value then "yes" else "no")
+                else if lib.isString value then
+                  ''"${value}"''
+                else
+                  toString value;
+            in
+            "${key}=${value'}";
+        };
         value = palette: rec {
           global =
             let

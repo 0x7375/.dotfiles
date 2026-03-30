@@ -19,7 +19,7 @@
         systemd.tmpfiles.settings."arr-media" =
           let
             mkDir = user: {
-              user = user;
+              inherit user;
               group = "media";
               mode = "0775";
             };

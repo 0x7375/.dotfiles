@@ -81,6 +81,11 @@
       url = "git+https://codeberg.org/0x7E/karabiner-ts";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    git-hooks-nix = {
+      url = "github:cachix/git-hooks.nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -97,6 +102,7 @@
     inputs.flake-parts.lib.mkFlake { inherit inputs; } {
       imports = [
         inputs.wrappers.flakeModules.wrappers
+        inputs.git-hooks-nix.flakeModule
       ]
       ++ (import-tree ./modules);
 
@@ -109,10 +115,36 @@
       ];
 
       perSystem =
-        { ... }:
+        {
+          config,
+          lib,
+          pkgs,
+          ...
+        }:
         {
           wrappers.control_type = "exclude";
           wrappers.packages = { };
+
+          pre-commit.settings.hooks = {
+            nixfmt.enable = true;
+            statix = {
+              enable = true;
+              entry = "${lib.getExe pkgs.statix} fix";
+            };
+            deadnix = {
+              enable = true;
+              settings = {
+                edit = true;
+                noUnderscore = true;
+                noLambdaArg = true;
+                noLambdaPatternNames = true;
+              };
+            };
+          };
+
+          devShells.default = pkgs.mkShell {
+            shellHook = config.pre-commit.installationScript;
+          };
         };
     };
 }

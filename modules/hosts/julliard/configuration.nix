@@ -16,10 +16,12 @@
         xclip
       ];
 
-      wsl.enable = true;
-      wsl.defaultUser = config.me.user;
-      wsl.wslConf.network.hostname = config.me.hostname;
-      wsl.interop.register = true;
+      wsl = {
+        enable = true;
+        defaultUser = config.me.user;
+        wslConf.network.hostname = config.me.hostname;
+        interop.register = true;
+      };
 
       hj.xdg.config.files."lf/lfrc".text = ''
         map gh cd /mnt/c/Users/${config.me.user}

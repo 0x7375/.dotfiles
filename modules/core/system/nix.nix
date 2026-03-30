@@ -18,11 +18,11 @@
           });
 
           unstable = import inputs.nixpkgs-unstable {
-            system = final.stdenv.hostPlatform.system;
+            inherit (final.stdenv.hostPlatform) system;
             config.allowUnfreePredicate = config.nixpkgs.config.allowUnfreePredicate;
           };
           auto = import inputs.auto-update {
-            system = final.stdenv.hostPlatform.system;
+            inherit (final.stdenv.hostPlatform) system;
             config.allowUnfreePredicate = config.nixpkgs.config.allowUnfreePredicate;
           };
 

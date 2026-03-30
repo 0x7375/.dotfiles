@@ -122,7 +122,7 @@
               "${name}" = syncthingDirConfig (
                 baseArgs
                 // {
-                  devices = f.devices;
+                  inherit (f) devices;
                 }
               );
             }

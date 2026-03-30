@@ -28,11 +28,10 @@
     }:
     {
       users.users.${config.me.user} = {
+        inherit (config.me) uid home;
         isNormalUser = true;
-        home = config.me.home;
         initialPassword = "pw123";
         initialHashedPassword = lib.mkForce null;
-        uid = config.me.uid;
         shell = pkgs.zsh;
         extraGroups = [
           "wheel"

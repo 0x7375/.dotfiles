@@ -8,7 +8,7 @@
     {
       nixpkgs.overlays = [
         (final: prev: {
-          gromit-mpx = final.unstable.gromit-mpx;
+          inherit (final.unstable) gromit-mpx;
         })
       ];
 

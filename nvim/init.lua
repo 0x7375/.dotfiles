@@ -1,109 +1,79 @@
-vim.g.windows = vim.fn.has("unix") ~= 1
+vim.loader.enable()
 
-vim.g.rpi = vim.fn.system("uname -m"):match("aarch64")
+_G.map = vim.keymap.set
+_G.del = vim.keymap.del
 
-local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-if not vim.uv.fs_stat(lazypath) then
-  vim.fn.system({
-    "git",
-    "clone",
-    "--filter=blob:none",
-    "https://github.com/folke/lazy.nvim.git",
-    "--branch=stable", -- latest stable release
-    lazypath,
+-- automatically append github to entries without an absolute link
+_G.pack = function(plugins, opts)
+  for k, p in ipairs(plugins) do
+    if type(p) == "string" and not p:match("^https?://") then
+      plugins[k] = "https://github.com/" .. p
+    elseif type(p) == "table" and p.src and not p.src:match("^https?://") then
+      p.src = "https://github.com/" .. p.src
+    end
+  end
+  vim.pack.add(plugins, opts)
+end
+
+_G.on_event = function(ev, f)
+  vim.api.nvim_create_autocmd(vim.split(ev, ","), {
+    callback = function() pcall(f) end,
   })
 end
-vim.opt.rtp:prepend(lazypath)
+
+_G.on_filetype = function(ft, f)
+  vim.api.nvim_create_autocmd("FileType", {
+    pattern = vim.split(ft, ","),
+    callback = function() pcall(f) end,
+  })
+end
 
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 vim.opt.termguicolors = true
 
-local opts = {
-  change_detection = {
-    notify = false,
-  },
-  ui = {
-    border = "single",
-    backdrop = 100,
-  },
-  dev = {
-    path = "~/repos",
-  },
-  rocks = {
-    enabled = false,
-  },
-  performance = {
-    rtp = {
-      reset = false,
-      disabled_plugins = {
-        "2html_plugin",
-        "getscript",
-        "getscriptPlugin",
-        "gzip",
-        "logipat",
-        "netrw",
-        "netrwPlugin",
-        "netrwSettings",
-        "netrwFileHandlers",
-        "matchit",
-        "matchparen",
-        "tar",
-        "tarPlugin",
-        "rrhelper",
-        "vimball",
-        "health",
-        "shada",
-        "spellfile",
-        "tohtml",
-        "tutor",
-        "vimballPlugin",
-        "zip",
-        "zipPlugin",
-        "rplugin",
-      },
-    },
-  },
+local disabled_builtins = {
+  "2html_plugin",
+  "getscript",
+  "getscriptPlugin",
+  "gzip",
+  "logipat",
+  "netrw",
+  "netrwPlugin",
+  "netrwSettings",
+  "netrwFileHandlers",
+  "matchit",
+  "matchparen",
+  "tar",
+  "tarPlugin",
+  "rrhelper",
+  "vimball",
+  "vimballPlugin",
+  "health",
+  "shada",
+  "spellfile",
+  "tohtml",
+  "tutor",
+  "vimballPlugin",
+  "zip",
+  "zipPlugin",
+  "rplugin",
 }
+
+for _, plugin in ipairs(disabled_builtins) do
+  vim.g["loaded_" .. plugin] = 1
+end
 
 require("opts")
 require("keymaps")
 
 if vim.g.vscode then
-  require("lazy").setup("plugins.actions", opts)
   require("codium")
   return
 end
 
 require("autocmds")
 
-if vim.g.windows or vim.g.rpi then
-  require("lazy").setup({
-    { import = "plugins.nav" },
-    { import = "plugins.actions" },
-    { import = "plugins.ui" },
-  }, opts)
-  return
-end
-
-require("lazy").setup({
-  { import = "plugins.nav" },
-  { import = "plugins.lsp" },
-  { import = "plugins.actions" },
-  { import = "plugins.dap" },
-  { import = "plugins.tools" },
-  { import = "plugins.ui" },
-}, opts)
-
 -- experimental ui that avoid hit-enter prompts g< to open buffer
 -- disabled for now, shows a notification for every write/undo
 require("vim._core.ui2").enable({})
-
--- remove default conflicting lsp mappings
--- del({ "n", "x" }, "gra")
--- del("n", "gri")
--- del("n", "grn")
--- del("n", "grr")
--- del("n", "grt")
-
--- vim.pack.add({ "https://github.com/vim-scripts/ReplaceWithRegister" })

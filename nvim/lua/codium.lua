@@ -1,6 +1,5 @@
 local vscode = require("vscode")
 local call = vscode.call
-local map = vim.keymap.set
 
 map("n", "<leader>e", function() call("workbench.action.toggleSidebarVisibility") end)
 map("n", "<leader>t", function() call("workbench.actions.view.problems") end)

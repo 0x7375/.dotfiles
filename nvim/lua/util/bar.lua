@@ -2,52 +2,59 @@ local M = {}
 
 local git_cache = ""
 
+local function update_branch(cb)
+  vim.system({ "git", "rev-parse", "--abbrev-ref", "HEAD" }, { text = true }, function(r)
+    if r.code ~= 0 then
+      git_cache = ""
+      vim.schedule(cb or M.refresh)
+      return
+    end
+    local ref = vim.trim(r.stdout)
+    if ref == "HEAD" then
+      vim.system({ "git", "rev-parse", "--short", "HEAD" }, { text = true }, function(r2)
+        git_cache = r2.code == 0 and vim.trim(r2.stdout) or ""
+        vim.schedule(cb or M.refresh)
+      end)
+    else
+      git_cache = ref
+      vim.schedule(cb or M.refresh)
+    end
+  end)
+end
+
 local function setup_git_watch()
   local git_dir = vim.fn.finddir(".git", ".;")
-
-  if not git_dir then
+  if not git_dir or git_dir == "" then
     return
   end
-
-  local head_file = git_dir .. "/HEAD"
   local event = vim.uv.new_fs_event()
-
   if not event then
     return
   end
-
-  vim.uv.fs_event_start(event, head_file, {}, vim.schedule_wrap(function() M.refresh() end))
+  vim.uv.fs_event_start(event, git_dir .. "/HEAD", {}, function()
+    git_cache = ""
+    update_branch()
+  end)
 end
 
-setup_git_watch()
-
-local function git_branch()
-  if git_cache ~= "" then
-    return git_cache
-  end
-
-  local ref = vim.fn.system("git rev-parse --abbrev-ref HEAD 2>/dev/null | tr -d '\n'")
-  local branch = ""
-  if ref == "HEAD" then
-    branch = vim.fn.system("git rev-parse --short HEAD 2>/dev/null | tr -d '\n'")
-  elseif ref ~= "" then
-    branch = ref
-  end
-
-  git_cache = branch
-  return branch
-end
+vim.api.nvim_create_autocmd("VimEnter", {
+  once = true,
+  callback = function()
+    update_branch()
+    setup_git_watch()
+  end,
+})
 
 vim.api.nvim_create_autocmd("DirChanged", {
   callback = function()
     git_cache = ""
+    update_branch()
     setup_git_watch()
-    M.refresh()
   end,
 })
 
 M.build_bar = function()
-  local branch = git_branch()
+  local branch = git_cache ~= "" and (" " .. git_cache) or ""
   branch = " " .. branch
 
   local set_green = "%#GruvboxGreen#"

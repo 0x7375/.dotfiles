@@ -5,13 +5,12 @@ let
     {
       pkgs,
       lib,
-      configDir,
+      configDir ? null,
       unfree ? false,
       dev ? true,
     }:
     {
       inherit pkgs;
-      settings.config_directory = configDir;
 
       package = inputs.neovim-nightly-overlay.packages.${pkgs.stdenv.hostPlatform.system}.default;
 
@@ -64,6 +63,9 @@ let
           pkgs.intelephense
         ])
       );
+    }
+    // lib.optionalAttrs (configDir != null) {
+      settings.config_directory = configDir;
     }
     // lib.optionalAttrs dev {
       specs.treesitter = {
@@ -139,17 +141,17 @@ in
       packages = [
         (neovim.apply (neovimWrapperBase {
           inherit pkgs lib;
-          configDir = "${config.me.flakeDir}/nvim";
           dev = false;
         })).wrapper
       ];
+
+      hj.xdg.config.files."nvim".source = "${config.me.flakeDir}/nvim";
     };
 
   flake.shared.desktop =
     {
       lib,
       pkgs,
-      config,
       ...
     }:
     {
@@ -158,7 +160,6 @@ in
       packages = [
         (neovim.apply (neovimWrapperBase {
           inherit pkgs lib;
-          configDir = "${config.me.flakeDir}/nvim";
           unfree = true;
         })).wrapper
       ];

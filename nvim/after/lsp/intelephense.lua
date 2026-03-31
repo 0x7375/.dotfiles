@@ -1,6 +1,9 @@
 ---@type vim.lsp.Config
 return {
-  on_init = function(client) client.server_capabilities.documentFormattingProvider = true end,
+  ---@type lspconfig.settings.intelephense
+  capabilities = {
+    documentFormattingProvider = true,
+  },
   settings = {
     intelephense = {
       format = { enable = true, braces = "k&r" },

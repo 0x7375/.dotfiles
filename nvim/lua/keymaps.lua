@@ -1,4 +1,3 @@
-local map = vim.keymap.set
 local bar = require("util.bar")
 
 map({ "n", "x", "v" }, ":", ";")

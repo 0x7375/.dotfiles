@@ -25,6 +25,7 @@ if stat and stat.size > 50 * 1024 * 1024 then
   io.open(log_path, "w+"):close()
 end
 
+vim.filetype.add({ extension = { log = "log" } })
 vim.filetype.add({ extension = { lock = "json" } })
 vim.filetype.add({ extension = { g4 = "antlr4" } })
 vim.filetype.add({ extension = { code = "c" } })

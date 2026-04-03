@@ -20,17 +20,21 @@
 
       mkThemeFile =
         fileCfg: themePalette:
-        if fileCfg.generator != null then
-          {
-            value = if fileCfg.value != null then applyIfFn fileCfg.value themePalette else themePalette;
-            inherit (fileCfg) generator;
-          }
-        else if fileCfg.source != null then
-          { source = applyIfFn fileCfg.source themePalette; }
-        else if fileCfg.text != null then
-          { text = fileCfg.text themePalette; }
-        else
-          throw "must specify one of text, source, or generator";
+        let
+          base =
+            if fileCfg.generator != null then
+              {
+                value = if fileCfg.value != null then applyIfFn fileCfg.value themePalette else themePalette;
+                inherit (fileCfg) generator;
+              }
+            else if fileCfg.source != null then
+              { source = applyIfFn fileCfg.source themePalette; }
+            else if fileCfg.text != null then
+              { text = fileCfg.text themePalette; }
+            else
+              throw "must specify one of text, source, or generator";
+        in
+        base // lib.optionalAttrs fileCfg.executable { executable = true; };
     in
     {
       options.tinted = {
@@ -61,6 +65,7 @@
             type = types.attrsOf (
               types.submodule {
                 options = {
+                  executable = lib.mkEnableOption "";
                   text = lib.mkOption {
                     type = lib.types.nullOr paletteTextType;
                     default = null;

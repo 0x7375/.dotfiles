@@ -189,6 +189,15 @@
             timeout = 600
             on-timeout = ${getExe lock}
           }
+
+          listener {
+            timeout = 600
+            on-timeout = ${getExe lock}
+          }
+          listener {
+            timeout = 1800
+            on-timeout = systemctl hibernate
+          }
         '';
 
       security.pam.services.hyprlock = {

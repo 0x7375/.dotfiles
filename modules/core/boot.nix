@@ -36,6 +36,8 @@
             ];
           };
 
+          systemd.ctrlAltDelUnit = "poweroff.target";
+
           boot.kernel.sysctl."kernel.sysrq" = 1;
 
           systemd.settings.Manager.RebootWatchdogSec = "10s";

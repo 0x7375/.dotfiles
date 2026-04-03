@@ -56,7 +56,7 @@
             if [[ -n "$SSH_TTY" ]]; then
               printf '\033]52;c;%s\a' "$(printf '%s' "$data" | base64 | tr -d '\n')" > "$SSH_TTY"
             else
-              printf '%s' "$data" | ${lib.optionalString (options ? me.desktop) config.me.desktop.copy}
+              printf '%s' "$data" | ${if (options ? me.desktop) then config.me.desktop.copy else "/dev/null"}
             fi
           }
 

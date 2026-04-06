@@ -12,7 +12,7 @@ let
     {
       inherit pkgs;
 
-      package = inputs.neovim-nightly-overlay.packages.${pkgs.stdenv.hostPlatform.system}.default;
+      package = pkgs.unstable.neovim-unwrapped;
 
       hosts = {
         python3.nvim-host.enable = dev;

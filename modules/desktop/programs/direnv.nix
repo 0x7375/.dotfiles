@@ -17,8 +17,8 @@
         lib.mkAfter "command -v direnv &> /dev/null && eval \"$(direnv hook bash)\"";
 
       packages = with pkgs; [
-        auto.devenv
-        direnv
+        unstable.devenv
+        nix-direnv
       ];
 
       hj.xdg.config.files."direnv/direnv.toml" = {
@@ -32,19 +32,21 @@
       hj.xdg.config.files."direnv/lib/nix-direnv.sh".source =
         "${pkgs.nix-direnv}/share/nix-direnv/direnvrc";
 
-      hj.xdg.config.files."direnv/direnvrc".text = ''
-        : "''${XDG_CACHE_HOME:="''${HOME}/.cache"}"
-        declare -A direnv_layout_dirs
-        direnv_layout_dir() {
-            local hash path
-            echo "''${direnv_layout_dirs[$PWD]:=$(
-                hash="''$(sha1sum - <<< "$PWD" | head -c40)"
-                path="''${PWD//[^a-zA-Z0-9]/-}"
-                echo "''${XDG_CACHE_HOME}/direnv/layouts/''${hash}''${path}"
-            )}"
-        }
+      hj.xdg.config.files."direnv/direnvrc".text =
+        # bash
+        ''
+          : "''${XDG_CACHE_HOME:="''${HOME}/.cache"}"
+          declare -A direnv_layout_dirs
+          direnv_layout_dir() {
+              local hash path
+              echo "''${direnv_layout_dirs[$PWD]:=$(
+                  hash="''$(sha1sum - <<< "$PWD" | head -c40)"
+                  path="''${PWD//[^a-zA-Z0-9]/-}"
+                  echo "''${XDG_CACHE_HOME}/direnv/layouts/''${hash}''${path}"
+              )}"
+          }
 
-        export DIRENV_LOADED=1
-      '';
+          export DIRENV_LOADED=1
+        '';
     };
 }

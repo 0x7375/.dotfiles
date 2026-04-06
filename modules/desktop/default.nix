@@ -98,7 +98,7 @@
             in
             mkOption {
               type = lib.types.str;
-              default = if pkgs.stdenv.isDarwin then "pbcopy" else getExe' pkgs.wl-clipboard "wl-copy";
+              default = if pkgs.stdenv.isDarwin then "pbcopy" else getExe' pkgs.wl-clipboard-rs "wl-copy";
             };
 
           terminal = {
@@ -247,7 +247,9 @@
               coreutils
               xdg-user-dirs
               libnotify
-              hyprshot
+              grim
+              slurp
+              maim
             ];
             text = ''
               time=$(date -u "+%s" | cut -c 7-)
@@ -256,7 +258,10 @@
 
               [[ -z $1 ]] && echo "Usage: screenshot {region|window|monitor}" && exit 1
 
-              hyprshot -o "$folder" -f "$file" -m "$1"
+              case "$1" in
+                region|window) grim -g "$(slurp)" "$folder$file" ;;
+                monitor) grim "$folder$file" ;;
+              esac
             '';
           };
         in

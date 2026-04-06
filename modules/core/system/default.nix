@@ -3,6 +3,7 @@
     {
       pkgs,
       options,
+      config,
       ...
     }:
     {
@@ -30,28 +31,28 @@
         packages = with pkgs; [ terminus_font ];
         font = "${pkgs.terminus_font}/share/consolefonts/ter-132b.psf.gz";
         useXkbConfig = true;
-        # colors =
-        #   let
-        #     palette = config.me.hex.dark;
-        #   in
-        #   [
-        #     "000000"
-        #     palette.red
-        #     palette.green
-        #     palette.yellow
-        #     palette.blue
-        #     palette.magenta
-        #     palette.cyan
-        #     "ffffff"
-        #     palette.bg3
-        #     palette.red
-        #     palette.green
-        #     palette.magenta
-        #     palette.blue
-        #     palette.magenta
-        #     palette.cyan
-        #     "ffffff"
-        #   ];
+        colors =
+          let
+            p = config.tinted.hex.dark;
+          in
+          [
+            "000000"
+            p.red
+            p.green
+            p.yellow
+            p.blue
+            p.magenta
+            p.cyan
+            "ffffff"
+            p.bg3
+            p.red
+            p.green
+            p.magenta
+            p.blue
+            p.magenta
+            p.cyan
+            "ffffff"
+          ];
       };
 
       time.timeZone = "Europe/Paris";

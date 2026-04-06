@@ -44,7 +44,7 @@
           # })
           vesktop
           omnissa-horizon-client
-          auto.signal-desktop
+          signal-desktop
           # jetbrains.idea-community
         ];
       }

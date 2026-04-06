@@ -43,6 +43,13 @@
       };
     };
 
+  flake.nixos.docker =
+    { pkgs, ... }:
+    {
+      virtualisation.docker.enable = true;
+      packages = [ pkgs.docker-compose ];
+    };
+
   flake.darwin.core =
     {
       lib,
@@ -71,9 +78,6 @@
       imports = [ self.shared.core ];
 
       services.locate.enable = true;
-
-      virtualisation.docker.enable = true;
-      packages = [ pkgs.docker-compose ];
 
       security.polkit.enable = true;
 

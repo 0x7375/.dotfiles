@@ -25,11 +25,10 @@ let
     in
     {
       DefaultSearchProviderEnabled = true;
-      DefaultSearchProviderName = "Brave";
-      DefaultSearchProviderSearchURL = "https://search.brave.com/search?q={searchTerms}";
-      DefaultSearchProviderSuggestURL = "https://search.brave.com/api/suggest?q={searchTerms}";
-      DefaultSearchProviderIconURL = "https://search.brave.com/favicon.ico";
-      DefaultSearchProviderNewTabURL = "https://search.brave.com/";
+      DefaultSearchProviderName = "Startpage";
+      DefaultSearchProviderSearchURL = "https://startpage.com/do/dsearch?prfe=d7a6edf2bdae7d159fd3c7281470fb1b1611b9ebc58099d433766aab83750a24485b18c6615e9979c5ef4f823efb2326568630359a4cfaca9f87b8eda4b78324a831f096405c6b39160f84ca&query={searchTerms}";
+      DefaultSearchProviderIconURL = "https://startpage.com/favicon.ico";
+      DefaultSearchProviderNewTabURL = "https://startpage.com/";
 
       DefaultCookiesSetting = 4;
 
@@ -38,11 +37,11 @@ let
         "https://twitch.tv"
         "https://monkeytype.com"
         "https://youtube.com"
-        "https://claude.ai"
-        "https://gemini.google.com"
-        "https://brave.com"
         "https://keybr.com"
         "https://vault.bitwarden.com"
+
+        "https://claude.ai"
+        "https://gemini.google.com"
       ];
       ClearBrowsingDataOnExitList = [
         "cached_images_and_files"
@@ -129,7 +128,7 @@ let
       };
     }
     // mkDisabledPermissions [
-      "Notifications"
+      # "Notifications"
       "Geolocation"
       "Cameras"
       "Microphone"
@@ -138,37 +137,33 @@ let
 in
 {
   flake.shared.desktop =
+    { pkgs, ... }:
     {
-      pkgs,
-      ...
-    }:
-    let
-      overlay = final: prev: {
-        helium = pkgs.nur.repos.forkprince.helium-nightly.overrideAttrs (
-          old:
-          if (!pkgs.stdenv.isDarwin) then
-            {
-              buildCommand =
-                let
-                  bwrapPath = builtins.head (builtins.match ".*ln -s ([^ ]+) [$]out/bin/helium.*" old.buildCommand);
-                in
-                ''
-                  mkdir -p $out/bin
-                  cp ${bwrapPath} $out/bin/helium
-                  sed -i 's|--tmpfs /etc|--tmpfs /etc --ro-bind /etc/chromium /etc/chromium|' $out/bin/helium
-                  sed -i 's|-container-init "\$@"|-container-init ${builtins.concatStringsSep " " flags} "\$@"|' $out/bin/helium
-                ''
-                +
-                  builtins.replaceStrings [ "mkdir -p $out/bin\nln -s ${bwrapPath} $out/bin/helium\n" ] [ "" ]
-                    old.buildCommand;
-            }
-          else
-            { }
-        );
-      };
-    in
-    {
-      nixpkgs.overlays = [ overlay ];
+      nixpkgs.overlays = [
+        (final: _: {
+          helium = final.nur.repos.forkprince.helium-nightly.overrideAttrs (
+            old:
+            if (!final.stdenv.isDarwin) then
+              {
+                buildCommand =
+                  let
+                    bwrapPath = builtins.head (builtins.match ".*ln -s ([^ ]+) [$]out/bin/helium.*" old.buildCommand);
+                  in
+                  ''
+                    mkdir -p $out/bin
+                    cp ${bwrapPath} $out/bin/helium
+                    sed -i 's|--tmpfs /etc|--tmpfs /etc --ro-bind /etc/chromium /etc/chromium|' $out/bin/helium
+                    sed -i 's|-container-init "\$@"|-container-init ${builtins.concatStringsSep " " flags} "\$@"|' $out/bin/helium
+                  ''
+                  +
+                    builtins.replaceStrings [ "mkdir -p $out/bin\nln -s ${bwrapPath} $out/bin/helium\n" ] [ "" ]
+                      old.buildCommand;
+              }
+            else
+              { }
+          );
+        })
+      ];
 
       packages = [ pkgs.helium ];
     };

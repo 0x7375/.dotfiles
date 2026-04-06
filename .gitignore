@@ -1,5 +1,5 @@
 result
 result-man
 *.qcow2
-.assets/dunst/output
+misc/dunst/output
 .pre-commit-config.yaml

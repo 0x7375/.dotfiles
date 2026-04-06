@@ -10,8 +10,7 @@
       inherit (pkgs.stdenv.hostPlatform) system;
     in
     {
-      # TODO: using auto until noogle index is on unstable
-      packages = [ pkgs.auto.nix-search-tv ];
+      packages = [ pkgs.unstable.nix-search-tv ];
 
       hj.xdg.config.files."nix-search-tv/config.json" = {
         generator = lib.generators.toJSON { };

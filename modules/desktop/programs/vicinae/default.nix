@@ -159,6 +159,8 @@
         );
       };
 
+      vicinae = pkgs.unstable.vicinae;
+
       vicinaeServerWrapper = pkgs.writeShellScript "vicinae-server" ''
         DB_PATH="$HOME/.local/share/vicinae/vicinae.db"
         mkdir -p "$(dirname "$DB_PATH")"
@@ -172,7 +174,7 @@
             ${sqlValues};
         "
 
-        exec ${lib.getExe pkgs.vicinae} server
+        exec ${lib.getExe vicinae} server
       '';
 
       extensions =
@@ -209,25 +211,11 @@
       theme = "nix";
     in
     {
-      nixpkgs.overlays = [
-        (final: prev: {
-          # TODO: until unstable has v0.20.8
-          vicinae = final.auto.vicinae.overrideAttrs (old: {
-            src = final.fetchFromGitHub {
-              owner = "vicinaehq";
-              repo = "vicinae";
-              tag = "v0.20.8";
-              hash = "sha256-G+ibcIvOaPE3qot4zLmHUo7cmNFNU1kw2Zhn08D26Ts=";
-            };
-          });
-        })
-      ];
-
-      packages = [ pkgs.vicinae ];
+      packages = [ vicinae ];
 
       me.desktop =
         let
-          vicinae = lib.getExe pkgs.vicinae;
+          vicinaeExec = lib.getExe vicinae;
         in
         {
           bindings =
@@ -237,17 +225,17 @@
                 pkgs.writeShellScript "open-note"
                   # bash
                   ''
-                    note=$(ls ${dir} | sed 's/\.md$//' | ${vicinae} dmenu --no-quick-look -p "NOTE")
+                    note=$(ls ${dir} | sed 's/\.md$//' | ${vicinaeExec} dmenu --no-quick-look -p "NOTE")
                     [ -n "$note" ] && $TERMINAL $EDITOR "${dir}/$note.md"
                   '';
             in
             {
-              "Mod+d" = "${vicinae} open";
-              "Mod+p" = "${vicinae} vicinae://launch/@me/powermenu/index";
-              "Mod+b" = "${vicinae} vicinae://launch/@Gelei/vicinae-extension-bluetooth-0/devices";
+              "Mod+d" = "${vicinaeExec} open";
+              "Mod+p" = "${vicinaeExec} vicinae://launch/@me/powermenu/index";
+              "Mod+b" = "${vicinaeExec} vicinae://launch/@Gelei/vicinae-extension-bluetooth-0/devices";
               "Mod+m" = openNote;
               "Mod+n" =
-                "${vicinae} vicinae://launch/@dagimg-dot/vicinae-extension-wifi-commander-0/manage-saved-networks";
+                "${vicinaeExec} vicinae://launch/@dagimg-dot/vicinae-extension-wifi-commander-0/manage-saved-networks";
               "Mod+Shift+b" = pkgs.writeShellScript "open-bookmark" ''
                 file="$HOME/notes/Bookmarks.md"
                 [[ ! -f $file ]] && exit

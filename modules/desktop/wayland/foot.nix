@@ -42,7 +42,7 @@
         enable = true;
         settings =
           let
-            inherit (config.me.hex) dark light;
+            inherit (config.tinted.hex) dark light;
           in
           {
             main =

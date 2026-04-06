@@ -5,13 +5,8 @@
 }:
 
 let
-  inherit (config.me.palette) dark light;
-  paletteHash = builtins.hashString "sha256" (
-    builtins.toJSON {
-      inherit dark;
-      inherit light;
-    }
-  );
+  inherit (config.tinted.colors) dark light;
+  paletteHash = builtins.hashString "sha256" (builtins.toJSON { inherit dark light; });
 in
 pkgs.writeShellApplication {
   name = "generate-icons";
@@ -34,12 +29,12 @@ pkgs.writeShellApplication {
     rm -rf "$icons_dir"
     mkdir -p "$icons_dir/dark" "$icons_dir/light"
 
-    primary=${dark.fg0}
-    green=${dark.green}
-    red=${dark.red}
-    light_primary=${light.fg0}
-    light_green=${light.green}
-    light_red=${light.red}
+    primary="${dark.fg0}"
+    green="${dark.green}"
+    red="${dark.red}"
+    light_primary="${light.fg0}"
+    light_green="${light.green}"
+    light_red="${light.red}"
 
     for file in "$source_dir"/*.png; do
       filename=$(basename -- "$file")

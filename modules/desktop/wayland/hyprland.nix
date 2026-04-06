@@ -60,7 +60,13 @@
             }
           '';
 
-      packages = [ pkgs.wl-clipboard ];
+      nixpkgs.overlays = [
+        (final: _: {
+          inherit (final.unstable) wayshot;
+        })
+      ];
+
+      packages = [ pkgs.wl-clipboard-rs ];
 
       programs.hyprland = {
         enable = true;
@@ -68,7 +74,7 @@
       };
 
       tinted.files.".config/hypr/hyprland.conf" = {
-        prefix = false;
+        stripHash = false;
         text =
           p:
           # hyprlang

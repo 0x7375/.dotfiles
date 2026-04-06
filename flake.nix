@@ -50,12 +50,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # until 0.12 is released
-    neovim-nightly-overlay = {
-      url = "github:nix-community/neovim-nightly-overlay";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     vicinae = {
       url = "github:vicinaehq/vicinae";
       inputs.nixpkgs.follows = "nixpkgs-unstable";

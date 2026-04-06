@@ -79,7 +79,7 @@
 
           iconTheme = mkThemeOption {
             name = "Gruvbox-Plus";
-            package = pkgs.auto.gruvbox-plus-icons;
+            package = pkgs.unstable.gruvbox-plus-icons;
           };
 
           cursorTheme =

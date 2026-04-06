@@ -7,16 +7,7 @@
     }:
     let
       cfg = config.tinted;
-      inherit (config.me) home;
-      tintedDir = ".local/state/tinted";
-      themes = [
-        "dark"
-        "light"
-      ];
-
-      applyIfFn = f: arg: if lib.isFunction f then f arg else f;
-      dirname = path: lib.concatStringsSep "/" (lib.init (lib.splitString "/" path));
-      palette = theme: prefix: config.me.${if prefix then "palette" else "hex"}.${theme};
+      palette = theme: stripHash: if stripHash then cfg.colors.${theme} else cfg.hex.${theme};
 
       mkThemeFile =
         fileCfg: themePalette:
@@ -24,11 +15,11 @@
           base =
             if fileCfg.generator != null then
               {
-                value = if fileCfg.value != null then applyIfFn fileCfg.value themePalette else themePalette;
+                value = if fileCfg.value != null then fileCfg.value themePalette else themePalette;
                 inherit (fileCfg) generator;
               }
             else if fileCfg.source != null then
-              { source = applyIfFn fileCfg.source themePalette; }
+              { source = fileCfg.source themePalette; }
             else if fileCfg.text != null then
               { text = fileCfg.text themePalette; }
             else
@@ -39,13 +30,50 @@
     {
       options.tinted = {
         enable = lib.mkEnableOption "themed configuration management";
-        defaultTheme = lib.mkOption {
-          type = lib.types.enum [
-            "dark"
-            "light"
-          ];
-          default = "dark";
+
+        palette = lib.mkOption {
+          type = lib.types.attrsOf (lib.types.attrsOf lib.types.str);
+          default = { };
+          description = "Per-color palette entries. Values should include the # symbol.";
         };
+
+        _themes = lib.mkOption {
+          type = lib.types.listOf lib.types.str;
+          internal = true;
+          default = lib.unique (lib.concatMap lib.attrNames (lib.attrValues cfg.palette));
+        };
+
+        colors = lib.mkOption {
+          type = lib.types.attrsOf (lib.types.attrsOf lib.types.str);
+          internal = true;
+          default = lib.genAttrs cfg._themes (theme: lib.mapAttrs (_: v: v.${theme}) cfg.palette);
+        };
+
+        hex = lib.mkOption {
+          type = lib.types.attrsOf (lib.types.attrsOf lib.types.str);
+          internal = true;
+          default = lib.mapAttrs (_: lib.mapAttrs (_: lib.removePrefix "#")) cfg.colors;
+        };
+
+        user = lib.mkOption {
+          type = lib.types.str;
+        };
+
+        homeDir = lib.mkOption {
+          type = lib.types.str;
+          default = "/home/${config.tinted.user}";
+        };
+
+        stateDir = lib.mkOption {
+          type = lib.types.str;
+          default = ".local/state/tinted";
+        };
+
+        defaultTheme = lib.mkOption {
+          type = lib.types.str;
+          default = builtins.head cfg._themes;
+        };
+
         files =
           let
             inherit (lib) types;
@@ -82,7 +110,7 @@
                     type = types.nullOr (types.functionTo types.attrs);
                     default = null;
                   };
-                  prefix = lib.mkOption {
+                  stripHash = lib.mkOption {
                     type = types.bool;
                     default = true;
                   };
@@ -90,35 +118,44 @@
               }
             );
             default = { };
-            example.".Xresources".text = ''
-              *bg0: ''${palette.red}
-              *red: ''${palette.red}
+            example = lib.literalExpression ''
+              {
+                ".Xresources".text = palette: '''
+                  *bg0: ''${palette.red}
+                  *red: ''${palette.red}
+                ''';
+              }
             '';
           };
+
         _activations = lib.mkOption {
           type = lib.types.attrsOf lib.types.attrs;
           internal = true;
           default = lib.mapAttrs (targetPath: _: {
             dirs = [
-              "${home}/${dirname targetPath}"
-              "${home}/${dirname "${tintedDir}/${targetPath}"}"
+              (builtins.dirOf "${cfg.homeDir}/${targetPath}")
+              (builtins.dirOf "${cfg.homeDir}/${cfg.stateDir}/${targetPath}")
             ];
-            source = "${home}/${tintedDir}/${targetPath}-${cfg.defaultTheme}";
-            target = "${home}/${targetPath}";
+            source = "${cfg.homeDir}/${cfg.stateDir}/${targetPath}-${cfg.defaultTheme}";
+            target = "${cfg.homeDir}/${targetPath}";
           }) cfg.files;
         };
       };
 
       config = lib.mkIf cfg.enable {
+        assertions = [
+          {
+            assertion = cfg.palette != { };
+            message = "tinted: palette is empty";
+          }
+        ];
+
         hj.files = lib.concatMapAttrs (
           targetPath: fileCfg:
-          lib.listToAttrs (
-            map (
-              theme:
-              lib.nameValuePair "${tintedDir}/${targetPath}-${theme}" (
-                mkThemeFile fileCfg (palette theme fileCfg.prefix)
-              )
-            ) themes
+          lib.mergeAttrsList (
+            map (theme: {
+              "${cfg.stateDir}/${targetPath}-${theme}" = mkThemeFile fileCfg (palette theme fileCfg.stripHash);
+            }) cfg._themes
           )
         ) cfg.files;
       };

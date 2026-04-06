@@ -79,12 +79,7 @@
         enable = true;
         handlers =
           let
-            inherit (config.me) uid;
-            turnOffScreen = # bash
-              ''
-                HYPRLAND_INSTANCE_SIGNATURE=$(ls /run/user/${toString uid}/hypr/ | head -1) \
-                  ${lib.getExe' pkgs.hyprland "hyprctl"} dispatch dpms off
-              '';
+            turnOffScreen = "${lib.getExe pkgs.wlopm} --off \*";
           in
           {
             lid-close = {
@@ -94,7 +89,7 @@
                 ''
                   ${turnOffScreen}
 
-                  if ${lib.getExe' pkgs.procps "pgrep"} -x hyprlock > /dev/null; then
+                  if ${lib.getExe' pkgs.procps "pgrep"} -x waylock > /dev/null; then
                     systemctl hibernate
                   fi
                 '';
@@ -127,24 +122,21 @@
 
       services.auto-cpufreq.enable = true;
 
-      services.hypridle.enable = true;
-
-      hj.xdg.config.files."hypr/hypridle.conf".text =
+      me.desktop.startup.idle =
         let
-          screen = state: "${lib.getExe' pkgs.hyprland "hyprctl"} dispatch dpms ${state}";
+          screen = state: "${lib.getExe pkgs.wlopm} --${state} \*";
 
           lock = pkgs.writeShellApplication {
             name = "lock";
             bashOptions = [ ];
             runtimeInputs = with pkgs; [
               procps
-              hyprlock
-              hyprland
+              waylock
             ];
             text =
               # bash
               ''
-                if pidof hyprlock > /dev/null; then
+                if pidof waylock > /dev/null; then
                   exit 0
                 fi
 
@@ -164,46 +156,23 @@
                   systemctl hibernate
                 fi
                   
-                hyprlock
+                waylock
 
                 kill "$HIBERNATE_PID" 2>/dev/null || true
-                $browser_was_open && hyprctl dispatch exec -- "$BROWSER"
+                $browser_was_open && "$BROWSER" &
               '';
           };
         in
-        # hyprlang
+        # bash
         ''
-          general {
-            lock_cmd = ${getExe lock}
-            before_sleep_cmd = ${getExe lock}
-            after_sleep_cmd = ${screen "on"}
-          }
-
-          listener {
-            timeout = 300
-            on-timeout = ${screen "off"}
-            on-resume = ${screen "on"}
-          }
-
-          listener {
-            timeout = 600
-            on-timeout = ${getExe lock}
-          }
-
-          listener {
-            timeout = 600
-            on-timeout = ${getExe lock}
-          }
-          listener {
-            timeout = 1800
-            on-timeout = systemctl hibernate
-          }
+          ${lib.getExe pkgs.swayidle} -w \
+              timeout 300 '${screen "off"}' resume '${screen "on"}' \
+              timeout 600 '${getExe lock}' \
+              timeout 1800 'systemctl hibernate' \
+              before-sleep '${getExe lock}' \
+              after-resume '${screen "on"}' \
+              lock '${getExe lock}'
         '';
-
-      security.pam.services.hyprlock = {
-        u2fAuth = true;
-        unixAuth = false;
-      };
 
       # do not change
       # For more information, see `man configuration.nix` or https://nixos.org/manual/nixos/stable/options#opt-system.stateVersion .

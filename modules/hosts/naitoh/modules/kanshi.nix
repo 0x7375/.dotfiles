@@ -26,12 +26,7 @@
         ''
           profile dual {
             output * enable mode preferred position 0,0
-            output eDP-1 enable position 1920,0
-            ${exec}
-          }
-          profile single_external {
-            output eDP-1 disable
-            output * enable mode preferred
+            output eDP-1 enable position 0,1080
             ${exec}
           }
           profile laptop {

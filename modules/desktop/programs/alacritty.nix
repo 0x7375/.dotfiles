@@ -30,7 +30,7 @@
       };
 
       tinted.files.".config/alacritty/alacritty.toml" = {
-        prefix = false;
+        stripHash = false;
         generator = (pkgs.formats.toml { }).generate "alacritty.toml";
         value = p: {
           colors = {

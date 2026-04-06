@@ -7,77 +7,8 @@
     }:
     let
       inherit (config.me) home;
-      inherit (lib) types mkOption;
-      cfg = config.me;
-      path = home + "/.local/state/tinted/theme";
     in
     {
-      options.me = {
-        palette = mkOption {
-          type = types.attrsOf (types.attrsOf types.str);
-          default = {
-            dark = {
-              _theme = "dark";
-              bg0_dark = "#1d2021";
-
-              bg0 = "#282828";
-              bg1 = "#3c3836";
-              bg2 = "#504945";
-              bg3 = "#665c54";
-              fg4 = "#a89984";
-              fg3 = "#bdae93";
-              fg2 = "#d5c4a1";
-              fg1 = "#ebdbb2";
-              fg0 = "#fbf1c7";
-
-              red = "#fb4934";
-              green = "#b8bb26";
-              yellow = "#fabd2f";
-              cyan = "#8ec07c";
-              blue = "#83a598";
-              magenta = "#d3869b";
-              orange = "#fe8019";
-            };
-            light = {
-              _theme = "light";
-              bg0_dark = "#f2e5bc";
-
-              bg0 = "#fbf1c7";
-              bg1 = "#ebdbb2";
-              bg2 = "#d5c4a1";
-              bg3 = "#bdae93";
-              fg4 = "#7c6f64";
-              fg3 = "#665c54";
-              fg2 = "#504945";
-              fg1 = "#3c3836";
-              fg0 = "#282828";
-
-              red = "#9d0006";
-              yellow = "#b57614";
-              green = "#79740e";
-              cyan = "#427b58";
-              blue = "#076678";
-              magenta = "#8f3f71";
-              orange = "#af3a03";
-            };
-          };
-          internal = true;
-        };
-
-        hex = mkOption {
-          type = types.attrsOf (types.attrsOf types.str);
-          default =
-            let
-              map' = lib.mapAttrs (_: value: lib.removePrefix "#" value);
-            in
-            {
-              dark = map' cfg.palette.dark;
-              light = map' cfg.palette.light;
-            };
-          internal = true;
-        };
-      };
-
       config = {
         nixpkgs.overlays = [
           (final: prev: {
@@ -90,8 +21,93 @@
           })
         ];
 
-        tinted.enable = true;
-        vars.TINTED_FILE = path;
+        vars.TINTED_FILE = "${home}/${config.tinted.stateDir}/theme";
+
+        tinted = {
+          enable = true;
+          inherit (config.me) user;
+          homeDir = config.me.home;
+
+          palette = {
+            _theme = {
+              dark = "dark";
+              light = "light";
+            };
+            bg0_dark = {
+              dark = "#1d2021";
+              light = "#f2e5bc";
+            };
+            bg0 = {
+              dark = "#282828";
+              light = "#fbf1c7";
+            };
+            bg1 = {
+              dark = "#3c3836";
+              light = "#ebdbb2";
+            };
+            bg2 = {
+              dark = "#504945";
+              light = "#d5c4a1";
+            };
+            bg3 = {
+              dark = "#665c54";
+              light = "#bdae93";
+            };
+            fg4 = {
+              dark = "#a89984";
+              light = "#7c6f64";
+            };
+            fg3 = {
+              dark = "#bdae93";
+              light = "#665c54";
+            };
+            fg2 = {
+              dark = "#d5c4a1";
+              light = "#504945";
+            };
+            fg1 = {
+              dark = "#ebdbb2";
+              light = "#3c3836";
+            };
+            fg0 = {
+              dark = "#fbf1c7";
+              light = "#282828";
+            };
+            red = {
+              dark = "#fb4934";
+              light = "#9d0006";
+            };
+            green = {
+              dark = "#b8bb26";
+              light = "#b57614";
+            };
+            yellow = {
+              dark = "#fabd2f";
+              light = "#79740e";
+            };
+            cyan = {
+              dark = "#8ec07c";
+              light = "#427b58";
+            };
+            blue = {
+              dark = "#83a598";
+              light = "#076678";
+            };
+            magenta = {
+              dark = "#d3869b";
+              light = "#8f3f71";
+            };
+            orange = {
+              dark = "#fe8019";
+              light = "#af3a03";
+            };
+          };
+
+          files."${config.tinted.stateDir}/palette" = {
+            stripHash = false;
+            generator = lib.generators.toKeyValue { };
+          };
+        };
       };
     };
 }

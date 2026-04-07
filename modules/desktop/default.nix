@@ -38,10 +38,10 @@
                 options = {
                   type = mkOption {
                     type = types.enum [
-                      "class"
+                      "appid"
                       "title"
                     ];
-                    default = "class";
+                    default = "appid";
                   };
                   name = mkOption { type = types.str; };
                 }
@@ -140,6 +140,8 @@
     in
     {
       imports = [ self.shared.desktop ];
+
+      hardware.graphics.enable = true;
 
       hardware.i2c.enable = true;
 

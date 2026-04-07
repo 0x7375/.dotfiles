@@ -135,7 +135,7 @@
         };
       }
       # easyeffects
-      (lib.mkIf false {
+      (lib.mkIf true {
         packages = with pkgs; [
           easyeffects
           at-spi2-core

@@ -59,7 +59,7 @@
             in
             [
               {
-                type = "class";
+                type = "appid";
                 name = browserPascalCase;
                 workspace = "3";
               }

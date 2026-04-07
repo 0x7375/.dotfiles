@@ -31,7 +31,7 @@
 
         me.desktop.assign = [
           {
-            type = "class";
+            type = "appid";
             name = "vesktop";
             workspace = "4";
           }

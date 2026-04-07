@@ -10,8 +10,6 @@
       inherit (lib) getExe getExe';
     in
     {
-      hardware.graphics.enable = true;
-
       hardware.brillo.enable = true;
       services.udev.extraRules =
         let

@@ -28,7 +28,7 @@
 
       me.desktop =
         let
-          type = "class";
+          type = "appid";
           name = "vault.bitwarden.com";
         in
         {

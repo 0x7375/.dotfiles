@@ -19,27 +19,23 @@
             waybar-output = final.writeShellApplication {
               name = "waybar-output";
               runtimeInputs = with final; [
-                waybar
-                hyprland
-                systemd
+                wlr-randr
                 gnugrep
+                systemd
               ];
-              text = # bash
-                ''
-                  OUTPUT_FILE="$HOME/.config/waybar/output.json"
-
-                  if hyprctl monitors | grep -q "HDMI-A-2"; then
-                    echo '{"output": "HDMI-A-2"}' > "$OUTPUT_FILE"
-                  elif hyprctl monitors | grep -q "HDMI-A-1"; then
-                    echo '{"output": "HDMI-A-1"}' > "$OUTPUT_FILE"
-                  else
-                    echo '{"output": "eDP-1"}' > "$OUTPUT_FILE"
-                  fi
-
-                  if systemctl --user is-active --quiet waybar; then
-                    systemctl --user restart waybar
-                  fi
-                '';
+              text = ''
+                OUTPUT_FILE="$HOME/.config/waybar/output.json"
+                if wlr-randr | grep -q "HDMI-A-2"; then
+                  echo '{"output": "HDMI-A-2"}' > "$OUTPUT_FILE"
+                elif wlr-randr | grep -q "HDMI-A-1"; then
+                  echo '{"output": "HDMI-A-1"}' > "$OUTPUT_FILE"
+                else
+                  echo '{"output": "eDP-1"}' > "$OUTPUT_FILE"
+                fi
+                if systemctl --user is-active --quiet waybar; then
+                  systemctl --user restart waybar
+                fi
+              '';
             };
           };
         })
@@ -63,11 +59,13 @@
         include = [ "~/.config/waybar/output.json" ];
 
         modules-left = [
-          "hyprland/window"
+          "dwl/window"
           "custom/music"
         ];
 
-        modules-center = [ "hyprland/workspaces" ];
+        modules-center = [
+          "dwl/tags"
+        ];
 
         modules-right = [
           "cpu"
@@ -78,24 +76,43 @@
           "custom/clock"
         ];
 
-        "hyprland/workspaces" = {
-          on-click = "activate";
-          all-outputs = true;
-          active-only = false;
-          show-special = false;
-          persistent-workspaces."*" = 1;
+        "dwl/tags" = {
+          num-tags = 9;
+          disable-click = false;
+          format = "{name}";
+
+          # on-click = "activate";
+          # all-outputs = true;
+          # active-only = false;
+          # show-special = false;
+          # persistent-workspaces."*" = 1;
         };
 
-        "hyprland/window" = {
-          format = " {}";
+        "dwl/window" = {
+          tooltip = false;
+          icon-size = 0;
+          format = "{layout} {title}";
           rewrite =
             let
-              host = " ~${config.me.hostname}";
+              host = "~${config.me.hostname}";
             in
             {
-              " " = host;
+              "^T $" = "[]= ${host}";
+              "^T (.+)" = "[]= $1";
+              "^M $" = "[M] ${host}";
+              "^M (.+)" = "[M] $1";
+              "^G $" = "### ${host}";
+              "^G (.+)" = "### $1";
+              "^CT $" = "|M| ${host}";
+              "^CT (.+)" = "|M| $1";
+              "^VT $" = "=[] ${host}";
+              "^VT (.+)" = "=[] $1";
+              "^F $" = "><> ${host}";
+              "^F (.+)" = "><> $1";
+              "^><> $" = "><> ${host}";
+              "^><> (.+)" = "><> $1";
             };
-          max-length = 40;
+          max-length = 35;
         };
 
         "custom/music" = {
@@ -103,8 +120,8 @@
             ${playerctl} metadata --follow --format '{{status}}|   {{artist}} - {{title}}' 2>/dev/null | while read -r line; do
               if [[ "$line" == Playing* ]]; then
                 info="''${line#*|   }"
-                if [[ ''${#info} -gt 40 ]]; then
-                  echo "| ''${info:0:40}~"
+                if [[ ''${#info} -gt 35 ]]; then
+                  echo "| ''${info:0:35}~"
                 else
                   echo "| $info"
                 fi
@@ -215,7 +232,6 @@
           #custom-network,
           #battery,
           #custom-music,
-          #hyprland-window,
           #custom-clock {
             padding: 0 12px;
           }
@@ -229,17 +245,24 @@
             color: ${p.fg0};
           }
 
-          #workspaces button {
-            padding: 0 8px;
+          #tags button:not(.occupied):not(.focused) {
+              font-size: 0;
+              min-width: 0;
+              min-height: 0;
+              margin: -17px;
+              padding: 0;
+              border: 0;
+              opacity: 0;
+              box-shadow: none;
+          }
+
+          #tags button {
             background-color: transparent;
-          }
-
-          #workspaces button.active {
-            color: ${p.fg0};
-          }
-
-          #workspaces button {
             color: ${p.bg2};
+          }
+
+          #tags button.focused {
+            color: ${p.fg0};
           }
         '';
     };

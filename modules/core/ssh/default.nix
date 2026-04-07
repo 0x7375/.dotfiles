@@ -2,16 +2,20 @@
   flake.shared.core =
     {
       config,
+      lib,
       ...
     }:
     {
       users.users.root.openssh.authorizedKeys.keys = config.me.hosts.yubikey.sshPublicKeys;
       users.users.${config.me.user}.openssh.authorizedKeys.keys = config.me.hosts.yubikey.sshPublicKeys;
 
-      programs.ssh.extraConfig = ''
-        Host pearlman
-          ForwardAgent yes
-      '';
+      programs.ssh.extraConfig = builtins.concatStringsSep "\n" (
+        lib.map (v: "Host ${v}\n  ForwardAgent yes\n") [
+          "pearlman"
+          "cray"
+          "naitoh"
+        ]
+      );
 
       hj.files.".ssh/sk_main" = {
         text = builtins.readFile ./sk_main;

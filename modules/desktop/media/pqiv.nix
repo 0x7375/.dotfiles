@@ -23,7 +23,7 @@
 
       me.desktop.floating = [
         {
-          type = "class";
+          type = "appid";
           name = "Pqiv";
         }
       ];

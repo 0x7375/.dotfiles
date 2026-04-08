@@ -18,7 +18,7 @@
 
       packages = with pkgs; [
         unstable.devenv
-        nix-direnv
+        direnv
       ];
 
       hj.xdg.config.files."direnv/direnv.toml" = {

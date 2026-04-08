@@ -157,15 +157,15 @@ vim.api.nvim_create_autocmd("FileType", {
   end,
 })
 
-vim.api.nvim_create_autocmd("VimEnter", {
-  desc = "Open edited file on startup",
-  nested = true,
-  callback = function()
-    if vim.fn.argc() == 0 and vim.fn.line("$") == 1 and vim.fn.getline(1) == "" then
-      local last = vim.v.oldfiles[1]
-      if last and vim.fn.filereadable(last) == 1 then
-        vim.schedule(function() vim.cmd("edit " .. vim.fn.fnameescape(last)) end)
-      end
-    end
-  end,
-})
+-- vim.api.nvim_create_autocmd("VimEnter", {
+--   desc = "Open edited file on startup",
+--   nested = true,
+--   callback = function()
+--     if vim.fn.argc() == 0 and vim.fn.line("$") == 1 and vim.fn.getline(1) == "" then
+--       local last = vim.v.oldfiles[1]
+--       if last and vim.fn.filereadable(last) == 1 then
+--         vim.schedule(function() vim.cmd("edit " .. vim.fn.fnameescape(last)) end)
+--       end
+--     end
+--   end,
+-- })

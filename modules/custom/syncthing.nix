@@ -24,6 +24,7 @@
         let
           defaultPatterns = [
             ".cache"
+            ".git"
             "bin"
             "node_modules"
             ".venv"

@@ -1,5 +1,5 @@
 {
-  flake.shared.desktop =
+  flake.shared.core =
     {
       lib,
       config,

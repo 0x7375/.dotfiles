@@ -189,9 +189,12 @@
                 ]
                 ++ (lib.mapAttrsToList mkMangoBind config.me.desktop.bindings)
                 ++ (lib.flatten (
-                  lib.mapAttrsToList (
+                  (lib.mapAttrsToList (
                     monitor: tags: map (tag: "SUPER,${tag},viewcrossmon,${tag},${monitor}") tags
-                  ) cfg.monitors
+                  ) cfg.monitors)
+                  ++ (lib.mapAttrsToList (
+                    monitor: tags: map (tag: "SUPER+SHIFT,${tag},tagcrossmon,${tag},${monitor}") tags
+                  ) cfg.monitors)
                 ));
 
                 mousebind = [

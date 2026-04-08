@@ -30,6 +30,8 @@
               }
             '';
 
+        programs.xwayland.enable = true;
+
         systemd.user.targets.mango-session = {
           description = "Mango compositor session";
           bindsTo = [ "graphical-session.target" ];
@@ -116,7 +118,7 @@
                 exchange_cross_monitor = 1;
                 focus_cross_monitor = 1;
 
-                borderpx = 1;
+                borderpx = 0;
                 gappih = 0;
                 gappiv = 0;
                 gappoh = 0;

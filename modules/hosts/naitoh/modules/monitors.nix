@@ -6,23 +6,16 @@
       ...
     }:
     {
-      hj.xdg.config.files."hypr/workspaces.conf".text = ''
-        workspace = 1, monitor:HDMI-1, default:true
-        workspace = 2, monitor:HDMI-1
-        workspace = 3, monitor:HDMI-1
-        workspace = 4, monitor:HDMI-1
-        workspace = 5, monitor:eDP-1
-        workspace = 6, monitor:HDMI-1
-        workspace = 7, monitor:HDMI-1
-        workspace = 8, monitor:HDMI-1
-        workspace = 9, monitor:HDMI-1
-        workspace = 10, monitor:HDMI-1
-      '';
+      me.desktop.monitors = {
+        HDMI-1 = lib.remove "5" (map toString (lib.range 1 9));
+        eDP-1 = [ "5" ];
+      };
 
       hj.xdg.config.files."kanshi/config".text =
         let
           exec = "exec ${lib.getExe pkgs.my.waybar-output}";
         in
+        # sway
         ''
           profile dual {
             output * enable mode preferred position 0,0

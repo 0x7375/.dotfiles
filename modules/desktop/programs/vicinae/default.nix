@@ -159,7 +159,7 @@
         );
       };
 
-      vicinae = pkgs.unstable.vicinae;
+      inherit (pkgs.unstable) vicinae;
 
       vicinaeServerWrapper = pkgs.writeShellScript "vicinae-server" ''
         DB_PATH="$HOME/.local/share/vicinae/vicinae.db"
@@ -315,7 +315,7 @@
               providers = {
                 applications.preferences = {
                   defaultAction = "launch";
-                  launchPrefix = "uwsm app --";
+                  launchPrefix = "";
                 };
 
                 browser-extension.enabled = false;

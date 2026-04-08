@@ -6,7 +6,9 @@
 
     vars = {
       LIBVA_DRIVER_NAME = "nvidia";
+      GBM_BACKEND = "nvidia-drm";
       __GLX_VENDOR_LIBRARY_NAME = "nvidia";
+      ELECTRON_OZONE_PLATFORM_HINT = "auto";
     };
 
     services.xserver.videoDrivers = [ "nvidia" ];
@@ -20,13 +22,7 @@
       max-jobs = 4;
     };
 
-    tinted.files.".config/hypr/hyprland.conf".text =
-      # hyprlang
-      ''
-        input {
-          accel_profile = flat
-        }
-      '';
+    tinted.files.".config/mango/config.conf".value.accel_profile = "flat";
 
     time.hardwareClockInLocalTime = true;
 

@@ -12,7 +12,8 @@ let
     {
       inherit pkgs;
 
-      package = pkgs.unstable.neovim-unwrapped;
+      package =
+        inputs.nixpkgs-unstable.legacyPackages.${pkgs.stdenv.hostPlatform.system}.neovim-unwrapped;
 
       hosts = {
         python3.nvim-host.enable = dev;
@@ -87,6 +88,7 @@ let
               markdown
               markdown_inline
               gitignore
+              sway
               gitcommit
               cmake
               make

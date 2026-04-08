@@ -86,7 +86,9 @@
 
         packages = with pkgs; [
           playerctl
+          pwvucontrol
           pavucontrol
+
           pamixer
           pear-desktop
         ];
@@ -122,6 +124,7 @@
         security.rtkit.enable = true;
         services.pipewire = {
           enable = true;
+          pulse.enable = true;
           extraConfig.pipewire = {
             "99-custom" = {
               "context.properties" = {

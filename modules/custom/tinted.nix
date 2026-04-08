@@ -7,7 +7,7 @@
     }:
     let
       cfg = config.tinted;
-      palette = theme: stripHash: if stripHash then cfg.colors.${theme} else cfg.hex.${theme};
+      palette = theme: stripHash: if stripHash then cfg.hex.${theme} else cfg.colors.${theme};
 
       mkThemeFile =
         fileCfg: themePalette:
@@ -77,17 +77,24 @@
         files =
           let
             inherit (lib) types;
-            paletteTextType = lib.types.mkOptionType {
-              name = "paletteText";
-              description = "palette -> string, or plain string";
-              check = v: lib.isFunction v || lib.isString v;
-              merge =
-                _loc: defs:
-                let
-                  fns = map (d: if lib.isFunction d.value then d.value else _: d.value) defs;
-                in
-                palette: lib.concatMapStrings (f: f palette) fns;
-            };
+
+            mergeable =
+              {
+                name,
+                check,
+                merge,
+              }:
+              types.mkOptionType {
+                inherit name;
+                description = "palette -> ${name}, or plain ${name}";
+                check = v: lib.isFunction v || check v;
+                merge =
+                  _loc: defs:
+                  let
+                    fns = map (d: if lib.isFunction d.value then d.value else _: d.value) defs;
+                  in
+                  palette: merge (map (f: f palette) fns);
+              };
           in
           lib.mkOption {
             type = types.attrsOf (
@@ -95,7 +102,11 @@
                 options = {
                   executable = lib.mkEnableOption "";
                   text = lib.mkOption {
-                    type = lib.types.nullOr paletteTextType;
+                    type = types.nullOr (mergeable {
+                      name = "string";
+                      check = lib.isString;
+                      merge = lib.concatStrings;
+                    });
                     default = null;
                   };
                   source = lib.mkOption {
@@ -107,12 +118,16 @@
                     default = null;
                   };
                   value = lib.mkOption {
-                    type = types.nullOr (types.functionTo types.attrs);
+                    type = types.nullOr (mergeable {
+                      name = "attrs";
+                      check = lib.isAttrs;
+                      merge = builtins.foldl' lib.recursiveUpdate { };
+                    });
                     default = null;
                   };
                   stripHash = lib.mkOption {
                     type = types.bool;
-                    default = true;
+                    default = false;
                   };
                 };
               }

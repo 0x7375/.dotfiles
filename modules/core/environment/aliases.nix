@@ -22,6 +22,7 @@
         ns = "nix shell";
         nb = "nix build";
         nr = "nix run";
+        nl = "nix repl";
 
         v = "$EDITOR";
 

@@ -59,6 +59,7 @@
         include = [ "~/.config/waybar/output.json" ];
 
         modules-left = [
+          "custom/layout"
           "dwl/window"
           "custom/music"
         ];
@@ -80,37 +81,41 @@
           num-tags = 9;
           disable-click = false;
           format = "{name}";
+        };
 
-          # on-click = "activate";
-          # all-outputs = true;
-          # active-only = false;
-          # show-special = false;
-          # persistent-workspaces."*" = 1;
+        "custom/layout" = {
+          exec = pkgs.writeShellScript "waybar-layout" ''
+            ${lib.getExe' pkgs.mangowc "mmsg"} -w | while read -r mon key a b c d _; do
+              [[ "$key" == "selmon" && "$a" == "1" ]] && cur="$mon"
+              [[ "$mon" != "$cur" ]] && continue
+
+              [[ "$key" == "layout" ]] && lay="$a"
+              [[ "$key" == "tag" && "$d" == "1" ]] && cnt="$c"
+
+              if [[ "$key" == "layout" || ( "$key" == "tag" && "$d" == "1" ) || "$key" == "selmon" ]]; then
+                case "$lay" in
+                  M) out="[$cnt]" ;;
+                  T) out="[]=" ;;
+                  F|"><>") out="><>" ;;
+                  *) out="$lay" ;;
+                esac
+                echo " $out"
+              fi
+            done
+          '';
+          tooltip = false;
         };
 
         "dwl/window" = {
           tooltip = false;
           icon-size = 0;
-          format = "{layout} {title}";
+          format = "{title}";
           rewrite =
             let
               host = "~${config.me.hostname}";
             in
             {
-              "^T $" = "[]= ${host}";
-              "^T (.+)" = "[]= $1";
-              "^M $" = "[M] ${host}";
-              "^M (.+)" = "[M] $1";
-              "^G $" = "### ${host}";
-              "^G (.+)" = "### $1";
-              "^CT $" = "|M| ${host}";
-              "^CT (.+)" = "|M| $1";
-              "^VT $" = "=[] ${host}";
-              "^VT (.+)" = "=[] $1";
-              "^F $" = "><> ${host}";
-              "^F (.+)" = "><> $1";
-              "^><> $" = "><> ${host}";
-              "^><> (.+)" = "><> $1";
+              "" = host;
             };
           max-length = 35;
         };

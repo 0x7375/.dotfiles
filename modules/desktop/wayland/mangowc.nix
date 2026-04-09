@@ -150,11 +150,9 @@
                 ++ assignRules
                 ++ floatingRules;
 
-                exec = [
-                  "${getExe pkgs.swaybg} -c \"#${p.bg0}\""
+                exec = map (_: _.cmd) (lib.filter (c: c.always) (lib.attrValues config.me.desktop.startup)) ++ [
                   "${getExe pkgs.bash} -c '${getExe pkgs.my.swap-theme} $(cat $HOME/.local/state/tinted/theme)'"
-                ]
-                ++ map (_: _.cmd) (lib.filter (c: c.always) (lib.attrValues config.me.desktop.startup));
+                ];
 
                 "exec-once" = [
                   "${getExe' pkgs.dbus "dbus-update-activation-environment"} --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP XDG_SESSION_DESKTOP LIBVA_DRIVER_NAME GBM_BACKEND __GLX_VENDOR_LIBRARY_NAME"

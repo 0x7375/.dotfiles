@@ -11,7 +11,11 @@ in
 pkgs.writeShellApplication {
   name = "swap-theme";
   bashOptions = [ "nounset" ];
-  excludeShellChecks = [ "SC2034" ];
+  excludeShellChecks = [
+    "SC2034"
+    "SC2154"
+    "SC1091"
+  ];
   runtimeInputs =
     with pkgs;
     [
@@ -23,6 +27,8 @@ pkgs.writeShellApplication {
       [
         dunst
         darkman
+        swaybg
+        unstable.mangowc
       ]
     );
   text =
@@ -75,6 +81,8 @@ pkgs.writeShellApplication {
       ${lib.optionalString (!isDarwin)
         # bash
         ''
+          source "$HOME/.local/state/tinted/palette"
+
           mkdir -p "$share_dir/icons" "$share_dir/themes"
           ln -sfT "${theme.package}/share/themes/${theme.name}-''${theme^}" "$share_dir/themes/${theme.name}"
           ln -sfT "${iconTheme.package}/share/icons/${iconTheme.name}-''${theme^}" "$share_dir/icons/${iconTheme.name}"
@@ -83,6 +91,7 @@ pkgs.writeShellApplication {
           dunstctl reload
 
           systemctl restart --user waybar
+          pkill swaybg; swaybg -c "$bg0" &
         ''
       }
 

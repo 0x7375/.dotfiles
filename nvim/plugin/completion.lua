@@ -2,13 +2,24 @@ if vim.g.vscode then
   return
 end
 
+vim.api.nvim_create_autocmd("PackChanged", {
+  callback = function(ev)
+    local name, kind = ev.data.spec.name, ev.data.kind
+    if name == "blink.cmp" and (kind == "install" or kind == "update") then
+      vim.system({ "cargo", "build", "--release" }, { cwd = ev.data.path }, function(obj)
+        if obj.code ~= 0 then
+          vim.notify("blink.cmp build failed:\n" .. obj.stderr, vim.log.levels.ERROR)
+        end
+      end)
+    end
+  end,
+})
+
 on_event("InsertEnter,CmdlineEnter", function()
   pack({
     { src = "saghen/blink.cmp", version = vim.version.range("1.*") },
     "rafamadriz/friendly-snippets",
   })
-
-  -- opts_extend = { "sources.default" },
 
   -- dedup entries
   -- local original = require("blink.cmp.completion.list").show

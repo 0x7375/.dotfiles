@@ -9,11 +9,13 @@ let
       unfree ? false,
       dev ? true,
     }:
+    let
+      unstable = inputs.nixpkgs-unstable.legacyPackages.${pkgs.stdenv.hostPlatform.system};
+    in
     {
       inherit pkgs;
 
-      package =
-        inputs.nixpkgs-unstable.legacyPackages.${pkgs.stdenv.hostPlatform.system}.neovim-unwrapped;
+      package = unstable.neovim-unwrapped;
 
       hosts = {
         python3.nvim-host.enable = dev;
@@ -26,6 +28,8 @@ let
         [
           tree-sitter
           gnumake
+          cargo
+          rustc
 
           lua54Packages.tiktoken_core
           lynx
@@ -72,7 +76,7 @@ let
       specs.treesitter = {
         lazy = false;
         data = [
-          (pkgs.vimPlugins.nvim-treesitter.withPlugins (
+          (unstable.vimPlugins.nvim-treesitter.withPlugins (
             p: with p; [
               c
               go
@@ -99,7 +103,6 @@ let
               xcompose
               git_config
               json
-              jsonc
               yaml
               xml
               ini

@@ -1,14 +1,11 @@
 local ts_dir = require("nix-info")(nil, "plugins", "start", "nvim-treesitter")
 local grammars_dir = require("nix-info")(nil, "plugins", "start", "COLLATED_TS_GRAMMARS")
 
-if not ts_dir or vim.g.vscode then
+if not ts_dir or not grammars_dir or vim.g.vscode then
   return
 end
 
-vim.opt.runtimepath:prepend(ts_dir)
-if grammars_dir then
-  vim.opt.runtimepath:prepend(grammars_dir)
-end
+vim.opt.runtimepath:prepend({ ts_dir, grammars_dir })
 
 vim.cmd("runtime! plugin/nvim-treesitter.*")
 
@@ -18,7 +15,7 @@ pack({
   "Wansmer/treesj",
 })
 
-require("nvim-treesitter.configs").setup({
+require("nvim-treesitter").setup({
   indent = { enable = true },
   highlight = {
     enable = true,

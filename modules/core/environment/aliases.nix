@@ -76,6 +76,8 @@
         "worktree"
         "checkout"
         "fetch"
+        "rebase"
+        "cherry-pick"
       ] (name: "${git} ${name}"));
 
       environment.interactiveShellInit =

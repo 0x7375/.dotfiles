@@ -162,6 +162,10 @@
             bind -T copy-mode-vi 'y' \
               send -X copy-selection-and-cancel
 
+            bind -T copy-mode-vi 'Y' \
+              send -X copy-selection-and-cancel \; \
+              paste-buffer
+
             ${lib.concatMapStringsSep "\n" (x: "run-shell ${x.rtp}") plugins}
           '';
       };

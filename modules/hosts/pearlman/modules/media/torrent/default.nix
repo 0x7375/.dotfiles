@@ -71,6 +71,8 @@
               MaxUploadsPerTorrent = 4;
               Preallocation = true;
               QueueingSystemEnabled = false;
+              PeXEnabled = false;
+              DHTEnabled = false;
             };
           };
           Preferences = {

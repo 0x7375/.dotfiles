@@ -131,6 +131,7 @@
                 blur = 0;
                 shadows = 0;
                 animations = 0;
+                enable_hotarea = 0;
 
                 new_is_master = 1;
                 default_mfact = "0.50";

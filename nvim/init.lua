@@ -3,7 +3,7 @@ vim.loader.enable()
 _G.map = vim.keymap.set
 _G.del = vim.keymap.del
 
--- automatically append github to entries without an absolute link
+-- automatically append github to entries without an absolute source
 _G.pack = function(plugins, opts)
   for k, p in ipairs(plugins) do
     if type(p) == "string" and not p:match("^https?://") then
@@ -73,7 +73,3 @@ if vim.g.vscode then
 end
 
 require("autocmds")
-
--- experimental ui that avoid hit-enter prompts g< to open buffer
--- disabled for now, shows a notification for every write/undo
-require("vim._core.ui2").enable({})

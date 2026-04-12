@@ -1,13 +1,6 @@
-local ts_dir = require("nix-info")(nil, "plugins", "start", "nvim-treesitter")
-local grammars_dir = require("nix-info")(nil, "plugins", "start", "COLLATED_TS_GRAMMARS")
-
-if not ts_dir or not grammars_dir or vim.g.vscode then
+if vim.g.vscode then
   return
 end
-
-vim.opt.runtimepath:prepend({ ts_dir, grammars_dir })
-
-vim.cmd("runtime! plugin/nvim-treesitter.*")
 
 pack({
   "nvim-treesitter/nvim-treesitter-textobjects",
@@ -77,6 +70,9 @@ treesj.setup({ use_default_keymaps = false })
 
 map("n", "<leader>nj", function() treesj.join() end, { desc = "Join node" })
 map("n", "<leader>ns", function() treesj.split() end, { desc = "Split node" })
+
+-- force to load for rainbow-delimiters
+on_filetype("*", vim.treesitter.start)
 
 -- rainbow delimiters
 require("rainbow-delimiters.setup").setup({

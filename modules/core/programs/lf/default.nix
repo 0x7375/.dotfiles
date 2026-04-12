@@ -34,7 +34,7 @@
                 ]
               );
             text = ''
-              if [ -n "''${DISPLAY-}" ] && [ -z "''${FIFO_UEBERZUG-}" ]; then
+              if [ -n "''${WAYLAND_DISPLAY-}" ] && [ -z "''${FIFO_UEBERZUG-}" ]; then
                 export FIFO_UEBERZUG="''${TMPDIR:-/tmp}/lf-ueberzug-$$"
 
                 cleanup() {
@@ -44,7 +44,7 @@
 
                 mkfifo -- "$FIFO_UEBERZUG"
                 # empty the LD_LIBRARY_PATH var so there is no conflict when I override it inside devShells
-                while [ -p "$FIFO_UEBERZUG" ] && ! LD_LIBRARY_PATH="" ueberzugpp layer -s <"$FIFO_UEBERZUG"; do :; done &
+                while [ -p "$FIFO_UEBERZUG" ] && ! LD_LIBRARY_PATH="" ueberzugpp layer --output sixel -s <"$FIFO_UEBERZUG"; do :; done &
                 exec 3>"$FIFO_UEBERZUG"
                 trap cleanup EXIT
                 lf "$@" 3>&-

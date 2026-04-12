@@ -43,71 +43,83 @@ require("gitsigns").setup({
   end,
 })
 
--- lsp progress, vim.ui.input, notifications
-pack({ "folke/snacks.nvim" })
+pack({ "rachartier/tiny-cmdline.nvim" })
 
----@type table<number, {token:lsp.ProgressToken, msg:string, done:boolean}[]>
-local progress = vim.defaulttable()
-vim.api.nvim_create_autocmd("LspProgress", {
-  ---@param ev {data: {client_id: integer, params: lsp.ProgressParams}}
-  callback = function(ev)
-    local client = vim.lsp.get_client_by_id(ev.data.client_id)
-    local value = ev.data.params.value --[[@as {percentage?: number, title?: string, message?: string, kind: "begin" | "report" | "end"}]]
-    if not client or type(value) ~= "table" then
-      return
-    end
-    local p = progress[client.id]
+require("tiny-cmdline").setup({
+  width = {
+    value = "40%",
+  },
 
-    for i = 1, #p + 1 do
-      if i == #p + 1 or p[i].token == ev.data.params.token then
-        p[i] = {
-          token = ev.data.params.token,
-          msg = ("[%3d%%] %s%s"):format(
-            value.kind == "end" and 100 or value.percentage or 100,
-            value.title or "",
-            value.message and (" **%s**"):format(value.message) or ""
-          ),
-          done = value.kind == "end",
-        }
-        break
-      end
-    end
+  position = {
+    x = "50%",
+    y = "20%",
+  },
+  menu_col_offset = 0,
+  native_types = {},
+})
 
-    local msg = {} ---@type string[]
-    progress[client.id] = vim.tbl_filter(function(v) return table.insert(msg, v.msg) or not v.done end, p)
+-- experimental ui that avoid hit-enter prompts, g< to open buffer
+-- https://www.reddit.com/r/neovim/comments/1sfmgkb/comment/oeyrgua/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button
+require("vim._core.ui2").enable({
+  enable = true,
+  msg = {
+    targets = {
+      [""] = "msg",
+      empty = "cmd",
+      bufwrite = "msg",
+      confirm = "cmd",
+      emsg = "pager",
+      echo = "msg",
+      echomsg = "msg",
+      echoerr = "pager",
+      completion = "cmd",
+      list_cmd = "pager",
+      lua_error = "pager",
+      lua_print = "msg",
+      progress = "pager",
+      rpc_error = "pager",
+      quickfix = "msg",
+      search_cmd = "cmd",
+      search_count = "cmd",
+      shell_cmd = "pager",
+      shell_err = "pager",
+      shell_out = "pager",
+      shell_ret = "msg",
+      undo = "msg",
+      verbose = "pager",
+      wildlist = "cmd",
+      wmsg = "msg",
+      typed_cmd = "cmd",
+    },
+    cmd = {
+      height = 0.5,
+    },
+    dialog = {
+      height = 0.5,
+    },
+    msg = {
+      height = 0.3,
+      timeout = 3000,
+    },
+    pager = {
+      height = 0.5,
+    },
+  },
+})
 
-    local spinner = { "⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏" }
-    vim.notify(table.concat(msg, "\n"), "info", {
-      id = "lsp_progress",
-      title = client.name,
-      opts = function(notif)
-        notif.icon = #progress[client.id] == 0 and " "
-          or spinner[math.floor(vim.uv.hrtime() / (1e6 * 80)) % #spinner + 1]
-      end,
+-- show messages in the top left
+local ui2 = require("vim._core.ui2")
+local msgs = require("vim._core.ui2.messages")
+local orig_set_pos = msgs.set_pos
+msgs.set_pos = function(tgt)
+  orig_set_pos(tgt)
+  if (tgt == "msg" or tgt == nil) and vim.api.nvim_win_is_valid(ui2.wins.msg) then
+    pcall(vim.api.nvim_win_set_config, ui2.wins.msg, {
+      relative = "editor",
+      anchor = "NE",
+      row = 1,
+      col = vim.o.columns - 1,
+      border = "single",
     })
-  end,
-})
-
----@type snacks.Config
-require("snacks").setup({
-  styles = {
-    notification_history = {
-      backdrop = 100,
-    },
-  },
-  input = {
-    enabled = true,
-    icon = "",
-  },
-  notifier = {
-    padding = false,
-    enabled = true,
-    icons = {
-      error = "",
-      warn = "",
-      info = "",
-      debug = "",
-      trace = "",
-    },
-  },
-})
+  end
+end

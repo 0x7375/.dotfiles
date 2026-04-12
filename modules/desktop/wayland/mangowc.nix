@@ -115,6 +115,9 @@
                 tap_and_drag = 1;
                 cursor_size = 24;
 
+                # very buggy electron + nvidia otherwise
+                syncobj_enable = 1;
+
                 exchange_cross_monitor = 1;
                 focus_cross_monitor = 1;
 

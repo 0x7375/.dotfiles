@@ -27,12 +27,7 @@
 
       xdg.portal = {
         enable = true;
-        wlr.enable = true;
         xdgOpenUsePortal = true;
-        config.common."org.freedesktop.impl.portal.Settings" = "darkman";
-        extraPortals = with pkgs; [ darkman ];
       };
-
-      hj.xdg.config.files."darkman/config.yaml".text = "usegeoclue: false";
     };
 }

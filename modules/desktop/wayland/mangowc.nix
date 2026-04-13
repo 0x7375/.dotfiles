@@ -42,18 +42,17 @@
         packages = with pkgs; [
           wl-clipboard
           unstable.mangowc
+
+          # required for vesktop to open links for example
+          xdg-utils
         ];
 
         xdg.portal = {
-          extraPortals = with pkgs; [
-            xdg-desktop-portal-wlr
-            xdg-desktop-portal-gtk
-          ];
+          wlr.enable = true;
+          extraPortals = with pkgs; [ xdg-desktop-portal-gtk ];
 
-          config.mango = {
+          config.common = {
             default = [ "gtk" ];
-
-            "org.freedesktop.impl.portal.Secret" = [ "gnome-keyring" ];
             "org.freedesktop.impl.portal.ScreenCast" = [ "wlr" ];
             "org.freedesktop.impl.portal.ScreenShot" = [ "wlr" ];
             "org.freedesktop.impl.portal.Inhibit" = [ ];
@@ -158,12 +157,25 @@
                   "${getExe pkgs.bash} -c '${getExe pkgs.my.swap-theme} $(cat $HOME/.local/state/tinted/theme)'"
                 ];
 
-                "exec-once" = [
-                  "${getExe' pkgs.dbus "dbus-update-activation-environment"} --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP XDG_SESSION_DESKTOP LIBVA_DRIVER_NAME GBM_BACKEND __GLX_VENDOR_LIBRARY_NAME"
-                  "${getExe' pkgs.systemd "systemctl"} --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP XDG_SESSION_DESKTOP"
-                  "${getExe' pkgs.systemd "systemctl"} --user start mango-session.target"
-                ]
-                ++ map (_: _.cmd) (lib.filter (c: !c.always) (lib.attrValues config.me.desktop.startup));
+                "exec-once" =
+                  let
+                    env = builtins.concatStringsSep " " [
+                      "PATH"
+                      "XDG_DATA_DIRS"
+                      "WAYLAND_DISPLAY"
+                      "XDG_CURRENT_DESKTOP"
+                      "XDG_SESSION_DESKTOP"
+                      "LIBVA_DRIVER_NAME"
+                      "GBM_BACKEND"
+                      "__GLX_VENDOR_LIBRARY_NAME"
+                    ];
+                  in
+                  [
+                    "${getExe' pkgs.dbus "dbus-update-activation-environment"} --systemd ${env}"
+                    "${getExe' pkgs.systemd "systemctl"} --user import-environment ${env}"
+                    "${getExe' pkgs.systemd "systemctl"} --user start mango-session.target"
+                  ]
+                  ++ map (_: _.cmd) (lib.filter (c: !c.always) (lib.attrValues config.me.desktop.startup));
 
                 bind = [
                   "SUPER+SHIFT,r,reload_config"

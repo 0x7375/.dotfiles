@@ -26,7 +26,6 @@ pkgs.writeShellApplication {
       with pkgs;
       [
         dunst
-        darkman
         swaybg
         unstable.mangowc
       ]
@@ -87,7 +86,7 @@ pkgs.writeShellApplication {
           ln -sfT "${theme.package}/share/themes/${theme.name}-''${theme^}" "$share_dir/themes/${theme.name}"
           ln -sfT "${iconTheme.package}/share/icons/${iconTheme.name}-''${theme^}" "$share_dir/icons/${iconTheme.name}"
 
-          darkman set "$theme"
+          dconf write /org/gnome/desktop/interface/color-scheme "'prefer-$theme'"
           dunstctl reload
 
           systemctl restart --user waybar

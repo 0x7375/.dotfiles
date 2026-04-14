@@ -40,7 +40,7 @@
         };
 
         packages = with pkgs; [
-          wl-clipboard
+          wl-clipboard-rs
           unstable.mangowc
 
           # required for vesktop to open links for example
@@ -187,6 +187,8 @@
                   "SUPER,i,spawn,${getExe' pkgs.procps "pkill"} -USR1 waybar"
                   "SUPER,a,switch_layout"
 
+                  "SUPER,TAB,focuslast"
+
                   "SUPER,j,focusstack,prev"
                   "SUPER,k,focusstack,next"
 
@@ -210,6 +212,9 @@
                   ) cfg.monitors)
                   ++ (lib.mapAttrsToList (
                     monitor: tags: map (tag: "SUPER+SHIFT,${tag},tagcrossmon,${tag},${monitor}") tags
+                  ) cfg.monitors)
+                  ++ (lib.mapAttrsToList (
+                    monitor: tags: map (tag: "SUPER+CTRL,${tag},comboview,${tag},${monitor}") tags
                   ) cfg.monitors)
                 ));
 

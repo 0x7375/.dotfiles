@@ -201,11 +201,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1776130609,
-        "narHash": "sha256-vw4iFa2FLy7Zvzpz4INETthLVzj/9JVDsLDVvTIWboc=",
+        "lastModified": 1776206536,
+        "narHash": "sha256-ScgG/Coz0mfiZAn7UWClC5OFGYBxAP6SBuSTkqekZoI=",
         "ref": "refs/heads/main",
-        "rev": "de40f331a6e74d663edacf903f3d052f5708097e",
-        "revCount": 36,
+        "rev": "e2f9cfa5c5e6342d53537c7516d134c0a5892f4b",
+        "revCount": 37,
         "type": "git",
         "url": "https://codeberg.org/0x7E/nd"
       },
@@ -365,11 +365,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1776028425,
-        "narHash": "sha256-Iwn0uJRiKzRJxEyVNSj162xTw79KxaHVLILCjRILWEg=",
+        "lastModified": 1776202455,
+        "narHash": "sha256-K0SBOoCAYmQ4erutl8ivMK2qLpmb60oupOVlvQYSxfc=",
         "owner": "nix-community",
         "repo": "NUR",
-        "rev": "8a1eca686c5e12533a7b64f6ea5f6599e1ccd265",
+        "rev": "0574a6fa07e90633a7416b50f679ab86d5509dc2",
         "type": "github"
       },
       "original": {

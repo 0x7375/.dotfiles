@@ -12,6 +12,8 @@
     {
       programs.waybar.enable = true;
 
+      me.desktop.bindings."Mod+i" = "${lib.getExe' pkgs.procps "pkill"} -USR1 waybar";
+
       nixpkgs.overlays = [
         (final: prev: {
 

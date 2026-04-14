@@ -114,12 +114,16 @@
                 tap_and_drag = 1;
                 cursor_size = 24;
 
+                circle_layout = "tile,monocle";
+
                 # very buggy electron + nvidia otherwise
                 syncobj_enable = 1;
 
                 exchange_cross_monitor = 1;
+                scratchpad_cross_monitor = 1;
                 focus_cross_monitor = 1;
 
+                no_border_when_single = 1;
                 borderpx = 0;
                 gappih = 0;
                 gappiv = 0;
@@ -138,9 +142,6 @@
                 new_is_master = 1;
                 default_mfact = "0.50";
                 default_nmaster = 1;
-
-                circle_layout = "tile,monocle";
-                no_border_when_single = 1;
 
                 windowrule = [
                   "tags:3,appid:${config.me.desktop.browser}"
@@ -184,7 +185,7 @@
                   "SUPER,Return,togglefloating"
                   "SUPER,g,toggleoverview"
                   "SUPER,c,centerwin"
-                  "SUPER,i,spawn,${getExe' pkgs.procps "pkill"} -USR1 waybar"
+
                   "SUPER,a,switch_layout"
 
                   "SUPER,TAB,focuslast"

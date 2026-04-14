@@ -497,8 +497,15 @@
     };
 
   flake.nixos.desktop =
-    { pkgs, ... }:
+    { lib, pkgs, ... }:
     {
+      tinted.files.".config/mango/config.conf".value = {
+        bind = [
+          "SUPER,e,toggle_named_scratchpad,foot-lf,none,foot --app-id foot-lf -e ${lib.getExe pkgs.lf}"
+        ];
+        windowrule = [ "isnamedscratchpad:1,width:1280,height:800,appid:foot-lf" ];
+      };
+
       packages = with pkgs; [
         libreoffice
         trash-cli

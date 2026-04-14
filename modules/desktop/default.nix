@@ -158,53 +158,7 @@
 
       me.desktop.bindings =
         let
-          change-brightness = getExe (
-            pkgs.writeShellApplication {
-              name = "change-brightness";
-              runtimeInputs = with pkgs; [
-                brillo
-                ddcutil
-              ];
-              text = ''
-                fade=150000
-
-                get_brightness() {
-                  local -r device="dev:$1"
-                  ddccontrol -r 0x10 "$device" 2>/dev/null | grep "Control 0x10:" | cut -d'/' -f2
-                }
-
-                set_brightness() {
-                  local -r device="dev:$1"
-                  local -ri value=$2
-                  ddccontrol -r 0x10 -w "$value" "$device" &> /dev/null
-                }
-
-                case $1 in
-                up)
-                    brillo -u $fade -q -A 10
-                    ;;
-                down)
-                    brillo -u $fade -q -U 10
-                    ;;
-                esac
-
-                for device in "/dev/i2c-2" "/dev/i2c-4"; do
-                  current=$(get_brightness "$device")
-                  case $1 in
-                  up)
-                      current=$(("$current" + 10))
-                      [[ $current -gt 100 ]] && current=100
-                      ;;
-                  down)
-                      current=$(("$current" - 10))
-                      [[ $current -lt 0 ]] && current=0
-                      ;;
-                  esac
-                  set_brightness "$device" "$current" &
-                done
-              '';
-            }
-          );
+          change-brightness = getExe (import ./_change-brightness.nix pkgs);
           term = pkgs.${cfg.terminal.name} + "/bin/" + cfg.terminal.cmd;
 
           btToggle =
@@ -244,55 +198,8 @@
                 asyncio.run(main())
               '';
 
-          screenshot = pkgs.writeShellApplication {
-            name = "screenshot";
-            runtimeInputs = with pkgs; [
-              coreutils
-              xdg-user-dirs
-              libnotify
-              grim
-              slurp
-              wl-clipboard-rs
-              xdg-utils
-            ];
-            text = ''
-              time=$(date -u "+%s" | cut -c 7-)
-              file="Screenshot-$(date -u +%d-%m-%Y-"$time").png"
-              folder="$(xdg-user-dir SCREENSHOTS)/"
-              filepath="$folder$file"
-
-              [[ -z "$1" ]] && exit 1
-
-              active_mon=$(mmsg -g | awk '$2 == "selmon" && $3 == "1" {print $1}')
-
-              case "$1" in
-                region)
-                  grim -g "$(slurp)" "$filepath"
-                  ;;
-                monitor)
-                  grim -o "$active_mon" "$filepath"
-                  ;;
-                window)
-                  geom=$(mmsg -g -x | awk -v mon="$active_mon" '
-                    $1 == mon { geo[$2] = $3 } 
-                    END { printf "%s,%s %sx%s\n", geo["x"], geo["y"], geo["width"], geo["height"] }
-                  ')
-                  grim -g "$geom" "$filepath"
-                  ;;
-                *)
-                  echo "Usage: screenshot {region|window|monitor}"
-                  exit 1
-                  ;;
-              esac
-
-              wl-copy < "$filepath"
-
-              (
-               action=$(notify-send -i "$filepath" "Screenshot saved" "$filepath" --action="open=open")
-               [[ "$action" == "open" ]] && xdg-open "$filepath"
-              ) &
-            '';
-          };
+          screenshot = import ./_screenshot.nix pkgs;
+          screenrecord = import ./_screenrecord.nix pkgs;
         in
         {
           XF86MonBrightnessUp = "${change-brightness} up";
@@ -300,17 +207,16 @@
           Print = "${getExe screenshot} region";
           "Alt+Sys_Req" = "${getExe screenshot} window";
           "Shift+Print" = "${getExe screenshot} monitor";
+          "Mod+Print" = getExe screenrecord;
 
           "Mod+t" = "${term} -e ${getExe pkgs.my.tmux-sessionizer} ~/";
           "Mod+Shift+t" = term;
 
           "Mod+s" = "${term} -e ${getExe pkgs.my.tmux-sshr}";
           "Mod+Shift+s" = getExe pkgs.my.swap-theme;
-          "Mod+e" = "${term} -e ${getExe pkgs.lf}";
-          "Mod+Shift+e" = "${term} -e sudo ${getExe pkgs.lf}";
           # "Mod+n" =
           #   "${term} -e ${getExe pkgs.zsh} -c '${getExe' pkgs.networkmanager "nmcli"} device wifi rescan && unset COLORTERM && TERM=xterm-old ${getExe' pkgs.networkmanager "nmtui"}'";
-          "Mod+Alt+n" = "${getExe' pkgs.networkmanager "nmcli"} device wifi rescan";
+          "Mod+Shift+n" = "${getExe' pkgs.networkmanager "nmcli"} device wifi rescan";
           "Mod+Alt+b" = btToggle;
           "Mod+Shift+i" = getExe wizToggle;
 

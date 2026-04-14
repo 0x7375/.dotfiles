@@ -121,7 +121,21 @@
                     type = types.nullOr (mergeable {
                       name = "attrs";
                       check = lib.isAttrs;
-                      merge = builtins.foldl' lib.recursiveUpdate { };
+                      merge =
+                        let
+                          deepMerge =
+                            a: b:
+                            if lib.isAttrs a && lib.isAttrs b then
+                              lib.zipAttrsWith (_: v: builtins.foldl' deepMerge (builtins.head v) (builtins.tail v)) [
+                                a
+                                b
+                              ]
+                            else if lib.isList a && lib.isList b then
+                              a ++ b
+                            else
+                              b;
+                        in
+                        builtins.foldl' deepMerge { };
                     });
                     default = null;
                   };

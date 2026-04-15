@@ -190,14 +190,19 @@
 
                   "SUPER,TAB,focuslast"
 
-                  "SUPER,j,focusstack,prev"
-                  "SUPER,k,focusstack,next"
+                  "SUPER,p,focusstack,prev"
+                  "SUPER,n,focusstack,next"
 
+                  "SUPER,k,focusdir,up"
+                  "SUPER,j,focusdir,down"
                   "SUPER,h,focusdir,left"
                   "SUPER,l,focusdir,right"
 
-                  "SUPER+CTRL,j,exchange_stack_client,down"
-                  "SUPER+CTRL,k,exchange_stack_client,up"
+                  "SUPER+CTRL,n,exchange_stack_client,down"
+                  "SUPER+CTRL,p,exchange_stack_client,up"
+
+                  "SUPER+CTRL,k,exchange_client,up"
+                  "SUPER+CTRL,j,exchange_client,down"
                   "SUPER+CTRL,h,exchange_client,left"
                   "SUPER+CTRL,l,exchange_client,right"
 

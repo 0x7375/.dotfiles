@@ -77,7 +77,7 @@
         enable = true;
         handlers =
           let
-            turnOffScreen = "${lib.getExe pkgs.wlopm} --off \*";
+            turnOffScreen = "${lib.getExe pkgs.wlopm} --off \"*\"";
           in
           {
             lid-close = {
@@ -122,7 +122,7 @@
 
       me.desktop.startup.idle =
         let
-          screen = state: "${lib.getExe pkgs.wlopm} --${state} \*";
+          screen = state: "${lib.getExe pkgs.wlopm} --${state} \"*\"";
 
           lock = pkgs.writeShellApplication {
             name = "lock";
@@ -154,15 +154,18 @@
                   systemctl hibernate
                 fi
                   
-                waylock
+                waylock -fork-on-lock
 
-                kill "$HIBERNATE_PID" 2>/dev/null || true
-                $browser_was_open && "$BROWSER" &
+                (
+                  while pidof waylock >/dev/null; do sleep 1; done
+                  kill "$HIBERNATE_PID" 2>/dev/null || true
+                  $browser_was_open && "$BROWSER" &
+                ) &
               '';
           };
         in
         # bash
-        ''
+        pkgs.writeShellScript "idle" ''
           ${lib.getExe pkgs.swayidle} -w \
               timeout 300 '${screen "off"}' resume '${screen "on"}' \
               timeout 600 '${getExe lock}' \

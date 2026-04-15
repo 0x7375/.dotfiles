@@ -216,7 +216,7 @@
           "Mod+Shift+s" = getExe pkgs.my.swap-theme;
           # "Mod+n" =
           #   "${term} -e ${getExe pkgs.zsh} -c '${getExe' pkgs.networkmanager "nmcli"} device wifi rescan && unset COLORTERM && TERM=xterm-old ${getExe' pkgs.networkmanager "nmtui"}'";
-          "Mod+Shift+n" = "${getExe' pkgs.networkmanager "nmcli"} device wifi rescan";
+          "Mod+Alt+n" = "${getExe' pkgs.networkmanager "nmcli"} device wifi rescan";
           "Mod+Alt+b" = btToggle;
           "Mod+Shift+i" = getExe wizToggle;
 

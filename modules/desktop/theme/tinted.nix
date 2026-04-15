@@ -104,7 +104,7 @@
           };
 
           files."${config.tinted.stateDir}/palette" = {
-            stripHash = false;
+            stripHash = true;
             generator = lib.generators.toKeyValue { };
           };
         };

@@ -231,10 +231,10 @@
             in
             {
               "Mod+d" = "${vicinaeExec} open";
-              "Mod+p" = "${vicinaeExec} vicinae://launch/@me/powermenu/index";
+              "Mod+Shift+p" = "${vicinaeExec} vicinae://launch/@me/powermenu/index";
               "Mod+b" = "${vicinaeExec} vicinae://launch/@Gelei/vicinae-extension-bluetooth-0/devices";
               "Mod+m" = openNote;
-              "Mod+n" =
+              "Mod+Shift+n" =
                 "${vicinaeExec} vicinae://launch/@dagimg-dot/vicinae-extension-wifi-commander-0/manage-saved-networks";
               "Mod+Shift+b" = pkgs.writeShellScript "open-bookmark" ''
                 file="$HOME/notes/Bookmarks.md"

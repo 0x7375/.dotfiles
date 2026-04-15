@@ -25,6 +25,11 @@
 
     time.hardwareClockInLocalTime = true;
 
+    tinted.files.".config/mango/config.conf".value.exec-once = [
+      "mmsg -d viewcrossmon,5,HDMI-A-1"
+      "mmsg -d viewcrossmon,1,HDMI-A-2"
+    ];
+
     # do not change
     # For more information, see `man configuration.nix` or https://nixos.org/manual/nixos/stable/options#opt-system.stateVersion .
     system.stateVersion = "23.11"; # Did you read the comment?

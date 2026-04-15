@@ -158,7 +158,7 @@
                   "${getExe pkgs.bash} -c '${getExe pkgs.my.swap-theme} $(cat $HOME/.local/state/tinted/theme)'"
                 ];
 
-                "exec-once" =
+                exec-once =
                   let
                     env = builtins.concatStringsSep " " [
                       "PATH"

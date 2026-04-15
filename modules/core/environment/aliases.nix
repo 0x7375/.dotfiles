@@ -126,14 +126,14 @@
                 }' | sed 's/^A /Add /; s/^M /Update /; s/^D /Delete /');
 
                 if [[ -z "$changes" ]]; then
-                  echo -e "\tNo changes to commit"
+                  echo -e "  No changes to commit"
                 else
                   ${git} commit -m "$(printf "%s\n" "$changes")";
                 fi
 
                 ${git} pull --rebase;
 
-                echo -en "\tPush changes? [y/N]"
+                echo -en "  Push changes? [y/N]"
                 read -s -r -k 1 answer
 
                 [[ $answer == "y" ]] && {

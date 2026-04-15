@@ -148,6 +148,11 @@
             frame_color = palette.green;
             foreground = palette.green;
           };
+          z_low = {
+            appname = "low";
+            frame_color = palette.orange;
+            foreground = palette.orange;
+          };
           z_volume = {
             appname = "volume";
             history_ignore = true;

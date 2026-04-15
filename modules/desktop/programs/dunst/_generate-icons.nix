@@ -30,10 +30,15 @@ pkgs.writeShellApplication {
     mkdir -p "$icons_dir/dark" "$icons_dir/light"
 
     primary="${dark.fg0}"
-    green="${dark.green}"
-    red="${dark.red}"
     light_primary="${light.fg0}"
+
+    green="${dark.green}"
     light_green="${light.green}"
+
+    orange="${dark.orange}"
+    light_orange="${light.orange}"
+
+    red="${dark.red}"
     light_red="${light.red}"
 
     for file in "$source_dir"/*.png; do
@@ -46,6 +51,10 @@ pkgs.writeShellApplication {
           light_color="$light_green"
           ;;
         battery-low.png)
+          dark_color="$orange"
+          light_color="$light_orange"
+          ;;
+        battery-empty.png)
           dark_color="$red"
           light_color="$light_red"
           ;;

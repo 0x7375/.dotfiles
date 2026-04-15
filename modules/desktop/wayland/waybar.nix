@@ -206,6 +206,8 @@
 
         "custom/clock" = {
           exec = pkgs.writeShellScript "waybar-clock" ''
+            # tiny delay to prevent module to be blank on startup
+            sleep 0.1
             while true; do
               date '+%d/%m - %H:%M'
               sleep $(( 60 - $(date +%S) ))

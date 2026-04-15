@@ -12,7 +12,7 @@
         dunst
       ];
 
-      activation = lib.getExe (import ./_generate-icons.nix { inherit config pkgs; });
+      userActivation = lib.getExe (import ./_generate-icons.nix { inherit config pkgs; });
 
       me.desktop.bindings =
         let

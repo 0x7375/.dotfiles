@@ -123,3 +123,7 @@ msgs.set_pos = function(tgt)
     })
   end
 end
+
+-- colorize
+pack({ "brenoprata10/nvim-highlight-colors" })
+require("nvim-highlight-colors").setup()

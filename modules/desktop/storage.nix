@@ -106,7 +106,7 @@ in
       ...
     }:
     let
-      kdeconnectDir = "${config.me.home}/Library/Preferences/kdeconnect";
+      kdeconnectDir = "Library/Preferences/kdeconnect";
       kdeconnect-nightly = pkgs.stdenv.mkDerivation rec {
         pname = "kdeconnect-nightly";
         version = "5855";

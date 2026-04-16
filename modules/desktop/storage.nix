@@ -60,7 +60,7 @@ in
       ];
 
       programs.kdeconnect.enable = true;
-      me.desktop.startup.kdeconnect = lib.getExe' pkgs.kdePackages.kdeconnect-kde "kdeconnect-indicator";
+      me.desktop.startup.kdeconnect = lib.getExe' pkgs.kdePackages.kdeconnect-kde "kdeconnectd";
 
       me.hostSecrets."kdeconnect/key".path = "${config.me.home}/.config/kdeconnect/privateKey.pem";
 

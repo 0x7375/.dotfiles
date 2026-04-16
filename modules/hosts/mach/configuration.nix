@@ -70,25 +70,6 @@
         mas
         unstable.pear-desktop
         wireguard-tools
-
-        (pkgs.stdenv.mkDerivation rec {
-          pname = "kdeconnect-nightly";
-          version = "5855";
-
-          src = pkgs.fetchurl {
-            url = "https://origin.cdn.kde.org/ci-builds/network/kdeconnect-kde/master/macos-arm64/kdeconnect-kde-master-${version}-macos-clang-arm64.dmg";
-            hash = "sha256-aCPTooLM9hJ7hZrXzl3jfaQS7xOgXd2L87n/Qs1+YSY=";
-          };
-
-          nativeBuildInputs = [ pkgs.undmg ];
-
-          sourceRoot = ".";
-
-          installPhase = ''
-            mkdir -p $out/Applications
-            cp -r *.app $out/Applications
-          '';
-        })
       ];
 
       hj.xdg.config.files."karabiner/karabiner.json".source = "${

@@ -65,8 +65,8 @@
               };
               ExcludedFileNames = builtins.readFile ./blacklist.txt;
               Interface = "airvpn";
-              MaxConnections = 150;
-              MaxConnectionsPerTorrent = 50;
+              MaxConnections = 50;
+              MaxConnectionsPerTorrent = 10;
               MaxUploads = 15;
               MaxUploadsPerTorrent = 4;
               Preallocation = true;
@@ -76,6 +76,7 @@
             };
           };
           Preferences = {
+            Connection.ResolvePeerCountries = false;
             WebUI = {
               Username = "admin";
               Password_PBKDF2 = "@ByteArray(${template})";

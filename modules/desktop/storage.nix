@@ -15,11 +15,13 @@ let
           keyAlgorithm=EC
           name=${hostname}
         '';
+
       "certificate.pem".text = ''
         -----BEGIN CERTIFICATE-----
         ${config.me.host.kdeconnect.cert}
         -----END CERTIFICATE-----
       '';
+
       "trusted_devices".text = lib.concatMapAttrsStringSep "\n" (
         name: _:
         let

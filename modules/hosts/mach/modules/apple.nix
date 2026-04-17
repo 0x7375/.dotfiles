@@ -1,7 +1,6 @@
 {
   flake.darwin.mach =
     {
-      config,
       pkgs,
       lib,
       ...
@@ -119,81 +118,24 @@
           };
         };
       }
-      (
-        let
-          mkMacApp =
-            { name, terminalName }:
-            let
-              appScript = pkgs.writeScript "${name}" ''
-                #!/usr/bin/osascript
+      {
+        packages = [
+          pkgs.duti
+        ];
 
-                on run
-                  do shell script "open -na ${terminalName} --args -e nvim"
-                end run
+        activation = # bash
+          ''
+            export PATH=${pkgs.duti}/bin:$PATH
+            NVIM="org.nixos.nvim"
 
-                on open argv
-                  repeat with aFile in argv
-                    set p to POSIX path of aFile
-                      do shell script "open -na ${terminalName} --args -e nvim " & quoted form of p
-                  end repeat
-                end open
-              '';
+            duti -s info.sioyek.sioyek .pdf all
 
-              infoPlist = pkgs.writeText "Info.plist" (
-                lib.generators.toPlist { escape = true; } {
-                  CFBundleExecutable = name;
-                  CFBundleIdentifier = "org.nixos.${lib.strings.toLower name}";
-                  CFBundleName = name;
-                  CFBundlePackageType = "APPL";
-                  CFBundleShortVersionString = "1.0";
-                  CFBundleVersion = "1";
-                  LSUIElement = true;
-
-                  CFBundleDocumentTypes = [
-                    {
-                      CFBundleTypeName = "All";
-                      LSHandlerRank = "Alternate";
-                      LSItemContentTypes = [ "public.item" ];
-                    }
-                  ];
-                }
-              );
-            in
-            pkgs.runCommand "${name}.app" { } ''
-              mkdir -p $out/Applications/${name}.app/Contents/MacOS
-              mkdir -p $out/Applications/${name}.app/Contents/Resources
-
-              cp ${appScript} $out/Applications/${name}.app/Contents/MacOS/${name}
-              chmod +x $out/Applications/${name}.app/Contents/MacOS/${name}
-
-              cp ${infoPlist} $out/Applications/${name}.app/Contents/Info.plist
-            '';
-
-          nvimShim = mkMacApp {
-            name = "Nvim";
-            terminalName = config.me.desktop.terminal.name;
-          };
-        in
-        {
-          packages = [
-            nvimShim
-            pkgs.duti
-          ];
-
-          activation = # bash
-            ''
-              export PATH=${pkgs.duti}/bin:$PATH
-              NVIM="org.nixos.nvim"
-
-              duti -s info.sioyek.sioyek .pdf all
-
-              duti -s $NVIM .txt all
-              duti -s $NVIM .md all
-              duti -s $NVIM .nix all
-              duti -s $NVIM public.plain-text all
-              duti -s $NVIM public.unix-executable all
-            '';
-        }
-      )
+            duti -s $NVIM .txt all
+            duti -s $NVIM .md all
+            duti -s $NVIM .nix all
+            duti -s $NVIM public.plain-text all
+            duti -s $NVIM public.unix-executable all
+          '';
+      }
     ];
 }

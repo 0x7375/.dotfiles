@@ -110,6 +110,15 @@
               type = types.str;
               description = "Default terminal command";
             };
+            executable =
+              let
+                termCfg = cfg.terminal;
+              in
+              mkOption {
+                type = types.str;
+                readOnly = true;
+                default = pkgs.${termCfg.name} + "/bin/" + termCfg.cmd;
+              };
           };
 
           barFontSize = mkOption {
@@ -159,7 +168,7 @@
       me.desktop.bindings =
         let
           change-brightness = getExe (import ./_change-brightness.nix pkgs);
-          term = pkgs.${cfg.terminal.name} + "/bin/" + cfg.terminal.cmd;
+          term = cfg.terminal.executable;
 
           btToggle =
             let

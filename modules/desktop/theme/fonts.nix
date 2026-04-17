@@ -88,14 +88,19 @@
         };
 
         packages = with pkgs; [
-          fonts.CartographCF
           font-awesome
-          nerd-fonts.mononoki
           lexend
           nerd-fonts.terminess-ttf
           noto-fonts
           noto-fonts-cjk-sans
           noto-fonts-color-emoji
+
+          # dunst
+          fonts.CartographCF
+
+          # waybar
+          courier-prime
+          nerd-fonts.mononoki
         ];
       };
     };

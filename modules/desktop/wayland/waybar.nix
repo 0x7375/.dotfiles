@@ -221,7 +221,7 @@
         p: # css
         ''
           * {
-            font-family: Mononoki Nerd Font;
+            font-family: Courier Prime;
             font-size: ${toString config.me.desktop.barFontSize}pt;
             padding: 0;
             margin: 0;

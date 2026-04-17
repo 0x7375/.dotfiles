@@ -26,8 +26,7 @@
     time.hardwareClockInLocalTime = true;
 
     tinted.files.".config/mango/config.conf".value.exec-once = [
-      "mmsg -d viewcrossmon,5,HDMI-A-1"
-      "mmsg -d viewcrossmon,1,HDMI-A-2"
+      "mmsg -d viewcrossmon,5,HDMI-A-1 && mmsg -d viewcrossmon,1,HDMI-A-2"
     ];
 
     # do not change

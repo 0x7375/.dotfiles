@@ -20,7 +20,7 @@
 
             url = mkOption {
               type = types.str;
-              internal = true;
+              readOnly = true;
               default = "https://${config.subdomain}.${parentConfig.me.domain}";
               description = "Constructed public URL for this service";
             };

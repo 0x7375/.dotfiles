@@ -14,15 +14,15 @@
       ];
     in
     {
-      # nixpkgs.overlays = [
-      #   (final: prev: {
-      #     tmux = (prev.crossPkgs or prev).tmux.overrideAttrs (old: {
-      #       patches = (old.patches or [ ]) ++ [
-      #         ./tmux_bigger_input_buffer.patch
-      #       ];
-      #     });
-      #   })
-      # ];
+      nixpkgs.overlays = [
+        (_: prev: {
+          tmux = (prev.crossPkgs or prev).tmux.overrideAttrs (old: {
+            patches = (old.patches or [ ]) ++ [
+              ./tmux_bigger_input_buffer.patch
+            ];
+          });
+        })
+      ];
 
       packages = with pkgs; [
         my.tmux-sessionizer

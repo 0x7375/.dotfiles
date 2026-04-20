@@ -41,7 +41,10 @@
         (inputs.wrappers.lib.wrapPackage {
           inherit pkgs;
           package = pkgs.sioyek.overrideAttrs (old: {
-            patches = (old.patches or [ ]) ++ [ ./page_move_boundaries_fix.patch ];
+            patches = (old.patches or [ ]) ++ [
+              ./page_move_boundaries_fix.patch
+              ./fit_page_height_ignore_statusbar.patch
+            ];
           });
           env = {
             # https://github.com/ahrm/sioyek/issues/1283#issuecomment-3191610519
@@ -74,7 +77,7 @@
           link_highlight_color       ${p.blue}
 
           should_launch_new_window 1
-          page_separator_width 2
+          page_separator_width 1
           scroll_past_document_ends 0
           show_statusbar_only_when_hovered 1
         '';

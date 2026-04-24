@@ -62,19 +62,18 @@
         # sway
         ''
           startup_commands toggle_status_bar;toggle_titlebar
-          background_color           ${p.bg0}
-          status_bar_color           ${p.bg2}
-          status_bar_text_color      ${p.fg0}
-          ui_text_color              ${p.fg0}
-          ui_selected_text_color     ${p.bg2}
+          status_bar_color             ${p.bg2}
+          status_bar_text_color        ${p.fg0}
+          ui_text_color                ${p.fg0}
+          ui_selected_text_color       ${p.bg2}
           ui_selected_background_color ${p.blue}
 
-          custom_background_color    ${p.bg0}
-          custom_text_color          ${p.fg0}
+          custom_background_color      ${p.bg0}
+          custom_text_color            ${p.fg0}
 
-          text_highlight_color       ${p.yellow}
-          search_highlight_color     ${p.blue}
-          link_highlight_color       ${p.blue}
+          text_highlight_color         ${p.yellow}
+          search_highlight_color       ${p.blue}
+          link_highlight_color         ${p.blue}
 
           should_launch_new_window 1
           page_separator_width 1

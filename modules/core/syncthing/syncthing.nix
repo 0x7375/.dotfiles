@@ -5,11 +5,15 @@
       config,
       ...
     }:
-    {
-      systemd.services.syncthing = {
+    let
+      afterSops = {
         after = [ "sops-install-secrets.service" ];
         requires = [ "sops-install-secrets.service" ];
       };
+    in
+    {
+      systemd.services.syncthing-init = afterSops;
+      systemd.services.syncthing = afterSops;
 
       services.syncthing = {
         enable = true;
@@ -17,7 +21,7 @@
         overrideDevices = true;
         overrideFolders = true;
         guiPasswordFile = config.sops.secrets.syncthing_pw.path;
-        key = "${config.sops.secrets."syncthing/key".path}";
+        key = config.sops.secrets."syncthing/key".path;
         cert = "${pkgs.writeText "cert" ''
           -----BEGIN CERTIFICATE-----
           ${config.me.host.syncthing.cert}

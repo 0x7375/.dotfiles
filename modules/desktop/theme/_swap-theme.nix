@@ -25,6 +25,7 @@ pkgs.writeShellApplication {
     ++ lib.optionals (!isDarwin) (
       with pkgs;
       [
+        dconf
         dunst
         swaybg
         unstable.mangowc

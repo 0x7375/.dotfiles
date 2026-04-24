@@ -229,25 +229,6 @@
 
           map W online-share
 
-          ${lib.optionalString (options ? me.desktop)
-            # bash
-            ''
-              cmd external-copy ''${{
-                if [[ $(uname) == "Darwin" ]]; then
-                    osascript -e "set theFileList to {}" \
-                              $(printf " -e 'set end of theFileList to (POSIX file \"%s\") as alias'" $fx) \
-                              -e "set the clipboard to theFileList"
-                else
-                  echo -en "$fx" | sed 's|^|file://|' | tr ' ' '\n' | ${config.me.desktop.copy} --type text/uri-list
-                fi
-                ${getExe pkgs.lf} -remote 'send unselect'
-                ${getExe pkgs.lf} -remote 'send echo "Files copied to clipboard"'
-              }}
-            ''
-          }
-
-
-          map Y external-copy
           map [
           map \"
           map \$ push :$
@@ -486,12 +467,24 @@
         in
         # bash
         ''
+          cmd external-copy ''${{
+            if [[ $(uname) == "Darwin" ]]; then
+                osascript -e "set theFileList to {}" \
+                          $(printf " -e 'set end of theFileList to (POSIX file \"%s\") as alias'" $fx) \
+                          -e "set the clipboard to theFileList"
+            else
+              echo -en "$fx" | sed 's|^|file://|' | tr ' ' '\n' | ${config.me.desktop.copy} --type text/uri-list
+            fi
+            ${getExe pkgs.lf} -remote 'send unselect'
+            ${getExe pkgs.lf} -remote 'send echo "Files copied to clipboard"'
+          }}
+          map Y external-copy
+
           cmd copy-path ''${{
             echo -en "$fx" | tr ' ' '\n' | ${config.me.desktop.copy}
             ${getExe pkgs.lf} -remote 'send unselect'
             ${getExe pkgs.lf} -remote 'send echo "Path copied to clipboard"'
           }}
-
           map H copy-path
         '';
     };

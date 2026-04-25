@@ -72,6 +72,9 @@ let
         "https://raw.githubusercontent.com/*"
         "https://greasyfork.org/*"
         "https://update.greasyfork.org/*"
+        "https://clients2.google.com/service/update2/crx"
+        "https://chrome.google.com/webstore/*"
+        "https://clients2.9oo91e.qjz9zk/service/update2/crx"
       ];
 
       "3rdparty".extensions = {
@@ -192,8 +195,8 @@ in
           );
         in
         ''
-          install -d -m 0755 "/Library/Managed Preferences"
-          install -m 0644 ${managedPlist} "/Library/Managed Preferences/net.imput.helium.plist"
+          install -d -m 0755 "/Library/Preferences"
+          install -m 0644 ${managedPlist} "/Library/Preferences/net.imput.helium.plist"
         '';
     };
 }

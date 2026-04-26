@@ -19,6 +19,7 @@
           255.255.255.255 broadcasthost
           ::1 localhost
           ${builtins.concatStringsSep "\n" hosts}
+          192.168.1.86 hilse
         '';
     };
 

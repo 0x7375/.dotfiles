@@ -20,11 +20,6 @@
           };
         };
 
-      tinted.files.".config/mango/config.conf".value.monitorrule = [
-        "name:HDMI-A-1,scale:${toString config.me.desktop.scaling}"
-        "name:eDP-1,scale:${toString config.me.desktop.scaling}"
-      ];
-
       hj.xdg.config.files."kanshi/config".text =
         let
           script = lib.getExe config.me.desktop.monitorScript;

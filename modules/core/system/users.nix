@@ -1,10 +1,8 @@
 {
   flake.shared.core =
     {
-      pkgs,
       config,
       lib,
-      inputs,
       ...
     }:
     {
@@ -13,7 +11,6 @@
       ];
 
       hjem = {
-        linker = inputs.hjem.packages.${pkgs.stdenv.hostPlatform.system}.smfh;
         users.${config.me.user}.enable = true;
         clobberByDefault = true;
       };

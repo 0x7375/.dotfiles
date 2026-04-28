@@ -18,7 +18,7 @@
 
       sops.templates."home-vpn-${hostname}.conf".content =
         let
-          inherit (config.me) networkIps;
+          inherit (config.me) networkIps hosts server;
         in
         ''
           [Interface]
@@ -28,7 +28,7 @@
           [Peer]
           PublicKey = PpCxUOTz7Heh3B29OnI3XNZAKJ8abUETMzFNj3gpTyo=
           PresharedKey = ${config.sops.placeholder."${hostname}/vpn/psk"}
-          AllowedIPs = ${networkIps.vpn.subnet},${networkIps.lan.subnet}
+          AllowedIPs = ${networkIps.vpn.subnet},${networkIps.lan.subnet},${hosts.${server}.ips.lan}/32
           Endpoint = ${config.sops.placeholder.server_vpn_endpoint}:1637
         '';
 

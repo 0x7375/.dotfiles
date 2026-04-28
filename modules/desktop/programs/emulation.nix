@@ -25,7 +25,6 @@
       ];
 
       hj.xdg.config.files."melonDS/melonDS.toml" = {
-        clobber = true;
         type = "copy";
         permissions = "0644";
         text =

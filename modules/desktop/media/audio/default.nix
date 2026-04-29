@@ -98,8 +98,7 @@
             removeRule = subsystem: ''
               ACTION=="remove", \
               SUBSYSTEM=="${subsystem}", \
-              ENV{DISPLAY}=":0", \
-              ENV{XAUTHORITY}="/run/user/${toString config.me.uid}/Xauthority", \
+              ENV{WAYLAND_DISPLAY}="wayland-1", \
               RUN+="${lib.getExe' pkgs.su "su"} ${config.me.user} -c '${lib.getExe pkgs.playerctl} pause --all-players'"
             '';
           in

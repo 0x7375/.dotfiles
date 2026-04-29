@@ -217,6 +217,11 @@
         };
       };
 
+      fonts.packages = with pkgs; [
+        courier-prime
+        # nerd-fonts.mononoki
+      ];
+
       tinted.files.".config/waybar/style.css".text =
         p: # css
         ''

@@ -21,6 +21,7 @@
 
       vars = {
         NIXOS_OZONE_WL = "1";
+        GDK_BACKEND = "wayland,x11";
         WLR_NO_HARDWARE_CURSORS = "1";
       };
     };

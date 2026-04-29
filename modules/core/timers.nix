@@ -33,14 +33,14 @@
       systemd.timers.clean-old-trash = {
         wantedBy = [ "timers.target" ];
         timerConfig = {
-          OnCalendar = "weekly";
+          OnCalendar = "daily";
           Persistent = true;
         };
       };
 
       systemd.services.clean-old-trash.serviceConfig = {
         Type = "oneshot";
-        User = "root";
+        User = config.me.user;
         ExecStart = "${lib.getExe' pkgs.trash-cli "trash-empty"} 15";
       };
     };

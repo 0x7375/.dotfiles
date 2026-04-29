@@ -97,10 +97,6 @@
 
           # dunst
           fonts.CartographCF
-
-          # waybar
-          courier-prime
-          nerd-fonts.mononoki
         ];
       };
     };

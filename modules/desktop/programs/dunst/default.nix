@@ -94,7 +94,7 @@
               padding = 12;
               horizontal_padding = 24;
               text_icon_padding = 24;
-              frame_width = 3;
+              frame_width = 4;
               gap_size = 0;
               separator_color = "frame";
               sort = true;

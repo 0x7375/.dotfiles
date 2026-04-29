@@ -32,7 +32,9 @@
 
         packages = with pkgs; [
           wl-clipboard-rs
-          unstable.mangowc
+          (unstable.mangowc.overrideAttrs (old: {
+            patches = [ ./no_border_in_monocle.patch ];
+          }))
 
           # required for vesktop to open links for example
           xdg-utils
@@ -113,14 +115,15 @@
               focus_cross_monitor = 1;
 
               no_border_when_single = 1;
-              borderpx = 0;
+              borderpx = 4;
               gappih = 0;
               gappiv = 0;
               gappoh = 0;
               gappov = 0;
               border_radius = 0;
-              bordercolor = "0x${p.bg0}aa";
+              bordercolor = "0x${p.bg1}ff";
               focuscolor = "0x${p.fg2}ff";
+              scratchpadcolor = "0x${p.fg2}ff";
               rootcolor = "0x${p.bg0}ff";
 
               blur = 0;

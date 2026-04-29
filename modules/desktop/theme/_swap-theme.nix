@@ -81,8 +81,6 @@ pkgs.writeShellApplication {
       ${lib.optionalString (!isDarwin)
         # bash
         ''
-          source "$HOME/.local/state/tinted/palette"
-
           mkdir -p "$share_dir/icons" "$share_dir/themes"
           ln -sfT "${theme.package}/share/themes/${theme.name}-''${theme^}" "$share_dir/themes/${theme.name}"
           ln -sfT "${iconTheme.package}/share/icons/${iconTheme.name}-''${theme^}" "$share_dir/icons/${iconTheme.name}"
@@ -91,7 +89,10 @@ pkgs.writeShellApplication {
           dunstctl reload
 
           systemctl restart --user waybar
-          pkill swaybg; swaybg -c "$bg0" &
+
+          pkill swaybg
+          wallpaper=$(shuf -e -n1 --random-source=<(date +%Y%m%d | md5sum) ~/pictures/wallpapers/"$theme"/*)
+          swaybg -i "$wallpaper" -m fill &
         ''
       }
 

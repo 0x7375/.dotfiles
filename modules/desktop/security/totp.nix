@@ -1,3 +1,5 @@
+{ self, ... }:
+
 {
   flake.nixos.desktop =
     {
@@ -18,19 +20,29 @@
 
       packages = [ pkgs.token2-cli ];
 
-      me.desktop.bindings."Mod+u" = pkgs.writeShellScript "totp-menu" ''
-        tokens=$(${lib.getExe pkgs.token2-cli} get_all 2>&1 | grep -iv "touch")
-        selected=$(echo "$tokens" | awk -F'] | - ' '{print $2}' | vicinae dmenu --no-quick-look -p "TOTP")
+      me.desktop.bindings."Mod+u" =
+        let
+          mkToast = self.lib.noctalia.mkToast { inherit pkgs lib; };
+          call = self.lib.noctalia.call { inherit pkgs lib; };
+        in
+        pkgs.writeShellScript "totp-menu" ''
+          tokens=$(${lib.getExe pkgs.token2-cli} get_all 2>&1 | grep -iv "touch")
+          selected=$(echo "$tokens" | awk -F'] | - ' '{print $2}' | ${lib.getExe pkgs.my.dmenu} -p "TOTP")
 
-        [ -z "$selected" ] && exit 0
+          [ -z "$selected" ] && exit 0
 
-        app="''${selected%% / *}"
-        account="''${selected#* / }"
+          app="''${selected%% / *}"
+          account="''${selected#* / }"
 
-        notify-send -i key -t 0 "Touch required"
-        ${lib.getExe pkgs.token2-cli} read_entry --app-name "$app" --account-name "$account" 2>&1 | tail -n 1 | awk '{print $NF}' | tr -d '\r\n' | ${config.me.desktop.copy}
-        dunstctl close-all
-      '';
+          ${mkToast {
+            title = "Security key";
+            body = "Touch required";
+            icon = "fingerprint";
+            duration = self.lib.noctalia.infinite;
+          }}
+          ${lib.getExe pkgs.token2-cli} read_entry --app-name "$app" --account-name "$account" 2>&1 | tail -n 1 | awk '{print $NF}' | tr -d '\r\n' | ${config.me.desktop.copy}
+          ${call "toast dismiss"}
+        '';
 
       nixpkgs.config.permittedInsecurePackages = [
         "python3.12-ecdsa-0.19.1"

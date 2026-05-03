@@ -43,7 +43,7 @@ pkgs.writeShellApplication {
     wl-copy < "$filepath"
 
     (
-     action=$(notify-send -i "$filepath" "Screenshot saved" "$filepath" --action="open=open")
+     action=$(notify-send -i "$filepath" -a "Screenshot saved" "$filepath" --action="open=open")
      [[ "$action" == "open" ]] && xdg-open "$filepath"
     ) &
   '';

@@ -50,6 +50,7 @@ let
           ruff
           pyright
           phpactor
+          kdePackages.qtdeclarative # for qml
 
           # Formatters
           nixfmt

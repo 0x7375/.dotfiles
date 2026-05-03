@@ -26,7 +26,7 @@ pkgs.writeShellApplication {
       thumb="/tmp/thumb.png"
       ffmpeg -y -i "$filepath" -vframes 1 "$thumb" 2>/dev/null
 
-      action=$(notify-send -i "$thumb" "Recording Saved" "$filepath" --action="open=open")
+      action=$(notify-send -i "$thumb" -a "Recording Saved" "$filepath" --action="open=open")
       [[ "$action" == "open" ]] && xdg-open "$filepath"
       rm -f "$thumb"
 
@@ -76,7 +76,7 @@ pkgs.writeShellApplication {
         ;;
     esac
 
-    notify-send "Recording Started" "Mode: $mode" -t 2000
+    notify-send -a "Recording Started" "Mode: $mode" -t 2000
 
     eval "$record_cmd"
   '';

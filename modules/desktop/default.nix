@@ -59,7 +59,6 @@
               )}
             esac
             mmsg -d reload_config
-            ${lib.getExe pkgs.my.waybar-output}
           '';
         in
         {
@@ -191,7 +190,6 @@
 
       me.desktop.bindings =
         let
-          change-brightness = getExe (import ./_change-brightness.nix pkgs);
           term = cfg.terminal.executable;
 
           btToggle =
@@ -233,10 +231,11 @@
 
           screenshot = import ./_screenshot.nix pkgs;
           screenrecord = import ./_screenrecord.nix pkgs;
+          call = self.lib.noctalia.call { inherit pkgs lib; };
         in
         {
-          XF86MonBrightnessUp = "${change-brightness} up";
-          XF86MonBrightnessDown = "${change-brightness} down";
+          XF86MonBrightnessUp = call "brightness increase";
+          XF86MonBrightnessDown = call "brightness decrease";
           Print = "${getExe screenshot} region";
           "Alt+Sys_Req" = "${getExe screenshot} window";
           "Shift+Print" = "${getExe screenshot} monitor";
@@ -266,7 +265,8 @@
                 size="80x80"
                 color=$(hyprpicker -ra | tail -n1) && {
                   convert -size "$size" xc:"$color" /tmp/color.png && \
-                  notify-send --icon "/tmp/color.png" "Copied $color to clipboard"
+                  notify-send -i "/tmp/color.png" -a "Color picker" "Copied $color to clipboard" && \
+                  sleep 1 && rm /tmp/color.png
                 }
               '';
             }

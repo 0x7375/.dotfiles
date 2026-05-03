@@ -18,6 +18,8 @@
       systemd.coredump.enable = false;
       boot.kernel.sysctl."kernel.core_pattern" = "|/bin/false";
 
+      boot.kernelPackages = pkgs.linuxPackages_latest;
+
       zramSwap = {
         enable = true;
         memoryPercent = 50;

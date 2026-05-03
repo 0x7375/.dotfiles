@@ -52,6 +52,8 @@ in
       ...
     }:
     {
+      services.udisks2.enable = true;
+
       packages = with pkgs; [
         nemo
         ntfs3g

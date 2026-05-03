@@ -1,3 +1,5 @@
+{ self, ... }:
+
 {
   flake.shared.core =
     {
@@ -14,7 +16,7 @@
           (final: prev: {
             my = (prev.my or { }) // {
               swap-theme = import ./_swap-theme.nix {
-                inherit lib config;
+                inherit self lib config;
                 pkgs = final;
               };
             };

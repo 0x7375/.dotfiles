@@ -1,3 +1,5 @@
+{ self, ... }:
+
 {
   flake.nixos.desktop =
     {
@@ -5,6 +7,10 @@
       lib,
       ...
     }:
+    let
+      mkToast = self.lib.noctalia.mkToast { inherit pkgs lib; };
+      call = self.lib.noctalia.call { inherit pkgs lib; };
+    in
     {
       systemd.packages = [ pkgs.yubikey-touch-detector ];
 
@@ -18,9 +24,14 @@
           (${lib.getExe pkgs.netcat} -U "$XDG_RUNTIME_DIR/yubikey-touch-detector.socket" | \
           while IFS= read -r -n5 msg; do \
             if [[ "$msg" == "U2F_1" ]]; then
-              ${lib.getExe pkgs.libnotify} -i key -t 0 "Touch required"
+              ${mkToast {
+                title = "Security key";
+                body = "Touch required";
+                icon = "fingerprint";
+                duration = self.lib.noctalia.infinite;
+              }}
             else
-              ${lib.getExe' pkgs.dunst "dunstctl"} close-all
+              ${call "toast dismiss"}
             fi
           done) &
         '';

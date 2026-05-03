@@ -10,6 +10,7 @@ let
     deArrow = "enamippconapkdmgfgjchkhakpfinmaj";
     detachTab = "jalaajddhemiiilfhmenogfbpkbgglkk";
     captchaBuster = "mpbjkejclgfgadiemmefgebjfooflfhl";
+    _7tv = "ammjkodgmmoknidbanneddgankgfejfh";
   };
 
   flags = [
@@ -131,7 +132,7 @@ let
       };
     }
     // mkDisabledPermissions [
-      # "Notifications"
+      "Notifications"
       "Geolocation"
       "Cameras"
       "Microphone"

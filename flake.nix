@@ -9,7 +9,7 @@
     flake-parts.url = "github:hercules-ci/flake-parts";
     wrappers = {
       url = "github:BirdeeHub/nix-wrapper-modules";
-      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
 
     nur = {
@@ -50,13 +50,13 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    vicinae = {
-      url = "github:vicinaehq/vicinae";
+    noctalia = {
+      url = "github:noctalia-dev/noctalia-shell";
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
-    vicinae-extensions = {
-      url = "github:vicinaehq/extensions";
-      inputs.nixpkgs.follows = "nixpkgs-unstable";
+    noctalia-plugins = {
+      url = "github:noctalia-dev/noctalia-plugins";
+      flake = false;
     };
 
     zen-browser = {

@@ -7,7 +7,7 @@ pkgs.writeShellApplication {
     libnotify
     grim
     slurp
-    wl-clipboard-rs
+    wl-clipboard
     xdg-utils
   ];
   text = ''

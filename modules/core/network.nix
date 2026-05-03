@@ -154,6 +154,11 @@
         owner = config.me.user;
       };
 
+      systemd.services.NetworkManager-ensure-profiles = {
+        after = [ "sops-install-secrets.service" ];
+        requires = [ "sops-install-secrets.service" ];
+      };
+
       networking.networkmanager.ensureProfiles = {
         environmentFiles = [ config.sops.secrets.networkingEnvironment.path ];
         profiles = {

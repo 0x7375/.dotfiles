@@ -1,62 +1,93 @@
 { self, ... }:
 
+let
+  serverPublicKey = "PpCxUOTz7Heh3B29OnI3XNZAKJ8abUETMzFNj3gpTyo=";
+in
 {
   flake.shared.vpnPeer =
-    {
-      config,
-      ...
-    }:
+    { config, ... }:
     let
-      inherit (config.me) hostname host;
+      inherit (config.me) hostname user;
     in
     {
-      sops.secrets.server_vpn_endpoint.owner = config.me.user;
-      me.hostSecrets."vpn/pk" = {
-        owner = config.me.user;
-      };
-      sops.secrets."${hostname}/vpn/psk".owner = config.me.user;
+      sops.secrets.server_vpn_endpoint.owner = user;
+      me.hostSecrets."vpn/pk".owner = user;
+      sops.secrets."${hostname}/vpn/psk".owner = user;
 
-      sops.templates."home-vpn-${hostname}.conf".content =
-        let
-          inherit (config.me) networkIps hosts server;
-        in
-        ''
-          [Interface]
-          Address = ${host.ips.vpn}/24
-          PrivateKey = ${config.sops.placeholder."vpn/pk"}
-
-          [Peer]
-          PublicKey = PpCxUOTz7Heh3B29OnI3XNZAKJ8abUETMzFNj3gpTyo=
-          PresharedKey = ${config.sops.placeholder."${hostname}/vpn/psk"}
-          AllowedIPs = ${networkIps.vpn.subnet},${networkIps.lan.subnet},${hosts.${server}.ips.lan}/32
-          Endpoint = ${config.sops.placeholder.server_vpn_endpoint}:1637
-        '';
-
+      sops.templates."home-vpn-${hostname}.env".content = ''
+        WG_PRIVATE_KEY=${config.sops.placeholder."vpn/pk"}
+        WG_PSK=${config.sops.placeholder."${hostname}/vpn/psk"}
+        WG_ENDPOINT=${config.sops.placeholder.server_vpn_endpoint}
+      '';
     };
 
   flake.darwin.vpnPeer =
     { config, pkgs, ... }:
     let
-      inherit (config.me) hostname;
+      inherit (config.me)
+        hostname
+        host
+        networkIps
+        hosts
+        server
+        ;
     in
     {
       imports = [ self.shared.vpnPeer ];
-
       packages = [ pkgs.wireguard-tools ];
-      sops.templates."home-vpn-${hostname}.conf".path = "/etc/wireguard/home.conf";
+
+      sops.templates."home-vpn-${hostname}.conf" = {
+        path = "/etc/wireguard/home.conf";
+        content = ''
+          [Interface]
+          Address = ${host.ips.vpn}/24
+          PrivateKey = ${config.sops.placeholder."vpn/pk"}
+          [Peer]
+          PublicKey = ${serverPublicKey}
+          PresharedKey = ${config.sops.placeholder."${hostname}/vpn/psk"}
+          AllowedIPs = ${networkIps.vpn.subnet},${networkIps.lan.subnet},${hosts.${server}.ips.lan}/32
+          Endpoint = ${config.sops.placeholder.server_vpn_endpoint}:1637
+        '';
+      };
     };
 
   flake.nixos.vpnPeer =
     { config, pkgs, ... }:
     let
-      inherit (config.me) hostname;
+      inherit (config.me)
+        hostname
+        host
+        networkIps
+        hosts
+        server
+        ;
     in
     {
       imports = [ self.shared.vpnPeer ];
 
-      networking.wg-quick.interfaces.home = {
-        autostart = false;
-        configFile = config.sops.templates."home-vpn-${hostname}.conf".path;
+      networking.networkmanager.ensureProfiles = {
+        environmentFiles = [
+          config.sops.templates."home-vpn-${hostname}.env".path
+        ];
+        profiles."home-vpn" = {
+          connection = {
+            id = "home-vpn";
+            type = "wireguard";
+            interface-name = "wg0";
+            autoconnect = false;
+          };
+          wireguard.private-key = "$WG_PRIVATE_KEY";
+          "wireguard-peer.${serverPublicKey}" = {
+            endpoint = "$WG_ENDPOINT:1637";
+            allowed-ips = "${networkIps.vpn.subnet},${networkIps.lan.subnet},${hosts.${server}.ips.lan}/32";
+            preshared-key = "$WG_PSK";
+          };
+          ipv4 = {
+            address1 = "${host.ips.vpn}/24";
+            method = "manual";
+          };
+          ipv6.method = "disabled";
+        };
       };
 
       sops.secrets.home_ssid.owner = config.me.user;
@@ -64,12 +95,14 @@
       networking.networkmanager.dispatcherScripts = [
         {
           source = pkgs.writeShellScript "vpn-home-manager" ''
+            [[ "$2" == "up" || "$2" == "down" || "$2" == "dhcp4-change" ]] || exit 0
+
             home_ssid=$(cat "${config.sops.secrets.home_ssid.path}")
-            [[ "$2" = "dhcp4-change" ]] || exit 0
-            if [[ "$CONNECTION_ID" == "$home_ssid" ]]; then
-              systemctl stop wg-quick-home.service
+
+            if nmcli -g NAME connection show --active | grep -qx "$home_ssid"; then
+              nmcli connection down home-vpn 2>/dev/null || true
             else
-              systemctl start wg-quick-home.service
+              nmcli connection up home-vpn 2>/dev/null || true
             fi
           '';
           type = "basic";

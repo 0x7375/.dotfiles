@@ -110,7 +110,7 @@
             in
             mkOption {
               type = lib.types.str;
-              default = if pkgs.stdenv.isDarwin then "pbcopy" else getExe' pkgs.wl-clipboard-rs "wl-copy";
+              default = if pkgs.stdenv.isDarwin then "pbcopy" else getExe' pkgs.wl-clipboard "wl-copy";
             };
 
           terminal = {

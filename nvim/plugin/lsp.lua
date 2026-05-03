@@ -30,7 +30,6 @@ vim.lsp.enable({
   "taplo",
   "texlab",
   "sourcekit",
-  "qmlls",
 })
 
 -- toggle virtual text

@@ -7,7 +7,7 @@ pkgs.writeShellApplication {
     libnotify
     wf-recorder
     slurp
-    wl-clipboard-rs
+    wl-clipboard
     xdg-utils
     ffmpeg
     procps

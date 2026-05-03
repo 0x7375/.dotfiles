@@ -52,7 +52,7 @@
         enable = true;
         brews = [ ];
         casks = [
-          "vesktop"
+          "discord"
           "secretive"
           "unnaturalscrollwheels"
           "jellyfin-media-player"

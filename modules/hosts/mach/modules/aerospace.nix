@@ -106,6 +106,8 @@
                 "${super}-j" = "focus down";
                 "${super}-k" = "focus up";
                 "${super}-l" = "focus right";
+                "${super}-p" = "focus left";
+                "${super}-n" = "focus right";
 
                 "${super}-shift-h" = "move left";
                 "${super}-shift-j" = "move down";

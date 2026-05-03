@@ -71,9 +71,6 @@ treesj.setup({ use_default_keymaps = false })
 map("n", "<leader>nj", function() treesj.join() end, { desc = "Join node" })
 map("n", "<leader>ns", function() treesj.split() end, { desc = "Split node" })
 
--- force to load for rainbow-delimiters
-on_filetype("*", vim.treesitter.start)
-
 -- rainbow delimiters
 require("rainbow-delimiters.setup").setup({
   blacklist = {
@@ -88,3 +85,6 @@ require("rainbow-delimiters.setup").setup({
     "RainbowBlue",
   },
 })
+
+-- force to load for rainbow-delimiters to work, for... reasons
+on_filetype("*", vim.treesitter.start)

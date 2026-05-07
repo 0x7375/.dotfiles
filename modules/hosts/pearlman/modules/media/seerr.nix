@@ -17,15 +17,15 @@
       virtualisation.oci-containers.containers.seerr =
         let
           name = "ghcr.io/seerr-team/seerr";
-          version = "v3.1.0";
+          version = "v3.2.0";
         in
         {
           image = name + ":" + version;
 
           imageFile = pkgs.dockerTools.pullImage {
             imageName = name;
-            imageDigest = "sha256:b35ba0461c4a1033d117ac1e5968fd4cbe777899e4cbfbdeaf3d10a42a0eb7e9";
-            sha256 = "sha256-tutrSb/qrDNlhPZFXrV/lNoNYKP6vZlZ0oGvtQuzwt4=";
+            imageDigest = "sha256:c4cbd5121236ac2f70a843a0b920b68a27976be57917555f1c45b08a1e6b2aad";
+            sha256 = "sha256-tvkQhcr05bqxPfmu9xaRatMkSPx2HZWWH1FMtrldkzw=";
 
             finalImageTag = version;
           };

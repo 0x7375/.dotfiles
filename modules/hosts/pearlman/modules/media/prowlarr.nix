@@ -2,11 +2,11 @@
   flake.nixos.pearlman =
     { config, pkgs, ... }:
     let
-      inherit (config.me.services.flaresolverr) port;
+      inherit (config.me.services.byparr) port;
     in
     {
       me.services = {
-        flaresolverr = {
+        byparr = {
           subdomain = "solver";
           port = 8191;
         };
@@ -22,18 +22,18 @@
         openFirewall = true;
       };
 
-      virtualisation.oci-containers.containers.flaresolverr =
+      virtualisation.oci-containers.containers.byparr =
         let
-          name = "21hsmw/flaresolverr";
-          version = "nodriver";
+          name = "ghcr.io/thephaseless/byparr";
+          version = "2.1";
         in
         {
           image = name + ":" + version;
 
           imageFile = pkgs.dockerTools.pullImage {
             imageName = name;
-            imageDigest = "sha256:8462a7dc8ca7dcc4113375bcfece02643627c6a4a5d0ad6215e9472668c34794";
-            sha256 = "sha256-2XkRR2+6XTJnpG3TFMi3lfGkpn1292GRXiTMO6dNId8=";
+            imageDigest = "sha256:01a46a2865d9a6db5eb8ead04ec0dd33b8fbe233e8565ae70b50d4cc0af4cfb0";
+            sha256 = "sha256-HZaScLUeNXODE+Q4q4YVzCUbL0F6pC0xzAIPXF+2hLE=";
 
             finalImageTag = version;
           };

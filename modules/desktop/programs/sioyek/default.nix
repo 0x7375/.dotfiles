@@ -97,6 +97,8 @@
           previous_page <left>
           next_page f
           previous_page b
+          previous_page <f9>
+          next_page <f10>
 
           screen_down d
           screen_up u

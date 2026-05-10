@@ -50,10 +50,22 @@
 
     };
 
-  flake.nixos.core = {
-    services.fail2ban = {
-      enable = true;
-      maxretry = 10;
+  flake.nixos.core =
+    { config, ... }:
+    {
+      services.openssh.settings = {
+        PasswordAuthentication = false;
+        KbdInteractiveAuthentication = false;
+        AllowUsers = [
+          config.me.user
+          "root"
+        ];
+        PermitRootLogin = "prohibit-password"; # keys only for root
+      };
+
+      services.fail2ban = {
+        enable = true;
+        maxretry = 10;
+      };
     };
-  };
 }

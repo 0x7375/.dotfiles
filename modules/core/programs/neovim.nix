@@ -116,6 +116,7 @@ let
               graphql
               latex
               typst
+              swift
             ]
           ))
         ];

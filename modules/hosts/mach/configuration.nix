@@ -53,6 +53,7 @@
         brews = [ ];
         casks = [
           "discord"
+          "helium-browser"
           "secretive"
           "unnaturalscrollwheels"
           "jellyfin-media-player"

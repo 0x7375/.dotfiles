@@ -84,6 +84,8 @@
       hj.xdg.config.files."sioyek/keys_user.config".text =
         # sway
         ''
+          close_window q
+
           move_down_smooth j
           move_up_smooth k
           move_left l

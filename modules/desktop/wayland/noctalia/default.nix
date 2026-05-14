@@ -147,10 +147,7 @@
               action = "block";
               pattern = "Youtube_Music";
             }
-            {
-              action = "hide";
-              pattern = "discord";
-            }
+            # make vencord extension to hide content
             {
               action = "hide";
               pattern = "vesktop";

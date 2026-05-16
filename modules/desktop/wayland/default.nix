@@ -1,5 +1,5 @@
 {
-  flake.nixos.wayland =
+  flake.modules.nixos.wayland =
     {
       lib,
       pkgs,

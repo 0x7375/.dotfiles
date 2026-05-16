@@ -13,7 +13,7 @@
     infinite = 100000000000;
   };
 
-  flake.nixos.desktop =
+  flake.modules.nixos.desktop =
     {
       lib,
       pkgs,

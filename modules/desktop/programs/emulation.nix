@@ -1,11 +1,11 @@
 {
-  flake.nixos.desktop =
+  flake.modules.nixos.desktop =
     { pkgs, ... }:
     {
       packages = [ pkgs.dolphin-emu ];
     };
 
-  flake.shared.desktop =
+  flake.modules.generic.desktop =
     {
       pkgs,
       config,

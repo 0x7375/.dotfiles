@@ -1,5 +1,5 @@
 {
-  flake.nixos.naitoh = {
+  flake.modules.nixos.naitoh = {
     systemd.services.NetworkManager-ensure-profiles = {
       after = [ "sops-install-secrets.service" ];
       requires = [ "sops-install-secrets.service" ];

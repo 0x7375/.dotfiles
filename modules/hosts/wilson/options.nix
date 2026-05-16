@@ -1,5 +1,5 @@
 {
-  flake.nixos.wilson = {
+  flake.modules.nixos.wilson = {
     me.uid = 1001;
   };
 }

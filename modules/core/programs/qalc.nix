@@ -1,7 +1,7 @@
 { inputs, ... }:
 
 {
-  flake.shared.core =
+  flake.modules.generic.core =
     { pkgs, ... }:
     {
       packages = [ pkgs.my.qalc ];

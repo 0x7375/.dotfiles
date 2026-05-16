@@ -1,7 +1,7 @@
 { self, ... }:
 
 {
-  flake.shared.desktop =
+  flake.modules.generic.desktop =
     {
       pkgs,
       config,
@@ -155,11 +155,11 @@
       config.vars.TERMINAL = "${cfg.terminal.cmd} -e";
     };
 
-  flake.darwin.desktop = {
-    imports = [ self.shared.desktop ];
+  flake.modules.darwin.desktop = _: {
+    imports = [ self.modules.generic.desktop ];
   };
 
-  flake.nixos.desktop =
+  flake.modules.nixos.desktop =
     {
       pkgs,
       lib,
@@ -171,7 +171,7 @@
       cfg = config.me.desktop;
     in
     {
-      imports = [ self.shared.desktop ];
+      imports = [ self.modules.generic.desktop ];
 
       hardware.graphics.enable = true;
 

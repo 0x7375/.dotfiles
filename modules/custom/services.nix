@@ -1,5 +1,5 @@
 {
-  flake.nixos.custom =
+  flake.modules.nixos.custom =
     { config, lib, ... }:
     let
       parentConfig = config;

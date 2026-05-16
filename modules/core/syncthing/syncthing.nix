@@ -1,5 +1,5 @@
 {
-  flake.nixos.syncthing =
+  flake.modules.nixos.syncthing =
     {
       pkgs,
       config,

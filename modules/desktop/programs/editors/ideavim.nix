@@ -1,5 +1,5 @@
 {
-  flake.shared.ideavim =
+  flake.modules.generic.ideavim =
     { pkgs, ... }:
     {
       unfree-packages = [ "idea" ];

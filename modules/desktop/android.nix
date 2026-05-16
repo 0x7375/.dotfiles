@@ -1,11 +1,11 @@
 {
-  flake.nixos.desktop =
+  flake.modules.nixos.desktop =
     { config, ... }:
     {
       users.users.${config.me.user}.extraGroups = [ "adbusers" ];
     };
 
-  flake.shared.desktop =
+  flake.modules.generic.desktop =
     {
       pkgs,
       ...

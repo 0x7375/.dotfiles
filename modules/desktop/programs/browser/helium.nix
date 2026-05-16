@@ -140,7 +140,7 @@ let
     ];
 in
 {
-  flake.shared.desktop =
+  flake.modules.generic.desktop =
     { pkgs, ... }:
     {
       nixpkgs.overlays = [
@@ -172,7 +172,7 @@ in
       packages = [ pkgs.helium ];
     };
 
-  flake.nixos.desktop =
+  flake.modules.nixos.desktop =
     { lib, ... }:
     {
       programs.chromium = {
@@ -182,7 +182,7 @@ in
       };
     };
 
-  flake.darwin.desktop =
+  flake.modules.darwin.desktop =
     {
       lib,
       pkgs,

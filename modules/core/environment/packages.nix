@@ -1,5 +1,5 @@
 {
-  flake.shared.core =
+  flake.modules.generic.core =
     { inputs, pkgs, ... }:
     {
       packages = with pkgs; [
@@ -28,7 +28,7 @@
       ];
     };
 
-  flake.nixos.core =
+  flake.modules.nixos.core =
     { pkgs, ... }:
     {
       packages = [ pkgs.efibootmgr ];

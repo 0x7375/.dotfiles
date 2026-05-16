@@ -1,7 +1,7 @@
 { self, ... }:
 
 {
-  flake.nixos.syncthingClient =
+  flake.modules.nixos.syncthingClient =
     {
       config,
       ...
@@ -14,7 +14,7 @@
         ;
     in
     {
-      imports = [ self.nixos.syncthing ];
+      imports = [ self.modules.nixos.syncthing ];
 
       programs.fuse.userAllowOther = true;
 

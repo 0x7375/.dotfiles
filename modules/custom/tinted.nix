@@ -1,5 +1,5 @@
 {
-  flake.shared.custom =
+  flake.modules.generic.custom =
     {
       lib,
       config,
@@ -190,7 +190,7 @@
       };
     };
 
-  flake.nixos.custom =
+  flake.modules.nixos.custom =
     { config, lib, ... }:
     {
       systemd.user.tmpfiles.rules = lib.concatMap (
@@ -199,7 +199,7 @@
       ) (lib.attrValues config.tinted._activations);
     };
 
-  flake.darwin.custom =
+  flake.modules.darwin.custom =
     { config, lib, ... }:
     {
       activation = lib.concatMapStringsSep "\n" (v: ''

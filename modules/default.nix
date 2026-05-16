@@ -25,41 +25,30 @@ let
         inputs.nix-index-database.${mod}.nix-index
         inputs.hjem.${mod}.default
 
-        self.${modName}.${name}
-        self.${modName}.core
-        self.${modName}.custom
+        self.modules.${modName}.${name}
+        self.modules.${modName}.core
+        self.modules.${modName}.custom
         { networking.hostName = name; }
       ]
       ++ lib.optionals isNixos [
         inputs.disko.nixosModules.disko
-        self.nixos.overrides
+        self.modules.nixos.overrides
       ]
       ++ extraModules;
     };
 in
 {
-  # allow these options to be merged
-  options.flake =
-    let
-      attrsOption = lib.mkOption {
-        type = lib.types.lazyAttrsOf lib.types.deferredModule;
-        default = { };
-      };
-    in
-    {
-      nixos = attrsOption;
-      darwin = attrsOption;
-      shared = attrsOption;
-      lib = lib.mkOption {
-        type = lib.types.lazyAttrsOf lib.types.raw;
-        default = { };
-      };
-    };
+  # allow it to be merged
+  options.flake.lib = lib.mkOption {
+    type = lib.types.lazyAttrsOf lib.types.raw;
+    default = { };
+  };
 
   config = {
     flake.nixosConfigurations = {
       cray = mkHost "nixos" "cray" (
-        (with self.nixos; [
+        with self.modules.nixos;
+        [
           boot
           secrets
           networkEnvironment
@@ -69,14 +58,13 @@ in
           syncthingClient
           desktop
           wayland
-        ])
-        ++ (with self.shared; [
           dev
-        ])
+        ]
       );
 
       naitoh = mkHost "nixos" "naitoh" (
-        (with self.nixos; [
+        with self.modules.nixos;
+        [
           boot
           secrets
           networkEnvironment
@@ -86,14 +74,12 @@ in
           vpnPeer
           desktop
           wayland
-        ])
-        ++ (with self.shared; [
           dev
-        ])
+        ]
       );
 
       pearlman = mkHost "nixos" "pearlman" (
-        with self.nixos;
+        with self.modules.nixos;
         [
           boot
           secrets
@@ -102,7 +88,7 @@ in
         ]
       );
 
-      isoImg = mkHost "nixos" "isoImg" [ self.nixos.keyd ];
+      isoImg = mkHost "nixos" "isoImg" [ self.modules.nixos.keyd ];
     };
 
     flake.darwinConfigurations = {
@@ -110,14 +96,12 @@ in
         [
           inputs.nix-homebrew.darwinModules.nix-homebrew
         ]
-        ++ (with self.darwin; [
+        ++ (with self.modules.darwin; [
           secrets
           vpnPeer
           desktop
           alacritty
           network
-        ])
-        ++ (with self.shared; [
           dev
         ])
       );

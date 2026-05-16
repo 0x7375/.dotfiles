@@ -1,7 +1,7 @@
 { self, ... }:
 
 {
-  flake.nixos.desktop =
+  flake.modules.nixos.desktop =
     { config, ... }:
     {
       xdg.mimeApps =
@@ -25,7 +25,7 @@
         };
     };
 
-  flake.shared.desktop =
+  flake.modules.generic.desktop =
     {
       config,
       lib,

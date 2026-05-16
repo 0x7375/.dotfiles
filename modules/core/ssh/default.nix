@@ -1,5 +1,5 @@
 {
-  flake.shared.core =
+  flake.modules.generic.core =
     {
       config,
       lib,
@@ -50,7 +50,7 @@
 
     };
 
-  flake.nixos.core =
+  flake.modules.nixos.core =
     { config, ... }:
     {
       services.openssh.settings = {

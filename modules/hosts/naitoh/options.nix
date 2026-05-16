@@ -1,5 +1,5 @@
 {
-  flake.nixos.naitoh = {
+  flake.modules.nixos.naitoh = {
     me = {
       tpm.enable = true;
       boot.encryption.enable = true;

@@ -1,7 +1,7 @@
 { self, ... }:
 
 {
-  flake.nixos.pearlman =
+  flake.modules.nixos.pearlman =
     {
       config,
       lib,

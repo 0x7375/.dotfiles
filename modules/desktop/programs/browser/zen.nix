@@ -304,12 +304,12 @@ let
     '';
 in
 {
-  flake.shared.desktop = {
+  flake.modules.generic.desktop = {
     # required for zen to load the custom profile
     vars.MOZ_LEGACY_PROFILES = "1";
   };
 
-  flake.darwin.desktop =
+  flake.modules.darwin.desktop =
     {
       config,
       pkgs,
@@ -352,7 +352,7 @@ in
         js config.me.desktop.refreshRate lib;
     };
 
-  flake.nixos.desktop =
+  flake.modules.nixos.desktop =
     {
       inputs,
       config,

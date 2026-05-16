@@ -1,5 +1,5 @@
 {
-  flake.darwin.mach = {
+  flake.modules.darwin.mach = {
     me = rec {
       desktop.terminal.font.size = 22;
       home = "/Users/ayko";

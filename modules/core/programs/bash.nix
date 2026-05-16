@@ -1,5 +1,5 @@
 {
-  flake.shared.core = {
+  flake.modules.generic.core = {
     hj.files.".bashrc".text = # bash
       ''
         [[ $- == *i* ]] || return

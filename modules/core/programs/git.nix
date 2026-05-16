@@ -1,5 +1,5 @@
 {
-  flake.shared.core =
+  flake.modules.generic.core =
     {
       lib,
       pkgs,
@@ -107,7 +107,7 @@
       hj.files.".ssh/allowed_signers".text = lib.concatMapStrings (k: "* ${k}\n") allSigningKeys;
     };
 
-  flake.darwin.core =
+  flake.modules.darwin.core =
     { config, ... }:
     let
       inherit (config.me) home;
@@ -124,7 +124,7 @@
       '';
     };
 
-  flake.nixos.secrets =
+  flake.modules.nixos.secrets =
     {
       pkgs,
       lib,
@@ -166,7 +166,7 @@
         '';
     };
 
-  flake.shared.secrets =
+  flake.modules.generic.secrets =
     {
       config,
       lib,

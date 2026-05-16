@@ -1,7 +1,7 @@
 { self, ... }:
 
 {
-  flake.shared.core =
+  flake.modules.generic.core =
     {
       lib,
       config,

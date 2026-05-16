@@ -1,7 +1,7 @@
 { self, ... }:
 
 {
-  flake.nixos.desktop = {
+  flake.modules.nixos.desktop = {
     xdg.mimeApps.defaultApplications = self.lib.mapMimeEntries [
       "audio/vnd.wave"
       "audio/midi"
@@ -19,7 +19,7 @@
     ] "mpv";
   };
 
-  flake.shared.desktop =
+  flake.modules.generic.desktop =
     {
       pkgs,
       ...

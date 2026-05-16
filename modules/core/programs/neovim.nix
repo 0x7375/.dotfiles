@@ -136,7 +136,7 @@ in
         })).wrapper;
     };
 
-  flake.shared.core =
+  flake.modules.generic.core =
     {
       pkgs,
       lib,
@@ -154,7 +154,7 @@ in
       hj.xdg.config.files."nvim".source = "${config.me.flakeDir}/nvim";
     };
 
-  flake.shared.desktop =
+  flake.modules.generic.desktop =
     {
       lib,
       pkgs,
@@ -171,7 +171,7 @@ in
       ];
     };
 
-  flake.nixos.core = {
+  flake.modules.nixos.core = {
     xdg.mimeApps.defaultApplications = self.lib.mapMimeEntries [
       "text/plain"
       "text/markdown"

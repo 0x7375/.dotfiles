@@ -1,5 +1,5 @@
 {
-  flake.nixos.secrets =
+  flake.modules.nixos.secrets =
     {
       lib,
       pkgs,
@@ -82,7 +82,7 @@
       };
     };
 
-  flake.nixos.pearlman =
+  flake.modules.nixos.pearlman =
     { config, ... }:
     {
       networking.firewall.interfaces.airvpn =

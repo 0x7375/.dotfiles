@@ -4,7 +4,7 @@ let
   serverPublicKey = "PpCxUOTz7Heh3B29OnI3XNZAKJ8abUETMzFNj3gpTyo=";
 in
 {
-  flake.shared.vpnPeer =
+  flake.modules.generic.vpnPeer =
     { config, ... }:
     let
       inherit (config.me) hostname user;
@@ -21,7 +21,7 @@ in
       '';
     };
 
-  flake.darwin.vpnPeer =
+  flake.modules.darwin.vpnPeer =
     { config, pkgs, ... }:
     let
       inherit (config.me)
@@ -33,7 +33,7 @@ in
         ;
     in
     {
-      imports = [ self.shared.vpnPeer ];
+      imports = [ self.modules.generic.vpnPeer ];
       packages = [ pkgs.wireguard-tools ];
 
       sops.templates."home-vpn-${hostname}.conf" = {
@@ -51,7 +51,7 @@ in
       };
     };
 
-  flake.nixos.vpnPeer =
+  flake.modules.nixos.vpnPeer =
     { config, pkgs, ... }:
     let
       inherit (config.me)
@@ -63,7 +63,7 @@ in
         ;
     in
     {
-      imports = [ self.shared.vpnPeer ];
+      imports = [ self.modules.generic.vpnPeer ];
 
       networking.networkmanager.ensureProfiles = {
         environmentFiles = [

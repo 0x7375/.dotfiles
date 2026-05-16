@@ -1,5 +1,5 @@
 {
-  flake.nixos.cray = {
+  flake.modules.nixos.cray = {
     boot.supportedFilesystems = [ "ntfs" ];
 
     boot.binfmt.emulatedSystems = [ "aarch64-linux" ];

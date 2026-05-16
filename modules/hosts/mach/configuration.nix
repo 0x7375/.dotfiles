@@ -21,7 +21,7 @@
       // extraConfig;
     };
 
-  flake.darwin.mach =
+  flake.modules.darwin.mach =
     {
       inputs,
       config,

@@ -1,5 +1,5 @@
 {
-  flake.nixos.cray = {
+  flake.modules.nixos.cray = {
     disko.devices = {
       disk.main = {
         type = "disk";

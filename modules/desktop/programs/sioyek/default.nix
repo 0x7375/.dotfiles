@@ -1,7 +1,7 @@
 { inputs, self, ... }:
 
 {
-  flake.nixos.desktop =
+  flake.modules.nixos.desktop =
     { pkgs, ... }:
     {
       packages = with pkgs; [ my.zaread ];
@@ -34,7 +34,7 @@
       };
     };
 
-  flake.shared.desktop =
+  flake.modules.generic.desktop =
     { pkgs, ... }:
     {
       packages = [

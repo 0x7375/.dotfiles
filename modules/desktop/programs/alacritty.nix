@@ -1,23 +1,23 @@
 { self, ... }:
 
 {
-  flake.nixos.alacritty =
+  flake.modules.nixos.alacritty =
     { pkgs, ... }:
     {
-      imports = [ self.shared.alacritty ];
+      imports = [ self.modules.generic.alacritty ];
 
       xdg.terminal-exec.settings.default = [ "Alacritty.desktop" ];
 
       packages = [ pkgs.alacritty ];
     };
 
-  flake.darwin.alacritty = {
-    imports = [ self.shared.alacritty ];
+  flake.modules.darwin.alacritty = {
+    imports = [ self.modules.generic.alacritty ];
 
     homebrew.casks = [ "alacritty" ];
   };
 
-  flake.shared.alacritty =
+  flake.modules.generic.alacritty =
     {
       pkgs,
       config,

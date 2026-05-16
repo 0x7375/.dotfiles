@@ -1,5 +1,5 @@
 {
-  flake.nixos.naitoh =
+  flake.modules.nixos.naitoh =
     {
       pkgs,
       config,

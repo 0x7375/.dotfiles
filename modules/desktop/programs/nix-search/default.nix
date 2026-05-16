@@ -1,5 +1,5 @@
 {
-  flake.shared.desktop =
+  flake.modules.generic.desktop =
     {
       pkgs,
       lib,

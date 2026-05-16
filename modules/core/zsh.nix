@@ -1,7 +1,7 @@
 { self, ... }:
 
 {
-  flake.shared.core =
+  flake.modules.generic.core =
     {
       lib,
       config,
@@ -345,7 +345,7 @@
         '';
     };
 
-  flake.shared.desktop =
+  flake.modules.generic.desktop =
     { pkgs, lib, ... }:
     let
       inherit (lib) getExe getExe';

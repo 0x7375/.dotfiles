@@ -1,5 +1,5 @@
 {
-  flake.darwin.mach =
+  flake.modules.darwin.mach =
     {
       secrets,
       config,

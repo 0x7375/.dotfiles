@@ -1,5 +1,5 @@
 {
-  flake.nixos.keyd =
+  flake.modules.nixos.keyd =
     {
       config,
       lib,

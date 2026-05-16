@@ -1,5 +1,5 @@
 {
-  flake.nixos.core =
+  flake.modules.nixos.core =
     { lib, ... }:
     let
       directories = {

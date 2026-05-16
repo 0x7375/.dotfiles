@@ -38,13 +38,13 @@ let
     };
 in
 {
-  flake.shared.desktop =
+  flake.modules.generic.desktop =
     { config, ... }:
     {
       me.hostSecrets."kdeconnect/key".owner = config.me.user;
     };
 
-  flake.nixos.desktop =
+  flake.modules.nixos.desktop =
     {
       lib,
       config,
@@ -100,7 +100,7 @@ in
       ] "xarchiver";
     };
 
-  flake.darwin.desktop =
+  flake.modules.darwin.desktop =
     {
       lib,
       config,

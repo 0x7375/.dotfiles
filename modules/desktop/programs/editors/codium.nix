@@ -1,9 +1,9 @@
 {
-  flake.nixos.desktop = {
+  flake.modules.nixos.desktop = {
     xdg.mimeApps.defaultApplications."application/x-ipynb+json" = "codium.desktop";
   };
 
-  flake.shared.desktop =
+  flake.modules.generic.desktop =
     {
       pkgs,
       config,

@@ -1,6 +1,6 @@
 # override getty to use --login-options
 {
-  flake.nixos.overrides =
+  flake.modules.nixos.overrides =
     {
       config,
       lib,

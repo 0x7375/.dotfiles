@@ -1,5 +1,10 @@
+{ self, ... }:
+
 {
-  flake.shared.dev =
+  flake.modules.nixos.dev.imports = [ self.modules.generic.dev ];
+  flake.modules.darwin.dev.imports = [ self.modules.generic.dev ];
+
+  flake.modules.generic.dev =
     { pkgs, ... }:
     {
       config = {

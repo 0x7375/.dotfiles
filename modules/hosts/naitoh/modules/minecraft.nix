@@ -1,5 +1,5 @@
 {
-  flake.nixos.minecraft =
+  flake.modules.nixos.minecraft =
     {
       config,
       lib,

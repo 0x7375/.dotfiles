@@ -95,6 +95,7 @@
     in
     inputs.flake-parts.lib.mkFlake { inherit inputs; } {
       imports = [
+        inputs.flake-parts.flakeModules.modules
         inputs.wrappers.flakeModules.wrappers
         inputs.git-hooks-nix.flakeModule
       ]

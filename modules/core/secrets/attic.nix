@@ -1,5 +1,5 @@
 {
-  flake.nixos.secrets =
+  flake.modules.nixos.secrets =
     {
       config,
       lib,

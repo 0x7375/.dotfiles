@@ -1,5 +1,5 @@
 {
-  flake.shared.desktop =
+  flake.modules.generic.desktop =
     { pkgs, ... }:
     {
       packages = with pkgs; [
@@ -9,7 +9,7 @@
       ];
     };
 
-  flake.nixos.desktop =
+  flake.modules.nixos.desktop =
     {
       pkgs,
       ...

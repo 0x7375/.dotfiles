@@ -1,5 +1,5 @@
 {
-  flake.nixos.pearlman =
+  flake.modules.nixos.pearlman =
     { config, pkgs, ... }:
     let
       inherit (config.me.services.byparr) port;

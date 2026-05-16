@@ -1,7 +1,7 @@
 { self, ... }:
 
 {
-  flake.shared.network =
+  flake.modules.generic.network =
     { config, lib, ... }:
     {
       environment.etc.hosts.text =
@@ -23,13 +23,13 @@
         '';
     };
 
-  flake.darwin.network =
+  flake.modules.darwin.network =
     {
       lib,
       ...
     }:
     {
-      imports = [ self.shared.network ];
+      imports = [ self.modules.generic.network ];
 
       preActivation = "rm -f /etc/hosts";
 
@@ -88,10 +88,10 @@
       ];
     };
 
-  flake.nixos.network =
+  flake.modules.nixos.network =
     { lib, config, ... }:
     {
-      imports = [ self.shared.network ];
+      imports = [ self.modules.generic.network ];
 
       networking.nameservers = [
         "9.9.9.9#dns.quad9.net"
@@ -138,14 +138,14 @@
       networking.firewall.enable = true;
     };
 
-  flake.nixos.networkEnvironment =
+  flake.modules.nixos.networkEnvironment =
     {
       config,
       secrets,
       ...
     }:
     {
-      imports = [ self.nixos.network ];
+      imports = [ self.modules.nixos.network ];
 
       sops.secrets.networkingEnvironment = {
         sopsFile = "${secrets}/networking-environment.env";

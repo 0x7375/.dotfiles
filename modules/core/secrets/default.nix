@@ -1,7 +1,7 @@
 { self, ... }:
 
 {
-  flake.shared.secrets =
+  flake.modules.generic.secrets =
     {
       pkgs,
       secrets,
@@ -53,14 +53,14 @@
       };
     };
 
-  flake.shared.desktop =
+  flake.modules.generic.desktop =
     { pkgs, ... }:
     {
 
       packages = [ pkgs.age-plugin-se ];
     };
 
-  flake.nixos.secrets =
+  flake.modules.nixos.secrets =
     {
       pkgs,
       config,
@@ -68,7 +68,7 @@
       ...
     }:
     {
-      imports = [ self.shared.secrets ];
+      imports = [ self.modules.generic.secrets ];
 
       options.me.tpm.enable = lib.mkEnableOption "Setup tpm and decrypt sops-nix secrets using tpm";
 
@@ -97,10 +97,10 @@
       ];
     };
 
-  flake.darwin.secrets =
+  flake.modules.darwin.secrets =
     { pkgs, ... }:
     {
-      imports = [ self.shared.secrets ];
+      imports = [ self.modules.generic.secrets ];
 
       sops.age = {
         keyFile = "/var/lib/sops-nix/se-identity.txt";

@@ -1,7 +1,7 @@
 { self, ... }:
 
 {
-  flake.nixos.desktop = {
+  flake.modules.nixos.desktop = {
     xdg = {
       mimeApps.defaultApplications = self.lib.mapMimeEntries [
         "image/png"
@@ -27,7 +27,7 @@
     };
   };
 
-  flake.shared.desktop =
+  flake.modules.generic.desktop =
     { pkgs, ... }:
     {
       packages = [ pkgs.pqiv ];

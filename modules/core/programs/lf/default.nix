@@ -1,7 +1,7 @@
 { self, ... }:
 
 {
-  flake.shared.core =
+  flake.modules.generic.core =
     {
       lib,
       config,
@@ -451,7 +451,7 @@
       hj.xdg.config.files."lf/colors".text = builtins.readFile ./colors;
     };
 
-  flake.shared.desktop =
+  flake.modules.generic.desktop =
     {
       lib,
       config,
@@ -489,7 +489,7 @@
         '';
     };
 
-  flake.nixos.desktop =
+  flake.modules.nixos.desktop =
     { lib, pkgs, ... }:
     {
       tinted.files.".config/mango/config.conf".value = {

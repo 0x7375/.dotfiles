@@ -1,7 +1,7 @@
 { self, ... }:
 
 {
-  flake.nixos.naitoh =
+  flake.modules.nixos.naitoh =
     {
       lib,
       config,

@@ -1,5 +1,5 @@
 {
-  flake.nixos.btrfs =
+  flake.modules.nixos.btrfs =
     {
       pkgs,
       lib,

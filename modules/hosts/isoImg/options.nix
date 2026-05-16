@@ -1,5 +1,5 @@
 {
-  flake.nixos.isoImg = {
+  flake.modules.nixos.isoImg = {
     me.user = "nixos";
   };
 }

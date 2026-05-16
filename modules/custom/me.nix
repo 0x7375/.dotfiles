@@ -1,5 +1,5 @@
 {
-  flake.shared.custom =
+  flake.modules.generic.custom =
     {
       config,
       lib,

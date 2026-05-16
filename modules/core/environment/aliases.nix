@@ -1,11 +1,11 @@
 {
-  flake.nixos.core =
+  flake.modules.nixos.core =
     { pkgs, lib, ... }:
     {
       aliases.open = "${lib.getExe' pkgs.xdg-utils "xdg-open"}";
     };
 
-  flake.shared.core =
+  flake.modules.generic.core =
     {
       lib,
       config,

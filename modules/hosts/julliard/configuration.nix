@@ -1,7 +1,7 @@
 # NixOS-WSL specific options are documented on the NixOS-WSL repository:
 # https://github.com/nix-community/NixOS-WSL
 {
-  flake.nixos.julliard =
+  flake.modules.nixos.julliard =
     {
       config,
       inputs,

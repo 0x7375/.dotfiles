@@ -1,5 +1,5 @@
 {
-  flake.nixos.naitoh = {
+  flake.modules.nixos.naitoh = {
     disko.devices = {
       disk.main = {
         type = "disk";

@@ -1,6 +1,6 @@
 # copied over module from home manager
 {
-  flake.nixos.custom =
+  flake.modules.nixos.custom =
     {
       config,
       lib,

@@ -1,5 +1,5 @@
 {
-  flake.shared.core =
+  flake.modules.generic.core =
     {
       pkgs,
       config,
@@ -80,7 +80,7 @@
         '';
     };
 
-  flake.nixos.core =
+  flake.modules.nixos.core =
     { config, ... }:
     {
       programs.nh = {

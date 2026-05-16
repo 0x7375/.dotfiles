@@ -3,7 +3,7 @@
     ${service}.unitConfig.OnFailure = "service-failure-notify@%N.service";
   };
 
-  flake.nixos.pearlman =
+  flake.modules.nixos.pearlman =
     {
       lib,
       pkgs,

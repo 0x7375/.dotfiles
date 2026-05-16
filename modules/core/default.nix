@@ -1,7 +1,7 @@
 { inputs, self, ... }:
 
 {
-  flake.shared.core =
+  flake.modules.generic.core =
     {
       lib,
       pkgs,
@@ -43,14 +43,14 @@
       };
     };
 
-  flake.nixos.docker =
+  flake.modules.nixos.docker =
     { pkgs, ... }:
     {
       virtualisation.docker.enable = true;
       packages = [ pkgs.docker-compose ];
     };
 
-  flake.darwin.core =
+  flake.modules.darwin.core =
     {
       lib,
       config,
@@ -58,7 +58,7 @@
       ...
     }:
     {
-      imports = [ self.shared.core ];
+      imports = [ self.modules.generic.core ];
 
       system.activationScripts.postActivation.text = lib.mkIf (config.userActivation != "") ''
         sudo -H -u ${config.me.user} ${lib.getExe pkgs.bash} -c '
@@ -67,7 +67,7 @@
       '';
     };
 
-  flake.nixos.core =
+  flake.modules.nixos.core =
     {
       lib,
       config,
@@ -75,7 +75,7 @@
       ...
     }:
     {
-      imports = [ self.shared.core ];
+      imports = [ self.modules.generic.core ];
 
       services.locate.enable = true;
 

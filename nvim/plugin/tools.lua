@@ -42,7 +42,14 @@ map("n", "<leader>g", function() vim.cmd("tab Git") end, { desc = "Open fugitive
 
 -- workspace search/replace
 pack({ "MagicDuck/grug-far.nvim" })
-map("n", "<leader>R", vim.cmd.GrugFar, { desc = "Search and replace project" })
+map("n", "<leader>R", function()
+  -- ripgrep doesn't fuck with additive gitignore
+  local paths = vim.fn.systemlist("git ls-files --cached --others 2>/dev/null | awk -F/ '{print $1}' | sort -u")
+  require("grug-far").open({
+    engines = { ripgrep = { extraArgs = "--no-ignore-vcs" } },
+    prefills = { paths = table.concat(paths, " ") },
+  })
+end, { desc = "Search and replace project" })
 
 -- live preview norm
 pack({ "smjonas/live-command.nvim" })

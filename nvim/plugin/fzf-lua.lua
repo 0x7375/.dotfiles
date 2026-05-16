@@ -90,9 +90,35 @@ map("n", "<leader>p<esc>", "<nop>")
 map("n", "<leader>pD", function() fzf.lsp_workspace_diagnostics() end, { desc = "Search for workspace diagnostics" })
 
 map("n", "<leader>pd", function() fzf.lsp_document_diagnostics() end, { desc = "Search file diagnostics" })
-map("n", "<leader>pf", function() fzf.files() end, { desc = "Search for file" })
-map("n", "<leader>pg", function() fzf.live_grep() end, { desc = "Search for string" })
-map({ "n", "x" }, "<leader>pG", function() fzf.grep_cword() end, { desc = "Search for word under cursor" })
+
+-- fd support additive gitignore so I use git ls-files (and include untracked files)
+map(
+  "n",
+  "<leader>pf",
+  function()
+    fzf.files({
+      cmd = "sh -c 'git ls-files --cached --others 2>/dev/null || fd --type f --hidden --follow'",
+    })
+  end,
+  { desc = "Search for file" }
+)
+
+map("n", "<leader>pg", function()
+  local files = vim.fn.systemlist("git ls-files --cached --others 2>/dev/null")
+  fzf.live_grep({
+    search_dirs = files,
+    rg_opts = "--column --line-number --no-heading --color=always --smart-case --no-ignore-vcs",
+  })
+end, { desc = "Search for string" })
+
+map({ "n", "x" }, "<leader>pG", function()
+  local files = vim.fn.systemlist("git ls-files --cached --others 2>/dev/null")
+  fzf.grep_cword({
+    search_dirs = files,
+    rg_opts = "--column --line-number --no-heading --color=always --smart-case --no-ignore-vcs",
+  })
+end, { desc = "Search for word under cursor" })
+
 map("n", "<leader>ph", function() fzf.help_tags() end, { desc = "Search for help documentation" })
 map("n", "<leader>pH", function() fzf.highlights() end, { desc = "Search for highlight groups" })
 map("n", "<leader>pk", function() fzf.keymaps() end, { desc = "Search for keymaps" })

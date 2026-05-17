@@ -1,19 +1,13 @@
-{ self, ... }:
-
 {
   flake.modules.nixos.alacritty =
     { pkgs, ... }:
     {
-      imports = [ self.modules.generic.alacritty ];
-
       xdg.terminal-exec.settings.default = [ "Alacritty.desktop" ];
 
       packages = [ pkgs.alacritty ];
     };
 
   flake.modules.darwin.alacritty = {
-    imports = [ self.modules.generic.alacritty ];
-
     homebrew.casks = [ "alacritty" ];
   };
 

@@ -6,6 +6,27 @@
 
 let
   inherit (inputs.nixpkgs) lib;
+  # for each module name: both generic+platform if both exist, otherwise whichever does
+  mkScope =
+    generic: platform:
+    lib.genAttrs (lib.attrNames (generic // platform)) (
+      name:
+      if generic ? ${name} && platform ? ${name} then
+        {
+          imports = [
+            generic.${name}
+            platform.${name}
+          ];
+        }
+      else
+        generic.${name} or platform.${name}
+    );
+
+  scope = {
+    nixos = mkScope self.modules.generic self.modules.nixos;
+    darwin = mkScope self.modules.generic self.modules.darwin;
+  };
+
   mkHost =
     type: name: extraModules:
     let
@@ -26,8 +47,8 @@ let
         inputs.hjem.${mod}.default
 
         self.modules.${modName}.${name}
-        self.modules.${modName}.core
-        self.modules.${modName}.custom
+        scope.${modName}.core
+        scope.${modName}.custom
         { networking.hostName = name; }
       ]
       ++ lib.optionals isNixos [
@@ -47,7 +68,7 @@ in
   config = {
     flake.nixosConfigurations = {
       cray = mkHost "nixos" "cray" (
-        with self.modules.nixos;
+        with scope.nixos;
         [
           boot
           secrets
@@ -63,7 +84,7 @@ in
       );
 
       naitoh = mkHost "nixos" "naitoh" (
-        with self.modules.nixos;
+        with scope.nixos;
         [
           boot
           secrets
@@ -79,7 +100,7 @@ in
       );
 
       pearlman = mkHost "nixos" "pearlman" (
-        with self.modules.nixos;
+        with scope.nixos;
         [
           boot
           secrets
@@ -88,7 +109,12 @@ in
         ]
       );
 
-      isoImg = mkHost "nixos" "isoImg" [ self.modules.nixos.keyd ];
+      isoImg = mkHost "nixos" "isoImg" (
+        with scope.nixos;
+        [
+          keyd
+        ]
+      );
     };
 
     flake.darwinConfigurations = {
@@ -96,7 +122,7 @@ in
         [
           inputs.nix-homebrew.darwinModules.nix-homebrew
         ]
-        ++ (with self.modules.darwin; [
+        ++ (with scope.darwin; [
           secrets
           vpnPeer
           desktop

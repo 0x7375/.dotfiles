@@ -1,5 +1,3 @@
-{ self, ... }:
-
 let
   serverPublicKey = "PpCxUOTz7Heh3B29OnI3XNZAKJ8abUETMzFNj3gpTyo=";
 in
@@ -33,7 +31,6 @@ in
         ;
     in
     {
-      imports = [ self.modules.generic.vpnPeer ];
       packages = [ pkgs.wireguard-tools ];
 
       sops.templates."home-vpn-${hostname}.conf" = {
@@ -63,8 +60,6 @@ in
         ;
     in
     {
-      imports = [ self.modules.generic.vpnPeer ];
-
       networking.networkmanager.ensureProfiles = {
         environmentFiles = [
           config.sops.templates."home-vpn-${hostname}.env".path

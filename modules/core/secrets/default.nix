@@ -56,7 +56,6 @@
   flake.modules.generic.desktop =
     { pkgs, ... }:
     {
-
       packages = [ pkgs.age-plugin-se ];
     };
 
@@ -68,8 +67,6 @@
       ...
     }:
     {
-      imports = [ self.modules.generic.secrets ];
-
       options.me.tpm.enable = lib.mkEnableOption "Setup tpm and decrypt sops-nix secrets using tpm";
 
       config = lib.mkMerge [
@@ -100,8 +97,6 @@
   flake.modules.darwin.secrets =
     { pkgs, ... }:
     {
-      imports = [ self.modules.generic.secrets ];
-
       sops.age = {
         keyFile = "/var/lib/sops-nix/se-identity.txt";
         plugins = with pkgs; [

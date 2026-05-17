@@ -1,4 +1,4 @@
-{ inputs, self, ... }:
+{ inputs, ... }:
 
 {
   flake.modules.generic.core =
@@ -58,8 +58,6 @@
       ...
     }:
     {
-      imports = [ self.modules.generic.core ];
-
       system.activationScripts.postActivation.text = lib.mkIf (config.userActivation != "") ''
         sudo -H -u ${config.me.user} ${lib.getExe pkgs.bash} -c '
           ${config.userActivation}
@@ -75,8 +73,6 @@
       ...
     }:
     {
-      imports = [ self.modules.generic.core ];
-
       services.locate.enable = true;
 
       security.polkit.enable = true;

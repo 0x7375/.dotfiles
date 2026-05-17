@@ -29,8 +29,6 @@
       ...
     }:
     {
-      imports = [ self.modules.generic.network ];
-
       preActivation = "rm -f /etc/hosts";
 
       networking.dns = [

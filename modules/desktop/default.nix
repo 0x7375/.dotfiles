@@ -155,10 +155,6 @@
       config.vars.TERMINAL = "${cfg.terminal.cmd} -e";
     };
 
-  flake.modules.darwin.desktop = _: {
-    imports = [ self.modules.generic.desktop ];
-  };
-
   flake.modules.nixos.desktop =
     {
       pkgs,
@@ -171,8 +167,6 @@
       cfg = config.me.desktop;
     in
     {
-      imports = [ self.modules.generic.desktop ];
-
       hardware.graphics.enable = true;
 
       hardware.i2c.enable = true;

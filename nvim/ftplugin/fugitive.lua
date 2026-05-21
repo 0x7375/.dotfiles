@@ -4,4 +4,5 @@ map("n", "p", function() vim.cmd.Git("push") end, { desc = "Fugitive: git push",
 map("n", "P", function() vim.cmd.Git("pull --rebase") end, { desc = "Fugitive: git pull", buffer = bufnr })
 map("n", "q", vim.cmd.tabclose, { desc = "Close fugitive ", buffer = bufnr })
 map("n", "s", "V", { desc = "Visual line selection", buffer = bufnr })
-map("n", "S", "s", { desc = "Fugitive: stage", buffer = bufnr })
+map({ "n", "x" }, "l", "-", { desc = "Fugitive: stage/unstage", remap = true, buffer = bufnr })
+map({ "n", "x" }, "h", "=", { desc = "Fugitive: show/hide diff", remap = true, buffer = bufnr })

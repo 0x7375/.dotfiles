@@ -5,8 +5,11 @@
 !LICENSE
 
 !modules
+!modules/**
 !nvim
+!nvim/**
 !scripts
+!scripts/**
 !flake.{nix,lock}
 
 !stylua.toml

@@ -106,7 +106,7 @@
     {
       packages =
         let
-          dir = ../../scripts;
+          dir = ../_scripts;
           files = builtins.readDir dir;
           nixFiles = lib.filterAttrs (name: type: type == "regular" && lib.hasSuffix ".nix" name) files;
         in

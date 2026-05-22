@@ -110,6 +110,7 @@ require("vim._core.ui2").enable({
 -- show messages in the top left
 local ui2 = require("vim._core.ui2")
 local msgs = require("vim._core.ui2.messages")
+
 local orig_set_pos = msgs.set_pos
 msgs.set_pos = function(tgt)
   orig_set_pos(tgt)
@@ -123,6 +124,15 @@ msgs.set_pos = function(tgt)
     })
   end
 end
+
+-- TODO: check if still needed in august ig, uncomment and test if it's getting cleared
+-- vim.api.nvim_create_user_command("DoesItClearIt", function()
+--   vim.cmd("echomsg 'Hellooooooo'")
+--   vim.defer_fn(function() vim.cmd("echo ''") end, 100)
+-- end, {})
+
+-- ignore clear event so vim-fugitive for example leaves the output to be read
+msgs.msg_clear = function() end
 
 -- colorize
 pack({ "brenoprata10/nvim-highlight-colors" })

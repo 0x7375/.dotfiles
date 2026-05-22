@@ -157,18 +157,29 @@ vim.api.nvim_create_autocmd("FileType", {
   end,
 })
 
--- vim.api.nvim_create_autocmd("VimEnter", {
---   desc = "Open edited file on startup",
---   nested = true,
---   callback = function()
---     if vim.fn.argc() == 0 and vim.fn.line("$") == 1 and vim.fn.getline(1) == "" then
---       local last = vim.v.oldfiles[1]
---       if last and vim.fn.filereadable(last) == 1 then
---         vim.schedule(function() vim.cmd("edit " .. vim.fn.fnameescape(last)) end)
---       end
---     end
---   end,
--- })
+-- automatically open the last edited file, directory wide
+vim.api.nvim_create_autocmd("VimEnter", {
+  callback = function()
+    if vim.fn.argc() > 0 then
+      return
+    end
+
+    vim.schedule(function()
+      local cwd = vim.fn.getcwd()
+      local sep = vim.fn.has("win32") == 1 and "\\" or "/"
+      local prefix = cwd:sub(-1) == sep and cwd or cwd .. sep
+
+      for _, file in ipairs(vim.v.oldfiles) do
+        local path = vim.fn.expand(file)
+        if vim.startswith(path, prefix) and vim.fn.filereadable(path) == 1 then
+          vim.cmd("edit " .. vim.fn.fnameescape(path))
+          vim.cmd.normal({ "zz", bang = true })
+          return
+        end
+      end
+    end)
+  end,
+})
 
 vim.api.nvim_create_autocmd("LspProgress", {
   callback = function(ev)

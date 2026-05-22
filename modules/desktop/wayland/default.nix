@@ -10,8 +10,9 @@
 
       systemd.user.services.kanshi = {
         description = "kanshi";
-        wantedBy = [ "graphical-session.target" ];
-        partOf = [ "graphical-session.target" ];
+        wantedBy = [ "mango-session.target" ];
+        partOf = [ "mango-session.target" ];
+        after = [ "mango-session.target" ];
         serviceConfig = {
           ExecStart = "${lib.getExe pkgs.kanshi}";
           Restart = "always";

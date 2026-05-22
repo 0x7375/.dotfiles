@@ -53,6 +53,7 @@ let
       ]
       ++ lib.optionals isNixos [
         inputs.disko.nixosModules.disko
+        inputs.nixcord.nixosModules.nixcord
         self.modules.nixos.overrides
       ]
       ++ extraModules;

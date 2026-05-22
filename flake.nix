@@ -15,6 +15,7 @@
     nur = {
       url = "github:nix-community/NUR";
       inputs.nixpkgs.follows = "auto-update";
+      inputs.flake-parts.follows = "flake-parts";
     };
 
     nix-darwin = {
@@ -74,6 +75,11 @@
     karabiner-ts = {
       url = "git+https://codeberg.org/0x7E/karabiner-ts";
       inputs.nixpkgs.follows = "nixpkgs";
+    };
+    nixcord = {
+      url = "github:FlameFlag/nixcord";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.flake-parts.follows = "flake-parts";
     };
 
     git-hooks-nix = {

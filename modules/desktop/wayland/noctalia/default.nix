@@ -130,6 +130,7 @@
         my.noctalia
         udisks
         my.dmenu
+        ddcutil
       ];
 
       hj.xdg.config.files = {
@@ -147,11 +148,10 @@
               action = "block";
               pattern = "Youtube_Music";
             }
-            # make vencord extension to hide content
-            {
-              action = "hide";
-              pattern = "vesktop";
-            }
+            # {
+            #   action = "hide";
+            #   pattern = "vesktop";
+            # }
           ];
         };
       };

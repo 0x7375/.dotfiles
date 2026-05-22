@@ -24,25 +24,13 @@
     { lib, pkgs, ... }:
     lib.mkMerge [
       {
-        unfree-packages = [
-          "discord"
-          "omnissa-horizon-client"
-        ];
-
-        me.desktop.assign = [
-          {
-            type = "appid";
-            name = "vesktop";
-            workspace = "4";
-          }
-        ];
+        unfree-packages = [ "omnissa-horizon-client" ];
 
         packages = with pkgs; [
           # (auto.discord.override {
           #   # withOpenASAR = true;
           #   withVencord = true;
           # })
-          vesktop
           omnissa-horizon-client
           signal-desktop
           # jetbrains.idea-community

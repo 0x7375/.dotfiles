@@ -157,7 +157,7 @@ vim.api.nvim_create_autocmd("FileType", {
   end,
 })
 
--- automatically open the last edited file, directory wide
+-- automatically open the last edited file in the first "valid" window, directory wide
 vim.api.nvim_create_autocmd("VimEnter", {
   callback = function()
     if vim.fn.argc() > 0 then
@@ -165,17 +165,26 @@ vim.api.nvim_create_autocmd("VimEnter", {
     end
 
     vim.schedule(function()
-      local cwd = vim.fn.getcwd()
-      local sep = vim.fn.has("win32") == 1 and "\\" or "/"
-      local prefix = cwd:sub(-1) == sep and cwd or cwd .. sep
-
-      for _, file in ipairs(vim.v.oldfiles) do
-        local path = vim.fn.expand(file)
-        if vim.startswith(path, prefix) and vim.fn.filereadable(path) == 1 then
-          vim.cmd("edit " .. vim.fn.fnameescape(path))
-          vim.cmd.normal({ "zz", bang = true })
-          return
+      local win = vim.iter(vim.api.nvim_tabpage_list_wins(0)):find(
+        function(w)
+          return not vim.api.nvim_win_get_config(w).zindex and vim.bo[vim.api.nvim_win_get_buf(w)].buftype == ""
         end
+      )
+      if not win then
+        return
+      end
+
+      local prefix = vim.fn.getcwd() .. "/"
+      local file = vim.iter(vim.v.oldfiles):find(function(f)
+        local path = vim.fn.expand(f)
+        return vim.startswith(path, prefix) and vim.fn.filereadable(path) == 1
+      end)
+
+      if file then
+        vim.api.nvim_win_call(win, function()
+          vim.cmd("edit " .. vim.fn.fnameescape(vim.fn.expand(file)))
+          vim.cmd.normal({ "zz", bang = true })
+        end)
       end
     end)
   end,

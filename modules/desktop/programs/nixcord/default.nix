@@ -1,4 +1,5 @@
 {
+  # TODO: darwin fails to build
   flake.modules.nixos.desktop =
     { config, ... }:
     {

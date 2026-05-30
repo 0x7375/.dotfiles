@@ -17,6 +17,20 @@ local config = function()
   local t = ls.text_node
   local i = ls.insert_node
 
+  ls.add_snippets("swift", {
+    s("ios", {
+      t({ "#if os(iOS)", "    " }),
+      i(0),
+      t({ "", "#endif" }),
+    }),
+
+    s("watchos", {
+      t({ "#if os(watchOS)", "    " }),
+      i(0),
+      t({ "", "#endif" }),
+    }),
+  })
+
   ls.add_snippets("typst", {
     s("o", {
       t("ol("),

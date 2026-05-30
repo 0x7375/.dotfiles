@@ -50,7 +50,10 @@
 
       homebrew = {
         enable = true;
-        brews = [ ];
+        brews = [
+          "xcode-build-server"
+          "xcbeautify"
+        ];
         casks = [
           "discord"
           "helium-browser"

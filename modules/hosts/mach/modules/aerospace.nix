@@ -137,6 +137,7 @@
                 "${super}-shift-8" = "move-node-to-workspace 8";
                 "${super}-shift-9" = "move-node-to-workspace 9";
 
+                "${super}-g" = "exec-and-forget open -a \"Mission Control\"";
                 "${super}-tab" = "workspace-back-and-forth";
                 "${super}-shift-tab" = "move-workspace-to-monitor --wrap-around next";
               };

@@ -45,6 +45,7 @@ let
         inputs.sops-nix.${mod}.sops
         inputs.nix-index-database.${mod}.nix-index
         inputs.hjem.${mod}.default
+        inputs.nixcord.${mod}.nixcord
 
         self.modules.${modName}.${name}
         scope.${modName}.core
@@ -53,7 +54,6 @@ let
       ]
       ++ lib.optionals isNixos [
         inputs.disko.nixosModules.disko
-        inputs.nixcord.nixosModules.nixcord
         self.modules.nixos.overrides
       ]
       ++ extraModules;

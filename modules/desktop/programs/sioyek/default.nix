@@ -38,23 +38,15 @@
     { pkgs, ... }:
     {
       packages = [
-        (inputs.wrappers.lib.wrapPackage {
-          inherit pkgs;
-          package = pkgs.sioyek.overrideAttrs (old: {
-            patches = (old.patches or [ ]) ++ [
-              ./page_move_boundaries_fix.patch
-              ./fit_page_height_ignore_statusbar.patch
-            ];
-          });
-          env = {
-            # https://github.com/ahrm/sioyek/issues/1283#issuecomment-3191610519
-            __GLX_VENDOR_LIBRARY_NAME = "mesa";
-            __EGL_VENDOR_LIBRARY_FILENAMES = "/run/opengl-driver/share/glvnd/egl_vendor.d/50_mesa.json";
-            MESA_LOADER_DRIVER_OVERRIDE = "zink";
-            GALLIUM_DRIVER = "zink";
-            LIBGL_KOPPER_DRI2 = "1";
-          };
-        })
+        (pkgs.sioyek.overrideAttrs (old: {
+          patches = (old.patches or [ ]) ++ [
+            ./page_move_boundaries_fix.patch
+            ./fit_page_height_ignore_statusbar.patch
+
+            # fixes: https://github.com/ahrm/sioyek/issues/1283#issuecomment-4469874080
+            ./remove_qsuface_format.patch
+          ];
+        }))
       ];
 
       tinted.files.".config/sioyek/prefs_user.config".text =
@@ -115,7 +107,6 @@
 
           zoom_out J
           zoom_in K
-          toggle_two_page_view D
           toggle_custom_color i
           rotate_clockwise <C-r>
           reload r

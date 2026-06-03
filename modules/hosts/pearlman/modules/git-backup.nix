@@ -25,7 +25,23 @@
             export GIT_SSH_COMMAND="ssh -i /root/.ssh/id_backup_codeberg -o IdentitiesOnly=yes -o StrictHostKeyChecking=no"
 
             repos=$(curl -s "''${remote_url}/api/v1/users/$user/repos" | jq -r '.[].clone_url')
-            repos+=$'\n'"git@codeberg.org:''${user}/nix-secrets.git"
+
+            private=(
+              nix-secrets
+              csp-graphes
+              web-mvcr
+              battle-arena
+              todo
+              bio-zola
+              recipes
+              pyplanet
+              15-puzzle
+              token2-totp-cli
+            )
+
+            for repo in "''${private[@]}"; do
+                repos+=$'\n'"git@codeberg.org:''${user}/''${repo}.git"
+            done
 
             for repo in $repos; do
               repo_name=$(basename "$repo" .git)

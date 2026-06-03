@@ -29,7 +29,7 @@
         app="''${selected%% / *}"
         account="''${selected#* / }"
 
-        ${lib.getExe pkgs.my.notify} "Security key" "Touch required" -i "fingerprint" -t ${self.lib.notify.maxInt}
+        ${lib.getExe pkgs.my.notify} "Security key" "Touch required" -i "fingerprint" -t 0
         ${lib.getExe pkgs.token2-cli} read_entry --app-name "$app" --account-name "$account" 2>&1 | tail -n 1 | awk '{print $NF}' | tr -d '\r\n' | ${config.me.desktop.copy}
         ${lib.getExe pkgs.my.noctalia} msg notification-clear-active
       '';

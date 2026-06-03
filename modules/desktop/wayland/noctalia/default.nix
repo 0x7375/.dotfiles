@@ -1,6 +1,26 @@
-{ inputs, self, ... }:
+{ inputs, ... }:
 {
-  flake.modules.nixos.desktop =
+  flake.lib.mkNoctaliaLayout =
+    {
+      main,
+      secondary ? null,
+    }:
+    # toml
+    ''
+      [notification]
+      monitors = [ "${main}" ]
+      ${
+        if secondary != null then
+          # toml
+          ''
+            [bar.default.monitor.${secondary}]
+            auto_hide = true
+          ''
+        else
+          ""
+      }'';
+
+  flake.modules.nixos.wayland =
     {
       lib,
       pkgs,
@@ -46,7 +66,7 @@
         mOnTertiary = p.bg0;
         mError = p.red;
         mOnError = p.bg0;
-        mSurface = p.bg0;
+        mSurface = p.bg0_dark;
         mOnSurface = p.fg0;
         mSurfaceVariant = p.bg1;
         mOnSurfaceVariant = p.fg1;
@@ -77,7 +97,139 @@
       ];
 
       hj.xdg.config.files = {
-        "noctalia/colorschemes/nix/nix.json" = {
+        "noctalia/settings.toml" = {
+          generator = (pkgs.formats.toml { }).generate "noctalia-settings";
+          value = {
+            bar = {
+              default = {
+                capsule = false;
+                center = [ "workspaces" ];
+                end = [
+                  "tray"
+                  "notifications"
+                  "clipboard"
+                  "brightness"
+                  "volume"
+                  "battery"
+                  "sysmon"
+                  "ram"
+                  "bluetooth"
+                  "network"
+                  "clock"
+                ];
+                margin_edge = 0;
+                margin_ends = 0;
+                margin_h = 0;
+                margin_v = 0;
+                radius = 0;
+                reserve_space = true;
+                shadow = true;
+                start = [
+                  "Mango"
+                  "active_window"
+                  "media"
+                ];
+                widget_spacing = 10;
+              };
+            };
+
+            brightness = {
+              enable_ddcutil = true;
+            };
+
+            config = { };
+
+            control_center = {
+              sidebar_section = "none";
+              shortcuts = [
+                { type = "wifi"; }
+                { type = "bluetooth"; }
+                { type = "caffeine"; }
+                { type = "notification"; }
+                { type = "screen_recorder"; }
+                { type = "dark_mode"; }
+              ];
+            };
+
+            desktop_widgets.enabled = false;
+            dock.enabled = false;
+            hooks.theme_mode_changed = "swap-theme sync";
+
+            keybinds = {
+              down = [ "Ctrl+n" ];
+              up = [ "Ctrl+p" ];
+            };
+
+            location.auto_locate = true;
+
+            noctalia_state.setup_wizard_completed = true;
+
+            notification = {
+              background_opacity = 1.0;
+              position = "top_center";
+            };
+
+            osd.position = "top_center";
+
+            shell = {
+              avatar_path = "${config.me.home}/pictures/ghibli/kiki.jpg";
+              clipboard_auto_paste = "off";
+              clipboard_confirm_clear_history = false;
+              polkit_agent = true;
+              screen_time_enabled = true;
+              settings_show_advanced = true;
+              telemetry_enabled = true;
+              animation = {
+                enabled = false;
+              };
+              panel = {
+                launcher_categories = false;
+                open_near_click_control_center = true;
+                session_placement = "floating";
+              };
+              shadow.alpha = 0.20999999344348907;
+            };
+
+            templates = { };
+
+            theme = {
+              builtin = "Catppuccin";
+              custom_palette = "nix";
+              source = "custom";
+              templates = {
+                enable_builtin_templates = false;
+                enable_community_templates = false;
+              };
+            };
+
+            widget = {
+              bluetooth.show_label = true;
+              sysmon.show_label = false;
+              brightness.show_label = false;
+              Mango = {
+                hot_reload = true;
+                script = "${./mango.lua}";
+                type = "scripted";
+              };
+              ram = {
+                show_label = false;
+                stat = "ram_pct";
+              };
+              tray = {
+                anchor = false;
+                capsule = false;
+                drawer = true;
+              };
+              volume.show_label = false;
+              workspaces = {
+                capsule = false;
+                display = "none";
+                hide_when_empty = false;
+              };
+            };
+          };
+        };
+        "noctalia/palettes/nix.json" = {
           generator = lib.strings.toJSON;
           value = {
             dark = mkScheme dark;

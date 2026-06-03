@@ -29,7 +29,7 @@ pkgs.writeShellApplication {
         dconf
         dunst
         swaybg
-        unstable.mangowc
+        mangowc
       ]
     );
   text =
@@ -91,7 +91,7 @@ pkgs.writeShellApplication {
           ln -sfT "${iconTheme.package}/share/icons/${iconTheme.name}-''${theme^}" "$share_dir/icons/${iconTheme.name}"
 
           wallpaper=$(shuf -e -n1 --random-source=<(date +%Y%m%d | md5sum) ~/pictures/wallpapers/"$theme"/*)
-          noctalia msg wallpaper-set all "$wallpaper"
+          noctalia msg wallpaper-set "$wallpaper"
         ''
       }
 

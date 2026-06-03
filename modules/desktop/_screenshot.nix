@@ -18,7 +18,7 @@ pkgs.writeShellApplication {
 
     [[ -z "$1" ]] && exit 1
 
-    active_mon=$(mmsg -g | awk '$2 == "selmon" && $3 == "1" {print $1}')
+    active_mon=$(mmsg get focusing-client | jq .monitor)
 
     case "$1" in
       region)
@@ -28,10 +28,7 @@ pkgs.writeShellApplication {
         grim -o "$active_mon" "$filepath"
         ;;
       window)
-        geom=$(mmsg -g -x | awk -v mon="$active_mon" '
-          $1 == mon { geo[$2] = $3 } 
-          END { printf "%s,%s %sx%s\n", geo["x"], geo["y"], geo["width"], geo["height"] }
-        ')
+        geom=$(mmsg get monitor "$active_mon" | jq -r '"\(.x),\(.y) \(.width)x\(.height)"')
         grim -g "$geom" "$filepath"
         ;;
       *)

@@ -6,6 +6,11 @@
       ...
     }:
     {
+      me.desktop.startup.kanshi = {
+        cmd = "systemctl restart --user ${lib.getExe pkgs.kanshi}";
+        always = true;
+      };
+
       packages = [ pkgs.kanshi ];
 
       systemd.user.services.kanshi = {

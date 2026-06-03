@@ -1,40 +1,45 @@
 diff --git a/src/layout/arrange.h b/src/layout/arrange.h
-index 04f4554..e1d0c4c 100644
+index 7223b43..bb27d36 100644
 --- a/src/layout/arrange.h
 +++ b/src/layout/arrange.h
-@@ -918,6 +918,12 @@ arrange(Monitor *m, bool want_animation, bool from_view) {
+@@ -1214,6 +1214,13 @@ arrange(Monitor *m, bool want_animation, bool from_view) {
  
  	pre_caculate_before_arrange(m, want_animation, from_view, false);
  
-+    Client *_c;
-+    wl_list_for_each(_c, &clients, link) {
-+        if (!VISIBLEON(_c, m) || !ISTILED(_c)) continue;
-+        wlr_scene_node_set_enabled(&_c->border->node, 1);
-+    }
++	Client *_c;
++	wl_list_for_each(_c, &clients, link) {
++		if (!VISIBLEON(_c, m) || !ISTILED(_c))
++			continue;
++		wlr_scene_node_set_enabled(&_c->border->node, 1);
++	}
 +
  	if (m->isoverview) {
  		overviewlayout.arrange(m);
  	} else {
 diff --git a/src/layout/horizontal.h b/src/layout/horizontal.h
-index eaa7b5c..24ca1df 100644
+index 9298073..fce8248 100644
 --- a/src/layout/horizontal.h
 +++ b/src/layout/horizontal.h
-@@ -985,11 +985,13 @@ monocle(Monitor *m) {
+@@ -567,10 +567,11 @@ monocle(Monitor *m) {
  	wl_list_for_each(c, &clients, link) {
- 		if (!VISIBLEON(c, m) || !ISTILED(c))
+ 		if (!VISIBLEON(c, m) || !ISFAKETILED(c))
  			continue;
 -		geom.x = m->w.x + cur_gappoh;
 -		geom.y = m->w.y + cur_gappov;
 -		geom.width = m->w.width - 2 * cur_gappoh;
 -		geom.height = m->w.height - 2 * cur_gappov;
--		resize(c, geom, 0);
-+
-+        wlr_scene_node_set_enabled(&c->border->node, 0);
-+        geom.x = m->w.x + cur_gappoh - c->bw;
-+        geom.y = m->w.y + cur_gappov - c->bw;
-+        geom.width = m->w.width - 2 * cur_gappoh + 2 * c->bw;
-+        geom.height = m->w.height - 2 * cur_gappov + 2 * c->bw;
-+        resize(c, geom, 0);
++		wlr_scene_node_set_enabled(&c->border->node, 0);
++		geom.x = m->w.x + cur_gappoh - c->bw;
++		geom.y = m->w.y + cur_gappov - c->bw;
++		geom.width = m->w.width - 2 * cur_gappoh + 2 * c->bw;
++		geom.height = m->w.height - 2 * cur_gappov + 2 * c->bw;
+ 		client_tile_resize(c, geom, 0);
  	}
  	if ((c = focustop(m)))
- 		wlr_scene_node_raise_to_top(&c->scene->node);
+@@ -939,4 +940,4 @@ void fair(Monitor *m) {
+ 											.height = (int32_t)fl_ch},
+ 						   0);
+ 	}
+-}
+\ No newline at end of file
++}

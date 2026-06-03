@@ -11,6 +11,23 @@
     in
     {
       config = {
+        nixpkgs.overlays = [
+          (final: prev: {
+            mangowc = final.unstable.mangowc.overrideAttrs (old: rec {
+              version = "0.14.0";
+              src = pkgs.fetchFromGitHub {
+                inherit (old.src) repo owner;
+                rev = "${version}";
+                sha256 = "DQ9uQJUBBkE9+Fk38vv4/dz9VztD++z8QEYG6supFic=";
+              };
+
+              buildInputs = old.buildInputs ++ [ pkgs.cjson ];
+
+              patches = [ ./no_border_in_monocle.patch ];
+            });
+          })
+        ];
+
         hj.xdg.config.files."zsh/.zshrc".text =
           lib.mkBefore # bash
             ''
@@ -32,9 +49,7 @@
 
         packages = with pkgs; [
           wl-clipboard-rs
-          (unstable.mangowc.overrideAttrs (old: {
-            patches = [ ./no_border_in_monocle.patch ];
-          }))
+          mangowc
 
           # required for vesktop to open links for example
           xdg-utils
@@ -147,7 +162,7 @@
               ++ floatingRules;
 
               exec = map (_: _.cmd) (lib.filter (c: c.always) (lib.attrValues config.me.desktop.startup)) ++ [
-                "${getExe pkgs.bash} -c '${getExe pkgs.my.swap-theme} $(cat $HOME/.local/state/tinted/theme)'"
+                "${getExe pkgs.bash} -c '${getExe pkgs.my.swap-theme} sync'"
               ];
 
               exec-once =

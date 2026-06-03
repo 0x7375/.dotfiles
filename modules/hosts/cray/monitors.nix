@@ -1,3 +1,5 @@
+{ self, ... }:
+
 {
   flake.modules.nixos.cray =
     {
@@ -9,17 +11,28 @@
       me.desktop.monitors =
         let
           all = map toString (lib.range 1 9);
+          inherit (self.lib) mkNoctaliaLayout;
         in
         {
           desktop_dual = {
-            HDMI-A-2 = lib.remove "5" all;
-            HDMI-A-1 = [ "5" ];
+            outputs = {
+              HDMI-A-2 = lib.remove "5" all;
+              HDMI-A-1 = [ "5" ];
+            };
+            noctaliaLayout = mkNoctaliaLayout {
+              main = "HDMI-A-2";
+              secondary = "HDMI-A-1";
+            };
           };
+
           desktop_right_only = {
-            HDMI-A-2 = all;
+            outputs.HDMI-A-2 = all;
+            noctaliaLayout = mkNoctaliaLayout { main = "HDMI-A-2"; };
           };
+
           desktop_left_only = {
-            HDMI-A-1 = all;
+            outputs.HDMI-A-1 = all;
+            noctaliaLayout = mkNoctaliaLayout { main = "HDMI-A-1"; };
           };
         };
 

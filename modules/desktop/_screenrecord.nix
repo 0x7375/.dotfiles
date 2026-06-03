@@ -52,7 +52,7 @@ pkgs.writeShellApplication {
     folder="$(xdg-user-dir VIDEOS)/"
     filepath="$folder$file"
 
-    active_mon=$(mmsg -g | awk '$2 == "selmon" && $3 == "1" {print $1}')
+    active_mon=$(mmsg get focusing-client | jq .monitor)
     enc_opts="$audio_flag -c h264_nvenc -p preset=p7 -p tune=hq -p cq=20 -p b=0"
 
     case "$mode" in
@@ -65,10 +65,7 @@ pkgs.writeShellApplication {
         record_cmd="wf-recorder -o \"$active_mon\" -f \"$filepath\" $enc_opts"
         ;;
       window)
-        geom=$(mmsg -g -x | awk -v mon="$active_mon" '
-          $1 == mon { geo[$2] = $3 } 
-          END { printf "%s,%s %sx%s\n", geo["x"], geo["y"], geo["width"], geo["height"] }
-        ')
+        geom=$(mmsg get monitor "$active_mon" | jq -r '"\(.x),\(.y) \(.width)x\(.height)"')
         record_cmd="wf-recorder -g \"$geom\" -f \"$filepath\" $enc_opts"
         ;;
       *)

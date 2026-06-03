@@ -1,3 +1,5 @@
+{ self, ... }:
+
 {
   flake.modules.nixos.naitoh =
     {
@@ -9,14 +11,22 @@
       me.desktop.monitors =
         let
           all = map toString (lib.range 1 9);
+          inherit (self.lib) mkNoctaliaLayout;
         in
         {
           dual = {
-            HDMI-A-1 = lib.remove "5" all;
-            eDP-1 = [ "5" ];
+            outputs = {
+              HDMI-A-1 = lib.remove "5" all;
+              eDP-1 = [ "5" ];
+            };
+            noctaliaLayout = mkNoctaliaLayout {
+              main = "HDMI-A-1";
+              secondary = "eDP-1";
+            };
           };
           laptop = {
-            eDP-1 = all;
+            outputs.eDP-1 = all;
+            noctaliaLayout = mkNoctaliaLayout { main = "eDP-1"; };
           };
         };
 

@@ -1,6 +1,4 @@
 {
-  flake.lib.notify.maxInt = "1000000000";
-
   flake.modules.nixos.desktop =
     { pkgs, ... }:
     {

@@ -47,16 +47,19 @@
               }
             );
 
-          monitorScript = pkgs.writeShellScriptBin "mango-monitor-setup" ''
+          monitorScript = pkgs.writeShellScriptBin "monitor-setup" ''
             case "$1" in
               ${lib.concatStringsSep "\n  " (
-                lib.mapAttrsToList (
-                  name: _:
-                  "${name}) ln -sf \"$HOME/.config/mango/profiles/${name}.conf\" \"$HOME/.config/mango/monitors.conf\" ;;"
-                ) cfg.monitors
+                lib.mapAttrsToList (name: profile: ''
+                  ${name})
+                    ln -sf "$HOME/.config/mango/profiles/${name}.conf" "$HOME/.config/mango/monitors.conf"
+                    ${lib.optionalString (profile.noctaliaLayout != null) ''
+                      ln -sf "${pkgs.writeText "noctalia-layout-${name}" profile.noctaliaLayout}" "$HOME/.config/noctalia/layout.toml"
+                    ''}
+                    ;;'') cfg.monitors
               )}
             esac
-            mmsg -d reload_config
+            mmsg dispatch reload_config
           '';
         in
         {
@@ -145,7 +148,20 @@
           };
 
           monitors = lib.mkOption {
-            type = lib.types.attrsOf (lib.types.attrsOf (lib.types.listOf lib.types.str));
+            type = lib.types.attrsOf (
+              lib.types.submodule {
+                options = {
+                  outputs = lib.mkOption {
+                    type = lib.types.attrsOf (lib.types.listOf lib.types.str);
+                    default = { };
+                  };
+                  noctaliaLayout = lib.mkOption {
+                    type = lib.types.nullOr lib.types.str;
+                    default = null;
+                  };
+                };
+              }
+            );
             default = { };
           };
         };
@@ -269,7 +285,7 @@
       tinted.files.".config/mango/config.conf".value.source = [ "~/.config/mango/monitors.conf" ];
 
       hj.files = lib.mapAttrs' (
-        name: monitorMap:
+        name: profile:
         lib.nameValuePair ".config/mango/profiles/${name}.conf" {
           text = lib.concatStrings (
             lib.flatten (
@@ -282,7 +298,7 @@
                   bind = SUPER+CTRL,${tag},comboview,${tag},${monitor}
                   tagrule = id:${tag},monitor_name:${monitor},no_hide:1,layout_name:monocle
                 '') tags
-              ) monitorMap
+              ) profile.outputs
             )
           );
         }

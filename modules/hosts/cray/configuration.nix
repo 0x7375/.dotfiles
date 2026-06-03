@@ -21,12 +21,12 @@
       max-jobs = 4;
     };
 
-    tinted.files.".config/mango/config.conf".value.accel_profile = "flat";
+    tinted.files.".config/mango/config.conf".value.mouse_accel_profile = "1";
 
     time.hardwareClockInLocalTime = true;
 
     tinted.files.".config/mango/config.conf".value.exec-once = [
-      "mmsg -d viewcrossmon,5,HDMI-A-1 && mmsg -d viewcrossmon,1,HDMI-A-2"
+      "mmsg dispatch viewcrossmon,5,HDMI-A-1 && mmsg dispatch viewcrossmon,1,HDMI-A-2"
     ];
 
     # do not change

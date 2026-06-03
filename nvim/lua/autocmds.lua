@@ -164,6 +164,10 @@ vim.api.nvim_create_autocmd("VimEnter", {
       return
     end
 
+    if vim.tbl_contains(vim.v.argv, "+Man!") then
+      return
+    end
+
     vim.schedule(function()
       local win = vim.iter(vim.api.nvim_tabpage_list_wins(0)):find(
         function(w)

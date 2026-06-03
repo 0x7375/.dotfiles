@@ -1,5 +1,3 @@
-{ self, ... }:
-
 {
   flake.modules.nixos.desktop =
     {
@@ -10,27 +8,14 @@
     }:
     lib.mkMerge [
       {
-        nixpkgs.overlays = [
-          (final: prev: {
-            pear-desktop = final.nur.repos.lonerOrz.pear-desktop.overrideAttrs (oldAttrs: {
-              installPhase = ''
-                find dist -type f -name "*.js" -exec sed -i 's/openDevTools()/closeDevTools()/g' {} +
-
-                ${oldAttrs.installPhase}
-              '';
-            });
-          })
-        ];
-
         me.desktop.bindings =
           let
             playerctl = lib.getExe pkgs.playerctl;
-            call = self.lib.noctalia.call { inherit pkgs lib; };
           in
           {
-            XF86AudioRaiseVolume = call "volume increase";
-            XF86AudioLowerVolume = call "volume decrease";
-            XF86AudioMute = call "volume muteOutput";
+            XF86AudioRaiseVolume = "noctalia msg volume-up";
+            XF86AudioLowerVolume = "noctalia msg volume-down";
+            XF86AudioMute = "noctalia msg volume-mute";
             XF86AudioNext = "${playerctl} next";
             XF86AudioPrev = "${playerctl} previous";
             XF86AudioPlay = "${playerctl} play-pause";
@@ -45,7 +30,7 @@
           pavucontrol
 
           pamixer
-          pear-desktop
+          unstable.pear-desktop
         ];
 
         services.udev.extraRules = # bash

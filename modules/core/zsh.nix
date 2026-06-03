@@ -356,7 +356,6 @@
         text =
           let
             activeWindow = lib.optionalString pkgs.stdenv.isLinux "${getExe pkgs.lswt} -j | jq '.toplevels[] | select(.activated == true).title'";
-            mkToast = self.lib.noctalia.mkToast { inherit pkgs lib; };
           in
           # bash
           ''
@@ -379,11 +378,7 @@
                 if [[ $duration -gt $time_threshold ]]; then
                   if ! original_window_is_focused; then
                     duration=$(get_duration "$duration")
-                    ${mkToast {
-                      title = "Shell";
-                      body = "Command done: $duration $cmd";
-                      icon = "brand-powershell";
-                    }}
+                    ${getExe pkgs.my.notify} -i brand-powershell "Shell" "Command done: $duration $cmd"
                   fi
                 fi
                 time_taken=0

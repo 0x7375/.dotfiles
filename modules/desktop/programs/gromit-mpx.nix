@@ -12,20 +12,20 @@
         })
       ];
 
-      me.desktop =
-        let
-          gromit = lib.getExe pkgs.gromit-mpx;
-        in
-        {
-          startup.gromit = gromit;
-
-          bindings = {
-            "Mod+o" = "${gromit} --toggle";
-            "Mod+Shift+o" = "${gromit} --clear";
-            "Alt+Shift+o" = "${gromit} --undo";
-            "Shift+F9" = "${gromit} --toggle";
-          };
-        };
+      # me.desktop =
+      #   let
+      #     gromit = lib.getExe pkgs.gromit-mpx;
+      #   in
+      #   {
+      #     startup.gromit = gromit;
+      #
+      #     bindings = {
+      #       "Mod+o" = "${gromit} --toggle";
+      #       "Mod+Shift+o" = "${gromit} --clear";
+      #       "Alt+Shift+o" = "${gromit} --undo";
+      #       "Shift+F9" = "${gromit} --toggle";
+      #     };
+      #   };
 
       hj.xdg.config.files."gromit-mpx.ini" = {
         generator = lib.generators.toINI { };

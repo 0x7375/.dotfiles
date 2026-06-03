@@ -22,32 +22,21 @@
               acpi
               libnotify
             ];
-            text =
-              let
-                mkToast = self.lib.noctalia.mkToast { inherit pkgs lib; };
-              in
-              ''
-                [[ $# != 1 ]] && printf '0 or 1 must be passed as an argument.\nUsage: %s 0|1\n' "$0" && exit
+            text = ''
+              [[ $# != 1 ]] && printf '0 or 1 must be passed as an argument.\nUsage: %s 0|1\n' "$0" && exit
 
-                export DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/$UID/bus"
+              export DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/$UID/bus"
 
-                battery_charging=$1
-                battery_level=$(acpi -b | grep -E "remaining|zero|until" | grep -P -o '[0-9]+(?=%)')
+              battery_charging=$1
+              battery_level=$(acpi -b | grep -E "remaining|zero|until" | grep -P -o '[0-9]+(?=%)')
 
-                if [[ $battery_charging -eq 1 ]]; then
-                  ${mkToast {
-                    title = "Charging";
-                    body = "$battery_level% of battery charged.";
-                    icon = "battery-charging-2";
-                  }}
-                elif [[ $battery_charging -eq 0 ]]; then
-                  ${mkToast {
-                    title = "Discharging";
-                    body = "$battery_level% of battery remaining.";
-                    icon = "battery";
-                  }}
-                fi
-              '';
+              if [[ $battery_charging -eq 1 ]]; then
+                ${lib.getExe pkgs.my.notify} "Charging" "$battery_level% of battery charged." -i "battery-charging-2" 
+              elif [[ $battery_charging -eq 0 ]]; then
+                ${lib.getExe pkgs.my.notify} "Discharging" "$battery_level% of battery remaining." -i "battery"
+                }}
+              fi
+            '';
           };
         in
         # bash

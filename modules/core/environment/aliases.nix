@@ -56,6 +56,8 @@
         ".." = "cd ..";
         "..." = "cd ../..";
         "...." = "cd ../../..";
+
+        sys = "systemctl";
       }
       // (lib.genAttrs [
         "diff"

@@ -32,43 +32,30 @@
           libnotify
           systemd
         ];
-        script =
-          let
-            mkToast = self.lib.noctalia.mkToast { inherit pkgs lib; };
-          in
+        script = ''
+          warning_level=15
+          full_level=90
 
-          ''
-            warning_level=15
-            full_level=90
+          empty_file=/tmp/batteryempty
+          full_file=/tmp/batteryfull
 
-            empty_file=/tmp/batteryempty
-            full_file=/tmp/batteryfull
+          battery_discharging=$(acpi -b | grep -c "Discharging")
+          battery_level=$(acpi -b | grep -E "remaining|charged|zero" | grep -P -o '[0-9]+(?=%)' || echo 0)
 
-            battery_discharging=$(acpi -b | grep -c "Discharging")
-            battery_level=$(acpi -b | grep -E "remaining|charged|zero" | grep -P -o '[0-9]+(?=%)' || echo 0)
+          if [[ $battery_discharging -eq 1 ]] && [[ -f $full_file ]]; then
+              rm $full_file
+          elif [[ $battery_discharging -eq 0 ]] && [[ -f $empty_file ]]; then
+              rm $empty_file
+          fi
 
-            if [[ $battery_discharging -eq 1 ]] && [[ -f $full_file ]]; then
-                rm $full_file
-            elif [[ $battery_discharging -eq 0 ]] && [[ -f $empty_file ]]; then
-                rm $empty_file
-            fi
-
-            if [[ $battery_level -ge $full_level && $battery_discharging -eq 0 && ! -f $full_file ]]; then
-                ${mkToast {
-                  title = "Battery Charged";
-                  body = "Battery is fully charged.";
-                  icon = "battery-4";
-                }}
-                touch $full_file
-            elif [[ $battery_level -le $warning_level ]] && [[ $battery_discharging -eq 1 ]] && [[ ! -f $empty_file ]]; then
-                ${mkToast {
-                  title = "Low battery";
-                  body = "$battery_level% of battery remaining.";
-                  type = "error";
-                }}
-                touch $empty_file
-            fi
-          '';
+          if [[ $battery_level -ge $full_level && $battery_discharging -eq 0 && ! -f $full_file ]]; then
+              ${lib.getExe pkgs.my.notify} "Battery Charged" "Battery is fully charged." -i "battery-4"
+              touch $full_file
+          elif [[ $battery_level -le $warning_level ]] && [[ $battery_discharging -eq 1 ]] && [[ ! -f $empty_file ]]; then
+              ${lib.getExe pkgs.my.notify} "Low battery" "$battery_level% of battery remaining." -i "error"
+              touch $empty_file
+          fi
+        '';
         serviceConfig.Type = "oneshot";
       };
 
@@ -79,9 +66,7 @@
           systemd
         ];
         script =
-          let
-            mkToast = self.lib.noctalia.mkToast { inherit pkgs lib; };
-          in
+          # bash
           ''
             hibernate_level=5
 
@@ -92,11 +77,7 @@
             battery_level=$(acpi -b | grep -E "remaining|charged|zero" | grep -P -o '[0-9]+(?=%)' || echo 0)
 
             if [[ $battery_level -le $hibernate_level ]] && is_discharging; then
-              ${mkToast {
-                title = "Very low battery";
-                body = "System will hibernate in 120 seconds!";
-                type = "error";
-              }}
+              ${lib.getExe pkgs.my.notify} "Very low battery" "System will hibernate in 120 seconds!" -i "error"
 
               sleep 120
 

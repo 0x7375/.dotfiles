@@ -1,5 +1,3 @@
-{ self, ... }:
-
 {
   flake.modules.generic.desktop =
     {
@@ -225,11 +223,10 @@
 
           screenshot = import ./_screenshot.nix pkgs;
           screenrecord = import ./_screenrecord.nix pkgs;
-          call = self.lib.noctalia.call { inherit pkgs lib; };
         in
         {
-          XF86MonBrightnessUp = call "brightness increase";
-          XF86MonBrightnessDown = call "brightness decrease";
+          XF86MonBrightnessUp = "noctalia msg brightness-up all";
+          XF86MonBrightnessDown = "noctalia msg brightness-down all";
           Print = "${getExe screenshot} region";
           "Alt+Sys_Req" = "${getExe screenshot} window";
           "Shift+Print" = "${getExe screenshot} monitor";

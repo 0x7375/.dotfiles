@@ -35,7 +35,6 @@ pkgs.writeShellApplication {
   text =
     let
       inherit (config.me.desktop) theme iconTheme;
-      call = self.lib.noctalia.call { inherit pkgs lib; };
     in
     # bash
     ''
@@ -54,7 +53,11 @@ pkgs.writeShellApplication {
       case ''${1:-} in
         sync)
           theme=light
-          defaults read -g AppleInterfaceStyle &>/dev/null && theme=dark
+          if command -v noctalia >/dev/null; then
+            theme=$(noctalia msg theme-mode-get)
+          else
+            defaults read -g AppleInterfaceStyle &>/dev/null && theme=dark
+          fi
           ;;
         light|dark)
           theme=$1
@@ -87,10 +90,8 @@ pkgs.writeShellApplication {
           ln -sfT "${theme.package}/share/themes/${theme.name}-''${theme^}" "$share_dir/themes/${theme.name}"
           ln -sfT "${iconTheme.package}/share/icons/${iconTheme.name}-''${theme^}" "$share_dir/icons/${iconTheme.name}"
 
-          ${call ''darkMode set"''${theme^}"''}
-
           wallpaper=$(shuf -e -n1 --random-source=<(date +%Y%m%d | md5sum) ~/pictures/wallpapers/"$theme"/*)
-          ${call "wallpaper set \"$wallpaper\" all"}
+          noctalia msg wallpaper-set all "$wallpaper"
         ''
       }
 

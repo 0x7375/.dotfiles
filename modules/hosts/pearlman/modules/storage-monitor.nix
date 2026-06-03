@@ -21,30 +21,34 @@
           in
           # bash
           ''
-            threshold_warning=90
-            threshold_critical=95
-            message=""
             lock_dir="/tmp/storage-monitor-locks"
             mkdir -p "$lock_dir"
 
-            root_usage=$(df -h / | grep -v Filesystem | awk '{print $5}' | tr -d '%')
-            lockfile="$lock_dir/root_$threshold_warning"
+            thresholds=(95 90 80)
+            declare -A threshold_labels=([95]="CRITICAL" [90]="WARNING" [80]="NOTICE")
 
-            if [[ $root_usage -ge $threshold_critical ]]; then
-              message="Root filesystem at $root_usage% (CRITICAL)"
-              lockfile="$lock_dir/root_$threshold_critical"
-            elif [[ $root_usage -ge $threshold_warning ]]; then
-              message="Root filesystem at $root_usage% (WARNING)"
-            else
-              rm -f "$lock_dir/root_$threshold_warning" "$lock_dir/root_$threshold_critical"
-            fi
+            get_usage() { df "$1" | awk 'NR==2 {gsub(/%/, "", $5); print $5}'; }
 
-            if [[ -n $message ]]; then
-              if [[ ! -f $lockfile ]]; then
-                curl -d "$message" ${ntfyUrl}/status
-                touch "$lockfile"
+            check_filesystem() {
+              local name="$1" usage="$2" hit=""
+
+              for t in "''${thresholds[@]}"; do
+                if [[ $usage -ge $t ]]; then hit=$t; break; fi
+              done
+
+              if [[ -n $hit ]]; then
+                local lockfile="$lock_dir/''${name}_''${hit}"
+                if [[ ! -f $lockfile ]]; then
+                  curl -d "''${name} filesystem at ''${usage}% (''${threshold_labels[$hit]})" "${ntfyUrl}/status"
+                  touch "$lockfile"
+                fi
+              else
+                for t in "''${thresholds[@]}"; do rm -f "$lock_dir/''${name}_''${t}"; done
               fi
-            fi
+            }
+
+            check_filesystem "root" "$(get_usage /)"
+            check_filesystem "data" "$(get_usage /data)"
           '';
 
         serviceConfig.Type = "oneshot";

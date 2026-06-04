@@ -34,7 +34,6 @@
                 ${lib.getExe pkgs.my.notify} "Charging" "$battery_level% of battery charged." -i "battery-charging-2" 
               elif [[ $battery_charging -eq 0 ]]; then
                 ${lib.getExe pkgs.my.notify} "Discharging" "$battery_level% of battery remaining." -i "battery"
-                }}
               fi
             '';
           };

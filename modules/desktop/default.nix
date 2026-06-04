@@ -252,7 +252,7 @@
           "Mod+Shift+t" = term;
 
           "Mod+s" = "${term} -e ${getExe pkgs.my.tmux-sshr}";
-          "Mod+Shift+s" = getExe pkgs.my.swap-theme;
+          "Mod+Shift+s" = "noctalia msg theme-mode-toggle";
           # "Mod+n" =
           #   "${term} -e ${getExe pkgs.zsh} -c '${getExe' pkgs.networkmanager "nmcli"} device wifi rescan && unset COLORTERM && TERM=xterm-old ${getExe' pkgs.networkmanager "nmtui"}'";
           "Mod+Alt+n" = "${getExe' pkgs.networkmanager "nmcli"} device wifi rescan";

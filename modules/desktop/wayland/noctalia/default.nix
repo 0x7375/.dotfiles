@@ -153,7 +153,10 @@
 
             desktop_widgets.enabled = false;
             dock.enabled = false;
-            hooks.theme_mode_changed = "swap-theme sync";
+            hooks = {
+              theme_mode_changed = "swap-theme sync";
+              started = "swap-theme sync";
+            };
 
             keybinds = {
               down = [ "Ctrl+n" ];
@@ -167,6 +170,7 @@
             notification = {
               background_opacity = 1.0;
               position = "top_center";
+              show_app_name = false;
             };
 
             osd.position = "top_center";
@@ -204,6 +208,7 @@
               bluetooth.show_label = true;
               sysmon.show_label = false;
               brightness.show_label = false;
+              media.hide_when_no_media = true;
               Mango = {
                 hot_reload = true;
                 script = "${./mango.lua}";
@@ -286,14 +291,14 @@
                 ACTION=$(printf "Lock\nSuspend\nHibernate\nReboot\nReboot to UEFI\nReboot to Windows\nLogout\nShutdown" | bemenu -p "POWER")
 
                 case "$ACTION" in
-                  "lock")         noctalia msg session lock ;;
-                  "suspend")      systemctl suspend ;;
-                  "hibernate")    systemctl hibernate ;;
-                  "reboot")       systemctl --no-wall reboot ;;
-                  "rebootToUefi") systemctl --no-wall reboot --firmware-setup ;;
-                  "logout")       loginctl terminate-user "$USER" ;;
-                  "poweroff")     systemctl poweroff ;;
-                  "windows")
+                  "Lock")         noctalia msg session lock ;;
+                  "Suspend")      systemctl suspend ;;
+                  "Hibernate")    systemctl hibernate ;;
+                  "Reboot")       systemctl --no-wall reboot ;;
+                  "Reboot to UEFI") systemctl --no-wall reboot --firmware-setup ;;
+                  "Logout")       loginctl terminate-user "$USER" ;;
+                  "Shutdown")     systemctl poweroff ;;
+                  "Reboot to Windows")
                     ENTRY=$(efibootmgr | grep -i windows | grep -oP 'Boot\K[0-9A-F]+' | head -1)
                     if [ -n "$ENTRY" ]; then
                       sudo efibootmgr --bootnext "$ENTRY" && systemctl --no-wall reboot

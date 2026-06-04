@@ -19,23 +19,23 @@
 
       packages = [ pkgs.gammastep ];
 
-      systemd.user.services.gammastep = {
-        description = "gammastep";
-        wantedBy = [ "graphical-session.target" ];
-        partOf = [ "graphical-session.target" ];
-        serviceConfig = {
-          ExecStart = pkgs.writeShellScript "gammastep-start" ''
-            set -euo pipefail
-            exec ${lib.getExe pkgs.gammastep} \
-              -l "$(cat ${config.sops.secrets.coordinates.path})" \
-              -t 6500:3000 \
-              -b 1.0:1.0 \
-              -v
-          '';
-          Restart = "always";
-          RestartSec = 3;
-        };
-      };
+      # systemd.user.services.gammastep = {
+      #   description = "gammastep";
+      #   wantedBy = [ "graphical-session.target" ];
+      #   partOf = [ "graphical-session.target" ];
+      #   serviceConfig = {
+      #     ExecStart = pkgs.writeShellScript "gammastep-start" ''
+      #       set -euo pipefail
+      #       exec ${lib.getExe pkgs.gammastep} \
+      #         -l "$(cat ${config.sops.secrets.coordinates.path})" \
+      #         -t 6500:3000 \
+      #         -b 1.0:1.0 \
+      #         -v
+      #     '';
+      #     Restart = "always";
+      #     RestartSec = 3;
+      #   };
+      # };
 
       hj.xdg.config.files."gammastep/hooks/brightness.sh" = {
         enable = true;

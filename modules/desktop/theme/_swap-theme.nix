@@ -52,9 +52,9 @@ pkgs.writeShellApplication {
 
       case ''${1:-} in
         sync)
-          theme=light
+          theme="$current_theme"
           if command -v noctalia >/dev/null; then
-            theme=$(noctalia msg theme-mode-get)
+            theme=$(noctalia msg theme-mode-get || echo "$current_theme")
           else
             defaults read -g AppleInterfaceStyle &>/dev/null && theme=dark
           fi

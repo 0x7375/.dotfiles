@@ -1,30 +1,25 @@
 { self, ... }:
 
 {
-  flake.modules.nixos.desktop = {
-    xdg.mimeApps.defaultApplications = self.lib.mapMimeEntries [
-      "audio/vnd.wave"
-      "audio/midi"
-      "audio/x-wav"
-      "audio/x-flac"
-      "audio/flac"
-      "audio/mpeg"
-      "audio/ogg"
-      "audio/x-musepack"
-      "audio/x-monkeysaudio"
-      "audio/aac"
-      "audio/x-aac"
-      "video/mp4"
-      "video/x-matroska"
-    ] "mpv";
-  };
+  flake.modules.nixos.desktop =
+    { pkgs, ... }:
+    {
+      xdg.mimeApps.defaultApplications = self.lib.mapMimeEntries [
+        "audio/vnd.wave"
+        "audio/midi"
+        "audio/x-wav"
+        "audio/x-flac"
+        "audio/flac"
+        "audio/mpeg"
+        "audio/ogg"
+        "audio/x-musepack"
+        "audio/x-monkeysaudio"
+        "audio/aac"
+        "audio/x-aac"
+        "video/mp4"
+        "video/x-matroska"
+      ] "mpv";
 
-  flake.modules.generic.desktop =
-    {
-      pkgs,
-      ...
-    }:
-    {
       packages = [ pkgs.mpv ];
 
       hj.xdg.config.files."mpv/mpv.conf".text = # ini

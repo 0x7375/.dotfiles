@@ -11,7 +11,6 @@
     }:
     {
       packages = with pkgs; [
-        # codium
         (vscode-with-extensions.override {
           vscode = vscodium;
           vscodeExtensions =
@@ -37,20 +36,6 @@
                 sha256 = "p/k5UcXldXKFKbPbnW603Jsut53n01azeDhWMDSd4nw=";
               }
             ];
-          # ++ [
-          #   (pkgs.vscode-utils.buildVscodeMarketplaceExtension {
-          #     mktplcRef = {
-          #       name = "monochromator";
-          #       publisher = "beem";
-          #       version = "0.28.0";
-          #     };
-          #     vsix = pkgs.fetchurl {
-          #       name = "beem.monochromator-0.28.0.vsix";
-          #       url = "https://open-vsx.org/api/beem/monochromator/0.28.0/file/beem.monochromator-0.28.0.vsix";
-          #       sha256 = "sha256-UaH7+qc9ytvEW9WjjN2lRbHMuzwxEDF4lh+SRn7lesY=";
-          #     };
-          #   })
-          # ];
         })
       ];
 

@@ -7,7 +7,7 @@ let
       lib,
       configDir ? null,
       unfree ? false,
-      dev ? true,
+      dev ? false,
     }:
     let
       unstable = inputs.nixpkgs-unstable.legacyPackages.${pkgs.stdenv.hostPlatform.system};
@@ -23,56 +23,62 @@ let
         ruby.nvim-host.enable = dev;
       };
 
-      extraPackages = lib.optionals dev (
+      extraPackages =
         with pkgs;
         [
           tree-sitter
           gnumake
-          cargo
-          rustc
 
-          lua54Packages.tiktoken_core
-          lynx
           # peek.nvim
           deno
 
           # LSPs
           lua-language-server
           nixd
-          jdt-language-server
-          bash-language-server
-          emmet-language-server
-          vscode-langservers-extracted
-          gopls
           typescript-language-server
-          texlab
-          sqls
-          ruff
-          pyright
-          phpactor
 
           # Formatters
           nixfmt
           stylua
-          shfmt
-          phpPackages.php-codesniffer
           typstyle
-          libxml2
 
           # Linters
           shellcheck
           statix
           deadnix
         ]
-        ++ (lib.optionals unfree [
-          pkgs.intelephense
-        ])
-      );
-    }
-    // lib.optionalAttrs (configDir != null) {
-      settings.config_directory = configDir;
-    }
-    // lib.optionalAttrs dev {
+        ++ (
+          lib.optionals dev (
+            with pkgs;
+            [
+              cargo
+              rustc
+              lua54Packages.tiktoken_core
+              lynx
+
+              # LSPs
+              jdt-language-server
+              bash-language-server
+              emmet-language-server
+              vscode-langservers-extracted
+              gopls
+              texlab
+              sqls
+              ruff
+              pyright
+              phpactor
+
+              # Formatters
+              shfmt
+              phpPackages.php-codesniffer
+              libxml2
+            ]
+          )
+          ++ (lib.optionals unfree [
+            pkgs.intelephense
+          ])
+        );
+
       specs.treesitter = {
         lazy = false;
         data = [
@@ -121,6 +127,9 @@ let
           ))
         ];
       };
+    }
+    // lib.optionalAttrs (configDir != null) {
+      settings.config_directory = configDir;
     };
 
   inherit (inputs.wrappers.wrappers) neovim;
@@ -147,14 +156,13 @@ in
       packages = [
         (neovim.apply (neovimWrapperBase {
           inherit pkgs lib;
-          dev = false;
         })).wrapper
       ];
 
       hj.xdg.config.files."nvim".source = "${config.me.flakeDir}/nvim";
     };
 
-  flake.modules.generic.desktop =
+  flake.modules.nixos.desktop =
     {
       lib,
       pkgs,
@@ -167,6 +175,7 @@ in
         (neovim.apply (neovimWrapperBase {
           inherit pkgs lib;
           unfree = true;
+          dev = true;
         })).wrapper
       ];
     };

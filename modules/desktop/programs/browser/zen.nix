@@ -309,48 +309,48 @@ in
     vars.MOZ_LEGACY_PROFILES = "1";
   };
 
-  flake.modules.darwin.desktop =
-    {
-      config,
-      pkgs,
-      lib,
-      ...
-    }:
-    let
-      inherit (pkgs.stdenv) isDarwin;
-    in
-    {
-      homebrew.casks = [ "zen" ];
-
-      environment.etc."zen-policies.plist".text = lib.generators.toPlist { escape = true; } (
-        (policies lib) // { EnterprisePoliciesEnabled = true; }
-      );
-
-      activation = ''
-        cp -f "/etc/zen-policies.plist" "/Library/Preferences/app.zen-browser.zen.plist"
-      '';
-
-      hj.files."Library/Application Support/zen-browser/Policies/Managed/policies.json".source =
-        "/etc/zen-policies.plist";
-
-      hj.files."Library/Application Support/zen/installs.ini" = {
-        type = "copy";
-        generator = lib.generators.toINI { };
-        value = {
-          "6ED35B3CA1B5D3AF" = {
-            Default = "Profiles/${profile}";
-            Locked = 1;
-          };
-        };
-      };
-
-      hj.files."Library/Application Support/zen/profiles.ini" = profiles lib isDarwin;
-      hj.files."Library/Application Support/zen/Profiles/${profile}/chrome/userChrome.css".text = css;
-      hj.files."Library/Application Support/zen/Profiles/${profile}/zen-keyboard-shortcuts.json".text =
-        shortcuts;
-      hj.files."Library/Application Support/zen/Profiles/${profile}/user.js".text =
-        js config.me.desktop.refreshRate lib;
-    };
+  # flake.modules.darwin.desktop =
+  #   {
+  #     config,
+  #     pkgs,
+  #     lib,
+  #     ...
+  #   }:
+  #   let
+  #     inherit (pkgs.stdenv) isDarwin;
+  #   in
+  #   {
+  #     homebrew.casks = [ "zen" ];
+  #
+  #     environment.etc."zen-policies.plist".text = lib.generators.toPlist { escape = true; } (
+  #       (policies lib) // { EnterprisePoliciesEnabled = true; }
+  #     );
+  #
+  #     activation = ''
+  #       cp -f "/etc/zen-policies.plist" "/Library/Preferences/app.zen-browser.zen.plist"
+  #     '';
+  #
+  #     hj.files."Library/Application Support/zen-browser/Policies/Managed/policies.json".source =
+  #       "/etc/zen-policies.plist";
+  #
+  #     hj.files."Library/Application Support/zen/installs.ini" = {
+  #       type = "copy";
+  #       generator = lib.generators.toINI { };
+  #       value = {
+  #         "6ED35B3CA1B5D3AF" = {
+  #           Default = "Profiles/${profile}";
+  #           Locked = 1;
+  #         };
+  #       };
+  #     };
+  #
+  #     hj.files."Library/Application Support/zen/profiles.ini" = profiles lib isDarwin;
+  #     hj.files."Library/Application Support/zen/Profiles/${profile}/chrome/userChrome.css".text = css;
+  #     hj.files."Library/Application Support/zen/Profiles/${profile}/zen-keyboard-shortcuts.json".text =
+  #       shortcuts;
+  #     hj.files."Library/Application Support/zen/Profiles/${profile}/user.js".text =
+  #       js config.me.desktop.refreshRate lib;
+  #   };
 
   flake.modules.nixos.desktop =
     {

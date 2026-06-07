@@ -2,36 +2,42 @@
   flake.modules.generic.dev =
     { pkgs, ... }:
     {
-      config = {
-        packages = with pkgs; [
-          gnumake
+      packages = with pkgs; [
+        gnumake
+        jq
+        # karabiner
+        nodejs_24
+      ];
+    };
 
-          go
-          delve
+  flake.modules.nixos.dev =
+    { pkgs, ... }:
+    {
+      packages = with pkgs; [
+        go
+        delve
 
-          # nodePackages.eas-cli
-          nodejs_24
+        # nodePackages.eas-cli
+        nodejs_24
 
-          # haskell
-          # ghc
+        # haskell
+        # ghc
 
-          # php
-          php
-          # nodePackages.intelephense
+        # php
+        php
+        # nodePackages.intelephense
 
-          # java
-          zulu
+        # java
+        zulu
 
-          # c
-          clang-tools
-          gcc
-          bear
-          gdb
+        # c
+        clang-tools
+        gcc
+        bear
+        gdb
 
-          python3
-          taplo
-          jq
-        ];
-      };
+        python3
+        taplo
+      ];
     };
 }

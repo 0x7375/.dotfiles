@@ -4,7 +4,6 @@
     {
       packages = with pkgs; [
         wireguard-tools
-        gcc
         unzip
         (openssl.override { withZlib = true; })
         ncdu
@@ -31,6 +30,9 @@
   flake.modules.nixos.core =
     { pkgs, ... }:
     {
-      packages = [ pkgs.efibootmgr ];
+      packages = with pkgs; [
+        efibootmgr
+        gcc
+      ];
     };
 }

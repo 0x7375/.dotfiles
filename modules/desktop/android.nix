@@ -1,16 +1,13 @@
 {
   flake.modules.nixos.desktop =
-    { config, ... }:
-    {
-      users.users.${config.me.user}.extraGroups = [ "adbusers" ];
-    };
-
-  flake.modules.generic.desktop =
     {
       pkgs,
+      config,
       ...
     }:
     {
+      users.users.${config.me.user}.extraGroups = [ "adbusers" ];
+
       unfree-packages = [ "android-studio-stable" ];
 
       packages = with pkgs; [

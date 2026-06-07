@@ -55,11 +55,8 @@
           "xcbeautify"
         ];
         casks = [
-          "discord"
-          "helium-browser"
           "secretive"
           "unnaturalscrollwheels"
-          "jellyfin-media-player"
           "karabiner-elements"
           "middleclick"
           "signal"
@@ -70,9 +67,6 @@
       };
 
       packages = with pkgs; [
-        syncthing
-        mas
-        unstable.pear-desktop
         wireguard-tools
       ];
 
@@ -121,12 +115,6 @@
       launchd.user.agents.theme-switcher = self.lib.mkLaunchdAgent {
         name = "theme-switcher";
         command = "${lib.getExe pkgs.dark-mode-notify} ${lib.getExe pkgs.my.swap-theme} sync";
-      };
-
-      launchd.user.agents.syncthing = self.lib.mkLaunchdAgent {
-        name = "syncthing";
-        command = "${lib.getExe pkgs.syncthing} --no-browser --no-restart";
-        background = true;
       };
 
       hj.files.".hushlogin".text = "";

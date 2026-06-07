@@ -39,6 +39,7 @@ require("gitsigns").setup({
     )
     vim.keymap.set("n", "gh", gitsigns.preview_hunk, { desc = "Preview hunk", buffer = bufnr })
     vim.keymap.set("n", "gH", gitsigns.preview_hunk_inline, { desc = "Preview hunk inline", buffer = bufnr })
+    vim.keymap.set("n", "gs", gitsigns.stage_hunk, { desc = "Stage hunk", buffer = bufnr })
     vim.keymap.set("n", "gX", gitsigns.reset_hunk, { desc = "Reset hunk", buffer = bufnr })
   end,
 })

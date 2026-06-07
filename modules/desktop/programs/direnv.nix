@@ -17,7 +17,6 @@
         lib.mkAfter "command -v direnv &> /dev/null && eval \"$(direnv hook bash)\"";
 
       packages = with pkgs; [
-        unstable.devenv
         direnv
       ];
 
@@ -48,5 +47,11 @@
 
           export DIRENV_LOADED=1
         '';
+    };
+
+  flake.modules.nixos.desktop =
+    { pkgs, ... }:
+    {
+      packages = [ pkgs.unstable.devenv ];
     };
 }

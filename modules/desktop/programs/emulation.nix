@@ -1,11 +1,5 @@
 {
   flake.modules.nixos.desktop =
-    { pkgs, ... }:
-    {
-      packages = [ pkgs.dolphin-emu ];
-    };
-
-  flake.modules.generic.desktop =
     {
       pkgs,
       config,
@@ -15,6 +9,7 @@
       packages = with pkgs; [
         melonDS
         ryubing
+        dolphin-emu
       ];
 
       me.desktop.floating = [

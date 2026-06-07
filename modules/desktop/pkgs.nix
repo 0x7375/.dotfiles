@@ -5,18 +5,10 @@
       ...
     }:
     {
-      unfree-packages = [
-        "discord"
-        "omnissa-horizon-client"
-      ];
-
       packages = with pkgs; [
         my.swap-theme
         my.backup-vault
-        texliveMedium
         typst
-        qbittorrent
-        # st
       ];
     };
 
@@ -24,15 +16,16 @@
     { lib, pkgs, ... }:
     lib.mkMerge [
       {
-        unfree-packages = [ "omnissa-horizon-client" ];
+        # unfree-packages = [ "omnissa-horizon-client" ];
 
         packages = with pkgs; [
           # (auto.discord.override {
           #   # withOpenASAR = true;
           #   withVencord = true;
           # })
-          omnissa-horizon-client
+          # omnissa-horizon-client
           signal-desktop
+          qbittorrent
           # jetbrains.idea-community
         ];
       }

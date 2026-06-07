@@ -13,6 +13,7 @@
 
       programs.nixcord = {
         enable = true;
+        discord.enable = false;
         vesktop.enable = true;
         inherit (config.me) user;
         config.plugins = {

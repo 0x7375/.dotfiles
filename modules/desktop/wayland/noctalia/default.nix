@@ -183,7 +183,10 @@
               screen_time_enabled = true;
               settings_show_advanced = true;
               telemetry_enabled = true;
-              animation.enabled = true;
+              animation = {
+                enabled = true;
+                speed = 2.0;
+              };
               panel = {
                 launcher_categories = false;
                 open_near_click_control_center = true;

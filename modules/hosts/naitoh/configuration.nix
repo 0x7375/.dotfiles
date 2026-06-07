@@ -73,6 +73,8 @@
           RUN+="${getExe' pkgs.systemd "loginctl"} lock-sessions"
         '';
 
+      services.upower.enable = true;
+
       packages = with pkgs; [ acpi ];
 
       services.acpid = {

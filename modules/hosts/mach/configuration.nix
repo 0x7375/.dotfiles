@@ -55,6 +55,8 @@
           "xcbeautify"
         ];
         casks = [
+          "altserver"
+          "sf-symbols"
           "secretive"
           "unnaturalscrollwheels"
           "karabiner-elements"

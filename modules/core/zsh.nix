@@ -345,7 +345,7 @@
         '';
     };
 
-  flake.modules.generic.desktop =
+  flake.modules.nixos.desktop =
     { pkgs, lib, ... }:
     let
       inherit (lib) getExe getExe';

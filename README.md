@@ -165,8 +165,13 @@ nixos-install --root /mnt --flake ~/.config/nixcfg#hostname
 ## Darwin
 
 - Install lix: `curl -sSf -L https://install.lix.systems/lix | sh -s -- install`
-- Clone repo
+- Install secretive and generate new key, create the suggested .ssh/config file
+- `sudo age-plugin-se keygen --access-control=none -o /var/lib/sops-nix/se-identity.txt"
+- Pull nix-secrets and updatekeys inside a shell with all the plugins and stuff
+- `mkdir .config && cd .config && git clone git@codeberg.org:0x7E/nixcfg`
+- `nix flake update secrets`
 - Give full disk access to terminal
-- `sudo nix run github:LnL7/nix-darwin -- switch --flake .#mach`
+- `sudo nix run github:LnL7/nix-darwin -- build --flake .#mach`
+- `sudo ./result/activate`
 - `sudo darwin-rebuild switch`
 - Privacy & Security -> Allow applications from `Anywhere`

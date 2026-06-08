@@ -19,29 +19,27 @@
       me.hostSecrets."syncthing/key" = {
         owner = user;
       };
-      hj.files."Library/Application Support/Syncthing/cert.pem".text = ''
-        -----BEGIN CERTIFICATE-----
-        ${config.me.host.syncthing.cert}
-        -----END CERTIFICATE-----
-      '';
 
-      system.activationScripts.sshConfigFromSecrets = {
-        deps = [ "setupSecrets" ];
-        text =
-          let
-            inherit (config.sops) secrets;
-          in
-          # bash
-          ''
-            dir="${home}/Library/Application Support/Syncthing"
-            mkdir -p "${home}/Library/Application Support/Syncthing"
+      activation =
+        let
+          inherit (config.sops) secrets;
+        in
+        # bash
+        ''
+          dir="${home}/Library/Application Support/Syncthing"
+          mkdir -p "$dir"
 
-            cp -f ${secrets."syncthing/config".path} "$dir/config.xml"
-            cp -f ${secrets."syncthing/key".path} "$dir/key.pem"
+          cp -f ${secrets."syncthing/config".path} "$dir/config.xml"
+          cp -f ${secrets."syncthing/key".path} "$dir/key.pem"
 
-            chown -R ${user}: "$dir"
-            chmod 600 "$dir/config.xml" "$dir/key.pem"
-          '';
-      };
+          cat << 'EOF' > "$dir/cert.pem"
+          -----BEGIN CERTIFICATE-----
+          ${config.me.host.syncthing.cert}
+          -----END CERTIFICATE-----
+          EOF
+
+          chown -R ${user}: "$dir"
+          chmod 600 "$dir/config.xml" "$dir/key.pem" "$dir/cert.pem"
+        '';
     };
 }

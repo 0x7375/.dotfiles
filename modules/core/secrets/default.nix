@@ -1,5 +1,3 @@
-{ self, ... }:
-
 {
   flake.modules.generic.secrets =
     {
@@ -71,7 +69,6 @@
 
       config = lib.mkMerge [
         {
-
           sops.useSystemdActivation = true;
         }
         (lib.mkIf config.me.tpm.enable {

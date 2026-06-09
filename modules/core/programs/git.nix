@@ -124,7 +124,7 @@
       '';
     };
 
-  flake.modules.nixos.secrets =
+  flake.modules.nixos.core =
     {
       pkgs,
       lib,

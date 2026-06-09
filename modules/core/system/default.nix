@@ -1,6 +1,7 @@
 {
   flake.modules.nixos.core =
     {
+      lib,
       pkgs,
       options,
       config,
@@ -18,7 +19,7 @@
       systemd.coredump.enable = false;
       boot.kernel.sysctl."kernel.core_pattern" = "|/bin/false";
 
-      boot.kernelPackages = pkgs.linuxPackages_latest;
+      boot.kernelPackages = lib.mkDefault pkgs.linuxPackages_latest;
 
       zramSwap = {
         enable = true;

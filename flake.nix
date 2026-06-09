@@ -28,6 +28,12 @@
     #   inputs.nixpkgs.follows = "nixpkgs";
     # };
 
+    apple-silicon.url = "github:nix-community/nixos-apple-silicon";
+    asahi-firmware = {
+      url = "git+ssh://git@codeberg.org/0x7E/asahi-firmware";
+      flake = false;
+    };
+
     hjem = {
       url = "github:feel-co/hjem";
       inputs.nixpkgs.follows = "nixpkgs";

@@ -1,5 +1,40 @@
 {
   "nodes": {
+    "apple-silicon": {
+      "inputs": {
+        "flake-compat": "flake-compat",
+        "nixpkgs": "nixpkgs"
+      },
+      "locked": {
+        "lastModified": 1780669925,
+        "narHash": "sha256-inOQx/s7GQjh9bcCjCHXAeX0EHX+sOQUBoo8+bs48ME=",
+        "owner": "nix-community",
+        "repo": "nixos-apple-silicon",
+        "rev": "5880026520a3fd248d59e1c81c4e4e111aefc6af",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "repo": "nixos-apple-silicon",
+        "type": "github"
+      }
+    },
+    "asahi-firmware": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1781020630,
+        "narHash": "sha256-91EF0ik5jyujMGoChgNgrBxhOIFI1ceOOV3V2Bdtsm8=",
+        "ref": "refs/heads/main",
+        "rev": "255aa72f184e368671210e55f79d1e28f08c0df7",
+        "revCount": 1,
+        "type": "git",
+        "url": "ssh://git@codeberg.org/0x7E/asahi-firmware"
+      },
+      "original": {
+        "type": "git",
+        "url": "ssh://git@codeberg.org/0x7E/asahi-firmware"
+      }
+    },
     "auto-update": {
       "locked": {
         "lastModified": 1780243769,
@@ -55,6 +90,21 @@
       }
     },
     "flake-compat": {
+      "locked": {
+        "lastModified": 1761640442,
+        "narHash": "sha256-AtrEP6Jmdvrqiv4x2xa5mrtaIp3OEe8uBYCDZDS+hu8=",
+        "owner": "nix-community",
+        "repo": "flake-compat",
+        "rev": "4a56054d8ffc173222d09dad23adf4ba946c8884",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "repo": "flake-compat",
+        "type": "github"
+      }
+    },
+    "flake-compat_2": {
       "flake": false,
       "locked": {
         "lastModified": 1767039857,
@@ -70,7 +120,7 @@
         "type": "github"
       }
     },
-    "flake-compat_2": {
+    "flake-compat_3": {
       "locked": {
         "lastModified": 1733328505,
         "narHash": "sha256-NeCCThCEP3eCl2l/+27kNNK7QrwZB1IJCrXfrbv5oqU=",
@@ -104,7 +154,7 @@
     },
     "git-hooks-nix": {
       "inputs": {
-        "flake-compat": "flake-compat",
+        "flake-compat": "flake-compat_2",
         "gitignore": "gitignore",
         "nixpkgs": [
           "nixpkgs"
@@ -288,7 +338,7 @@
     },
     "nixcord": {
       "inputs": {
-        "flake-compat": "flake-compat_2",
+        "flake-compat": "flake-compat_3",
         "flake-parts": [
           "flake-parts"
         ],
@@ -313,16 +363,16 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1777428379,
-        "narHash": "sha256-ypxFOeDz+CqADEQNL72haqGjvZQdBR5Vc7pyx2JDttI=",
-        "owner": "nixos",
+        "lastModified": 1779560665,
+        "narHash": "sha256-tpyBcxPpcQb8ukyNF7DoCwfSY3VPsxHoYwj00Cayv5o=",
+        "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "755f5aa91337890c432639c60b6064bb7fe67769",
+        "rev": "64c08a7ca051951c8eae34e3e3cb1e202fe36786",
         "type": "github"
       },
       "original": {
-        "owner": "nixos",
-        "ref": "nixos-25.11",
+        "owner": "NixOS",
+        "ref": "nixos-unstable",
         "repo": "nixpkgs",
         "type": "github"
       }
@@ -390,6 +440,22 @@
         "type": "github"
       }
     },
+    "nixpkgs_2": {
+      "locked": {
+        "lastModified": 1780511130,
+        "narHash": "sha256-2v9lT4ya59Lh1FqPeLnz1MoX9y/wz2huqfe9RtQZITk=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "535f3e6942cb1cead3929c604320d3db54b542b9",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "ref": "nixos-25.11",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
     "noctalia": {
       "inputs": {
         "nixpkgs": [
@@ -452,6 +518,8 @@
     },
     "root": {
       "inputs": {
+        "apple-silicon": "apple-silicon",
+        "asahi-firmware": "asahi-firmware",
         "auto-update": "auto-update",
         "disko": "disko",
         "flake-parts": "flake-parts",
@@ -463,7 +531,7 @@
         "nix-homebrew": "nix-homebrew",
         "nix-index-database": "nix-index-database",
         "nixcord": "nixcord",
-        "nixpkgs": "nixpkgs",
+        "nixpkgs": "nixpkgs_2",
         "nixpkgs-darwin": "nixpkgs-darwin",
         "nixpkgs-unstable": "nixpkgs-unstable",
         "noctalia": "noctalia",
@@ -479,11 +547,11 @@
     "secrets": {
       "flake": false,
       "locked": {
-        "lastModified": 1780930028,
-        "narHash": "sha256-t+CbQNZ1w+mqKwtysXaqQOlZ5JWCb1RVkOPwVlmK7yk=",
+        "lastModified": 1781025743,
+        "narHash": "sha256-OmGSfa9pNBRLvEwqky7pFeBWst3rv9fWWZsQyNMqmhs=",
         "ref": "refs/heads/main",
-        "rev": "4f31ca38704201b034d153415d1447c9e4b95677",
-        "revCount": 19,
+        "rev": "e25c3551506bcaa5e55c950f370c322c27a82e38",
+        "revCount": 21,
         "type": "git",
         "url": "ssh://git@codeberg.org/0x7E/nix-secrets"
       },

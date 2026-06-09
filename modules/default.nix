@@ -100,6 +100,22 @@ in
         ]
       );
 
+      woz = mkHost "nixos" "woz" (
+        with scope.nixos;
+        [
+          keyd
+          # boot
+          secrets
+          networkEnvironment
+          btrfs
+          syncthingClient
+          vpnPeer
+          desktop
+          wayland
+          dev
+        ]
+      );
+
       pearlman = mkHost "nixos" "pearlman" (
         with scope.nixos;
         [

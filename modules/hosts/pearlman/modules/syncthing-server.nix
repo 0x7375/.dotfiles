@@ -8,24 +8,30 @@
     let
       inherit (config.me) hostname services;
       inherit (services.syncthing) port;
-      cray = "cray";
-      naitoh = "naitoh";
-      cutler = "cutler";
-      shannon = "shannon";
-      lamarr = "lamarr";
-      yoshino = "yoshino";
-      mach = "mach";
+
+      devices = lib.mapAttrs (name: _: name) config.me.hosts;
+      inherit (devices)
+        cray
+        naitoh
+        woz
+        cutler
+        mach
+        shannon
+        lamarr
+        yoshino
+        ;
+
       groups = {
         desktops = [
           cray
           naitoh
+          woz
           cutler
-          mach
         ];
         linux = [
           cray
           naitoh
-          mach
+          woz
         ];
         phones = [
           shannon
@@ -106,7 +112,7 @@
 
           zsh_history = {
             path = "zsh";
-            devices = groups.linux;
+            devices = groups.linux ++ [ mach ];
             ignorePatterns = [
               "machine_id"
               "history"
@@ -115,7 +121,7 @@
 
           pictures = {
             path = "pictures";
-            devices = groups.desktops;
+            devices = groups.desktops ++ [ mach ];
           };
           documents = {
             path = "documents";
@@ -124,7 +130,7 @@
           };
           photos = {
             path = "photos";
-            devices = groups.linux ++ groups.phones;
+            devices = groups.linux ++ groups.phones ++ [ mach ];
             ro = true;
           };
           perso = {
@@ -143,11 +149,17 @@
 
           courses = {
             path = "courses";
-            devices = groups.desktops ++ groups.phones ++ [ yoshino ];
+            devices =
+              groups.desktops
+              ++ groups.phones
+              ++ [
+                yoshino
+                mach
+              ];
           };
           notes = {
             path = "notes";
-            devices = groups.linux ++ groups.phones;
+            devices = groups.linux ++ groups.phones ++ [ mach ];
             ro = true;
           };
         };

@@ -17,7 +17,7 @@
       directories = [
         "/var/lib/systemd/timers"
         {
-          file = "/var/lib/nixos";
+          directory = "/var/lib/nixos";
           inInitrd = true;
         }
       ];

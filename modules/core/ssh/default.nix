@@ -53,7 +53,7 @@
   flake.modules.nixos.core =
     { config, ... }:
     {
-      persist.dirs = [ "/var/lib/fail2ban" ];
+      persist.directories = [ "/var/lib/fail2ban" ];
 
       persistUser = {
         directories = [

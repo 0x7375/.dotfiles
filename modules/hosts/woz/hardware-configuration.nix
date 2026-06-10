@@ -23,23 +23,40 @@
 
       hardware.asahi.peripheralFirmwareDirectory = inputs.asahi-firmware;
 
-      fileSystems."/" = {
-        device = "/dev/mapper/crypted";
-        fsType = "btrfs";
-        options = [ "subvol=root" ];
-      };
-
       boot.initrd.luks.devices.crypted = {
         device = "/dev/disk/by-uuid/d9e7427d-b109-46e2-925f-1498525506b2";
+        allowDiscards = true;
         crypttabExtraOpts = [ "fido2-device=auto" ];
       };
 
-      boot.initrd.systemd.enable = true;
+      fileSystems."/" = {
+        device = "/dev/mapper/crypted";
+        fsType = "btrfs";
+        options = [
+          "subvol=root"
+          "compress=zstd"
+          "noatime"
+        ];
+      };
+
+      fileSystems."/home" = {
+        device = "/dev/mapper/crypted";
+        fsType = "btrfs";
+        options = [
+          "subvol=@home"
+          "compress=zstd"
+          "noatime"
+        ];
+      };
 
       fileSystems."/nix" = {
         device = "/dev/mapper/crypted";
         fsType = "btrfs";
-        options = [ "subvol=nix" ];
+        options = [
+          "subvol=nix"
+          "compress=zstd"
+          "noatime"
+        ];
       };
 
       fileSystems."/boot" = {
@@ -51,7 +68,21 @@
         ];
       };
 
-      swapDevices = [ ];
+      fileSystems."/swap" = {
+        device = "/dev/mapper/crypted";
+        fsType = "btrfs";
+        options = [
+          "subvol=@swap"
+          "noatime"
+        ];
+      };
+
+      swapDevices = [
+        {
+          device = "/swap/swapfile";
+          size = 8192;
+        }
+      ];
 
       nixpkgs.hostPlatform = lib.mkDefault "aarch64-linux";
     };

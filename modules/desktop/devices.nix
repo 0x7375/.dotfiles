@@ -39,12 +39,12 @@
             RUN+="${lib.getExe' pkgs.kmod "modprobe"} xpad", \
             RUN+="/bin/sh -c 'echo 2dc8 3109 > /sys/bus/usb/drivers/xpad/new_id'"
           '';
-      }
-      {
-        packages = with pkgs; [ vial ];
-        services.udev.packages = with pkgs; [ vial ];
 
         hardware.keyboard.qmk.enable = true;
       }
+      (lib.mkIf (!pkgs.stdenv.isAarch64) {
+        packages = with pkgs; [ vial ];
+        services.udev.packages = with pkgs; [ vial ];
+      })
     ];
 }

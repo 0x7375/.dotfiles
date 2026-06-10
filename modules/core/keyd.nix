@@ -16,6 +16,7 @@
             corne = "4653:0004";
             keychron = "3434:0321";
             thinkpad = "0001:0001";
+            m1 = "05ac:0281:dac4f95d";
 
             mapModNumbers = mod: lib.genAttrs (map toString (lib.range 0 9)) (x: "${mod}-${x}");
             mapNumbers = lib.genAttrs (map toString (lib.range 0 9)) (x: x);
@@ -137,16 +138,15 @@
               meta = mapModNumbers "M";
             };
 
-            qol = {
-              main = {
-                capslock = "overload(control, esc)";
-                leftalt = "layer(meta)";
-                leftmeta = "layer(alt)";
-              };
-              global = {
-                # ignores tap behaviour if no key was pressed and time is over timeout
-                overload_tap_timeout = 250;
-              };
+            overload-caps = {
+              main.capslock = "overload(control, esc)";
+              # ignores tap behaviour if no key was pressed and time is over timeout
+              global.overload_tap_timeout = 250;
+            };
+
+            swap-meta.main = {
+              leftalt = "layer(meta)";
+              leftmeta = "layer(alt)";
             };
 
             extraConfig =
@@ -169,6 +169,8 @@
                 [meta+qwerty_shift]
                 space = setlayout(main)
               '';
+
+            merge = lib.recursiveUpdate;
           in
           {
             external = {
@@ -178,9 +180,17 @@
               ];
               inherit settings extraConfig;
             };
-            laptop = {
+            thinkpad = {
               ids = [ thinkpad ];
-              settings = lib.recursiveUpdate settings qol;
+              settings = merge (merge (merge settings swap-meta) overload-caps) {
+                main.rightmeta = "oneshot(compose)";
+                compose.rightmeta = "oneshot(compose)";
+              };
+              inherit extraConfig;
+            };
+            m1 = {
+              ids = [ m1 ];
+              settings = merge settings overload-caps;
               inherit extraConfig;
             };
           };

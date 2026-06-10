@@ -104,7 +104,7 @@ in
         with scope.nixos;
         [
           keyd
-          # boot
+          boot
           secrets
           networkEnvironment
           btrfs

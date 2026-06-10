@@ -21,6 +21,7 @@
             };
             debug.enable = mkEnableOption "Make boot verbose";
             encryption.enable = mkEnableOption "Make boot verbose";
+            secureBoot.enable = mkEnableOption "Enable secure boot";
           };
         };
 
@@ -49,14 +50,13 @@
             enableEditor = false;
             maxGenerations = 30;
             # TODO: watch nixpkgs issues about automating keys enrolling
-            secureBoot.enable = true;
+            secureBoot.enable = config.me.boot.secureBoot.enable;
             style = {
               backdrop = "000000";
               wallpapers = lib.mkForce [ ];
 
-              # TODO: uncomment on next update
               interface = {
-                # helpHidden = true;
+                helpHidden = true;
                 branding = "";
               };
 
@@ -66,8 +66,6 @@
               };
             };
             extraConfig = ''
-              # TODO: remove on next update
-              interface_help_hidden: yes
               quiet: yes
             '';
           };

@@ -116,8 +116,6 @@
               trackpad_natural_scrolling = 1;
               disable_while_typing = 1;
               drag_tile_to_tile = 1;
-              tap_to_click = 1;
-              tap_and_drag = 1;
               cursor_size = 24;
 
               circle_layout = "tile,monocle";

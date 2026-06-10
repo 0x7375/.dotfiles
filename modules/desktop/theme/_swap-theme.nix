@@ -90,6 +90,8 @@ pkgs.writeShellApplication {
           ln -sfT "${theme.package}/share/themes/${theme.name}-''${theme^}" "$share_dir/themes/${theme.name}"
           ln -sfT "${iconTheme.package}/share/icons/${iconTheme.name}-''${theme^}" "$share_dir/icons/${iconTheme.name}"
 
+          dconf write /org/gnome/desktop/interface/color-scheme "'prefer-$theme'"
+
           wallpaper=$(shuf -e -n1 --random-source=<(date +%Y%m%d | md5sum) ~/pictures/wallpapers/"$theme"/*)
           noctalia msg wallpaper-set "$wallpaper"
         ''

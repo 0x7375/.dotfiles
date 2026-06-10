@@ -156,6 +156,29 @@
             hooks = {
               theme_mode_changed = "swap-theme sync";
               started = "swap-theme sync";
+              session_locked = lib.getExe (import ./_hooks/lock.nix { inherit pkgs lib config; });
+              session_unlocked = lib.getExe (import ./_hooks/unlock.nix { inherit pkgs; });
+            };
+
+            idle = {
+              behaviour_order = [
+                "screen-off"
+                "lock-and-suspend"
+              ];
+              behaviour = {
+                screen-off = {
+                  command = "noctalia:dpms-off";
+                  resume_command = "noctalia:dpms-on";
+                  timeout = 300;
+                  enabled = true;
+                };
+                lock-and-suspend = {
+                  command = "noctalia:session lock-and-suspend";
+                  resume_command = "noctalia:dpms-on";
+                  timeout = 600;
+                  enabled = true;
+                };
+              };
             };
 
             keybinds = {
@@ -164,8 +187,6 @@
             };
 
             location.auto_locate = true;
-
-            noctalia_state.setup_wizard_completed = true;
 
             notification = {
               background_opacity = 1.0;
@@ -183,6 +204,67 @@
               screen_time_enabled = true;
               settings_show_advanced = true;
               telemetry_enabled = true;
+              setup_wizard_enabled = false;
+
+              session.actions = [
+                {
+                  action = "lock";
+                  enabled = true;
+                  variant = "default";
+                }
+                {
+                  action = "suspend";
+                  enabled = true;
+                  variant = "default";
+                }
+                {
+                  action = "command";
+                  command = "loginctl terminate-user ${config.me.user}";
+                  enabled = true;
+                  glyph = "logout";
+                  label = "Log out";
+                  variant = "default";
+                }
+                {
+                  action = "shutdown";
+                  enabled = true;
+                  variant = "destructive";
+                }
+                {
+                  action = "reboot";
+                  enabled = true;
+                  variant = "default";
+                }
+                (
+                  let
+                    switch-to-windows = pkgs.writeShellApplication {
+                      name = "switch-to-windows";
+                      text = ''
+                        ENTRY=$(${lib.getExe pkgs.efibootmgr} | grep -i windows | grep -oP 'Boot\K[0-9A-F]+' | head -1)
+                        if [ -n "$ENTRY" ]; then
+                          sudo efibootmgr --bootnext "$ENTRY" && systemctl --no-wall reboot
+                        fi
+                      '';
+                    };
+                  in
+                  {
+                    action = "command";
+                    command = lib.getExe switch-to-windows;
+                    enabled = true;
+                    glyph = "brand-windows-filled";
+                    label = "Reboot to Windows";
+                    variant = "default";
+                  }
+                )
+                {
+                  action = "command";
+                  command = "systemctl --no-wall reboot --firmware-setup";
+                  enabled = true;
+                  glyph = "settings";
+                  label = "Reboot to UEFI";
+                  variant = "default";
+                }
+              ];
               animation = {
                 enabled = true;
                 speed = 2.0;
@@ -259,83 +341,30 @@
 
       me.desktop = {
         startup.noctalia = lib.getExe pkgs.my.noctalia;
-        bindings =
-          let
-            # inherit (pkgs.my) dmenu;
-            powermenu = pkgs.writeShellApplication {
-              name = "custom-session-menu";
-              runtimeInputs = with pkgs; [
-                efibootmgr
-                systemd
-                # dmenu
-                bemenu
-              ];
-              text = ''
-                # MENU_FILE=$(mktemp /tmp/powermenu.XXXXXX.json)
-                # trap 'rm -f "$MENU_FILE"' EXIT
-                #
-                # cat << 'EOF' > "$MENU_FILE"
-                # {
-                #   "items": [
-                #     {"name": "Lock", "value": "lock", "icon": "lock"},
-                #     {"name": "Suspend", "value": "suspend", "icon": "player-pause"},
-                #     {"name": "Hibernate", "value": "hibernate", "icon": "zzz"},
-                #     {"name": "Reboot", "value": "reboot", "icon": "refresh"},
-                #     {"name": "Reboot to UEFI", "value": "rebootToUefi", "icon": "settings"},
-                #     {"name": "Reboot to Windows", "value": "windows", "icon": "brand-windows"},
-                #     {"name": "Logout", "value": "logout", "icon": "logout"},
-                #     {"name": "Shutdown", "value": "poweroff", "icon": "power"}
-                #   ]
-                # }
-                # EOF
-
-                # ACTION=$(dmenu -p "POWER" -f "$MENU_FILE")
-
-                ACTION=$(printf "Lock\nSuspend\nHibernate\nReboot\nReboot to UEFI\nReboot to Windows\nLogout\nShutdown" | bemenu -p "POWER")
-
-                case "$ACTION" in
-                  "Lock")         noctalia msg session lock ;;
-                  "Suspend")      systemctl suspend ;;
-                  "Hibernate")    systemctl hibernate ;;
-                  "Reboot")       systemctl --no-wall reboot ;;
-                  "Reboot to UEFI") systemctl --no-wall reboot --firmware-setup ;;
-                  "Logout")       loginctl terminate-user "$USER" ;;
-                  "Shutdown")     systemctl poweroff ;;
-                  "Reboot to Windows")
-                    ENTRY=$(efibootmgr | grep -i windows | grep -oP 'Boot\K[0-9A-F]+' | head -1)
-                    if [ -n "$ENTRY" ]; then
-                      sudo efibootmgr --bootnext "$ENTRY" && systemctl --no-wall reboot
-                    fi
-                    ;;
-                  *) exit 0 ;;
-                esac
-              '';
-            };
-          in
-          {
-            "Mod+x" = "noctalia msg notification-clear-active";
-            "Mod+i" = "noctalia msg bar-hide";
-            "Mod+d" = "noctalia msg panel-open launcher";
-            "Mod+c" = "noctalia msg panel-open clipboard";
-            # "Mod+r" = "notifications toggleHistory"; # v4
-            "Mod+m" =
-              let
-                dir = "$HOME/notes";
-              in
-              pkgs.writeShellScript "open-note" ''
-                note=$(ls ${dir} | sed 's/\.md$//' | ${lib.getExe pkgs.bemenu} -p "NOTE")
-                [ -n "$note" ] && $TERMINAL $EDITOR "${dir}/$note.md"
-              '';
-            "Mod+Shift+b" = pkgs.writeShellScript "open-bookmark" ''
-              file="$HOME/notes/Bookmarks.md"
-              [[ ! -f $file ]] && exit
-              selection=$(awk -F': ' '{print $1}' "$file" | ${lib.getExe pkgs.bemenu} -p "BOOKMARK")
-              [[ -z "$selection" ]] && exit
-              url=$(awk -F': ' -v sel="$selection" '$1 == sel {print $2}' "$file")
-              [[ -n "$url" ]] && ${config.me.desktop.open} "$url"
+        bindings = {
+          "Mod+x" = "noctalia msg notification-clear-active";
+          "Mod+i" = "noctalia msg bar-hide";
+          "Mod+d" = "noctalia msg panel-open launcher";
+          "Mod+c" = "noctalia msg panel-open clipboard";
+          # "Mod+r" = "notifications toggleHistory"; # v4
+          "Mod+m" =
+            let
+              dir = "$HOME/notes";
+            in
+            pkgs.writeShellScript "open-note" ''
+              note=$(ls ${dir} | sed 's/\.md$//' | ${lib.getExe pkgs.bemenu} -p "NOTE")
+              [ -n "$note" ] && $TERMINAL $EDITOR "${dir}/$note.md"
             '';
-            "Mod+Shift+p" = lib.getExe powermenu;
-          };
+          "Mod+Shift+b" = pkgs.writeShellScript "open-bookmark" ''
+            file="$HOME/notes/Bookmarks.md"
+            [[ ! -f $file ]] && exit
+            selection=$(awk -F': ' '{print $1}' "$file" | ${lib.getExe pkgs.bemenu} -p "BOOKMARK")
+            [[ -z "$selection" ]] && exit
+            url=$(awk -F': ' -v sel="$selection" '$1 == sel {print $2}' "$file")
+            [[ -n "$url" ]] && ${config.me.desktop.open} "$url"
+          '';
+          "Mod+Shift+p" = "noctalia msg panel-open launcher /session";
+        };
       };
     };
 }

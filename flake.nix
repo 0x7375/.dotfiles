@@ -58,12 +58,8 @@
     };
 
     noctalia = {
-      url = "github:noctalia-dev/noctalia-shell/v5";
+      url = "github:noctalia-dev/noctalia";
       inputs.nixpkgs.follows = "nixpkgs-unstable";
-    };
-    noctalia-plugins = {
-      url = "github:noctalia-dev/noctalia-plugins";
-      flake = false;
     };
 
     zen-browser = {

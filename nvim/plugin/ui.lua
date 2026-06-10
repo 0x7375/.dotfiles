@@ -122,6 +122,7 @@ msgs.set_pos = function(tgt)
       row = 1,
       col = vim.o.columns - 1,
       border = "single",
+      width = math.min(vim.api.nvim_win_get_width(ui2.wins.msg), 30),
     })
   end
 end

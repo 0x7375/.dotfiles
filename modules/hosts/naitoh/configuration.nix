@@ -77,6 +77,11 @@
 
       packages = with pkgs; [ acpi ];
 
+      tinted.files.".config/mango/config.conf".value = _: {
+        tap_to_click = 0;
+        tap_and_drag = 0;
+      };
+
       services.acpid = {
         enable = true;
         handlers =

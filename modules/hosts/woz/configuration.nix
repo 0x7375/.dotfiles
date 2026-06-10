@@ -47,16 +47,16 @@
           ENV{DEVTYPE}=="usb_interface",\
           ENV{INTERFACE}=="11/0/0",\
           ENV{PRODUCT}=="349e/24/100",\
-          RUN+="${getExe pkgs.sudo} -u ${config.me.user} env XDG_RUNTIME_DIR=/run/user/${toString config.me.uid} ${getExe pkgs.my.noctalia} msg session lock"
+          RUN+="${getExe pkgs.sudo} -u ${config.me.user} env XDG_RUNTIME_DIR=/run/user/${toString config.me.uid} ${getExe pkgs.my.lock} lock"
         '';
 
       services.upower.enable = true;
 
       tinted.files.".config/mango/config.conf".value = _: {
         switchbind = [
-          "fold,spawn,noctalia msg session lock-and-suspend"
+          "fold,spawn,${getExe pkgs.my.lock} lock-and-suspend"
         ];
-        tap_to_click = 0;
+        tap_to_click = 1;
         tap_and_drag = 0;
       };
 

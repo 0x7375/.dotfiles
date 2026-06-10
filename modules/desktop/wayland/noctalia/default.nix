@@ -102,6 +102,10 @@
           my = (prev.my or { }) // {
             # dmenu = pkgs.writeShellScriptBin "dmenu" (builtins.readFile ./_noctalia-dmenu.sh);
             noctalia = inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default;
+            lock = import ./_lock.nix {
+              inherit lib config;
+              pkgs = final;
+            };
           };
         })
       ];
@@ -173,8 +177,6 @@
             hooks = {
               theme_mode_changed = "swap-theme sync";
               started = "swap-theme sync";
-              session_locked = lib.getExe (import ./_hooks/lock.nix { inherit pkgs lib config; });
-              session_unlocked = lib.getExe (import ./_hooks/unlock.nix { inherit pkgs; });
             };
 
             idle = {

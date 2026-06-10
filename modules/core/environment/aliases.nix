@@ -58,6 +58,7 @@
         "...." = "cd ../../..";
 
         sys = "systemctl";
+        jrl = "journalctl";
       }
       // (lib.genAttrs [
         "diff"

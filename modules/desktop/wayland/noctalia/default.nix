@@ -125,7 +125,7 @@
                 reserve_space = true;
                 shadow = true;
                 start = [
-                  "Mango"
+                  "mango-layout"
                   "active_window"
                   "media"
                 ];
@@ -161,11 +161,11 @@
             };
 
             idle = {
-              behaviour_order = [
+              behavior_order = [
                 "screen-off"
                 "lock-and-suspend"
               ];
-              behaviour = {
+              behavior = {
                 screen-off = {
                   command = "noctalia:dpms-off";
                   resume_command = "noctalia:dpms-on";
@@ -279,8 +279,9 @@
 
             templates = { };
 
+            nightlight.enabled = true;
+
             theme = {
-              builtin = "Catppuccin";
               custom_palette = "nix";
               source = "custom";
               templates = {
@@ -294,11 +295,6 @@
               sysmon.show_label = false;
               brightness.show_label = false;
               media.hide_when_no_media = true;
-              Mango = {
-                hot_reload = true;
-                script = "${./mango.lua}";
-                type = "scripted";
-              };
               ram = {
                 show_label = false;
                 stat = "ram_pct";
@@ -314,7 +310,10 @@
                 display = "none";
                 hide_when_empty = false;
               };
+              mango-layout.type = "me/mango-layout:widget";
             };
+
+            plugins.enabled = [ "me/mango-layout" ];
           };
         };
         "noctalia/palettes/nix.json" = {
@@ -338,6 +337,8 @@
           ];
         };
       };
+
+      hj.xdg.data.files."noctalia/plugins/mango-layout".source = ./mango_layout;
 
       me.desktop = {
         startup.noctalia = lib.getExe pkgs.my.noctalia;

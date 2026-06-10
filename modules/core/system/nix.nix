@@ -83,6 +83,14 @@
   flake.modules.nixos.core =
     { config, ... }:
     {
+      persistUser.directories = [
+        ".config/nixcfg"
+        ".cache/nix"
+        ".local/share/nix"
+        ".local/state/nd"
+        ".local/state/nix"
+      ];
+
       programs.nh = {
         enable = true;
         flake = config.me.flakeDir;

@@ -8,6 +8,11 @@
     }:
     lib.mkMerge [
       {
+        persistUser.directories = [
+          ".config/pulse"
+          ".local/state/wireplumber"
+        ];
+
         me.desktop.bindings =
           let
             playerctl = lib.getExe pkgs.playerctl;

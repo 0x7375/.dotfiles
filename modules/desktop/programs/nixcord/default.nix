@@ -3,6 +3,11 @@
   flake.modules.nixos.desktop =
     { config, ... }:
     {
+      persistUser.directories = [
+        ".config/vesktop"
+        ".config/Vencord"
+      ];
+
       me.desktop.assign = [
         {
           type = "appid";

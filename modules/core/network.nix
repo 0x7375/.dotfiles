@@ -89,6 +89,8 @@
   flake.modules.nixos.network =
     { lib, config, ... }:
     {
+      persist.directories = [ "/etc/NetworkManager/system-connections" ];
+
       imports = [ self.modules.generic.network ];
 
       networking.nameservers = [

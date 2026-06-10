@@ -169,6 +169,13 @@ in
       ...
     }:
     {
+      persistUser.directories = [
+        ".cache/nvim"
+        ".local/share/nvim"
+        ".local/state/nvim"
+        ".cache/lua-language-server"
+      ];
+
       unfree-packages = [ "intelephense" ];
 
       packages = [

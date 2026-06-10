@@ -56,7 +56,7 @@
         switchbind = [
           "fold,spawn,noctalia msg session lock-and-suspend"
         ];
-        tap_to_click = 1;
+        tap_to_click = 0;
         tap_and_drag = 0;
       };
 

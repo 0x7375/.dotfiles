@@ -39,6 +39,17 @@
         ];
       };
 
+      fileSystems."/var/log" = {
+        device = "/dev/mapper/crypted";
+        fsType = "btrfs";
+        neededForBoot = true;
+        options = [
+          "subvol=@log"
+          "compress=zstd"
+          "noatime"
+        ];
+      };
+
       fileSystems."/home" = {
         device = "/dev/mapper/crypted";
         fsType = "btrfs";
@@ -54,6 +65,17 @@
         fsType = "btrfs";
         options = [
           "subvol=nix"
+          "compress=zstd"
+          "noatime"
+        ];
+      };
+
+      fileSystems."/persist" = {
+        device = "/dev/mapper/crypted";
+        fsType = "btrfs";
+        neededForBoot = true;
+        options = [
+          "subvol=@persist"
           "compress=zstd"
           "noatime"
         ];

@@ -54,6 +54,7 @@ let
       ]
       ++ lib.optionals isNixos [
         inputs.disko.nixosModules.disko
+        inputs.preservation.nixosModules.default
         self.modules.nixos.overrides
       ]
       ++ extraModules;

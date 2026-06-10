@@ -5,6 +5,8 @@
       ...
     }:
     {
+      persist.directories = [ "/var/lib/bluetooth" ];
+
       packages = [ pkgs.adw-bluetooth ];
 
       hardware.bluetooth = {

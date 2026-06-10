@@ -110,6 +110,10 @@
           XCURSOR_SIZE = toString config.me.desktop.cursorTheme.size;
         };
 
+        persistUser.directories = [
+          ".config/dconf"
+        ];
+
         programs.dconf.profiles = {
           user.databases = [
             {

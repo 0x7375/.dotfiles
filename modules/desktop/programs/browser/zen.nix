@@ -364,6 +364,11 @@ in
       inherit (pkgs.stdenv) isDarwin;
     in
     {
+      persistUser.directories = [
+        ".zen"
+        ".cache/zen"
+      ];
+
       # for hardware acceleration
       vars.MOZ_DISABLE_RDD_SANDBOX = "1";
 

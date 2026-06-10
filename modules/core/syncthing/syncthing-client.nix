@@ -14,6 +14,10 @@
         ;
     in
     {
+      persistUser.directories = [
+        ".config/syncthing"
+      ];
+
       imports = [ self.modules.nixos.syncthing ];
 
       programs.fuse.userAllowOther = true;

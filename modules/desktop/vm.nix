@@ -5,6 +5,8 @@
       ...
     }:
     {
+      persist.directories = [ "/var/lib/libvirt" ];
+
       virtualisation.libvirtd = {
         enable = true;
         shutdownTimeout = 1;

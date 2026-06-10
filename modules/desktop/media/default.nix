@@ -5,6 +5,10 @@
       ...
     }:
     {
+      persistUser.directories = [
+        ".local/share/jellyfin-desktop"
+      ];
+
       packages = with pkgs; [
         imagemagick
         # kdePackages.kdenlive

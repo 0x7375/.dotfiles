@@ -57,6 +57,8 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    preservation.url = "github:nix-community/preservation";
+
     noctalia = {
       url = "github:noctalia-dev/noctalia";
       inputs.nixpkgs.follows = "nixpkgs-unstable";

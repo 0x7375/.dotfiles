@@ -80,6 +80,23 @@
       inherit (config.tinted.colors) dark light;
     in
     {
+      persistUser = {
+        directories = [
+          ".cache/noctalia"
+          {
+            directory = ".local/state/noctalia";
+            how = "_intermediate";
+          }
+          ".local/state/noctalia/clipboard"
+        ];
+        files = [
+          {
+            file = ".local/state/noctalia/screen_time.json";
+            how = "symlink";
+          }
+        ];
+      };
+
       nixpkgs.overlays = [
         (final: prev: {
           my = (prev.my or { }) // {

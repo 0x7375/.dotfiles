@@ -15,13 +15,6 @@
         fileSystems = [ "/" ];
       };
 
-      # sops key is inside home partition and needed
-      # during boot: https://github.com/nix-community/disko/issues/192#issuecomment-2567944604
-      fileSystems."/home".neededForBoot = true;
-      virtualisation.vmVariantWithDisko = {
-        virtualisation.fileSystems."/home".neededForBoot = true;
-      };
-
       services.btrbk.instances."home" = {
         onCalendar = "hourly";
         settings = {
@@ -29,8 +22,8 @@
           snapshot_preserve_min = "3d";
           snapshot_preserve = "7d";
           volume."/" = {
-            snapshot_dir = "/snapshots";
-            subvolume = "home";
+            snapshot_dir = "/persist/snapshots";
+            subvolume = "@persist";
           };
         };
       };

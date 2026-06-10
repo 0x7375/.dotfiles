@@ -72,6 +72,8 @@
           sops.useSystemdActivation = true;
         }
         (lib.mkIf config.me.tpm.enable {
+          persist.files = [ "/etc/tpm_key" ];
+
           sops.age = {
             keyFile = "/etc/tpm_key";
             plugins = with pkgs; [ unstable.age-plugin-tpm ];
@@ -86,6 +88,19 @@
           };
         })
         (lib.mkIf (!config.me.tpm.enable) {
+          persist.files = [
+            {
+              file = "/etc/ssh/ssh_host_ed25519_key";
+              how = "symlink";
+              configureParent = true;
+            }
+            {
+              file = "/etc/ssh/ssh_host_ed25519_key.pub";
+              how = "symlink";
+              configureParent = true;
+            }
+          ];
+
           sops.age.sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
         })
       ];

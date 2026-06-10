@@ -10,6 +10,10 @@
       inherit (pkgs.stdenv.hostPlatform) system;
     in
     {
+      persistUser.directories = [
+        ".cache/nix-search-tv"
+      ];
+
       packages = [ pkgs.unstable.nix-search-tv ];
 
       hj.xdg.config.files."nix-search-tv/config.json" = {

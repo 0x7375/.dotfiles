@@ -53,6 +53,23 @@
   flake.modules.nixos.core =
     { config, ... }:
     {
+      persist.dirs = [ "/var/lib/fail2ban" ];
+
+      persistUser = {
+        directories = [
+          {
+            directory = ".ssh";
+            how = "_intermediate";
+          }
+        ];
+        files = [
+          {
+            file = ".ssh/known_hosts";
+            how = "symlink";
+          }
+        ];
+      };
+
       services.openssh.settings = {
         PasswordAuthentication = false;
         KbdInteractiveAuthentication = false;

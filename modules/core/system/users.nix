@@ -24,6 +24,8 @@
       ...
     }:
     {
+      persist.directories = [ "/var/lib/hjem" ];
+
       users.users.${config.me.user} = {
         inherit (config.me) uid home;
         isNormalUser = true;

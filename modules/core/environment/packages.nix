@@ -30,6 +30,10 @@
   flake.modules.nixos.core =
     { pkgs, ... }:
     {
+      persistUser.directories = [
+        ".cache/tlrc"
+      ];
+
       packages = with pkgs; [
         efibootmgr
         gcc

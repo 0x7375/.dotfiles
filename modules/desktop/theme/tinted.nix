@@ -1,6 +1,19 @@
 { self, ... }:
 
 {
+  flake.modules.generic.nixos = {
+    persistUser = {
+      directories = [ ".cache/tabler-icons" ];
+      files = [
+        {
+          directory = ".local/state/tinted";
+          how = "_intermediate";
+        }
+        ".local/state/tinted/theme"
+      ];
+    };
+  };
+
   flake.modules.generic.core =
     {
       lib,

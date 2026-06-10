@@ -175,6 +175,11 @@ in
   flake.modules.nixos.desktop =
     { lib, ... }:
     {
+      persistUser.directories = [
+        ".config/net.imput.helium"
+        ".cache/net.imput.helium"
+      ];
+
       programs.chromium = {
         enable = true;
         extensions = lib.attrValues extensions;

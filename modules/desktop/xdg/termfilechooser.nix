@@ -84,8 +84,6 @@
           name = "filechooser";
         }
       ];
-      tinted.files.".config/hypr/hyprland.conf".text =
-        "windowrulev2 = size 800 600, title:^(filechooser)$";
 
       vars.QT_QPA_PLATFORMTHEME = "xdgdesktopportal";
 

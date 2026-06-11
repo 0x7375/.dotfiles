@@ -9,8 +9,7 @@
     ];
   };
 
-  flake.modules.nixos.preservation = {
-
+  flake.modules.nixos.preservation = { config, ... }: {
     preservation.enable = true;
 
     persist = {
@@ -28,6 +27,12 @@
         }
       ];
     };
+
+    systemd.tmpfiles.rules = [
+      "d ${config.me.home} 0700 ${config.me.user} users - -"
+    ];
+
+    systemd.suppressedSystemUnits = [ "systemd-machine-id-commit.service" ];
 
     persistUser = {
       directories = [
@@ -74,17 +79,26 @@
           btrfs subvolume list -o /mnt/root |
             cut -f9 -d' ' |
             while read subvolume; do
+              echo "deleting /$subvolume subvolume..."
               btrfs subvolume delete "/mnt/$subvolume"
             done &&
-            btrfs subvolume delete /mnt/root
+            echo "deleting root subvolume..." &&
+            btrfs subvolume delete /mnt/root &&
+            echo "deleting @home subvolume..." &&
             btrfs subvolume delete /mnt/@home
 
+          echo "restoring blank root subvolume..."
           btrfs subvolume snapshot /mnt/@blank /mnt/root
+          echo "restoring blank @home subvolume..."
           btrfs subvolume snapshot /mnt/@blank /mnt/@home
 
           umount /mnt
         '';
       };
     };
+
+    sops.age.sshKeyPaths = [
+      "/persist/etc/ssh/ssh_host_ed25519_key"
+    ];
   };
 }

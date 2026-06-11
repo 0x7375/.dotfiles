@@ -89,7 +89,12 @@
   flake.modules.nixos.network =
     { lib, config, ... }:
     {
-      persist.directories = [ "/etc/NetworkManager/system-connections" ];
+      persist.directories = [
+        {
+          directory = "/etc/NetworkManager/system-connections";
+          mode = "0700";
+        }
+      ];
 
       imports = [ self.modules.generic.network ];
 

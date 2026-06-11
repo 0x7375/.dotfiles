@@ -114,6 +114,7 @@ in
           desktop
           wayland
           dev
+          preservation
         ]
       );
 

@@ -8,6 +8,10 @@
     }:
     lib.mkMerge [
       {
+        persist.directories = [
+          "/var/lib/alsa"
+        ];
+
         persistUser.directories = [
           ".config/pulse"
           ".local/state/wireplumber"

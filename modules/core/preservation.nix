@@ -56,7 +56,6 @@
           directory = ".local/state";
           how = "_intermediate";
         }
-        ".cache/mesa_shader_cache"
       ];
     };
 

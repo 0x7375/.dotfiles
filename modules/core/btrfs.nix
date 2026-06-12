@@ -15,23 +15,17 @@
         fileSystems = [ "/" ];
       };
 
-      services.btrbk.instances."home" = {
+      services.btrbk.instances."persist" = {
         onCalendar = "hourly";
         settings = {
           timestamp_format = "long";
           snapshot_preserve_min = "3d";
           snapshot_preserve = "7d";
-          volume."/" = {
-            snapshot_dir = "/persist/snapshots";
-            subvolume = "@persist";
+          volume."/persist" = {
+            snapshot_dir = "/snapshots";
+            subvolume = ".";
           };
         };
-      };
-
-      systemd.tmpfiles.settings.syncthing."/snapshots".d = {
-        group = "root";
-        user = "root";
-        mode = "0755";
       };
     };
 }

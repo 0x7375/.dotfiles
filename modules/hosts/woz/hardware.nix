@@ -8,6 +8,19 @@
       modulesPath,
       ...
     }:
+    let
+      fairy-dust = pkgs.linux-asahi.kernel.overrideAttrs (old: rec {
+        src = pkgs.fetchFromGitHub {
+          owner = "AsahiLinux";
+          repo = "linux";
+          rev = "fairydust";
+          hash = "sha256-wnNrbpa3dYceQU7ZeJ7eJH6k9QMqswctK/4xxGI9SZE=";
+        };
+
+        version = "7.0.11";
+        modDirVersion = version;
+      });
+    in
     {
 
       imports = [
@@ -19,21 +32,10 @@
         "usbhid"
       ];
 
-      # boot.kernelPackages = lib.mkForce (
-      #   pkgs.linuxPackagesFor (
-      #     pkgs.linux-asahi.kernel.overrideAttrs (old: rec {
-      #       src = pkgs.fetchFromGitHub {
-      #         owner = "AsahiLinux";
-      #         repo = "linux";
-      #         rev = "fairydust";
-      #         hash = "sha256-wnNrbpa3dYceQU7ZeJ7eJH6k9QMqswctK/4xxGI9SZE=";
-      #       };
-      #
-      #       version = "7.0.11";
-      #       modDirVersion = version;
-      #     })
-      #   )
-      # );
+      system.extraDependencies = [
+        (pkgs.linuxPackagesFor fairy-dust.kernel)
+      ];
+      # boot.kernelPackages = lib.mkForce (pkgs.linuxPackagesFor fairy-dust);
       # boot.initrd.kernelModules = [ "typec_displayport" ];
 
       boot.initrd.kernelModules = [ ];
@@ -59,7 +61,7 @@
         device = "/dev/mapper/crypted";
         fsType = "btrfs";
         options = [
-          "subvol=root"
+          "subvol=@root"
           "compress=zstd"
           "noatime"
         ];
@@ -102,6 +104,16 @@
         neededForBoot = true;
         options = [
           "subvol=@persist"
+          "compress=zstd"
+          "noatime"
+        ];
+      };
+
+      fileSystems."/snapshots" = {
+        device = "/dev/mapper/crypted";
+        fsType = "btrfs";
+        options = [
+          "subvol=@snapshots"
           "compress=zstd"
           "noatime"
         ];

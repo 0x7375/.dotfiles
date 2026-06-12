@@ -25,7 +25,7 @@ pkgs.writeShellApplication {
     trap cleanup EXIT
 
     mkdir -p "$MNT_HOME" "$MNT_ROOT" "$MNT_PERSIST"
-    sudo mount -o ro,noatime,subvol=root "$DEVICE" "$MNT_ROOT"
+    sudo mount -o ro,noatime,subvol=@root "$DEVICE" "$MNT_ROOT"
     sudo mount -o ro,noatime,subvol=@home "$DEVICE" "$MNT_HOME"
     sudo mount -o ro,noatime,subvol=@persist "$DEVICE" "$MNT_PERSIST"
 

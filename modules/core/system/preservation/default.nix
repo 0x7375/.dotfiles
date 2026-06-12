@@ -16,6 +16,7 @@
       directories = [
         "/var/lib/systemd/timers"
         "/var/lib/systemd/backlight"
+        "/mnt"
         {
           directory = "/var/lib/nixos";
           inInitrd = true;
@@ -78,19 +79,19 @@
 
           mount -o subvol=/ /dev/mapper/crypted /mnt
 
-          btrfs subvolume list -o /mnt/root |
+          btrfs subvolume list -o /mnt/@root |
             cut -f9 -d' ' |
             while read subvolume; do
               echo "deleting /$subvolume subvolume..."
               btrfs subvolume delete "/mnt/$subvolume"
             done &&
-            echo "deleting root subvolume..." &&
-            btrfs subvolume delete /mnt/root &&
+            echo "deleting @root subvolume..." &&
+            btrfs subvolume delete /mnt/@root &&
             echo "deleting @home subvolume..." &&
             btrfs subvolume delete /mnt/@home
 
           echo "restoring blank root subvolume..."
-          btrfs subvolume snapshot /mnt/@blank /mnt/root
+          btrfs subvolume snapshot /mnt/@blank /mnt/@root
           echo "restoring blank @home subvolume..."
           btrfs subvolume snapshot /mnt/@blank /mnt/@home
 

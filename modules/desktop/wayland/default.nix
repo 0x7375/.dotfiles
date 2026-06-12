@@ -17,7 +17,7 @@
         description = "kanshi";
         wantedBy = [ "mango-session.target" ];
         partOf = [ "mango-session.target" ];
-        after = [ "mango-session.target" ];
+
         serviceConfig = {
           ExecStart = "${lib.getExe pkgs.kanshi}";
           Restart = "always";

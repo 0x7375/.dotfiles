@@ -4,6 +4,8 @@
   flake.modules.nixos.desktop =
     { config, ... }:
     {
+      persistUser.directories = [ ".local/share/pki" ];
+
       xdg.mimeApps =
         let
           inherit (self.lib) mapMimeEntries;

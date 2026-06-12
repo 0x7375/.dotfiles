@@ -28,6 +28,8 @@
           })
         ];
 
+        persistUser.directories = [ ".config/mango" ];
+
         hj.xdg.config.files."zsh/.zshrc".text =
           lib.mkBefore # bash
             ''

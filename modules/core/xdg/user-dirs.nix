@@ -17,6 +17,13 @@
       wrapped = lib.mapAttrs (_: value: ''"${value}"'') directories;
     in
     {
+      persistUser.directories = [
+        "documents"
+        "downloads"
+        "pictures"
+        "repos"
+      ];
+
       hj.xdg.config.files."user-dirs.conf".text = "enabled=False";
       hj.xdg.config.files."user-dirs.dirs".text = lib.generators.toKeyValue { } wrapped;
 

@@ -18,7 +18,44 @@
           ''
         else
           ""
-      }'';
+      }
+
+      [lockscreen_widgets]
+      widget_order = [  "lockscreen-login-box@${main}", "lockscreen-widget-label" ]
+
+          [lockscreen_widgets.grid]
+          cell_size = 16
+          major_interval = 4
+          visible = true
+
+          [lockscreen_widgets.widget."lockscreen-login-box@${main}"]
+          box_height = 0.0
+          box_width = 0.0
+          cx = 711.0
+          cy = 765.0
+          output = "${main}"
+          rotation = 0.0
+          type = "login_box"
+
+            [lockscreen_widgets.widget."lockscreen-login-box@${main}".settings]
+            show_login_button = false
+
+          [lockscreen_widgets.widget.lockscreen-widget-label]
+          box_height = 149.14453125
+          box_width = 312.4609375
+          cx = 711.0
+          cy = 217.005859375
+          output = "${main}"
+          rotation = 0.0
+          type = "label"
+
+              [lockscreen_widgets.widget.lockscreen-widget-label.settings]
+              background = false
+              background_opacity = 1.0
+              background_radius = 10.0
+              shadow = false
+              title = "~Locked~"
+    '';
 
   flake.modules.nixos.wayland =
     {
@@ -83,6 +120,7 @@
       persistUser = {
         directories = [
           ".cache/noctalia"
+          ".config/noctalia"
           {
             directory = ".local/state/noctalia";
             how = "_intermediate";
@@ -100,14 +138,13 @@
       nixpkgs.overlays = [
         (final: prev: {
           my = (prev.my or { }) // {
-            # dmenu = pkgs.writeShellScriptBin "dmenu" (builtins.readFile ./_noctalia-dmenu.sh);
             noctalia = inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default.overrideAttrs (old: {
               patches = (old.patches or [ ]) ++ [
                 ./truncate_ssid.patch
               ];
             });
             lock = import ./_lock.nix {
-              inherit lib config;
+              inherit config;
               pkgs = final;
             };
           };
@@ -117,7 +154,6 @@
       packages = with pkgs; [
         my.noctalia
         udisks
-        # my.dmenu
         ddcutil
       ];
 
@@ -178,6 +214,12 @@
 
             desktop_widgets.enabled = false;
             dock.enabled = false;
+
+            lockscreen_widgets = {
+              enabled = true;
+              schema_version = 2;
+            };
+
             hooks = {
               session_locked = "systemctl stop --user yubikey-touch-detector";
               session_unlocked = "systemctl start --user yubikey-touch-detector";
@@ -365,8 +407,20 @@
 
       hj.xdg.data.files."noctalia/plugins/mango-layout".source = ./mango_layout;
 
+      systemd.user.services.noctalia = {
+        wantedBy = [ "mango-session.target" ];
+        partOf = [ "mango-session.target" ];
+        after = [ "kanshi.service" ];
+        requires = [ "kanshi.service" ];
+
+        serviceConfig = {
+          ExecStart = "${lib.getExe pkgs.my.noctalia}";
+          Restart = "always";
+          RestartSec = 3;
+        };
+      };
+
       me.desktop = {
-        startup.noctalia = lib.getExe pkgs.my.noctalia;
         bindings = {
           "Mod+x" = "noctalia msg notification-clear-active";
           "Mod+i" = "noctalia msg bar-hide";
@@ -389,7 +443,7 @@
             url=$(awk -F': ' -v sel="$selection" '$1 == sel {print $2}' "$file")
             [[ -n "$url" ]] && ${config.me.desktop.open} "$url"
           '';
-          "Mod+Shift+p" = "noctalia msg panel-open launcher /session";
+          "Mod+Shift+p" = "noctalia msg panel-open launcher \"/session \"";
         };
       };
     };

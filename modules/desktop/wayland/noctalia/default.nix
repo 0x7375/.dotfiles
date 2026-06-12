@@ -346,7 +346,7 @@
 
             templates = { };
 
-            nightlight.enabled = true;
+            nightlight.enabled = false;
 
             theme = {
               custom_palette = "nix";

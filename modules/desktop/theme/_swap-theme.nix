@@ -1,5 +1,4 @@
 {
-  self,
   lib,
   config,
   pkgs,
@@ -30,6 +29,7 @@ pkgs.writeShellApplication {
         dunst
         swaybg
         mangowc
+        my.noctalia
       ]
     );
   text =

@@ -67,6 +67,7 @@
             };
             extraConfig = ''
               quiet: yes
+              remember_last_entry: yes
             '';
           };
           boot.loader.timeout = 1;

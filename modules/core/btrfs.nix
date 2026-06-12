@@ -8,7 +8,7 @@
     {
       packages = [ pkgs.btdu ];
 
-      aliases.btdu = "sudo mkdir /mnt/crypted; sudo mount -o subvol=/ /dev/mapper/crypted /mnt/crypted && sudo ${lib.getExe pkgs.btdu} /mnt/crypted && sudo umount -l /mnt/crypted";
+      aliases.btdu = "sudo mkdir -p /mnt/crypted; sudo mount -o subvol=/ /dev/mapper/crypted /mnt/crypted && sudo ${lib.getExe pkgs.btdu} /mnt/crypted && sudo umount -l /mnt/crypted";
 
       services.btrfs.autoScrub = {
         enable = true;

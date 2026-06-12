@@ -1,0 +1,13 @@
+diff --git a/src/shell/bar/widgets/network_widget.cpp b/src/shell/bar/widgets/network_widget.cpp
+index 6855246dd..a4cf45e2d 100644
+--- a/src/shell/bar/widgets/network_widget.cpp
++++ b/src/shell/bar/widgets/network_widget.cpp
+@@ -22,7 +22,7 @@ namespace {
+ 
+   std::string labelForState(const NetworkState& s) {
+     if (s.kind == NetworkConnectivity::Wireless && s.connected && !s.ssid.empty()) {
+-      return s.ssid;
++      return s.ssid.length() > 7 ? s.ssid.substr(0, 7) + "~" : s.ssid;
+     }
+     if (s.kind == NetworkConnectivity::Wired && s.connected) {
+       return s.interfaceName.empty() ? i18n::tr("bar.widgets.network.wired") : s.interfaceName;

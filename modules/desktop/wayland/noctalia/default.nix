@@ -101,7 +101,11 @@
         (final: prev: {
           my = (prev.my or { }) // {
             # dmenu = pkgs.writeShellScriptBin "dmenu" (builtins.readFile ./_noctalia-dmenu.sh);
-            noctalia = inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default;
+            noctalia = inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default.overrideAttrs (old: {
+              patches = (old.patches or [ ]) ++ [
+                ./truncate_ssid.patch
+              ];
+            });
             lock = import ./_lock.nix {
               inherit lib config;
               pkgs = final;

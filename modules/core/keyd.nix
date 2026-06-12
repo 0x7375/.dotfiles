@@ -25,8 +25,6 @@
               control.m = "enter";
 
               main = {
-                rightalt = "oneshot(compose)";
-
                 shift = "layer(pwerty_shift)";
                 "`" = "^";
                 "1" = "+";
@@ -85,7 +83,6 @@
               };
 
               compose = {
-                rightalt = "oneshot(compose)";
                 shift = "layer(compose_shift)";
 
                 a = "macro(compose ` a)";
@@ -102,6 +99,31 @@
                 "0" = "oneshot(compose_zero)";
                 "8" = "oneshot(compose_eight)";
                 equal = "oneshot(compose_equal)";
+              };
+
+              utility = {
+                # numpad
+                q = "1";
+                w = "2";
+                e = "3";
+                a = "4";
+                s = "5";
+                d = "6";
+                z = "7";
+                x = "8";
+                c = "9";
+                leftmeta = "0";
+                leftalt = "0";
+
+                # media
+                right = "nextsong";
+                left = "previoussong";
+                up = "volumeup";
+                down = "volumedown";
+                space = "playpause";
+
+                backspace = "print";
+                capslock = "capslock";
               };
 
               compose_zero_shift.e = "macro(compose S-o S-e)";
@@ -178,19 +200,26 @@
                 keychron
                 corne
               ];
-              inherit settings extraConfig;
+              settings = merge settings {
+                main.rightalt = "oneshot(compose)";
+                main.rightctrl = "oneshot(utility)";
+              };
+              inherit extraConfig;
             };
             thinkpad = {
               ids = [ thinkpad ];
               settings = merge (merge (merge settings swap-meta) overload-caps) {
-                main.rightmeta = "oneshot(compose)";
-                compose.rightmeta = "oneshot(compose)";
+                main.rightalt = "oneshot(compose)";
+                main.rightctrl = "oneshot(utility)";
               };
               inherit extraConfig;
             };
             m1 = {
               ids = [ m1 ];
-              settings = merge settings overload-caps;
+              settings = merge (merge settings overload-caps) {
+                main.rightmeta = "oneshot(compose)";
+                main.rightalt = "oneshot(utility)";
+              };
               inherit extraConfig;
             };
           };

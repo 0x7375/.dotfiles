@@ -21,6 +21,8 @@
       }
 
       [lockscreen_widgets]
+      enabled = true
+      schema_version = 2
       widget_order = [  "lockscreen-login-box@${main}", "lockscreen-widget-label" ]
 
           [lockscreen_widgets.grid]
@@ -214,11 +216,6 @@
 
             desktop_widgets.enabled = false;
             dock.enabled = false;
-
-            lockscreen_widgets = {
-              enabled = true;
-              schema_version = 2;
-            };
 
             hooks = {
               session_locked = "systemctl stop --user yubikey-touch-detector";

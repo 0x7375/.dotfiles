@@ -74,7 +74,7 @@ in
           wireguard.private-key = "$WG_PRIVATE_KEY";
           "wireguard-peer.${serverPublicKey}" = {
             endpoint = "$WG_ENDPOINT:1637";
-            allowed-ips = "${networkIps.vpn.subnet},${networkIps.lan.subnet},${hosts.${server}.ips.lan}/32";
+            allowed-ips = "${networkIps.vpn.subnet};${networkIps.lan.subnet};${hosts.${server}.ips.lan}/32";
             preshared-key = "$WG_PSK";
           };
           ipv4 = {

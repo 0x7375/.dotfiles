@@ -20,6 +20,7 @@
         mach = "z2/QJTGzNBiq4MKPqFDtuPJsCE1Tb/7VG6oYCExeYVg=";
         yoshino = "+TLwV2JKgqxaAHBv/BYrwDXEcILUt3cbuth1XY/HfTo=";
         cray = "IZKATLv0/+V137IYJJpw7I2qVbilaSQnaFMfj9zlmBc=";
+        woz = "MB9Q6MhSciYep8uHV2YHkKiwFYA0qr+Ugw1ZlHqq1Qc=";
       };
 
       peerNames = builtins.attrNames peerKeys;

@@ -3,7 +3,6 @@
     {
       lib,
       config,
-      self,
       ...
     }:
     let
@@ -11,11 +10,6 @@
       inherit (services.syncthing) port;
     in
     {
-      imports = [
-        self.modules.nixos.syncthing
-        self.modules.nixos.syncthingFolders
-      ];
-
       me.services.syncthing = {
         subdomain = "sync";
         port = 8384;

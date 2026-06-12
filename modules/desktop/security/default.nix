@@ -6,6 +6,11 @@
       ...
     }:
     {
+      persistUser.directories = [
+        ".gnupg"
+        ".password-store"
+      ];
+
       xdg.desktopEntries.bitwarden = {
         exec = "${lib.getExe pkgs.helium} --app=http://vault.bitwarden.com";
         name = "Bitwarden";

@@ -9,7 +9,7 @@
     ];
   };
 
-  flake.modules.nixos.preservation = { config, ... }: {
+  flake.modules.nixos.preservation = { pkgs, config, ... }: {
     preservation.enable = true;
 
     persist = {
@@ -34,6 +34,8 @@
     ];
 
     systemd.suppressedSystemUnits = [ "systemd-machine-id-commit.service" ];
+
+    packages = [ (import ./_diff.nix pkgs) ];
 
     persistUser = {
       directories = [

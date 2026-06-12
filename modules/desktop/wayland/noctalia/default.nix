@@ -179,6 +179,8 @@
             desktop_widgets.enabled = false;
             dock.enabled = false;
             hooks = {
+              session_locked = "systemctl stop --user yubikey-touch-detector";
+              session_unlocked = "systemctl start --user yubikey-touch-detector";
               theme_mode_changed = "swap-theme sync";
               started = "swap-theme sync";
             };

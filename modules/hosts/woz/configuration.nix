@@ -60,6 +60,29 @@
         tap_and_drag = 0;
       };
 
+      hj.xdg.config.files."noctalia/settings.toml".value = {
+        idle = {
+          behavior_order = [
+            "screen-off"
+            "lock-and-suspend"
+          ];
+          behavior = {
+            screen-off = {
+              command = "noctalia:dpms-off";
+              resume_command = "noctalia:dpms-on";
+              timeout = 300;
+              enabled = true;
+            };
+            lock-and-suspend = {
+              command = "noctalia:session lock-and-suspend";
+              resume_command = "noctalia:dpms-on";
+              timeout = 600;
+              enabled = true;
+            };
+          };
+        };
+      };
+
       # force usb to disconnect/reconnect
       powerManagement.resumeCommands = ''
         ${getExe pkgs.unstable.tuxvdmtool} disconnect

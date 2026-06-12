@@ -224,27 +224,6 @@
               started = "swap-theme sync";
             };
 
-            idle = {
-              behavior_order = [
-                "screen-off"
-                "lock-and-suspend"
-              ];
-              behavior = {
-                screen-off = {
-                  command = "noctalia:dpms-off";
-                  resume_command = "noctalia:dpms-on";
-                  timeout = 300;
-                  enabled = true;
-                };
-                lock-and-suspend = {
-                  command = "noctalia:session lock-and-suspend";
-                  resume_command = "noctalia:dpms-on";
-                  timeout = 600;
-                  enabled = true;
-                };
-              };
-            };
-
             keybinds = {
               down = [ "Ctrl+n" ];
               up = [ "Ctrl+p" ];

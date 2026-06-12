@@ -8,10 +8,6 @@
     }:
     lib.mkMerge [
       {
-        persist.directories = [
-          "/var/lib/alsa"
-        ];
-
         persistUser.directories = [
           ".config/pulse"
           ".local/state/wireplumber"
@@ -115,7 +111,7 @@
           wantedBy = [ "graphical-session.target" ];
 
           serviceConfig = {
-            ExecStart = "${lib.getExe pkgs.easyeffects} --gapplication-service --load-preset defaut";
+            ExecStart = "${lib.getExe pkgs.easyeffects} --gapplication-service --load-preset default";
             ExecStop = "${lib.getExe pkgs.easyeffects} --quit";
             Restart = "on-failure";
             RestartSec = 5;

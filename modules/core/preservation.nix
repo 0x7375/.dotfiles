@@ -15,6 +15,7 @@
     persist = {
       directories = [
         "/var/lib/systemd/timers"
+        "/var/lib/systemd/backlight"
         {
           directory = "/var/lib/nixos";
           inInitrd = true;

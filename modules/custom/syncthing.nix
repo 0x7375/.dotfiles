@@ -7,103 +7,67 @@
     }:
     let
       cfg = config.me.syncthing;
-      inherit (lib)
-        mkOption
-        mkEnableOption
-        types
-        ;
+      inherit (config.me) hostname;
+      isServer = hostname == config.me.server;
 
-      syncthingDirConfig =
-        {
-          path,
-          devices,
-          ignorePatterns ? [ ],
-          type ? "sendreceive",
-          extraConfig ? { },
-        }:
-        let
-          defaultPatterns = [
-            ".cache"
-            ".git"
-            "bin"
-            "node_modules"
-            ".venv"
-            ".expo"
-            "*.class"
-            "*.o"
-            "*.toc"
-            "*.aux"
-            "!capture.log"
-            "*.log"
-            "*.out"
-            "*.idx"
+      inherit (lib) mkOption types;
 
-            # windows
-            "desktop.ini"
+      defaultPatterns = [
+        ".cache"
+        ".git"
+        "bin"
+        "node_modules"
+        ".venv"
+        ".expo"
+        "*.class"
+        "*.o"
+        "*.toc"
+        "*.aux"
+        "!capture.log"
+        "*.log"
+        "*.out"
+        "*.idx"
 
-            # macos
-            ".DS_Store"
-            ".localized"
-            "Photos Library.photoslibrary"
-          ];
-        in
-        {
-          path = cfg.dataRoot + path;
-          inherit type;
-          inherit devices;
-          ignorePatterns = defaultPatterns ++ ignorePatterns;
-          versioning =
-            if type != "sendonly" then
-              {
-                type = "simple";
-                params = {
-                  keep = "5";
-                  cleanoutDays = "14";
-                };
-              }
-            else
-              null;
-        }
-        // extraConfig;
+        # windows
+        "desktop.ini"
+
+        # macos
+        ".DS_Store"
+        ".localized"
+        "Photos Library.photoslibrary"
+      ];
 
       folderSubmodule =
-        { name, ... }:
+        { name, config, ... }:
         {
           options = {
+            devices = mkOption {
+              type = types.listOf types.str;
+              default = [ ];
+            };
             path = mkOption {
               type = types.str;
               default = name;
             };
-            devices = mkOption {
-              type = types.listOf types.str;
-              default = [ config.me.server ];
+            serverPath = mkOption {
+              type = types.str;
+              default = config.path;
             };
             ignorePatterns = mkOption {
               type = types.listOf types.str;
               default = [ ];
             };
-
-            ro = mkOption {
-              type = types.bool;
-              default = false;
-            };
-            roDevices = mkOption {
-              type = types.listOf types.str;
-              default = [ "cutler" ];
-            };
           };
         };
+
+      activeFolders = lib.filterAttrs (_: f: isServer || lib.elem hostname f.devices) cfg.folders;
     in
     {
       options.me.syncthing = {
-        client.enable = mkEnableOption "Setup folders";
-
         dataRoot = mkOption {
           type = types.str;
           default = "~/";
-          description = "The base path where Syncthing folders are stored";
         };
-
         folders = mkOption {
           type = types.attrsOf (types.submodule folderSubmodule);
           default = { };
@@ -111,32 +75,25 @@
       };
 
       config = {
-        services.syncthing.settings.folders = lib.foldl' lib.mergeAttrs { } (
-          lib.mapAttrsToList (
-            name: f:
-            let
-              baseArgs = {
-                inherit (f) path ignorePatterns;
-              };
-            in
-            {
-              "${name}" = syncthingDirConfig (
-                baseArgs
-                // {
-                  inherit (f) devices;
-                }
-              );
-            }
-            // lib.optionalAttrs f.ro {
-              "${name}-ro" = syncthingDirConfig (
-                baseArgs
-                // {
-                  devices = f.roDevices;
-                  type = "sendonly";
-                }
-              );
-            }
-          ) cfg.folders
+        services.syncthing.settings.folders = lib.mapAttrs (_: f: {
+          path = cfg.dataRoot + (if isServer then f.serverPath else f.path);
+          devices = if isServer then f.devices else [ config.me.server ];
+          ignorePatterns = defaultPatterns ++ f.ignorePatterns;
+          versioning = {
+            type = "simple";
+            params = {
+              keep = "5";
+              cleanoutDays = "14";
+            };
+          };
+        }) activeFolders;
+
+        persist.directories = lib.optionals isServer (
+          lib.mapAttrsToList (_: f: cfg.dataRoot + f.serverPath) activeFolders
+        );
+
+        persistUser.directories = lib.optionals (!isServer) (
+          lib.mapAttrsToList (_: f: f.path) activeFolders
         );
       };
     };

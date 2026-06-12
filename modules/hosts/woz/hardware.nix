@@ -17,6 +17,24 @@
         "usb_storage"
         "usbhid"
       ];
+
+      # boot.kernelPackages = lib.mkForce (
+      #   pkgs.linuxPackagesFor (
+      #     pkgs.linux-asahi.kernel.overrideAttrs (old: rec {
+      #       src = pkgs.fetchFromGitHub {
+      #         owner = "AsahiLinux";
+      #         repo = "linux";
+      #         rev = "fairydust";
+      #         hash = "sha256-wnNrbpa3dYceQU7ZeJ7eJH6k9QMqswctK/4xxGI9SZE=";
+      #       };
+      #
+      #       version = "7.0.11";
+      #       modDirVersion = version;
+      #     })
+      #   )
+      # );
+      # boot.initrd.kernelModules = [ "typec_displayport" ];
+
       boot.initrd.kernelModules = [ ];
       boot.kernelModules = [ ];
       boot.extraModulePackages = [ ];

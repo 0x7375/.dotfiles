@@ -92,7 +92,7 @@
         device = "/dev/mapper/crypted";
         fsType = "btrfs";
         options = [
-          "subvol=nix"
+          "subvol=@nix"
           "compress=zstd"
           "noatime"
         ];

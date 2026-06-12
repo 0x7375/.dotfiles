@@ -27,7 +27,7 @@
           enable = true;
           settings = {
             cue = true;
-            cue_prompt = "~Touch required!~";
+            cue_prompt = "Touch required!";
             authfile = config.environment.etc.u2f-mappings.source;
             origin = "pam://yubikey";
             appid = "pam://yubikey";

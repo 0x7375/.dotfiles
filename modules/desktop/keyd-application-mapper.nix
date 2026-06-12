@@ -44,8 +44,6 @@
           apps = [
             "vesktop"
             "discord"
-            # empty-app-id
-            # "|vicinae-launcher"
           ];
         in
         # toml

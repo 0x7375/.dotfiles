@@ -83,9 +83,10 @@
         };
       };
 
-      # force usb to disconnect/reconnect
       powerManagement.resumeCommands = ''
+        # force usb to disconnect/reconnect
         ${getExe pkgs.unstable.tuxvdmtool} disconnect
+        systemctl restart --user gammastep
       '';
 
       packages = with pkgs; [ acpi ];

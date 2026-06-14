@@ -1,24 +1,31 @@
 {
-  config,
   pkgs,
 }:
 pkgs.writeShellApplication {
   name = "lock";
   runtimeInputs = with pkgs; [
-    wirelesstools
     my.noctalia
+    networkmanager
   ];
   bashOptions = [ ];
   text = ''
-    current_ssid=$(iwgetid -r || true)
-    home_ssid=$(cat "${config.sops.secrets.home_ssid.path}")
-
-    [[ "$current_ssid" == "$home_ssid" ]] && exit 0
+    safe() {
+      nmcli -g NAME connection show --active | grep -Fxq -e "home-wifi" -e "away_1" -e "away_2"
+    }
 
     case "$1" in
-    lock-and-suspend) noctalia msg session lock-and-suspend ;;
-    lock) noctalia msg session lock ;;
-    *) noctalia msg session lock-and-suspend ;;
+    lock)
+      if ! safe; then
+        noctalia msg session lock
+      fi
+    ;;
+    *)
+      if ! safe; then
+        noctalia msg session lock-and-suspend
+      else
+        noctalia msg session suspend
+      fi
+    ;;
     esac
   '';
 }

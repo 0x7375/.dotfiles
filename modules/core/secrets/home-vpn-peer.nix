@@ -49,7 +49,12 @@ in
     };
 
   flake.modules.nixos.vpnPeer =
-    { config, pkgs, ... }:
+    {
+      lib,
+      config,
+      pkgs,
+      ...
+    }:
     let
       inherit (config.me)
         hostname
@@ -90,17 +95,23 @@ in
 
       networking.networkmanager.dispatcherScripts = [
         {
-          source = pkgs.writeShellScript "vpn-home-manager" ''
-            [[ "$2" == "up" || "$2" == "down" || "$2" == "dhcp4-change" ]] || exit 0
+          source = lib.getExe (
+            pkgs.writeShellApplication {
+              name = "vpn-home-manager";
+              runtimeInputs = with pkgs; [ networkmanager ];
+              text = ''
+                # $1: interface, $2: action
+                # [[ "$1" == "wg0" || "$1" == "home-vpn" ]] && exit 0
+                [[ "$2" == "up" || "$2" == "down" || "$2" == "dhcp4-change" ]] || exit 0
 
-            home_ssid=$(cat "${config.sops.secrets.home_ssid.path}")
-
-            if nmcli -g NAME connection show --active | grep -qx "$home_ssid"; then
-              nmcli connection down home-vpn 2>/dev/null || true
-            else
-              nmcli connection up home-vpn 2>/dev/null || true
-            fi
-          '';
+                if ! nmcli -g NAME connection show --active | grep -xq "home-wifi"; then
+                  nmcli connection up home-vpn 2>/dev/null || true
+                else
+                  nmcli connection up home-vpn 2>/dev/null || true
+                fi
+              '';
+            }
+          );
           type = "basic";
         }
       ];

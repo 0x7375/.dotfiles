@@ -255,7 +255,6 @@
           "Mod+Shift+s" = "noctalia msg theme-mode-toggle";
           # "Mod+n" =
           #   "${term} -e ${getExe pkgs.zsh} -c '${getExe' pkgs.networkmanager "nmcli"} device wifi rescan && unset COLORTERM && TERM=xterm-old ${getExe' pkgs.networkmanager "nmtui"}'";
-          "Mod+Alt+n" = "${getExe' pkgs.networkmanager "nmcli"} device wifi rescan";
           "Mod+Alt+b" = btToggle;
           "Mod+Shift+i" = getExe wizToggle;
 
@@ -272,7 +271,7 @@
                 size="80x80"
                 color=$(hyprpicker -ra | tail -n1) && {
                   convert -size "$size" xc:"$color" /tmp/color.png && \
-                  notify-send -i "/tmp/color.png" -a "Color picker" "Copied $color to clipboard" && \
+                  notify-send -i "/tmp/color.png" "Color picker" "Copied $color to clipboard" && \
                   sleep 1 && rm /tmp/color.png
                 }
               '';

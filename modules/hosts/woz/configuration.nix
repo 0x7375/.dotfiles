@@ -54,7 +54,7 @@
 
       tinted.files.".config/mango/config.conf".value = _: {
         switchbind = [
-          "fold,spawn,${getExe pkgs.my.lock} lock-and-suspend"
+          "fold,spawn,noctalia msg lock-and-suspend"
         ];
         tap_to_click = 1;
         tap_and_drag = 0;
@@ -74,7 +74,7 @@
               enabled = true;
             };
             lock-and-suspend = {
-              command = "noctalia:session lock-and-suspend";
+              command = "${pkgs.my.lock} lock-and-suspend";
               resume_command = "noctalia:dpms-on";
               timeout = 600;
               enabled = true;

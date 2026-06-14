@@ -314,7 +314,7 @@
                 open_near_click_control_center = true;
                 session_placement = "floating";
               };
-              shadow.alpha = 0.20999999344348907;
+              shadow.alpha = 0.04;
             };
 
             templates = { };

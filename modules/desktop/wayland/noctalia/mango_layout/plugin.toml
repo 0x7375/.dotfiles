@@ -5,10 +5,6 @@ min_noctalia = "5.0.0"
 author = "me"
 description = "Show current mango tag layout"
 
-[[service]]
-id = "service"
-entry = "mango_service.luau"
-
 [[widget]]
 id = "mango-layout"
-entry = "mango_widget.luau"
+entry = "mango-layout.luau"

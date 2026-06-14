@@ -269,10 +269,10 @@
               ];
               text = ''
                 size="80x80"
+                file=$(mktemp)
                 color=$(hyprpicker -ra | tail -n1) && {
-                  convert -size "$size" xc:"$color" /tmp/color.png && \
-                  notify-send -i "/tmp/color.png" "Color picker" "Copied $color to clipboard" && \
-                  sleep 1 && rm /tmp/color.png
+                  convert -size "$size" xc:"$color" "$file" && \
+                  notify-send -i "$file" "Color picker" "Copied $color to clipboard" && \
                 }
               '';
             }

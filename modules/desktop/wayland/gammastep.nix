@@ -21,9 +21,16 @@
 
       systemd.user.services.gammastep = {
         description = "gammastep";
-        wantedBy = [ "graphical-session.target" ];
-        partOf = [ "graphical-session.target" ];
+        wantedBy = [ "mango-session.target" ];
+        partOf = [ "mango-session.target" ];
+        after = [ "noctalia.service" ];
+        requires = [ "noctalia.service" ];
         serviceConfig = {
+          ExecStartPre = pkgs.writeShellScript "wait-for-noctalia" ''
+            until ${lib.getExe pkgs.my.noctalia} msg status >/dev/null 2>&1; do
+              sleep 0.1
+            done
+          '';
           ExecStart = pkgs.writeShellScript "gammastep-start" ''
             set -euo pipefail
             exec ${lib.getExe pkgs.gammastep} \

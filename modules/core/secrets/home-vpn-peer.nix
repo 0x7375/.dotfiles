@@ -91,8 +91,6 @@ in
         };
       };
 
-      sops.secrets.home_ssid.owner = config.me.user;
-
       networking.networkmanager.dispatcherScripts = [
         {
           source = lib.getExe (
@@ -100,15 +98,18 @@ in
               name = "vpn-home-manager";
               runtimeInputs = with pkgs; [ networkmanager ];
               text = ''
-                # $1: interface, $2: action
-                # [[ "$1" == "wg0" || "$1" == "home-vpn" ]] && exit 0
-                [[ "$2" == "up" || "$2" == "down" || "$2" == "dhcp4-change" ]] || exit 0
+                [[ "$2" == "up" ]] || exit 0
 
-                if ! nmcli -g NAME connection show --active | grep -xq "home-wifi"; then
-                  nmcli connection up home-vpn 2>/dev/null || true
-                else
-                  nmcli connection up home-vpn 2>/dev/null || true
-                fi
+                conn_type=$(nmcli -g connection.type connection show "$CONNECTION_UUID" 2>/dev/null || true)
+                [[ "$conn_type" == "wireguard" ]] && exit 0
+
+                (
+                  if ! nmcli -g NAME connection show --active | grep -xq "home-wifi"; then
+                    nmcli connection up home-vpn 2>/dev/null || true
+                  else
+                    nmcli connection down home-vpn 2>/dev/null || true
+                  fi
+                ) &
               '';
             }
           );

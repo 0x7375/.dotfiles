@@ -386,6 +386,8 @@
         after = [ "kanshi.service" ];
         requires = [ "kanshi.service" ];
 
+        path = [ pkgs.mangowc ];
+
         serviceConfig = {
           ExecStart = "${lib.getExe pkgs.my.noctalia}";
           Restart = "always";

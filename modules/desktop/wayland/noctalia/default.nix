@@ -350,7 +350,7 @@
                 display = "none";
                 hide_when_empty = false;
               };
-              mango-layout.type = "me/mango-layout:widget";
+              mango-layout.type = "me/mango-layout:mango-layout";
             };
 
             plugins.enabled = [ "me/mango-layout" ];

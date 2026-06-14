@@ -117,6 +117,7 @@
       };
 
       inherit (config.tinted.colors) dark light;
+      inherit (config.me.services.radicale) url;
     in
     {
       persistUser = {
@@ -193,8 +194,13 @@
               };
             };
 
-            brightness = {
-              enable_ddcutil = true;
+            brightness.enable_ddcutil = true;
+            calendar.account.admin = {
+              name = "calendar";
+              provider = "custom";
+              server_url = url;
+              type = "caldav";
+              username = "admin";
             };
 
             config = { };
@@ -377,6 +383,14 @@
           ];
         };
       };
+
+      sops.secrets.calendar_pw.owner = config.me.user;
+      sops.templates."calendar.toml".content =
+        # toml
+        ''
+          [calendar_credentials]
+          admin_password = "${config.sops.placeholder.calendar_pw}"
+        '';
 
       hj.xdg.data.files."noctalia/plugins/mango-layout".source = ./mango_layout;
 

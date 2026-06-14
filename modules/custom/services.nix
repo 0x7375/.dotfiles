@@ -56,12 +56,18 @@
         };
       };
 
-      config.me.services.attic = {
-        subdomain = "cache";
-        port = 8082;
-        extraConfig = ''
-          client_max_body_size 0;
-        '';
+      config.me.services = {
+        radicale = {
+          subdomain = "calendar";
+          port = 5232;
+        };
+        attic = {
+          subdomain = "cache";
+          port = 8082;
+          extraConfig = ''
+            client_max_body_size 0;
+          '';
+        };
       };
     };
 }

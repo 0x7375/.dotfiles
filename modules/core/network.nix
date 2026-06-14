@@ -184,18 +184,18 @@
               psk = "$PSK_HOME";
             };
           };
-          sekai = {
+          bell = {
             connection = {
-              id = "sekai";
+              id = "bell";
               type = "wifi";
             };
             wifi = {
               mode = "infrastructure";
-              ssid = "sekai";
+              ssid = "bell";
             };
             wifi-security = {
               key-mgmt = "wpa-psk";
-              psk = "$PSK_SEKAI";
+              psk = "$PSK_BELL";
             };
           };
           away_1 = {

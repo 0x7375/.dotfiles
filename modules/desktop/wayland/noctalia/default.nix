@@ -145,10 +145,7 @@
                 ./truncate_ssid.patch
               ];
             });
-            lock = import ./_lock.nix {
-              inherit config;
-              pkgs = final;
-            };
+            lock = import ./_lock.nix final;
           };
         })
       ];

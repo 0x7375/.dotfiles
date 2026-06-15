@@ -2,6 +2,7 @@
   flake.modules.nixos.desktop =
     {
       config,
+      pkgs,
       ...
     }:
     {
@@ -9,10 +10,15 @@
         autologinOnce = true;
         autologinUser = config.me.user;
         extraArgs = [
-          "--noissue"
           "--nonewline"
           "--nohostname"
         ];
       };
+
+      environment.etc.issue.source = pkgs.writeText "issue" ''
+
+        <<< \n (\m) - \l >>>
+
+      '';
     };
 }

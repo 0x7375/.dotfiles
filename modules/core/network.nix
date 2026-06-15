@@ -94,10 +94,6 @@
           directory = "/etc/NetworkManager/system-connections";
           mode = "0700";
         }
-        {
-          directory = "/var/lib/iwd";
-          mode = "0700";
-        }
       ];
 
       imports = [ self.modules.generic.network ];

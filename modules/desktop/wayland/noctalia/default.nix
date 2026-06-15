@@ -195,12 +195,15 @@
             };
 
             brightness.enable_ddcutil = true;
-            calendar.account.admin = {
-              name = "calendar";
-              provider = "custom";
-              server_url = url;
-              type = "caldav";
-              username = "admin";
+            calendar = {
+              enabled = true;
+              account.default = {
+                name = "Default";
+                provider = "custom";
+                server_url = url;
+                type = "caldav";
+                username = "admin";
+              };
             };
 
             config = { };
@@ -385,12 +388,16 @@
       };
 
       sops.secrets.calendar_pw.owner = config.me.user;
-      sops.templates."calendar.toml".content =
-        # toml
-        ''
-          [calendar_credentials]
-          admin_password = "${config.sops.placeholder.calendar_pw}"
-        '';
+      sops.templates.calendar = {
+        owner = config.me.user;
+        path = config.me.home + "/.local/state/noctalia/state.toml";
+        content =
+          # toml
+          ''
+            [calendar_credentials]
+            default_password = "${config.sops.placeholder.calendar_pw}"
+          '';
+      };
 
       hj.xdg.data.files."noctalia/plugins/mango-layout".source = ./mango_layout;
 

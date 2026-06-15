@@ -12,7 +12,12 @@
       };
     in
     {
-      systemd.services.syncthing-init = afterSops;
+      systemd.services.syncthing-init = afterSops // {
+        serviceConfig = {
+          Restart = "on-failure";
+          RestartSec = "5s";
+        };
+      };
       systemd.services.syncthing = afterSops;
 
       services.syncthing = {

@@ -13,7 +13,7 @@
       services.radicale = {
         enable = true;
         settings = {
-          server.hosts = [ "0.0.0.0:${port}" ];
+          server.hosts = [ "0.0.0.0:${toString port}" ];
           auth = {
             type = "htpasswd";
             htpasswd_filename = config.sops.secrets.radicale_users.path;

@@ -98,6 +98,7 @@ in
           desktop
           wayland
           dev
+          laptop
         ]
       );
 
@@ -105,6 +106,7 @@ in
         with scope.nixos;
         [
           keyd
+          laptop
           boot
           secrets
           networkEnvironment

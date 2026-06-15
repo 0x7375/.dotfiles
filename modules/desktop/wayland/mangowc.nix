@@ -233,4 +233,14 @@
           };
       };
     };
+
+  flake.modules.nixos.laptop = {
+    tinted.files.".config/mango/config.conf".value = {
+      switchbind = [
+        "fold,spawn,noctalia msg lock-and-suspend"
+      ];
+      tap_to_click = 1;
+      tap_and_drag = 0;
+    };
+  };
 }

@@ -68,7 +68,7 @@
         script =
           # bash
           ''
-            hibernate_level=5
+            hibernate_level=7
 
             is_discharging() {
               acpi -b | grep -q "Discharging"

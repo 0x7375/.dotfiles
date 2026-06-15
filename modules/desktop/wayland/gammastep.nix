@@ -75,4 +75,11 @@
           '';
       };
     };
+
+  flake.modules.nixos.laptop = {
+    powerManagement.resumeCommands = # bash
+      ''
+        systemctl restart --user gammastep
+      '';
+  };
 }

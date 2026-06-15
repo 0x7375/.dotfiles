@@ -180,6 +180,7 @@
                     "LIBVA_DRIVER_NAME"
                     "GBM_BACKEND"
                     "__GLX_VENDOR_LIBRARY_NAME"
+                    "TERMINAL"
                   ];
                 in
                 [

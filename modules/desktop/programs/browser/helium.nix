@@ -38,9 +38,8 @@ let
         "https://twitch.tv"
         "https://monkeytype.com"
         "https://youtube.com"
+        "https://discord.com"
         "https://keybr.com"
-        "https://vault.bitwarden.com"
-
         "https://claude.ai"
         "https://gemini.google.com"
       ];

@@ -94,6 +94,10 @@
           directory = "/etc/NetworkManager/system-connections";
           mode = "0700";
         }
+        {
+          directory = "/var/lib/iwd";
+          mode = "0700";
+        }
       ];
 
       imports = [ self.modules.generic.network ];
@@ -127,11 +131,7 @@
 
       networking.wireless.iwd = {
         enable = true;
-        settings = {
-          General = {
-            EnableNetworkConfiguration = false;
-          };
-        };
+        settings.General.EnableNetworkConfiguration = false;
       };
 
       users.users.${config.me.user}.extraGroups = [ "networkmanager" ];
@@ -147,6 +147,8 @@
     {
       config,
       secrets,
+      pkgs,
+      lib,
       ...
     }:
     {
@@ -243,5 +245,23 @@
           };
         };
       };
+
+      # prevent network manager from creating duplicate entries for each profile on startup
+      systemd.services.iwd.preStart =
+        let
+          inherit (lib) getExe;
+        in
+        lib.mkBefore
+          # bash
+          ''
+            for f in /var/lib/iwd/*.psk; do
+              ${getExe pkgs.gnused} -i '/^AutoConnect=/d' "$f"
+              if ${getExe pkgs.gnugrep} -q '^\[Settings\]' "$f"; then
+                ${getExe pkgs.gnused} -i '/^\[Settings\]/a AutoConnect=false' "$f"
+              else
+                printf '\n[Settings]\nAutoConnect=false\n' >> "$f"
+              fi
+            done
+          '';
     };
 }

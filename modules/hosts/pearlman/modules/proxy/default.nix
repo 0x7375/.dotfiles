@@ -70,6 +70,13 @@
       services.nginx = {
         enable = true;
         virtualHosts = {
+          _ = {
+            default = true;
+            addSSL = true;
+            useACMEHost = domain;
+            extraConfig = "return 444;";
+          };
+
           "${domain}" = {
             forceSSL = true;
             enableACME = true;

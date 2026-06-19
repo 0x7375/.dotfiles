@@ -32,9 +32,9 @@
         "usbhid"
       ];
 
-      system.extraDependencies = [
-        (pkgs.linuxPackagesFor fairy-dust.kernel)
-      ];
+      # system.extraDependencies = [
+      #   (pkgs.linuxPackagesFor fairy-dust.kernel)
+      # ];
       # boot.kernelPackages = lib.mkForce (pkgs.linuxPackagesFor fairy-dust);
       # boot.initrd.kernelModules = [ "typec_displayport" ];
 

@@ -5,6 +5,9 @@
       main,
       secondary ? null,
     }:
+    let
+      label = "label";
+    in
     # toml
     ''
       [notification]
@@ -23,7 +26,7 @@
       [lockscreen_widgets]
       enabled = true
       schema_version = 2
-      widget_order = [  "lockscreen-login-box@${main}", "lockscreen-widget-label" ]
+      widget_order = [  "lockscreen-login-box@${main}", "lockscreen-widget-${label}" ]
 
           [lockscreen_widgets.grid]
           cell_size = 16
@@ -42,21 +45,20 @@
             [lockscreen_widgets.widget."lockscreen-login-box@${main}".settings]
             show_login_button = false
 
-          [lockscreen_widgets.widget.lockscreen-widget-label]
-          box_height = 149.14453125
-          box_width = 312.4609375
+          [lockscreen_widgets.widget.lockscreen-widget-${label}]
+          box_height = 128.0
+          box_width = 368.0
           cx = 711.0
-          cy = 217.005859375
+          cy = 236.0
           output = "${main}"
           rotation = 0.0
           type = "label"
 
-              [lockscreen_widgets.widget.lockscreen-widget-label.settings]
+              [lockscreen_widgets.widget.lockscreen-widget-${label}.settings]
               background = false
               background_opacity = 1.0
-              background_radius = 10.0
               shadow = false
-              title = "~Locked~"
+              title = "Locked"
     '';
 
   flake.modules.nixos.wayland =
@@ -215,13 +217,18 @@
                 { type = "bluetooth"; }
                 { type = "caffeine"; }
                 { type = "notification"; }
-                { type = "screen_recorder"; }
+                { type = "session"; }
                 { type = "dark_mode"; }
               ];
             };
 
             desktop_widgets.enabled = false;
             dock.enabled = false;
+
+            lockscreen = {
+              allow_empty_password = true;
+              blur_intensity = 0.99;
+            };
 
             hooks = {
               session_locked = "systemctl stop --user yubikey-touch-detector";
@@ -231,8 +238,19 @@
             };
 
             keybinds = {
-              down = [ "Ctrl+n" ];
-              up = [ "Ctrl+p" ];
+              cancel = [ "Escape" ];
+              down = [
+                "Ctrl+n"
+                "Down"
+              ];
+              up = [
+                "Ctrl+p"
+                "Up"
+              ];
+              confirm = [
+                "Ctrl+m"
+                "Return"
+              ];
             };
 
             location.auto_locate = true;

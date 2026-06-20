@@ -1,10 +1,9 @@
-{ self, ... }:
-
 {
-  flake.modules.nixos.naitoh =
+  flake.modules.nixos.laptop =
     {
       lib,
       pkgs,
+      config,
       ...
     }:
     {
@@ -33,7 +32,7 @@
           systemd
         ];
         script = ''
-          warning_level=15
+          warning_level=20
           full_level=90
 
           empty_file=/tmp/batteryempty
@@ -52,7 +51,7 @@
               ${lib.getExe pkgs.my.notify} "Battery Charged" "Battery is fully charged." -i "battery-4"
               touch $full_file
           elif [[ $battery_level -le $warning_level ]] && [[ $battery_discharging -eq 1 ]] && [[ ! -f $empty_file ]]; then
-              ${lib.getExe pkgs.my.notify} "Low battery" "$battery_level% of battery remaining." -i "error"
+              ${lib.getExe pkgs.my.notify} "Low battery" "$battery_level% of battery remaining." -i battery-1 -u critical
               touch $empty_file
           fi
         '';
@@ -66,9 +65,12 @@
           systemd
         ];
         script =
+          let
+            action = if config.me.hostname != "woz" then "hibernate" else "suspend";
+          in
           # bash
           ''
-            hibernate_level=7
+            critical_level=7
 
             is_discharging() {
               acpi -b | grep -q "Discharging"
@@ -76,12 +78,12 @@
 
             battery_level=$(acpi -b | grep -E "remaining|charged|zero" | grep -P -o '[0-9]+(?=%)' || echo 0)
 
-            if [[ $battery_level -le $hibernate_level ]] && is_discharging; then
-              ${lib.getExe pkgs.my.notify} "Very low battery" "System will hibernate in 120 seconds!" -i "error"
+            if [[ $battery_level -le $critical_level ]] && is_discharging; then
+              ${lib.getExe pkgs.my.notify} "Very low battery" "System will ${action} in 120 seconds!" -i battery -u "error"
 
               sleep 120
 
-              is_discharging && systemctl hibernate
+              is_discharging && systemctl ${action}
             fi
           '';
         serviceConfig.Type = "oneshot";

@@ -12,8 +12,11 @@
           serviceConfig.ExecStart =
             let
               mount = "/run/media/ayko";
+              notify = lib.getExe pkgs.my.notify;
+              onDrive = "--exec-on-drive \"${notify} 'Devmon' 'Device %f mounted at ${mount}' -i disc\"";
+              onRemove = "--exec-on-remove \"${notify} 'Devmon' 'Device %f unmounted from ${mount}' -i disc-off\"";
             in
-            lib.mkForce ''${lib.getExe' pkgs.udevil "devmon"} --exec-on-remove "notify-send 'Device %f unmounted from ${mount}' -i disk -r 9998" --exec-on-drive "notify-send 'Device %f mounted at ${mount}' -i disk -r 9999"'';
+            lib.mkForce "${lib.getExe' pkgs.udevil "devmon"} ${onDrive} ${onRemove}";
         };
 
         services = {

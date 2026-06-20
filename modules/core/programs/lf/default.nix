@@ -16,6 +16,11 @@
         height="$3"
         x="$4"
         y="$5"
+        next="$6"
+
+        if [ -n "$next" ] && [ ! -d "$next" ]; then
+          exit 0
+        fi
 
         printf -v blank '%*s' "$width" '''
         col=$((x + 1))
@@ -32,7 +37,9 @@
     in
     {
       nixpkgs.overlays = [
-        (_: prev: {
+        (final: prev: {
+          inherit (final.unstable) lf;
+
           ouch = (prev.crossPkgs or prev).ouch.override {
             enableUnfree = true;
           };
@@ -78,9 +85,9 @@
           set sortby "ext"
           set tabstop 4
 
-          # cmd on-select &{{
-          #   ${getExe pkgs.lf} -remote "send $id redraw"
-          # }}
+          cmd on-select &{{
+            ${getExe pkgs.lf} -remote "send $id redraw"
+          }}
           cmd on-cd &{{
             if [ -d .git ] || [ -f .git ]; then
                 branch="$(git branch --show-current 2>/dev/null)" || true

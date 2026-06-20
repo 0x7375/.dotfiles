@@ -26,20 +26,6 @@ pkgs.writeShellApplication {
       ]
     );
   text = ''
-    blank_preview() {
-      printf -v blank '%*s' "$width" '''
-      col=$((x + 1))
-
-      args=()
-      i=0
-      while [ "$i" -lt "$height" ]; do
-        args+=("$((y + i + 1))" "$col" "$blank")
-        i=$((i + 1))
-      done
-
-      printf '\033[%d;%dH%s' "''${args[@]}" >/dev/tty
-    }
-
     kitty_preview() {
       kitten icat --image-id 1 --stdin no --transfer-mode memory --place "''${width}x''${height}@''${x}x''${y}" "$1" </dev/null >/dev/tty
       exit 1
@@ -63,8 +49,6 @@ pkgs.writeShellApplication {
     height="$3"
     x="$4"
     y="$5"
-
-    blank_preview
 
     case "''${file##*.}" in
       pem | env | gpg | keyring)

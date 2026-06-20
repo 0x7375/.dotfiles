@@ -75,7 +75,7 @@
           persist.files = [ "/etc/tpm_key" ];
 
           sops.age = {
-            keyFile = "/etc/tpm_key";
+            keyFile = "/persist/etc/tpm_key";
             plugins = with pkgs; [ unstable.age-plugin-tpm ];
           };
 

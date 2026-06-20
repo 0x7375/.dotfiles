@@ -15,7 +15,7 @@
             "-L"
             "NIXROOT"
           ];
-          subvolumes = self.mkBtrfsSubvolumes {
+          subvolumes = self.lib.mkBtrfsSubvolumes {
             inherit lib;
             home = true;
             swap = true;

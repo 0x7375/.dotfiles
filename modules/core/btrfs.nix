@@ -15,7 +15,7 @@
         fileSystems = [ "/" ];
       };
 
-      services.btrbk.instances."persist" = {
+      services.btrbk.instances.persist = {
         onCalendar = "hourly";
         settings = {
           timestamp_format = "long";

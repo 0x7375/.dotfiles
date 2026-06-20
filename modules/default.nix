@@ -82,6 +82,7 @@ in
           desktop
           wayland
           dev
+          kitty
         ]
       );
 
@@ -99,6 +100,8 @@ in
           wayland
           dev
           laptop
+          kitty
+          preservation
         ]
       );
 

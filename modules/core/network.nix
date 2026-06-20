@@ -254,6 +254,8 @@
         lib.mkBefore
           # bash
           ''
+            set +e
+
             for f in /var/lib/iwd/*.psk; do
               ${getExe pkgs.gnused} -i '/^AutoConnect=/d' "$f"
               if ${getExe pkgs.gnugrep} -q '^\[Settings\]' "$f"; then

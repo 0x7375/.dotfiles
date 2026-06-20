@@ -27,6 +27,8 @@
 
       config = lib.mkMerge [
         {
+          persist.directories = [ "/var/lib/sbctl" ];
+
           boot.plymouth = {
             enable = true;
             theme = "spinner_alt";
@@ -105,10 +107,13 @@
             };
           };
 
-          boot.initrd.luks.devices.crypted.crypttabExtraOpts = [
-            "fido2-device=auto"
-            "token-timeout=0"
-          ];
+          boot.initrd.luks.devices.crypted = {
+            allowDiscards = true;
+            crypttabExtraOpts = [
+              "fido2-device=auto"
+              "token-timeout=0"
+            ];
+          };
 
           # prevent luks pw prompt from timing out
           boot.initrd.systemd.settings.Manager.DefaultDeviceTimeoutSec = "infinity";

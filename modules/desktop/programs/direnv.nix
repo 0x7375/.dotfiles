@@ -6,6 +6,10 @@
       ...
     }:
     {
+      persistUser.directories = [
+        ".cache/direnv"
+      ];
+
       vars.DIRENV_WARN_TIMEOUT = "0";
 
       aliases.direnvrc = "echo 'use_flake' > .envrc && direnv allow";

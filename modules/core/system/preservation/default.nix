@@ -1,4 +1,52 @@
 {
+  flake.lib.mkBtrfsSubvolumes =
+    let
+      mountOptions = [
+        "noatime"
+        "compress=zstd"
+      ];
+    in
+    {
+      lib,
+      home ? true,
+      swap ? false,
+      swapSize ? "8G",
+    }:
+    {
+      "@root" = {
+        mountpoint = "/";
+        inherit mountOptions;
+      };
+      "@log" = {
+        mountpoint = "/var/log";
+        inherit mountOptions;
+      };
+      "@nix" = {
+        mountpoint = "/nix";
+        inherit mountOptions;
+      };
+      "@persist" = {
+        mountpoint = "/persist";
+        inherit mountOptions;
+      };
+      "@snapshots" = {
+        mountpoint = "/snapshots";
+        inherit mountOptions;
+      };
+    }
+    // lib.optionalAttrs home {
+      "@home" = {
+        mountpoint = "/home";
+        inherit mountOptions;
+      };
+    }
+    // lib.optionalAttrs swap {
+      "@swap" = {
+        mountpoint = "/swap/swapfile";
+        swap.swapfile.size = swapSize;
+      };
+    };
+
   flake.modules.nixos.core = { lib, config, ... }: {
     imports = [
       (lib.mkAliasOptionModule [ "persist" ] [ "preservation" "preserveAt" "/persist" ])
@@ -103,5 +151,8 @@
     sops.age.sshKeyPaths = [
       "/persist/etc/ssh/ssh_host_ed25519_key"
     ];
+
+    fileSystems."/var/log".neededForBoot = true;
+    fileSystems."/persist".neededForBoot = true;
   };
 }

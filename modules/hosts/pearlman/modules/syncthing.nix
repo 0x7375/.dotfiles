@@ -20,9 +20,6 @@
 
       users.users.syncthing.extraGroups = [ "media" ];
 
-      # allow watching more files
-      boot.kernel.sysctl."fs.inotify.max_user_watches" = 204800;
-
       networking.firewall.allowedTCPPorts = [ port ];
 
       me.syncthing.dataRoot = "/mnt/ssd/syncthing/";

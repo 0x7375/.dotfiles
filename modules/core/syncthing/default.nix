@@ -20,6 +20,9 @@
       };
       systemd.services.syncthing = afterSops;
 
+      # allow watching more files
+      boot.kernel.sysctl."fs.inotify.max_user_watches" = 524288;
+
       services.syncthing = {
         enable = true;
         package = pkgs.syncthing;

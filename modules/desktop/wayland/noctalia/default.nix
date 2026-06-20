@@ -425,10 +425,13 @@
         after = [ "kanshi.service" ];
         requires = [ "kanshi.service" ];
 
-        path = with pkgs; [
-          mangowc
-          foot
+        path = [
+          pkgs.mangowc
+          pkgs.${config.me.desktop.terminal.name}
         ];
+
+        # forces kitty to source the path
+        environment."__NIXOS_SET_ENVIRONMENT_DONE" = "";
 
         serviceConfig = {
           ExecStart = "${lib.getExe pkgs.my.noctalia}";

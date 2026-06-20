@@ -1,5 +1,4 @@
 {
-  isDesktop,
   isLinux,
   pkgs,
   ...
@@ -14,46 +13,36 @@ pkgs.writeShellApplication {
       file
       w3m
       delta
-      chafa
+      kitty
       imagemagick
       ffmpegthumbnailer
       poppler-utils
+      fontforge
     ]
-    ++ lib.optionals isDesktop (
-      with pkgs;
-      [
-        fontforge
-      ]
-    )
-    ++ lib.optionals (isDesktop && isLinux) (
+    ++ pkgs.lib.optionals isLinux (
       with pkgs;
       [
         libreoffice
       ]
     );
   text = ''
-    ueberzug_preview() {
-      path="$(readlink -f -- "$1" | sed 's/\\/\\\\/g;s/"/\\"/g')"
-      printf '{"action":"add","identifier":"preview","x":%d,"y":%d,"width":%d,"height":%d,"scaler":"contain","scaling_position_x":0.5,"scaling_position_y":0.5,"path":"%s"}\n' \
-        "$x" "$y" "$width" "$height" "$path" | tee -a /tmp/lf-preview-debug.log > "''${FIFO_UEBERZUG:-}"
+    blank_preview() {
+      printf -v blank '%*s' "$width" '''
+      col=$((x + 1))
+
+      args=()
+      i=0
+      while [ "$i" -lt "$height" ]; do
+        args+=("$((y + i + 1))" "$col" "$blank")
+        i=$((i + 1))
+      done
+
+      printf '\033[%d;%dH%s' "''${args[@]}" >/dev/tty
+    }
+
+    kitty_preview() {
+      kitten icat --image-id 1 --stdin no --transfer-mode memory --place "''${width}x''${height}@''${x}x''${y}" "$1" </dev/null >/dev/tty
       exit 1
-    }
-
-    hash() {
-      cache="$HOME/.cache/lf/$(stat --printf '%n\0%i\0%F\0%s\0%W\0%Y' -- "$(readlink -f -- "$1")" | sha256sum | cut -d' ' -f1).jpg"
-    }
-
-    chafa_preview() {
-      chafa --symbols vhalf --format symbols --size "''${width}x''${height}" "$1"
-      exit 1
-    }
-
-    ueberzug_or_chafa() {
-      if [ -p "''${FIFO_UEBERZUG:-}" ]; then
-        ueberzug_preview "$1"
-      else
-        chafa_preview "$1"
-      fi
     }
 
     preview_cached() {
@@ -62,7 +51,11 @@ pkgs.writeShellApplication {
         [ -d "$dir" ] || mkdir -p -- "$dir"
         "$@"
       fi
-      ueberzug_or_chafa "$cache"
+      kitty_preview "$cache"
+    }
+
+    hash() {
+      cache="$HOME/.cache/lf/$(stat --printf '%n\0%i\0%F\0%s\0%W\0%Y' -- "$(readlink -f -- "$1")" | sha256sum | cut -d' ' -f1).jpg"
     }
 
     file="$1"
@@ -70,6 +63,8 @@ pkgs.writeShellApplication {
     height="$3"
     x="$4"
     y="$5"
+
+    blank_preview
 
     case "''${file##*.}" in
       pem | env | gpg | keyring)
@@ -90,7 +85,7 @@ pkgs.writeShellApplication {
           && [ "$orientation" != TopLeft ]; then
           preview_cached magick -- "$file" -auto-orient "$cache"
         else
-          ueberzug_or_chafa "$file"
+          kitty_preview "$file"
         fi
         ;;
       video/*)
@@ -114,37 +109,25 @@ pkgs.writeShellApplication {
       font/* | \
         application/font* | \
         application/x-font*)
-        if [ -p "''${FIFO_UEBERZUG:-}" ]; then
-          preview_cached fontimage -o "$cache" "$file"
-        else
-          file -Lb "$file"
-        fi
+        preview_cached fontimage -o "$cache" "$file"
         ;;
 
       application/pdf)
-        if [ -p "''${FIFO_UEBERZUG:-}" ]; then
-          preview_cached pdftoppm -jpeg -f 1 -singlefile "$file" "''${cache%.jpg}"
-        else
-          pdftotext -l 3 "$file" -
-        fi
+        preview_cached pdftoppm -jpeg -f 1 -singlefile "$file" "''${cache%.jpg}"
         ;;
 
       application/vnd.openxmlformats-officedocument.* | \
         application/vnd.ms-* | \
         application/msword | \
         application/vnd.oasis.*)
-        if [ -p "''${FIFO_UEBERZUG:-}" ]; then
-          # shellcheck disable=SC2329
-          office_to_jpg() {
-            tmp="$(mktemp -d)"
-            libreoffice --headless --convert-to pdf --outdir "$tmp" "$file" 2>/dev/null
-            pdftoppm -jpeg -f 1 -singlefile "$tmp"/*.pdf "''${cache%.jpg}"
-            rm -rf "$tmp"
-          }
-          preview_cached office_to_jpg
-        else
-          file -Lb "$file"
-        fi
+        # shellcheck disable=SC2329
+        office_to_jpg() {
+          tmp="$(mktemp -d)"
+          libreoffice --headless --convert-to pdf --outdir "$tmp" "$file" 2>/dev/null
+          pdftoppm -jpeg -f 1 -singlefile "$tmp"/*.pdf "''${cache%.jpg}"
+          rm -rf "$tmp"
+        }
+        preview_cached office_to_jpg
         ;;
 
       text/x-diff | \

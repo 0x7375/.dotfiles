@@ -105,6 +105,7 @@ pkgs.writeShellApplication {
       }
 
       pkill -USR1 nvim
+      pkill -USR1 kitty
       ${lib.optionalString (config.me.desktop.terminal.name == "foot")
         # bash
         ''

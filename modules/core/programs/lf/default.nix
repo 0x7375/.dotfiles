@@ -5,55 +5,34 @@
     {
       lib,
       config,
-      options,
       pkgs,
       ...
     }:
     let
       inherit (pkgs.stdenv) isLinux;
-      isDesktop = options ? me.desktop;
-      previewer = lib.getExe (import ./_previewer.nix { inherit isDesktop isLinux pkgs; });
+      previewer = lib.getExe (import ./_previewer.nix { inherit isLinux pkgs; });
       cleaner = pkgs.writeShellScript "cleaner" ''
-        [ -p "$FIFO_UEBERZUG" ] && printf '{"action":"remove","identifier":"preview"}\n' >"$FIFO_UEBERZUG"
+        width="$2"
+        height="$3"
+        x="$4"
+        y="$5"
+
+        printf -v blank '%*s' "$width" '''
+        col=$((x + 1))
+
+        args=()
+        i=0
+        while [ "$i" -lt "$height" ]; do
+          args+=("$((y + i + 1))" "$col" "$blank")
+          i=$((i + 1))
+        done
+
+        printf '\033[%d;%dH%s' "''${args[@]}" >/dev/tty
       '';
     in
     {
       nixpkgs.overlays = [
-        (final: prev: {
-          lf = prev.writeShellApplication {
-            name = "lf";
-            runtimeInputs =
-              with prev;
-              [
-                lf
-              ]
-              ++ lib.optionals isDesktop (
-                with prev;
-                [
-                  ueberzugpp
-                ]
-              );
-            text = ''
-              if [ -n "''${WAYLAND_DISPLAY-}" ] && [ -z "''${FIFO_UEBERZUG-}" ]; then
-                export FIFO_UEBERZUG="''${TMPDIR:-/tmp}/lf-ueberzug-$$"
-
-                cleanup() {
-                  exec 3>&-
-                  rm -- "$FIFO_UEBERZUG"
-                }
-
-                mkfifo -- "$FIFO_UEBERZUG"
-                # empty the LD_LIBRARY_PATH var so there is no conflict when I override it inside devShells
-                while [ -p "$FIFO_UEBERZUG" ] && ! LD_LIBRARY_PATH="" ueberzugpp layer --output sixel -s <"$FIFO_UEBERZUG"; do :; done &
-                exec 3>"$FIFO_UEBERZUG"
-                trap cleanup EXIT
-                lf "$@" 3>&-
-              else
-                exec lf "$@"
-              fi
-            '';
-          };
-
+        (_: prev: {
           ouch = (prev.crossPkgs or prev).ouch.override {
             enableUnfree = true;
           };
@@ -66,6 +45,7 @@
         lf
         ouch
         perl540Packages.FileMimeInfo
+        kitty
       ];
 
       hj.xdg.config.files."lf/lfrc".text =
@@ -98,6 +78,9 @@
           set sortby "ext"
           set tabstop 4
 
+          # cmd on-select &{{
+          #   ${getExe pkgs.lf} -remote "send $id redraw"
+          # }}
           cmd on-cd &{{
             if [ -d .git ] || [ -f .git ]; then
                 branch="$(git branch --show-current 2>/dev/null)" || true
@@ -459,8 +442,6 @@
       ...
     }:
     {
-      packages = [ pkgs.ueberzugpp ];
-
       hj.xdg.config.files."lf/lfrc".text =
         let
           inherit (lib) getExe;
@@ -494,9 +475,9 @@
     {
       tinted.files.".config/mango/config.conf".value = {
         bind = [
-          "SUPER,e,toggle_named_scratchpad,foot-lf,none,footclient --app-id foot-lf -e ${lib.getExe pkgs.lf}"
+          "SUPER,e,toggle_named_scratchpad,kitty-lf,none,kitty -1 --class kitty-lf -e ${lib.getExe pkgs.lf}"
         ];
-        windowrule = [ "isnamedscratchpad:1,width:1280,height:800,appid:foot-lf" ];
+        windowrule = [ "isnamedscratchpad:1,width:1280,height:800,appid:kitty-lf" ];
       };
 
       packages = with pkgs; [

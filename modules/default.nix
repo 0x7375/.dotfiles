@@ -117,6 +117,7 @@ in
           wayland
           dev
           preservation
+          kitty
         ]
       );
 

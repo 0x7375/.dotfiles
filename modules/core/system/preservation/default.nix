@@ -148,7 +148,7 @@
       };
     };
 
-    sops.age.sshKeyPaths = [
+    sops.age.sshKeyPaths = pkgs.lib.optionals (!config.me.tpm.enable) [
       "/persist/etc/ssh/ssh_host_ed25519_key"
     ];
 

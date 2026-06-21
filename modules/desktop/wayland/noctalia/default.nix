@@ -262,7 +262,10 @@
               show_app_name = false;
             };
 
-            osd.position = "top_center";
+            osd = {
+              position = "top_center";
+              kinds.media = false;
+            };
 
             shell = {
               avatar_path = "${config.me.home}/pictures/ghibli/kiki.jpg";
@@ -430,17 +433,10 @@
         partOf = [ "mango-session.target" ];
         after = [ "kanshi.service" ];
         requires = [ "kanshi.service" ];
-
-        path = [
-          pkgs.mangowc
-          pkgs.${config.me.desktop.terminal.name}
-        ];
-
-        # forces kitty to source the path
-        environment."__NIXOS_SET_ENVIRONMENT_DONE" = "";
+        enableDefaultPath = false;
 
         serviceConfig = {
-          ExecStart = "${lib.getExe pkgs.my.noctalia}";
+          ExecStart = lib.getExe pkgs.my.noctalia;
           Restart = "always";
           RestartSec = 3;
         };
@@ -450,9 +446,10 @@
         bindings = {
           "Mod+x" = "noctalia msg notification-clear-active";
           "Mod+i" = "noctalia msg bar-hide";
-          "Mod+d" = "noctalia msg panel-open launcher";
-          "Mod+c" = "noctalia msg panel-open clipboard";
-          # "Mod+r" = "notifications toggleHistory"; # v4
+          "Mod+d" = "noctalia msg panel-toggle launcher";
+          "Mod+c" = "noctalia msg panel-toggle clipboard";
+          "Mod+Shift+n" = "noctalia msg panel-toggle control-center notifications";
+          "Mod+Shift+m" = "noctalia msg panel-toggle control-center weather";
           "Mod+m" =
             let
               dir = "$HOME/notes";
@@ -469,7 +466,7 @@
             url=$(awk -F': ' -v sel="$selection" '$1 == sel {print $2}' "$file")
             [[ -n "$url" ]] && ${config.me.desktop.open} "$url"
           '';
-          "Mod+Shift+p" = "noctalia msg panel-open launcher \"/session \"";
+          "Mod+Shift+p" = "noctalia msg panel-toggle launcher \"/session \"";
         };
       };
     };

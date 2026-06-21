@@ -177,7 +177,7 @@
       ...
     }:
     let
-      inherit (lib) getExe getExe';
+      inherit (lib) getExe;
       cfg = config.me.desktop;
     in
     {
@@ -253,8 +253,7 @@
 
           "Mod+s" = "${term} -e ${getExe pkgs.my.tmux-sshr}";
           "Mod+Shift+s" = "noctalia msg theme-mode-toggle";
-          # "Mod+n" =
-          #   "${term} -e ${getExe pkgs.zsh} -c '${getExe' pkgs.networkmanager "nmcli"} device wifi rescan && unset COLORTERM && TERM=xterm-old ${getExe' pkgs.networkmanager "nmtui"}'";
+          "Mod+y" = "noctalia msg panel-toggle control-center system";
           "Mod+Alt+b" = btToggle;
           "Mod+Shift+i" = getExe wizToggle;
 

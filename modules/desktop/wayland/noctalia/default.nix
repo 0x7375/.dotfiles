@@ -196,6 +196,7 @@
               };
             };
 
+            battery.warning_threshold = 20;
             brightness.enable_ddcutil = true;
             calendar = {
               enabled = true;

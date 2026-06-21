@@ -236,6 +236,7 @@
 
   flake.modules.nixos.laptop = {
     tinted.files.".config/mango/config.conf".value = {
+      trackpad_scroll_factor = 0.3;
       switchbind = [
         "fold,spawn,noctalia msg lock-and-suspend"
       ];

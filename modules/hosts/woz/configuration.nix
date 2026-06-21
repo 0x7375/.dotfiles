@@ -33,8 +33,6 @@
           ${lib.getExe pkgs.unstable.tuxvdmtool} disconnect
         '';
 
-      tinted.files.".config/mango/config.conf".value.trackpad_scroll_factor = 0.3;
-
       system.stateVersion = "25.11";
     };
 }

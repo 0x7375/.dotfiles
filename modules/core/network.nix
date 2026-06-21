@@ -246,23 +246,16 @@
         };
       };
 
-      # prevent network manager from creating duplicate entries for each profile on startup
+      # prevent iwd's own known-network store from autoconnecting and
+      # shadowing the managed NetworkManager profiles
       systemd.services.iwd.preStart =
-        let
-          inherit (lib) getExe;
-        in
         lib.mkBefore
           # bash
           ''
             set +e
-
-            for f in /var/lib/iwd/*.psk; do
-              ${getExe pkgs.gnused} -i '/^AutoConnect=/d' "$f"
-              if ${getExe pkgs.gnugrep} -q '^\[Settings\]' "$f"; then
-                ${getExe pkgs.gnused} -i '/^\[Settings\]/a AutoConnect=false' "$f"
-              else
-                printf '\n[Settings]\nAutoConnect=false\n' >> "$f"
-              fi
+            for f in /var/lib/iwd/*.psk /var/lib/iwd/*.open; do
+              [ -e "$f" ] || continue
+              rm -f "$f"
             done
           '';
     };

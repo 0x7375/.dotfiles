@@ -375,8 +375,13 @@
               volume.show_label = false;
               workspaces = {
                 capsule = false;
-                display = "none";
-                hide_when_empty = false;
+                display = "id";
+                empty_color = "outline";
+                focused_color = "on_surface";
+                hide_when_empty = true;
+                minimal = true;
+                occupied_color = "outline";
+                scale = 1.2;
               };
               mango-layout.type = "me/mango-layout:mango-layout";
             };

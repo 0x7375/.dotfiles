@@ -8,6 +8,7 @@
     {
       persistUser.directories = [
         ".cache/direnv"
+        ".local/share/direnv"
       ];
 
       vars.DIRENV_WARN_TIMEOUT = "0";

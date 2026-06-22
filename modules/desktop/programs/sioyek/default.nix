@@ -4,6 +4,10 @@
   flake.modules.nixos.desktop =
     { pkgs, ... }:
     {
+      persistUser.directories = [
+        ".local/share/sioyek"
+      ];
+
       packages = with pkgs; [ my.zaread ];
 
       xdg.mimeApps.defaultApplications = {

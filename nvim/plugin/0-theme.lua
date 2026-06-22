@@ -28,7 +28,6 @@ require("gruvbox").setup({
     GruvboxOrangeSign = { link = "GruvboxOrange" },
     GruvboxPurpleSign = { link = "GruvboxPurple" },
 
-    Comment = { link = "NonText" },
     Visual = { link = "MiniFilesCursorLine" },
     -- Visual = { link = "CursorLine" },
     YankyYanked = { link = "IncSearch" },

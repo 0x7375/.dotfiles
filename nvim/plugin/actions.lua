@@ -33,13 +33,13 @@ require("mini.move").setup({
     down = "J",
     up = "K",
 
-    line_left = "<M-h>",
-    line_right = "<M-l>",
-    line_down = "<M-j>",
-    line_up = "<M-k>",
+    line_left = "",
+    line_right = "",
+    line_down = "",
+    line_up = "",
   },
 
   options = {
-    reindent_linewise = false,
+    reindent_linewise = true,
   },
 })

@@ -1,0 +1,60 @@
+p:
+# css
+''
+  /*
+  * GTK Colors (GTK3)
+  * Copied from Noctalia templates
+  */
+
+  @define-color accent_color ${p.green};
+  @define-color accent_bg_color ${p.green};
+  @define-color accent_fg_color ${p.bg0};
+
+  @define-color destructive_bg_color ${p.red};
+  @define-color destructive_fg_color ${p.bg0};
+
+  @define-color error_bg_color ${p.red};
+  @define-color error_fg_color ${p.bg0};
+
+  @define-color window_bg_color ${p.bg0_dark};
+  @define-color window_fg_color ${p.fg0};
+
+  @define-color view_bg_color ${p.bg0_dark};
+  @define-color view_fg_color ${p.fg0};
+
+  @define-color headerbar_bg_color ${p.bg1};
+  @define-color headerbar_fg_color ${p.fg0};
+  @define-color headerbar_backdrop_color @window_bg_color;
+
+  @define-color popover_bg_color ${p.bg1};
+  @define-color popover_fg_color ${p.fg0};
+
+  @define-color card_bg_color ${p.bg1};
+  @define-color card_fg_color ${p.fg0};
+
+  @define-color dialog_bg_color ${p.bg0_dark};
+  @define-color dialog_fg_color ${p.fg0};
+
+  @define-color overview_bg_color ${p.bg1};
+  @define-color overview_fg_color ${p.fg0};
+
+  @define-color sidebar_bg_color ${p.bg1};
+  @define-color sidebar_fg_color ${p.fg0};
+  @define-color sidebar_backdrop_color @window_bg_color;
+  @define-color sidebar_border_color @window_bg_color;
+
+  @define-color secondary_sidebar_bg_color ${p.bg0_dark};
+  @define-color secondary_sidebar_fg_color ${p.fg0};
+
+  /* Focused selection states */
+  @define-color theme_selected_bg_color @accent_bg_color;
+  @define-color theme_selected_fg_color @accent_fg_color;
+
+  /* Backdrop/unfocused states */
+  @define-color theme_unfocused_fg_color @window_fg_color;
+  @define-color theme_unfocused_text_color @view_fg_color;
+  @define-color theme_unfocused_bg_color @window_bg_color;
+  @define-color theme_unfocused_base_color @window_bg_color;
+  @define-color theme_unfocused_selected_bg_color @accent_bg_color;
+  @define-color theme_unfocused_selected_fg_color @accent_fg_color;
+''

@@ -8,14 +8,6 @@
     }:
     # gtk theme and icon theme need to be symlinked to work, I symlink and swap inside swap-theme
     let
-      pascalCase =
-        string:
-        let
-          firstLetter = lib.toUpper (lib.substring 0 1 string);
-          rest = lib.toLower (lib.substring 1 (lib.stringLength string - 1) string);
-        in
-        firstLetter + rest;
-
       inherit (config.me.desktop)
         theme
         cursorTheme
@@ -26,10 +18,15 @@
       fontNameAndSize = font.family + " 11";
 
       cssContent =
-        { colorScheme, version }:
+        {
+          colorScheme,
+          version,
+        }:
         # css
         ''
-          @import url("file://${theme.package}/share/themes/${theme.name}-${pascalCase colorScheme}/gtk-${version}.0/gtk.css");
+          @import url("file://${theme.package}/share/themes/${theme.name}${
+            if colorScheme == "dark" then "-dark" else ""
+          }/gtk-${version}.0/gtk.css");
 
           # window.csd {
           #   border-radius: 0;
@@ -42,6 +39,8 @@
             border: none;
             box-shadow: none;
           }
+
+
         '';
     in
     {
@@ -68,13 +67,8 @@
         in
         {
           theme = mkThemeOption {
-            name = "Gruvbox";
-            package = pkgs.gruvbox-gtk-theme.override {
-              colorVariants = [
-                "dark"
-                "light"
-              ];
-            };
+            name = "adw-gtk3";
+            package = pkgs.adw-gtk3;
           };
 
           iconTheme = mkThemeOption {
@@ -98,7 +92,7 @@
       config = {
         nixpkgs.overlays = [
           (final: _: {
-            inherit (final.unstable) gruvbox-gtk-theme;
+            # inherit (final.unstable) gruvbox-gtk-theme;
           })
         ];
 
@@ -185,13 +179,15 @@
             cssContent {
               colorScheme = palette._theme;
               version = "3";
-            };
+            }
+            + (import ./_gtk3.nix palette);
           ".config/gtk-4.0/gtk.css".text =
             palette:
             cssContent {
               colorScheme = palette._theme;
               version = "4";
-            };
+            }
+            + (import ./_gtk4.nix palette);
         };
       };
     };

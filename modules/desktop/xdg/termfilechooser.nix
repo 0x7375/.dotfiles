@@ -96,8 +96,6 @@
         type = "Application";
       };
 
-      xdg.mimeApps.defaultApplications."inode/directory" = [ "lf.desktop" ];
-
       hj.xdg.data.files."dbus-1/services/org.freedesktop.FileManager1.service".text = # ini
         ''
           [D-BUS Service]

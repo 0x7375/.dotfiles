@@ -9,7 +9,10 @@
           directory = ".local/state/tinted";
           how = "_intermediate";
         }
-        ".local/state/tinted/theme"
+        {
+          file = ".local/state/tinted/theme";
+          how = "symlink";
+        }
       ];
     };
   };

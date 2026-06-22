@@ -91,7 +91,15 @@
 
       systemd.suppressedSystemUnits = [ "systemd-machine-id-commit.service" ];
 
-      packages = [ (import ./_diff.nix pkgs) ];
+      nixpkgs.overlays = [
+        (final: prev: {
+          my = (prev.my or { }) // {
+            fs-diff = import ./_fs-diff.nix pkgs;
+          };
+        })
+      ];
+
+      packages = [ pkgs.my.fs-diff ];
 
       persistUser = {
         directories = [

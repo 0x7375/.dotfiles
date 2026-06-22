@@ -18,6 +18,9 @@ map({ "n", "v" }, "<space>", "<nop>")
 
 map({ "n", "x" }, "s", "V")
 
+-- Duplicate line and put cursor where it was (hello tsoding)
+map("n", "yp", "m`yyp``j")
+
 map("n", "<ESC>", function()
   vim.cmd("nohlsearch")
   bar.refresh()

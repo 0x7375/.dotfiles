@@ -37,7 +37,6 @@ require("oil").setup({
   keymaps = {
     ["H"] = "actions.parent",
     ["L"] = "actions.select",
-    ["<ESC>"] = "actions.close",
     ["q"] = "actions.close",
     ["."] = "actions.toggle_hidden",
     ["<C-r>"] = "actions.refresh",

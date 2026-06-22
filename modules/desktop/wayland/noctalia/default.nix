@@ -107,7 +107,7 @@
         mOnTertiary = p.bg0;
         mError = p.red;
         mOnError = p.bg0;
-        mSurface = p.bg0_dark;
+        mSurface = p.bg0_hard;
         mOnSurface = p.fg0;
         mSurfaceVariant = p.bg1;
         mOnSurfaceVariant = p.fg1;

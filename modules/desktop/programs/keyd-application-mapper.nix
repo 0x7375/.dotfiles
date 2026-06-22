@@ -44,6 +44,7 @@
           apps = [
             "vesktop"
             "discord"
+            "zen"
           ];
         in
         # toml
@@ -52,7 +53,7 @@
           ${default}
           control.e = f6
 
-          [zen-browser]
+          [zen]
           control.e = f6
           # make fullscreen toggle compact mode aswell
           meta.f = macro(A-c M-f)

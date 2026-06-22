@@ -57,7 +57,7 @@ M.build_bar = function()
   local branch = git_cache ~= "" and (" " .. git_cache) or ""
   branch = " " .. branch
 
-  local set_green = "%#GruvboxGreen#"
+  local set_green = "%#Directory#"
   local set_normal = "%#Dim#"
   local file_name = " " .. vim.fn.expand("%:~:.")
 

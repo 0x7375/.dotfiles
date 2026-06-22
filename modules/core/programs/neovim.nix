@@ -108,7 +108,6 @@ let
               hyprlang
               xcompose
               git_config
-              kitty
               json
               yaml
               xml

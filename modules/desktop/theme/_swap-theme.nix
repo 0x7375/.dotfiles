@@ -38,7 +38,7 @@ pkgs.writeShellApplication {
     in
     # bash
     ''
-      themes_dir="$HOME/.local/state/tinted"
+      themes_dir="$TINTED_DIR"
       share_dir="$HOME/.local/share"
       theme_file="''${themes_dir}/theme"
 

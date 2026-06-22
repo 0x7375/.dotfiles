@@ -16,10 +16,10 @@ p:
   @define-color error_bg_color ${p.red};
   @define-color error_fg_color ${p.bg0};
 
-  @define-color window_bg_color ${p.bg0_dark};
+  @define-color window_bg_color ${p.bg0_hard};
   @define-color window_fg_color ${p.fg0};
 
-  @define-color view_bg_color ${p.bg0_dark};
+  @define-color view_bg_color ${p.bg0_hard};
   @define-color view_fg_color ${p.fg0};
 
   @define-color headerbar_bg_color ${p.bg1};
@@ -32,7 +32,7 @@ p:
   @define-color card_bg_color ${p.bg1};
   @define-color card_fg_color ${p.fg0};
 
-  @define-color dialog_bg_color ${p.bg0_dark};
+  @define-color dialog_bg_color ${p.bg0_hard};
   @define-color dialog_fg_color ${p.fg0};
 
   @define-color overview_bg_color ${p.bg1};
@@ -43,7 +43,7 @@ p:
   @define-color sidebar_backdrop_color @window_bg_color;
   @define-color sidebar_border_color @window_bg_color;
 
-  @define-color secondary_sidebar_bg_color ${p.bg0_dark};
+  @define-color secondary_sidebar_bg_color ${p.bg0_hard};
   @define-color secondary_sidebar_fg_color ${p.fg0};
 
   /* Focused selection states */

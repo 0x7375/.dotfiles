@@ -2,19 +2,10 @@
 
 {
   flake.modules.generic.nixos = {
-    persistUser = {
-      directories = [ ".cache/tabler-icons" ];
-      files = [
-        {
-          directory = ".local/state/tinted";
-          how = "_intermediate";
-        }
-        {
-          file = ".local/state/tinted/theme";
-          how = "symlink";
-        }
-      ];
-    };
+    persistUser.directories = [
+      ".cache/tabler-icons"
+      ".local/state/tinted"
+    ];
   };
 
   flake.modules.generic.core =
@@ -39,91 +30,143 @@
           })
         ];
 
-        vars.TINTED_FILE = "${home}/${config.tinted.stateDir}/theme";
+        vars.TINTED_DIR = "${home}/${config.tinted.stateDir}";
 
-        tinted = {
+        tinted = rec {
           enable = true;
           inherit (config.me) user;
           homeDir = config.me.home;
 
-          palette = {
-            _theme = {
-              dark = "dark";
-              light = "light";
-            };
-            bg0_dark = {
-              dark = "#1d2021";
-              light = "#f2e5bc";
-            };
-            bg0 = {
-              dark = "#282828";
-              light = "#fbf1c7";
-            };
-            bg1 = {
-              dark = "#3c3836";
-              light = "#ebdbb2";
-            };
-            bg2 = {
-              dark = "#504945";
-              light = "#d5c4a1";
-            };
-            bg3 = {
-              dark = "#665c54";
-              light = "#bdae93";
-            };
-            fg4 = {
-              dark = "#a89984";
-              light = "#7c6f64";
-            };
-            fg3 = {
-              dark = "#bdae93";
-              light = "#665c54";
-            };
-            fg2 = {
-              dark = "#d5c4a1";
-              light = "#504945";
-            };
-            fg1 = {
-              dark = "#ebdbb2";
-              light = "#3c3836";
-            };
-            fg0 = {
-              dark = "#fbf1c7";
-              light = "#282828";
-            };
-            red = {
-              dark = "#fb4934";
-              light = "#9d0006";
-            };
-            green = {
-              dark = "#b8bb26";
-              light = "#b57614";
-            };
-            yellow = {
-              dark = "#fabd2f";
-              light = "#79740e";
-            };
-            cyan = {
-              dark = "#8ec07c";
-              light = "#427b58";
-            };
-            blue = {
-              dark = "#83a598";
-              light = "#076678";
-            };
-            magenta = {
-              dark = "#d3869b";
-              light = "#8f3f71";
-            };
-            orange = {
-              dark = "#fe8019";
-              light = "#af3a03";
-            };
-          };
+          palette =
+            let
+              mkUnique = color: {
+                dark = color;
+                light = color;
+              };
+            in
+            {
+              _theme = {
+                dark = "dark";
+                light = "light";
+              };
+              bg0_hard = {
+                dark = "#1D2021";
+                light = "#F2E5BC";
+              };
+              bg0 = {
+                dark = "#282828";
+                light = "#FBF1C7";
+              };
+              bg0_soft = {
+                dark = "#32302F";
+                light = "#F9F5D7";
+              };
+              bg1 = {
+                dark = "#3C3836";
+                light = "#EBDBB2";
+              };
+              bg2 = {
+                dark = "#504945";
+                light = "#D5C4A1";
+              };
+              bg3 = {
+                dark = "#665C54";
+                light = "#BDAE93";
+              };
+              bg4 = {
+                dark = "#7C6F64";
+                light = "#A89984";
+              };
+              gray = mkUnique "#928374";
 
-          files."${config.tinted.stateDir}/palette" = {
-            stripHash = true;
-            generator = lib.generators.toKeyValue { };
+              neutral_red = mkUnique "#CC241D";
+              red = {
+                dark = "#FB4934";
+                light = "#9D0006";
+              };
+              bg_red = {
+                dark = "#722529";
+                light = "#fc9487";
+              };
+
+              neutral_green = mkUnique "#98971A";
+              green = {
+                dark = "#b8bb26";
+                light = "#79740E";
+              };
+              bg_green = {
+                dark = "#62693e";
+                light = "#d5d39b";
+              };
+
+              neutral_yellow = mkUnique "#D79921";
+              yellow = {
+                dark = "#FABD2F";
+                light = "#B57614";
+              };
+
+              neutral_blue = mkUnique "#458588";
+              blue = {
+                dark = "#83A598";
+                light = "#076678";
+              };
+
+              neutral_magenta = mkUnique "#B16286";
+              magenta = {
+                dark = "#D3869B";
+                light = "#8F3F71";
+              };
+
+              neutral_cyan = mkUnique "#689D6A";
+              cyan = {
+                dark = "#8EC07C";
+                light = "#427B58";
+              };
+              bg_cyan = {
+                dark = "#49503b";
+                light = "#e8e5b5";
+              };
+
+              neutral_orange = mkUnique "#D65D0E";
+              orange = {
+                dark = "#FE8019";
+                light = "#AF3A03";
+              };
+            }
+            // (
+              let
+                swap = c: {
+                  dark = c.light;
+                  light = c.dark;
+                };
+                bgs = [
+                  "bg4"
+                  "bg3"
+                  "bg2"
+                  "bg1"
+                  "bg0_soft"
+                  "bg0"
+                  "bg0_hard"
+                ];
+              in
+              builtins.listToAttrs (
+                map (name: {
+                  name = builtins.replaceStrings [ "bg" ] [ "fg" ] name;
+                  value = swap palette.${name};
+                }) bgs
+              )
+            );
+
+          files = {
+            "${config.tinted.stateDir}/palette.env" = {
+              stripHash = true;
+              generator = lib.generators.toKeyValue { };
+            };
+            "${config.tinted.stateDir}/palette.lua".text = p: ''
+              return {
+              ${lib.concatStringsSep ",\n" (lib.mapAttrsToList (k: v: "  ${k} = \"${v}\"") p)}
+              }
+            '';
           };
         };
       };

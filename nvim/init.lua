@@ -77,3 +77,5 @@ if vim.g.vscode then
 end
 
 require("autocmds")
+
+require("util.theme").update()

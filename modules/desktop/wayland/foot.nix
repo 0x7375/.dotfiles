@@ -17,7 +17,7 @@
         regular4 = p.blue;
         regular5 = p.magenta;
         regular6 = p.cyan;
-        regular7 = p.fg3;
+        regular7 = p.fg3; # completion text
         bright0 = p.bg3;
         bright1 = p.red;
         bright2 = p.green;

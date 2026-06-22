@@ -11,7 +11,7 @@
             notify = prev.writeShellScriptBin "notify" ''
               _tabler() {
                 local name=$1
-                source "''$HOME/.local/state/tinted/palette"
+                source "''$TINTED_DIR/palette.env"
 
                 local out="''$HOME/.cache/tabler-icons/$name-$fg0.png"
                 [[ -f "$out" ]] && { printf '%s' "$out"; return; }

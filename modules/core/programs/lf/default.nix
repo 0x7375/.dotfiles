@@ -78,6 +78,7 @@
           set ignorecase
           set info
           set promptfmt "\033[34;1m%d\033[0m\033[1m%f\033[0m"
+          set errorfmt "\033[7;31m" # overriden to use background color as foreground
           set ratios "1:1"
           set scrolloff 8
           set shell "zsh"

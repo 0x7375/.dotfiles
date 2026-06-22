@@ -104,5 +104,22 @@
           Name=org.freedesktop.FileManager1
           Exec=${lib.getExe pkgs.file-handler}
         '';
+
+      packages = [
+        (pkgs.writeShellScriptBin "switch-file-chooser" ''
+          dir=$HOME/.config/xdg-desktop-portal
+          file=$dir/portals.conf
+          mkdir -p $dir
+
+          if [[ -f $file ]]; then
+            rm -f $file
+            echo "Switching to terminal file chooser..."
+          else
+            printf '[preferred]\ndefault=gtk\norg.freedesktop.impl.portal.FileChooser=gtk\n' > "$file"
+            echo "Switching to gtk file chooser..."
+          fi
+          systemctl restart --user xdg-desktop-portal
+        '')
+      ];
     };
 }

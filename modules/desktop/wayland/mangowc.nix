@@ -238,7 +238,7 @@
     tinted.files.".config/mango/config.conf".value = {
       trackpad_scroll_factor = 0.3;
       switchbind = [
-        "fold,spawn,noctalia msg lock-and-suspend"
+        "fold,spawn,noctalia msg session lock-and-suspend"
       ];
       tap_to_click = 1;
       tap_and_drag = 0;

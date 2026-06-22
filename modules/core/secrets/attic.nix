@@ -28,7 +28,8 @@
             ${lib.getExe pkgs.attic-client} login local ${url} $TOKEN
           '';
           ExecStart = "${lib.getExe pkgs.attic-client} watch-store cache";
-          Restart = "on-failure";
+          Restart = "always";
+          RestartSec = 3;
           KillMode = "control-group";
           KillSignal = "SIGTERM";
         };

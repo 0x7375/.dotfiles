@@ -58,10 +58,6 @@
       "rev": "ff2cbcba459b637ec3fd165a2be59b7bbaeedf0d",
       "src": "https://github.com/folke/lazydev.nvim"
     },
-    "lf.nvim": {
-      "rev": "586ca275cdb1e7b7580211bc09f44885fd1cd07c",
-      "src": "https://github.com/0x7375/lf.nvim"
-    },
     "live-command.nvim": {
       "rev": "fc8c36d7e5b96945fbc52af7029facc317a47377",
       "src": "https://github.com/smjonas/live-command.nvim"

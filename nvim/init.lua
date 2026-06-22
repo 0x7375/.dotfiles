@@ -43,7 +43,7 @@ local disabled_builtins = {
   "netrwSettings",
   "netrwFileHandlers",
   "matchit",
-  "matchparen",
+  -- "matchparen",
   "tar",
   "tarPlugin",
   "rrhelper",

@@ -106,6 +106,7 @@ local filetype_exclude = {
   "nvim-pack",
   "dap-view",
   "dap-repl",
+  "oil",
 }
 
 local function validate_buffer()

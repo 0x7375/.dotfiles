@@ -83,6 +83,7 @@ in
           wayland
           dev
           kitty
+          preservation
         ]
       );
 

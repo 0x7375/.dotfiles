@@ -74,10 +74,14 @@
               {
                 "${super}-m" = "exec-and-forget ${pkgs.writeShellScript "open-note" ''
                   tmp=$(mktemp)
-                  ${lib.getExe pkgs.alacritty} -e zsh -c "ls ~/notes/*.md | sed 's|.*/||; s/\.md$//' | ${fmenu} > $tmp"
+                  ${lib.getExe pkgs.alacritty} -e zsh -c "ls ~/{notes,courses}/*.md | sed 's|.*/||; s/\.md$//' | ${fmenu} > $tmp"
                   note=$(cat $tmp)
                   rm -f $tmp
-                  [ -n "$note" ] && open -na ${terminal} --args -e zsh -lc "nvim '$HOME/notes/$note.md'"
+                  if [ -n "$note" ]; then
+                    dir=notes
+                    [[ -f "$HOME/courses/$note.md" ]] && dir=courses
+                    open -na ${terminal} --args -e zsh -lc "nvim '$HOME/$dir/''${note}.md'"
+                  fi
                 ''}";
 
                 "${super}-shift-r" = [

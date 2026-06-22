@@ -450,14 +450,14 @@
           "Mod+c" = "noctalia msg panel-toggle clipboard";
           "Mod+Shift+n" = "noctalia msg panel-toggle control-center notifications";
           "Mod+Shift+m" = "noctalia msg panel-toggle control-center weather";
-          "Mod+m" =
-            let
-              dir = "$HOME/notes";
-            in
-            pkgs.writeShellScript "open-note" ''
-              note=$(ls ${dir} | sed 's/\.md$//' | ${lib.getExe pkgs.bemenu} -p "NOTE")
-              [ -n "$note" ] && $TERMINAL $EDITOR "${dir}/$note.md"
-            '';
+          "Mod+m" = pkgs.writeShellScript "open-note" ''
+            note=$(ls $HOME/{notes,courses}/*.md | sed 's|.*/||; s/\.md$//' | ${lib.getExe pkgs.bemenu} -p "NOTE")
+            [[ -n "$note" ]] && {
+              dir=notes
+              [[ -f "$HOME/courses/$note.md" ]] && dir=courses
+              $TERMINAL $EDITOR "$HOME/$dir/$note.md"
+            }
+          '';
           "Mod+Shift+b" = pkgs.writeShellScript "open-bookmark" ''
             file="$HOME/notes/Bookmarks.md"
             [[ ! -f $file ]] && exit

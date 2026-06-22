@@ -207,3 +207,40 @@ vim.api.nvim_create_autocmd("LspProgress", {
     })
   end,
 })
+
+-- fossify notes automatic code/decode on open
+local group = vim.api.nvim_create_augroup("Fossify", { clear = true })
+local pattern = "*/courses/*.md"
+
+local function filter(cmd)
+  -- avoid polluting undo history with the format-conversion itself
+  local saved = vim.bo.undolevels
+  vim.bo.undolevels = -1
+  vim.cmd("silent %!" .. cmd)
+  vim.bo.undolevels = saved
+end
+
+vim.api.nvim_create_autocmd("BufReadPost", {
+  group = group,
+  pattern = pattern,
+  callback = function(a)
+    filter("fossify decode " .. vim.fn.shellescape(a.file))
+    vim.bo[a.buf].modified = false
+    vim.bo[a.buf].filetype = "fossify"
+  end,
+})
+
+vim.api.nvim_create_autocmd("BufWritePre", {
+  group = group,
+  pattern = pattern,
+  callback = function(a) filter("fossify encode " .. vim.fn.shellescape(a.file)) end,
+})
+
+vim.api.nvim_create_autocmd("BufWritePost", {
+  group = group,
+  pattern = pattern,
+  callback = function(a)
+    filter("fossify decode " .. vim.fn.shellescape(a.file))
+    vim.bo[a.buf].modified = false
+  end,
+})

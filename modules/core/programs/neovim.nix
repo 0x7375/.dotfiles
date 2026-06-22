@@ -155,6 +155,7 @@ in
     }:
     {
       packages = [
+        pkgs.my.fossify
         (neovim.apply (neovimWrapperBase {
           inherit pkgs lib;
         })).wrapper

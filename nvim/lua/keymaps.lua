@@ -164,13 +164,27 @@ map("x", "<leader>xl", ":lua<CR>", { desc = "Run visual selection with lua" })
 
 map("n", "<leader>N", vim.cmd.restart, { desc = "Restart neovim" })
 
+local scratch_buf = nil
+
 map("n", '<leader>"', function()
-  local buf = vim.api.nvim_create_buf(false, true)
+  if not scratch_buf or not vim.api.nvim_buf_is_valid(scratch_buf) then
+    scratch_buf = vim.api.nvim_create_buf(false, true)
+
+    for name, value in pairs({
+      filetype = "scratch",
+      buftype = "nofile",
+      bufhidden = "hide",
+      swapfile = false,
+      modifiable = true,
+    }) do
+      vim.api.nvim_set_option_value(name, value, { buf = scratch_buf })
+    end
+  end
 
   local width = math.floor(vim.o.columns * 0.8)
   local height = math.floor(vim.o.lines * 0.8)
 
-  vim.api.nvim_open_win(buf, true, {
+  vim.api.nvim_open_win(scratch_buf, true, {
     relative = "editor",
     width = width,
     height = height,
@@ -179,14 +193,4 @@ map("n", '<leader>"', function()
     style = "minimal",
     border = "single",
   })
-
-  for name, value in pairs({
-    filetype = "scratch",
-    buftype = "nofile",
-    bufhidden = "wipe",
-    swapfile = false,
-    modifiable = true,
-  }) do
-    vim.api.nvim_set_option_value(name, value, { buf = buf })
-  end
 end, { desc = "Open a scratch buffer" })

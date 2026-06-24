@@ -51,8 +51,6 @@
 
       hardware.asahi.peripheralFirmwareDirectory = inputs.asahi-firmware;
 
-      boot.initrd.luks.devices.crypted.device = "/dev/disk/by-uuid/d9e7427d-b109-46e2-925f-1498525506b2";
-
       nixpkgs.hostPlatform = lib.mkDefault "aarch64-linux";
     };
 }

@@ -94,10 +94,6 @@
           directory = "/etc/NetworkManager/system-connections";
           mode = "0700";
         }
-        {
-          directory = "/var/lib/iwd";
-          mode = "0700";
-        }
       ];
 
       imports = [ self.modules.generic.network ];
@@ -122,16 +118,10 @@
       # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
       networking.networkmanager = {
         enable = true;
-        wifi.backend = "iwd";
         connectionConfig = {
           "ipv4.ignore-auto-dns" = true;
           "ipv6.ignore-auto-dns" = true;
         };
-      };
-
-      networking.wireless.iwd = {
-        enable = true;
-        settings.General.EnableNetworkConfiguration = false;
       };
 
       users.users.${config.me.user}.extraGroups = [ "networkmanager" ];
@@ -147,8 +137,8 @@
     {
       config,
       secrets,
-      pkgs,
       lib,
+      pkgs,
       ...
     }:
     {
@@ -245,18 +235,5 @@
           };
         };
       };
-
-      # prevent iwd's own known-network store from autoconnecting and
-      # shadowing the managed NetworkManager profiles
-      systemd.services.iwd.preStart =
-        lib.mkBefore
-          # bash
-          ''
-            set +e
-            for f in /var/lib/iwd/*.psk /var/lib/iwd/*.open; do
-              [ -e "$f" ] || continue
-              rm -f "$f"
-            done
-          '';
     };
 }

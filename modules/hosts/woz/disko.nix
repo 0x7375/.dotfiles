@@ -1,10 +1,10 @@
 { self, ... }:
 
 {
-  flake.modules.woz = { lib, ... }: {
+  flake.modules.nixos.woz = { lib, ... }: {
     disko.devices.disk.main = {
       type = "disk";
-      device = "/dev/nvme0n1p5";
+      device = "/dev/disk/by-uuid/d9e7427d-b109-46e2-925f-1498525506b2";
       content = {
         type = "luks";
         name = "crypted";

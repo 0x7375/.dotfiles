@@ -248,14 +248,6 @@
         "none,up,4,toggleoverview"
         "none,down,4,toggleoverview"
       ];
-      gesturebind = [
-        "none,up,3,togglefullscreen"
-        "none,down,3,togglefullscreen"
-        "none,right,3,viewtoleft"
-        "none,left,3,viewtoright"
-        "none,up,4,toggleoverview"
-        "none,down,4,toggleoverview"
-      ];
       tap_to_click = 1;
       tap_and_drag = 0;
     };

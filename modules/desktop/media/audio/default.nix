@@ -73,10 +73,28 @@
             "99-custom" = {
               "context.properties" = {
                 "module.x11.bell" = false;
+
+                # audio latency otherwise i think?
                 "default.clock.rate" = 48000;
                 "default.clock.quantum" = 1024;
                 "default.clock.min-quantum" = 1024;
               };
+            };
+          };
+          wireplumber.extraConfig = {
+            "51-disable-suspend" = {
+              "monitor.bluez.rules" = [
+                {
+                  matches = [
+                    { "node.name" = "~bluez_output.*"; }
+                  ];
+                  actions = {
+                    update-props = {
+                      "session.suspend-timeout-seconds" = 0;
+                    };
+                  };
+                }
+              ];
             };
           };
         };

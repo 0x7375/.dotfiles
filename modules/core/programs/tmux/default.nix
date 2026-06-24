@@ -139,7 +139,7 @@
 
             bind r command-prompt -I'#W' { rename-window -- '%%' }
 
-            # copying
+            # copy-mode
             bind j copy-mode
             bind -T copy-mode-vi 'v'    send -X begin-selection
             bind -T copy-mode-vi 'C-v'  send -X rectangle-toggle
@@ -159,12 +159,11 @@
               send -X select-line \; \
               send -X copy-selection-no-clear
 
-            bind -T copy-mode-vi 'y' \
-              send -X copy-selection-and-cancel
-
-            bind -T copy-mode-vi 'Y' \
-              send -X copy-selection-and-cancel \; \
-              paste-buffer
+            bind -T copy-mode-vi 'y' send -X copy-selection-and-cancel
+            bind -T copy-mode-vi 'Y' send -X copy-selection-and-cancel \; paste-buffer
+            bind -T copy-mode-vi ':' send -X jump-again
+            bind -T copy-mode-vi 'd' send -X halfpage-down
+            bind -T copy-mode-vi 'u' send -X halfpage-up
 
             ${lib.concatMapStringsSep "\n" (x: "run-shell ${x.rtp}") plugins}
           '';

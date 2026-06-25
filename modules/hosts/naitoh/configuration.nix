@@ -9,9 +9,9 @@
         "${config.systemd.package}/lib/systemd/systemd-sleep suspend-then-hibernate"
       ];
 
-      systemd.sleep.extraConfig = ''
-        HibernateDelaySec=30m
-      '';
+      systemd.sleep.settings.Sleep = {
+        HibernateDelaySec = "30m";
+      };
 
       # systemd.services.disable-lid-wakeup = {
       #   description = "Disable lid switch as wake source for suspend/hibernate";

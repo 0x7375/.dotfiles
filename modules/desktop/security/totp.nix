@@ -35,7 +35,7 @@
       '';
 
       nixpkgs.config.permittedInsecurePackages = [
-        "python3.12-ecdsa-0.19.1"
+        "python3.12-ecdsa-0.19.2"
       ];
     };
 }

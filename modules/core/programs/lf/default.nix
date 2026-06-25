@@ -51,7 +51,7 @@
       packages = with pkgs; [
         lf
         ouch
-        perl540Packages.FileMimeInfo
+        perlPackages.FileMimeInfo
         kitty
       ];
 

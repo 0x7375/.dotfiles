@@ -7,7 +7,7 @@
     }:
     {
       packages = with pkgs; [
-        melonDS
+        melonds
         ryubing
         dolphin-emu
       ];

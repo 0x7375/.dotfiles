@@ -29,6 +29,10 @@
       "mmsg dispatch viewcrossmon,5,HDMI-A-1 && mmsg dispatch viewcrossmon,1,HDMI-A-2"
     ];
 
+    boot.loader.limine.extraConfig = ''
+      remember_last_entry: yes
+    '';
+
     # do not change
     # For more information, see `man configuration.nix` or https://nixos.org/manual/nixos/stable/options#opt-system.stateVersion .
     system.stateVersion = "23.11"; # Did you read the comment?

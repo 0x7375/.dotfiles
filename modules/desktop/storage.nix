@@ -64,13 +64,15 @@ in
       programs.kdeconnect.enable = true;
       me.desktop.startup.kdeconnect = lib.getExe' pkgs.kdePackages.kdeconnect-kde "kdeconnectd";
 
-      me.hostSecrets."kdeconnect/key".path = "${config.me.home}/.config/kdeconnect/privateKey.pem";
+      me.hostSecrets."kdeconnect/key" = { };
 
       hj.xdg.config.files =
-        lib.mapAttrs' (n: v: lib.nameValuePair "kdeconnect/${n}" v)
-          (mkKdeConnectConfig {
-            inherit config lib;
-          });
+        lib.mapAttrs' (n: v: lib.nameValuePair "kdeconnect/${n}" v) (mkKdeConnectConfig {
+          inherit config lib;
+        })
+        // {
+          "kdeconnect/privateKey.pem".source = config.sops.secrets."kdeconnect/key".path;
+        };
 
       xdg.mimeApps.defaultApplications = self.lib.mapMimeEntries [
         "application/bzip2"

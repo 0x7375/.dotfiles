@@ -16,7 +16,7 @@
             corne = "4653:0004";
             keychron = "3434:0321";
             thinkpad = "0001:0001";
-            m1 = "05ac:0281:dac4f95d";
+            m1 = "05ac:0281:2bd1f3de";
 
             mapModNumbers = mod: lib.genAttrs (map toString (lib.range 0 9)) (x: "${mod}-${x}");
             mapNumbers = lib.genAttrs (map toString (lib.range 0 9)) (x: x);
@@ -202,7 +202,7 @@
               ];
               settings = merge settings {
                 main.rightalt = "oneshot(compose)";
-                main.rightctrl = "oneshot(utility)";
+                main.rightcontrol = "oneshot(utility)";
               };
               inherit extraConfig;
             };
@@ -210,7 +210,7 @@
               ids = [ thinkpad ];
               settings = merge (merge (merge settings swap-meta) overload-caps) {
                 main.rightalt = "oneshot(compose)";
-                main.rightctrl = "oneshot(utility)";
+                main.rightcontrol = "oneshot(utility)";
               };
               inherit extraConfig;
             };

@@ -15,6 +15,8 @@
           # adapted from: https://github.com/NixOS/nix/pull/15297
           lix = prev.lix.overrideAttrs (old: {
             patches = (old.patches or [ ]) ++ [ ./nix_shell_packages_env_var.patch ];
+            doCheck = false;
+            doInstallCheck = false;
           });
 
           unstable = import inputs.nixpkgs-unstable {

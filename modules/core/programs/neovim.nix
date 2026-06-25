@@ -23,7 +23,7 @@ let
         ruby.nvim-host.enable = dev;
       };
 
-      extraPackages =
+      runtimePkgs =
         with pkgs;
         [
           tree-sitter

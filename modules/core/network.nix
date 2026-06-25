@@ -107,10 +107,14 @@
 
       services.resolved = {
         enable = true;
-        dnsovertls = "true";
-        dnssec = "true";
-        fallbackDns = [ ];
-        domains = [ "~." ];
+        settings = {
+          Resolve = {
+            DNSOverTLS = "true";
+            DNSSEC = "true";
+            Domains = [ "~." ];
+            FallbackDNS = [ ];
+          };
+        };
       };
 
       # Configure network proxy if necessary

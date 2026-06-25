@@ -69,8 +69,7 @@
 
       persist = {
         directories = [
-          "/var/lib/systemd/timers"
-          "/var/lib/systemd/backlight"
+          "/var/lib/systemd"
           "/mnt"
           {
             directory = "/var/lib/nixos";

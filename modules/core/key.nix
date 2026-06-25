@@ -33,11 +33,19 @@
             appid = "pam://yubikey";
           };
         };
-        services = lib.genAttrs [ "sudo" "su" "login" "polkit-1" ] (_: {
-          rssh = true;
-          u2fAuth = true;
-          unixAuth = false;
-        });
+
+        services =
+          lib.genAttrs [ "sudo" "su" "polkit-1" ] (_: {
+            rssh = true;
+            u2fAuth = true;
+            unixAuth = false;
+          })
+          // {
+            login = {
+              u2fAuth = true;
+              unixAuth = false;
+            };
+          };
       };
     };
 }

@@ -2,6 +2,7 @@
   flake.modules.nixos.syncthing =
     {
       pkgs,
+      lib,
       config,
       ...
     }:
@@ -13,10 +14,14 @@
     in
     {
       systemd.services.syncthing-init = afterSops // {
-        serviceConfig = {
-          Restart = "on-failure";
-          RestartSec = "5s";
-        };
+        wantedBy = lib.mkForce [ config.me.target ];
+        after = lib.mkForce [ "syncthing.service" ];
+
+        serviceConfig.ExecStartPre = pkgs.writeShellScript "wait-for-syncthing" ''
+          until ${lib.getExe pkgs.curl} -sf http://127.0.0.1:8384/rest/noauth/health > /dev/null; do
+            sleep 0.2
+          done
+        '';
       };
       systemd.services.syncthing = afterSops;
 

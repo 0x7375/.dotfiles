@@ -23,5 +23,7 @@
         dataDir = home;
         settings.devices.${server}.id = config.me.hosts.${server}.syncthing.id;
       };
+
+      systemd.services.syncthing-init.after = [ "graphical.target" ];
     };
 }

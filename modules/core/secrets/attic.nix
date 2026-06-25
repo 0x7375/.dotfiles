@@ -16,7 +16,7 @@
 
       systemd.services.attic-watch-store = {
         description = "Attic watch store";
-        wantedBy = [ "multi-user.target" ];
+        wantedBy = [ config.me.target ];
         after = [ "sops-install-secrets.service" ];
         requires = [ "sops-install-secrets.service" ];
         environment.ATTIC_SERVER = url;

@@ -181,6 +181,8 @@
       cfg = config.me.desktop;
     in
     {
+      me.target = "graphical.target";
+
       hardware.graphics.enable = true;
 
       hardware.i2c.enable = true;

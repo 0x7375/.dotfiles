@@ -29,9 +29,6 @@ let
           tree-sitter
           gnumake
 
-          # peek.nvim
-          deno
-
           # LSPs
           lua-language-server
           nixd
@@ -67,6 +64,7 @@ let
               ruff
               pyright
               phpactor
+              mpls
 
               # Formatters
               shfmt

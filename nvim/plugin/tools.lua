@@ -18,23 +18,9 @@ vim.api.nvim_create_autocmd("PackChanged", {
   end,
 })
 
--- markdown preview
-on_filetype("markdown", function()
-  pack({ "toppair/peek.nvim" })
-  local peek = require("peek")
-
-  peek.setup({ app = "browser" })
-
-  map("n", "<leader>wo", function() peek.open() end, { desc = "Open markdown preview" })
-  map("n", "<leader>wc", function() peek.close() end, { desc = "Close markdown preview" })
-end)
-
 -- diff view
-vim.api.nvim_create_user_command("CodeDiff", function()
-  pack({ "esmuellert/codediff.nvim" })
-  require("codediff").setup({})
-  vim.cmd.CodeDiff()
-end, {})
+pack({ "esmuellert/codediff.nvim" })
+require("codediff").setup({})
 
 -- git ui
 pack({ "tpope/vim-fugitive" })

@@ -30,6 +30,7 @@ vim.lsp.enable({
   "taplo",
   "texlab",
   "sourcekit",
+  "mpls",
 })
 
 -- toggle virtual text
@@ -109,6 +110,8 @@ on_filetype("lua", function()
     },
   })
 end)
+
+map("n", "<leader>wo", vim.cmd.LspMplsOpenPreview, { desc = "Open markdown preview" })
 
 -- lint
 pack({ "mfussenegger/nvim-lint" })

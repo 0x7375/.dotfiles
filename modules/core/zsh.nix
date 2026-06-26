@@ -71,7 +71,7 @@
           export HISTFILE="$hist_dir"/history 
 
           # generate a unique ID once per machine to avoid
-          # syncthing conflicts on new install
+          # syncthing conflicts on new install (darwin doesn't have a /etc/machine-id)
           id_file="$hist_dir/machine_id"
           [[ ! -f "$id_file" ]] && uuidgen > "$id_file"
           machine_id=$(< "$id_file")
@@ -119,10 +119,11 @@
               builtin print -r -- ": $(date +%s):0;''${(z)_HISTLINE}" >> "$HOSTFILE"
             fi
             
-            merge_histories
+            merge_histories &!
 
             unset _HISTLINE
           }
+          [[ ! -s "$HISTFILE" ]] && merge_histories
         '';
 
       hj.xdg.config.files."zsh/opts.zsh".text = # bash

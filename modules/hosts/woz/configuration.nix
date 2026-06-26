@@ -26,6 +26,17 @@
 
       boot.extraModprobeConfig = "options hid_apple swap_fn_leftctrl=1";
 
+      environment.etc."libinput/local-overrides.quirks".text =
+        # ini
+        ''
+          [Apple SPI Trackpad]
+          MatchUdevType=touchpad
+          MatchName=*Apple SPI Trackpad*
+          AttrPressureRange=47:40
+          AttrTouchSizeRange=200:150
+          AttrPalmSizeThreshold=1100
+        '';
+
       powerManagement.resumeCommands =
         # bash
         ''

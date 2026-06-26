@@ -50,13 +50,6 @@
       boot.kernelModules = [ ];
       boot.extraModulePackages = [ ];
 
-      # from https://github.com/nix-community/nixos-apple-silicon/issues/352
-      # to persist volume level
-      hardware.asahi.setupAsahiSound = true;
-      services.pipewire.configPackages = lib.mkForce [ ];
-      services.pipewire.wireplumber.configPackages = lib.mkForce [ ];
-      packages = [ pkgs.asahi-audio ];
-
       hardware.asahi.peripheralFirmwareDirectory = inputs.asahi-firmware;
 
       nixpkgs.hostPlatform = lib.mkDefault "aarch64-linux";

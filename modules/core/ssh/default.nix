@@ -14,6 +14,7 @@
           "pearlman"
           "cray"
           "naitoh"
+          "woz"
         ]
       );
 

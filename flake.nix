@@ -33,6 +33,10 @@
       url = "git+ssh://git@codeberg.org/0x7E/asahi-firmware";
       flake = false;
     };
+    titdb = {
+      url = "github:0x7375/titdb-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     hjem = {
       url = "github:feel-co/hjem";

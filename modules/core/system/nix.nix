@@ -39,12 +39,13 @@
       };
 
       nix = {
-        package = pkgs.lix;
+        package = pkgs.unstable.lix;
         extraOptions = ''
           warn-dirty = false
           trusted-users = root ${config.me.user}
 
           connect-timeout = 10
+          stalled-download-timeout = 10
           # still build when a cache fails
           fallback = true
         '';

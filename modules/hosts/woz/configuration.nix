@@ -17,7 +17,13 @@
 
       imports = [
         inputs.apple-silicon.nixosModules.apple-silicon-support
+        inputs.titdb.nixosModules.default
       ];
+
+      services.titdb = {
+        enable = true;
+        device = "/dev/input/event2";
+      };
 
       nix.settings = {
         cores = 4;
@@ -25,17 +31,6 @@
       };
 
       boot.extraModprobeConfig = "options hid_apple swap_fn_leftctrl=1";
-
-      environment.etc."libinput/local-overrides.quirks".text =
-        # ini
-        ''
-          [Apple SPI Trackpad]
-          MatchUdevType=touchpad
-          MatchName=*Apple SPI Trackpad*
-          AttrPressureRange=47:40
-          AttrTouchSizeRange=200:150
-          AttrPalmSizeThreshold=1100
-        '';
 
       powerManagement.resumeCommands =
         # bash

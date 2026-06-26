@@ -537,6 +537,7 @@
         "preservation": "preservation",
         "secrets": "secrets",
         "sops-nix": "sops-nix",
+        "titdb": "titdb",
         "token2": "token2",
         "wrappers": "wrappers",
         "zen-browser": "zen-browser"
@@ -575,6 +576,26 @@
       "original": {
         "owner": "Mic92",
         "repo": "sops-nix",
+        "type": "github"
+      }
+    },
+    "titdb": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1782493730,
+        "narHash": "sha256-w4eKSl9E4C44imeAhWez/vctFrbdv13BmaFxlMK5DoQ=",
+        "owner": "0x7375",
+        "repo": "titdb-nix",
+        "rev": "a0bc4dc9a8c9570e7eb0e09be4ba4f2b54dfcf65",
+        "type": "github"
+      },
+      "original": {
+        "owner": "0x7375",
+        "repo": "titdb-nix",
         "type": "github"
       }
     },

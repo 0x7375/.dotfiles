@@ -243,8 +243,8 @@
       gesturebind = [
         "none,up,3,togglefullscreen"
         "none,down,3,togglefullscreen"
-        "none,right,3,viewtoleft"
-        "none,left,3,viewtoright"
+        "none,right,3,focuslast"
+        "none,left,3,focuslast"
         "none,up,4,toggleoverview"
         "none,down,4,toggleoverview"
       ];

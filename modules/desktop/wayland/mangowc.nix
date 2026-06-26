@@ -139,8 +139,11 @@
               border_radius = 0;
               bordercolor = "0x${p.bg1}ff";
               focuscolor = "0x${p.fg2}ff";
-              scratchpadcolor = "0x${p.fg2}ff";
+              globalcolor = "0x${p.fg3}ff";
+              urgentcolor = "0x${p.red}ff";
+              scratchpadcolor = "0x${p.blue}ff";
               rootcolor = "0x${p.bg0}ff";
+              overlaycolor = "0x${p.bg1}ff";
 
               blur = 0;
               shadows = 0;

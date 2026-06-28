@@ -7,7 +7,7 @@
     }:
     {
       xdg.desktopEntries.youtube-music = {
-        exec = "${lib.getExe pkgs.helium} --app=http://music.youtube.com";
+        exec = "${lib.getExe pkgs.helium} --profile-directory=YoutubeMusic --app=http://music.youtube.com";
         name = "Youtube Music";
         type = "Application";
       };

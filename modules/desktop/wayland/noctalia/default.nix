@@ -340,8 +340,10 @@
                 enabled = true;
                 speed = 2.0;
               };
+              launcher = {
+                categories = false;
+              };
               panel = {
-                launcher_categories = false;
                 open_near_click_control_center = true;
                 session_placement = "floating";
               };

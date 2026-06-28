@@ -64,7 +64,7 @@
           color6 #${p.cyan}
           color7 #${p.fg4} # fg color of lf error message
 
-          color8 #${p.gray} # command completion
+          color8 #${p.bg2} # command completion
           color9 #${p.red}
           color10 #${p.green}
           color11 #${p.yellow}

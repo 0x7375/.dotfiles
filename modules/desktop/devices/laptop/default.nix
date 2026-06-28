@@ -31,6 +31,7 @@
         '';
 
       services.upower.enable = true;
+      persist.directories = [ "/var/lib/upower" ];
 
       packages = with pkgs; [ acpi ];
 

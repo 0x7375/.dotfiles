@@ -12,6 +12,11 @@
         })
       ];
 
+      persistUser.directories = [
+        ".gnupg"
+        ".password-store"
+      ];
+
       services.passSecretService = {
         enable = true;
         package = pkgs.pass-secret-service-rs;

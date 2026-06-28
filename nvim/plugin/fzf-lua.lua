@@ -78,6 +78,7 @@ fzf.setup({
     ".DS_Store",
     "desktop.ini",
     ".localized",
+    "flake.lock",
     "doc/",
     ".cache/",
     "bin/",

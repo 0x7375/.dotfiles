@@ -8,7 +8,15 @@
       ...
     }:
     {
-      i18n.supportedLocales = options.i18n.supportedLocales.default ++ [ "fr_FR.UTF-8/UTF-8" ];
+      i18n = {
+        supportedLocales = options.i18n.supportedLocales.default ++ [ "fr_FR.UTF-8/UTF-8" ];
+        extraLocaleSettings = {
+          # DD/MM/YYYY, metric, Monday as first day of the week.
+          LC_TIME = "en_IE.UTF-8";
+          LC_MEASUREMENT = "en_IE.UTF-8";
+          LC_PAPER = "en_IE.UTF-8";
+        };
+      };
       location.provider = "manual";
 
       boot.tmp.useTmpfs = true;

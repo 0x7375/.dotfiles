@@ -146,6 +146,7 @@
             noctalia = inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default.overrideAttrs (old: {
               patches = (old.patches or [ ]) ++ [
                 ./truncate_ssid.patch
+                ./glyph_dmenu_cli.patch
               ];
             });
             lock = import ./_lock.nix final;
@@ -453,7 +454,7 @@
           "Mod+Shift+n" = "noctalia msg panel-toggle control-center notifications";
           "Mod+Shift+m" = "noctalia msg panel-toggle control-center weather";
           "Mod+m" = pkgs.writeShellScript "open-note" ''
-            note=$(ls $HOME/{notes,courses}/*.md | sed 's|.*/||; s/\.md$//' | ${lib.getExe pkgs.bemenu} -p "NOTE")
+            note=$(ls $HOME/{notes,courses}/*.md | sed 's|.*/||; s/\.md$//' | ${lib.getExe pkgs.my.noctalia} dmenu -p "Note to open..." -g notebook)
             [[ -n "$note" ]] && {
               dir=notes
               [[ -f "$HOME/courses/$note.md" ]] && dir=courses
@@ -463,7 +464,7 @@
           "Mod+Shift+b" = pkgs.writeShellScript "open-bookmark" ''
             file="$HOME/notes/Bookmarks.md"
             [[ ! -f $file ]] && exit
-            selection=$(awk -F': ' '{print $1}' "$file" | ${lib.getExe pkgs.bemenu} -p "BOOKMARK")
+            selection=$(awk -F': ' '{print $1}' "$file" | ${lib.getExe pkgs.my.noctalia} dmenu -p "Open bookmark..." -g bookmark)
             [[ -z "$selection" ]] && exit
             url=$(awk -F': ' -v sel="$selection" '$1 == sel {print $2}' "$file")
             [[ -n "$url" ]] && ${config.me.desktop.open} "$url"

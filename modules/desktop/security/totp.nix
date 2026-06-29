@@ -22,7 +22,7 @@
 
       me.desktop.bindings."Mod+u" = pkgs.writeShellScript "totp-menu" ''
         tokens=$(${lib.getExe pkgs.token2-cli} get_all 2>&1 | grep -iv "touch")
-        selected=$(echo "$tokens" | awk -F'] | - ' '{print $2}' | ${lib.getExe pkgs.bemenu} -p "TOTP")
+        selected=$(echo "$tokens" | awk -F'] | - ' '{print $2}' | ${lib.getExe pkgs.my.noctalia} dmenu -p "Copy OTP..." -g password)
 
         [ -z "$selected" ] && exit 0
 

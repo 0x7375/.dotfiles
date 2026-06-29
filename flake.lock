@@ -243,11 +243,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1782443564,
-        "narHash": "sha256-mKobTa2peaW9g17f5FtXeIYVI5a35tQV137p2QAvr/w=",
+        "lastModified": 1782692917,
+        "narHash": "sha256-vDa42nQWN/O65MqiuMxk87mwaRM+A7SNPQDr0UFzOLg=",
         "ref": "refs/heads/main",
-        "rev": "568df0b34768487709f9e54a67da20459ece23cd",
-        "revCount": 40,
+        "rev": "48da8b84b88d0cdf1e0005a75a126f822a1435a2",
+        "revCount": 41,
         "type": "git",
         "url": "https://codeberg.org/0x7E/nd"
       },
@@ -463,11 +463,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1781966005,
-        "narHash": "sha256-t8ZlndJyYIyO1rkdNLhUQBlu1jrJL26uOD+z5cLqfq4=",
+        "lastModified": 1782588925,
+        "narHash": "sha256-l0HYZkHgveZqy9jxO9K1mM5Rc5sIV1VgJ1No/AoNYTo=",
         "owner": "noctalia-dev",
         "repo": "noctalia",
-        "rev": "3743fc9d0804b48f18e0773b974797f3e6e59185",
+        "rev": "d2d2f9baaeb4efe915cbe892e7df8ba7572cc5a3",
         "type": "github"
       },
       "original": {

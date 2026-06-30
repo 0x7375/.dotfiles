@@ -2,11 +2,6 @@ if vim.g.vscode then
   return
 end
 
-pack({
-  "nvim-lua/plenary.nvim",
-  { src = "ThePrimeagen/harpoon", version = "harpoon2" },
-})
-
 require("harpoon").setup({
   settings = {
     save_on_toggle = true,

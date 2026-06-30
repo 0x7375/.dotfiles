@@ -236,6 +236,21 @@
         "url": "https://codeberg.org/0x7E/karabiner-ts"
       }
     },
+    "mnw": {
+      "locked": {
+        "lastModified": 1780772958,
+        "narHash": "sha256-VKKe8r4pwCGWZ3Yr9CPN129R4S3CKLSrlYqdYz3vKpM=",
+        "owner": "Gerg-L",
+        "repo": "mnw",
+        "rev": "0871dbf63a53610c95db04439ed8ea4d6ec9c160",
+        "type": "github"
+      },
+      "original": {
+        "owner": "Gerg-L",
+        "repo": "mnw",
+        "type": "github"
+      }
+    },
     "nd": {
       "inputs": {
         "nixpkgs": [
@@ -345,7 +360,9 @@
         "nixpkgs": [
           "nixpkgs"
         ],
-        "nixpkgs-nixcord": "nixpkgs-nixcord"
+        "nixpkgs-nixcord": [
+          "nixpkgs"
+        ]
       },
       "locked": {
         "lastModified": 1779469366,
@@ -405,22 +422,6 @@
       "original": {
         "owner": "nix-community",
         "repo": "nixpkgs.lib",
-        "type": "github"
-      }
-    },
-    "nixpkgs-nixcord": {
-      "locked": {
-        "lastModified": 1779102034,
-        "narHash": "sha256-vZJZjLo513IeI8hjzHFc6TDezUd4uCE2Eq4SNO3DNNg=",
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "687f05a9184cad4eaf905c48b63649e3a86f5433",
-        "type": "github"
-      },
-      "original": {
-        "owner": "NixOS",
-        "ref": "nixos-25.11",
-        "repo": "nixpkgs",
         "type": "github"
       }
     },
@@ -524,6 +525,7 @@
         "git-hooks-nix": "git-hooks-nix",
         "hjem": "hjem",
         "karabiner-ts": "karabiner-ts",
+        "mnw": "mnw",
         "nd": "nd",
         "nix-darwin": "nix-darwin_2",
         "nix-homebrew": "nix-homebrew",
@@ -539,7 +541,6 @@
         "sops-nix": "sops-nix",
         "titdb": "titdb",
         "token2": "token2",
-        "wrappers": "wrappers",
         "zen-browser": "zen-browser"
       }
     },
@@ -613,26 +614,6 @@
       "original": {
         "type": "git",
         "url": "ssh://git@codeberg.org/0x7E/token2-totp-cli"
-      }
-    },
-    "wrappers": {
-      "inputs": {
-        "nixpkgs": [
-          "nixpkgs-unstable"
-        ]
-      },
-      "locked": {
-        "lastModified": 1782135443,
-        "narHash": "sha256-vAmbArdCyjqpVW+37aCy/PMBOLIqukUXLQuEKLwUhA4=",
-        "owner": "BirdeeHub",
-        "repo": "nix-wrapper-modules",
-        "rev": "6e7f66fa2cdf4d63162580b438f7fcf87c28a46f",
-        "type": "github"
-      },
-      "original": {
-        "owner": "BirdeeHub",
-        "repo": "nix-wrapper-modules",
-        "type": "github"
       }
     },
     "zen-browser": {

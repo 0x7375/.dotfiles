@@ -3,7 +3,6 @@ if vim.g.vscode then
 end
 
 -- lsp
-pack({ "neovim/nvim-lspconfig" })
 require("lspconfig")
 
 vim.lsp.enable({
@@ -102,21 +101,16 @@ vim.api.nvim_create_autocmd("LspAttach", {
   end,
 })
 
-on_filetype("lua", function()
-  pack({ "folke/lazydev.nvim" })
-  require("lazydev").setup({
-    library = {
-      -- adds vim.uv typings when that word is found
-      { path = "${3rd}/luv/library", words = { "vim%.uv" } },
-    },
-  })
-end)
+require("lazydev").setup({
+  library = {
+    -- adds vim.uv typings when that word is found
+    { path = "${3rd}/luv/library", words = { "vim%.uv" } },
+  },
+})
 
 map("n", "<leader>wo", vim.cmd.LspMplsOpenPreview, { desc = "Open markdown preview" })
 
 -- lint
-pack({ "mfussenegger/nvim-lint" })
-
 require("lint").linters_by_ft = {
   sh = { "shellcheck" },
   nix = { "statix", "deadnix" },

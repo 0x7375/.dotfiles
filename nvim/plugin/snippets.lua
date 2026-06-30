@@ -2,12 +2,6 @@ if vim.g.vscode then
   return
 end
 
-pack({
-  "L3MON4D3/LuaSnip",
-  "rafamadriz/friendly-snippets",
-  "danymat/neogen",
-})
-
 require("luasnip.loaders.from_vscode").lazy_load()
 
 -- Snippets select mode mappings

@@ -3,12 +3,9 @@ if vim.g.vscode then
 end
 
 -- hide secrets
-pack({ "laytan/cloak.nvim" })
 require("cloak").setup()
 
 -- git symbols in column
-pack({ "lewis6991/gitsigns.nvim" })
-
 require("gitsigns").setup({
   signs = {
     add = { text = "│" },
@@ -94,5 +91,4 @@ require("vim._core.ui2").enable({
 })
 
 -- colorize
-pack({ "brenoprata10/nvim-highlight-colors" })
 require("nvim-highlight-colors").setup()

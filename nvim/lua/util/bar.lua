@@ -1,5 +1,8 @@
 local M = {}
 
+-- requires a patch
+vim.opt.showcmdloc = "winbar"
+
 local git_cache = ""
 
 local function update_branch(cb)
@@ -87,12 +90,15 @@ M.build_bar = function()
     recording = " @" .. reg
   end
 
+  local pending = "%S"
+
   return table.concat({
     set_normal,
     file_name,
     modified,
     recording,
     align_right,
+    pending,
     set_green,
     branch,
     set_normal,

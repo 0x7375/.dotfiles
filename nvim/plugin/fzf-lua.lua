@@ -2,8 +2,6 @@ if vim.g.vscode then
   return
 end
 
-pack({ "ibhagwan/fzf-lua" })
-
 local fzf = require("fzf-lua")
 
 fzf.setup({

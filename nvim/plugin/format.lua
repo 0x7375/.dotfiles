@@ -2,8 +2,6 @@ if vim.g.vscode or vim.g.windows then
   return
 end
 
-pack({ "stevearc/conform.nvim" })
-
 map(
   "n",
   "<leader>ff",

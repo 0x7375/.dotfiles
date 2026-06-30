@@ -1,0 +1,57 @@
+From b6e7260249830b28da6a8a67e5c6e7fe83f0b457 Mon Sep 17 00:00:00 2001
+From: 0x7375 <github.little@0xaa.me>
+Date: Mon, 29 Jun 2026 23:31:45 +0200
+Subject: [PATCH] feat(winbar): allow showcmdloc=winbar
+
+---
+ runtime/lua/vim/_meta/options.gen.lua | 2 +-
+ src/nvim/normal.c                     | 9 +++++++++
+ src/nvim/options.lua                  | 2 +-
+ 3 files changed, 11 insertions(+), 2 deletions(-)
+
+diff --git a/runtime/lua/vim/_meta/options.gen.lua b/runtime/lua/vim/_meta/options.gen.lua
+index a6477555221302acf36060116835cdda2bbf2c82..fc8761e010b4148d1c9e8f825f60879439b67813 100644
+--- a/runtime/lua/vim/_meta/options.gen.lua
++++ b/runtime/lua/vim/_meta/options.gen.lua
+@@ -6206,7 +6206,7 @@ vim.go.sc = vim.go.showcmd
+ --- place the text.  Without a custom 'statusline' or 'tabline' it will be
+ --- displayed in a convenient location.
+ ---
+---- @type 'last'|'statusline'|'tabline'
++--- @type 'last'|'statusline'|'tabline'|'winbar'
+ vim.o.showcmdloc = "last"
+ vim.o.sloc = vim.o.showcmdloc
+ vim.go.showcmdloc = vim.o.showcmdloc
+diff --git a/src/nvim/normal.c b/src/nvim/normal.c
+index 1e211149703c84d9df9519c344153b8a23c7398b..fffee621186be3ccdc921b4db843b553f161f27e 100644
+--- a/src/nvim/normal.c
++++ b/src/nvim/normal.c
+@@ -2063,6 +2063,15 @@ static void display_showcmd(void)
+     }
+     return;
+   }
++  if (*p_sloc == 'w') {
++    if (showcmd_is_clear) {
++      curwin->w_redr_status = true;
++    } else {
++      win_redr_winbar(curwin);
++      setcursor();  // put cursor back where it belongs
++    }
++    return;
++  }
+   if (*p_sloc == 't') {
+     if (showcmd_is_clear) {
+       redraw_tabline = true;
+diff --git a/src/nvim/options.lua b/src/nvim/options.lua
+index 20c000479c3226e9b91108b0206de6b4a7ab2ff9..c4ea32ce030ff5a908cd1bff61af22cb5bd8f420 100644
+--- a/src/nvim/options.lua
++++ b/src/nvim/options.lua
+@@ -8101,7 +8101,7 @@ local options = {
+       abbreviation = 'sloc',
+       cb = 'did_set_showcmdloc',
+       defaults = 'last',
+-      values = { 'last', 'statusline', 'tabline' },
++      values = { 'last', 'statusline', 'tabline', 'winbar' },
+       desc = [=[
+         This option can be used to display the (partially) entered command in
+         another location.  Possible values are:

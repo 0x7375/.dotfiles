@@ -2,12 +2,6 @@ if vim.g.vscode or vim.g.windows then
   return
 end
 
-pack({
-  "nvim-treesitter/nvim-treesitter-textobjects",
-  "HiPhish/rainbow-delimiters.nvim",
-  "Wansmer/treesj",
-})
-
 require("nvim-treesitter").setup({
   indent = { enable = true },
   highlight = {
@@ -87,4 +81,7 @@ require("rainbow-delimiters.setup").setup({
 })
 
 -- force to load for rainbow-delimiters to work, for... reasons
-on_filetype("*", vim.treesitter.start)
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = vim.split("*", ","),
+  callback = function() pcall(vim.treesitter.start) end,
+})

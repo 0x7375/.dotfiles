@@ -1,5 +1,3 @@
-pack({ "monaqa/dial.nvim" })
-
 local augend = require("dial.augend")
 
 local opts = {

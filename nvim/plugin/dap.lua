@@ -2,11 +2,11 @@ if vim.g.vscode or true then
   return
 end
 
-pack({
-  "mfussenegger/nvim-dap",
-  "mfussenegger/nvim-dap-python",
-  "igorlfs/nvim-dap-view",
-})
+-- pack({
+--   "mfussenegger/nvim-dap",
+--   "mfussenegger/nvim-dap-python",
+--   "igorlfs/nvim-dap-view",
+-- })
 
 local dap = require("dap")
 

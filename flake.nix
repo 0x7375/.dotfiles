@@ -7,10 +7,7 @@
     auto-update.url = "github:nixos/nixpkgs/nixos-unstable";
 
     flake-parts.url = "github:hercules-ci/flake-parts";
-    wrappers = {
-      url = "github:BirdeeHub/nix-wrapper-modules";
-      inputs.nixpkgs.follows = "nixpkgs-unstable";
-    };
+    mnw.url = "github:Gerg-L/mnw";
 
     nur = {
       url = "github:nix-community/NUR";
@@ -87,6 +84,7 @@
     nixcord = {
       url = "github:FlameFlag/nixcord";
       inputs.nixpkgs.follows = "nixpkgs";
+      inputs.nixpkgs-nixcord.follows = "nixpkgs";
       inputs.flake-parts.follows = "flake-parts";
     };
 
@@ -110,7 +108,6 @@
     inputs.flake-parts.lib.mkFlake { inherit inputs; } {
       imports = [
         inputs.flake-parts.flakeModules.modules
-        inputs.wrappers.flakeModules.wrappers
         inputs.git-hooks-nix.flakeModule
       ]
       ++ (import-tree ./modules);
@@ -131,9 +128,6 @@
           ...
         }:
         {
-          wrappers.control_type = "exclude";
-          wrappers.packages = { };
-
           pre-commit.settings.hooks = {
             stylua.enable = true;
             nixfmt.enable = true;

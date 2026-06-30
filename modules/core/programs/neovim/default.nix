@@ -30,7 +30,7 @@ let
       plugins = {
         dev.config = {
           pure = "${./../../../../nvim}";
-          impure = "~/.config/nvim";
+          impure = "~/.config/nixcfg/nvim";
         };
 
         start =
@@ -137,7 +137,6 @@ in
   flake.modules.generic.core =
     {
       pkgs,
-      config,
       ...
     }:
     {
@@ -154,8 +153,6 @@ in
         "ReplaceWithRegister"
         "vim-wordmotion"
       ];
-
-      hj.xdg.config.files."nvim".source = "${config.me.flakeDir}/nvim";
     };
 
   flake.modules.nixos.desktop =
@@ -168,7 +165,6 @@ in
         ".cache/nvim"
         ".local/share/nvim"
         ".local/state/nvim"
-        ".cache/lua-language-server"
       ];
 
       unfree-packages = [

@@ -2,22 +2,6 @@ if vim.g.vscode then
   return
 end
 
-vim.api.nvim_create_autocmd("PackChanged", {
-  callback = function(ev)
-    local name, kind = ev.data.spec.name, ev.data.kind
-    if name == "peek.nvim" and (kind == "install" or kind == "update") then
-      local dir = vim.fn.stdpath("data") .. "/site/pack/core/opt/peek.nvim"
-      vim.system({ "deno", "task", "--quiet" }, { cwd = dir }, function(obj)
-        if obj.code ~= 0 then
-          vim.notify("peek.nvim build failed:\n" .. obj.stderr, vim.log.levels.ERROR)
-        else
-          vim.notify("peek.nvim built successfully", vim.log.levels.INFO)
-        end
-      end)
-    end
-  end,
-})
-
 -- diff view
 pack({ "esmuellert/codediff.nvim" })
 require("codediff").setup({})

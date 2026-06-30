@@ -83,7 +83,7 @@ pkgs.writeShellApplication {
         ${lib.getExe pkgs.bat} cache --build > /dev/null 2>&1
       )
 
-      if [[ $OSTYPE == darwin* ]]; then
+      if [[ $OSTYPE != darwin* ]]; then
         mkdir -p "$share_dir/icons" "$share_dir/themes"
         ln -sfT "${theme.package}/share/themes/${theme.name}-''${theme^}" "$share_dir/themes/${theme.name}"
         ln -sfT "${iconTheme.package}/share/icons/${iconTheme.name}-''${theme^}" "$share_dir/icons/${iconTheme.name}"

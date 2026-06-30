@@ -1,6 +1,8 @@
 { inputs, self, ... }:
 
 let
+  root = ./../../../..;
+
   mkNeovim =
     {
       pkgs,
@@ -18,7 +20,7 @@ let
             ];
           });
 
-      initLua = builtins.readFile ./init.lua;
+      initLua = builtins.readFile (root + /nvim/init.lua);
 
       providers = {
         ruby.enable = true;
@@ -29,7 +31,7 @@ let
 
       plugins = {
         dev.config = {
-          pure = "${./../../../../nvim}";
+          pure = "${root + /nvim}";
           impure = "~/.config/nixcfg/nvim";
         };
 

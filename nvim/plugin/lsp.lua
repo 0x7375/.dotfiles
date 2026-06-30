@@ -31,6 +31,7 @@ vim.lsp.enable({
   "texlab",
   "sourcekit",
   "mpls",
+  "org",
 })
 
 -- toggle virtual text

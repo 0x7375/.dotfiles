@@ -64,8 +64,8 @@ fzf.setup({
     include_current_session = true,
   },
   file_ignore_patterns = {
-    "%.o",
-    "%.jar",
+    "%.o$",
+    "%.jar$",
     "%.class$",
     "%.out$",
     "%.log$",
@@ -82,6 +82,10 @@ fzf.setup({
     "doc/",
     ".cache/",
     "bin/",
+    ".obsidian/",
+    ".stignore",
+    ".stversions/",
+    ".stfolder/",
   },
 })
 

@@ -109,23 +109,23 @@ require("vim._core.ui2").enable({
 })
 
 -- show messages in the top left
-local ui2 = require("vim._core.ui2")
-local msgs = require("vim._core.ui2.messages")
-
-local orig_set_pos = msgs.set_pos
-msgs.set_pos = function(tgt)
-  orig_set_pos(tgt)
-  if (tgt == "msg" or tgt == nil) and vim.api.nvim_win_is_valid(ui2.wins.msg) then
-    pcall(vim.api.nvim_win_set_config, ui2.wins.msg, {
-      relative = "editor",
-      anchor = "NE",
-      row = 1,
-      col = vim.o.columns - 1,
-      border = "single",
-      width = math.min(vim.api.nvim_win_get_width(ui2.wins.msg), 30),
-    })
-  end
-end
+-- local ui2 = require("vim._core.ui2")
+-- local msgs = require("vim._core.ui2.messages")
+--
+-- local orig_set_pos = msgs.set_pos
+-- msgs.set_pos = function(tgt)
+--   orig_set_pos(tgt)
+--   if (tgt == "msg" or tgt == nil) and vim.api.nvim_win_is_valid(ui2.wins.msg) then
+--     pcall(vim.api.nvim_win_set_config, ui2.wins.msg, {
+--       relative = "editor",
+--       anchor = "NE",
+--       row = 1,
+--       col = vim.o.columns - 1,
+--       border = "single",
+--       width = math.min(vim.api.nvim_win_get_width(ui2.wins.msg), 30),
+--     })
+--   end
+-- end
 
 -- TODO: check if still needed in august ig, uncomment and test if it's getting cleared
 -- vim.api.nvim_create_user_command("DoesItClearIt", function()
@@ -134,7 +134,7 @@ end
 -- end, {})
 
 -- ignore clear event so vim-fugitive for example leaves the output to be read
-msgs.msg_clear = function() end
+-- msgs.msg_clear = function() end
 
 -- colorize
 pack({ "brenoprata10/nvim-highlight-colors" })

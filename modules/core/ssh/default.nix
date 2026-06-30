@@ -9,7 +9,11 @@
       users.users.root.openssh.authorizedKeys.keys = config.me.hosts.yubikey.sshPublicKeys;
       users.users.${config.me.user}.openssh.authorizedKeys.keys = config.me.hosts.yubikey.sshPublicKeys;
 
-      programs.ssh.extraConfig = builtins.concatStringsSep "\n" (
+      programs.ssh.extraConfig = ''
+        Host *
+          StrictHostKeyChecking accept-new
+      ''
+      + builtins.concatStringsSep "\n" (
         lib.map (v: "Host ${v}\n  ForwardAgent yes\n") [
           "pearlman"
           "cray"

@@ -25,10 +25,11 @@
         script =
           let
             action = if config.me.hostname != "woz" then "hibernate" else "suspend";
+            critical_level = if action == "hibernate" then "7" else "12";
           in
           # bash
           ''
-            critical_level=7
+            critical_level=${critical_level}
             full_level=90
 
             critical_file=/tmp/batterycritical

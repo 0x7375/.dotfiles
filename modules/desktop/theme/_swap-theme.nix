@@ -1,5 +1,4 @@
 {
-  lib,
   config,
   pkgs,
   ...
@@ -7,6 +6,7 @@
 
 let
   inherit (pkgs.stdenv) isDarwin;
+  inherit (pkgs) lib;
 in
 pkgs.writeShellApplication {
   name = "swap-theme";
@@ -78,43 +78,30 @@ pkgs.writeShellApplication {
       done
 
       (
-        export XDG_CACHE_HOME="${config.vars.XDG_CACHE_HOME}"
+        export XDG_CACHE_HOME="$HOME/.cache"
         cd "${pkgs.emptyDirectory}" || exit
         ${lib.getExe pkgs.bat} cache --build > /dev/null 2>&1
       )
 
-      ${lib.optionalString (!isDarwin)
-        # bash
-        ''
-          mkdir -p "$share_dir/icons" "$share_dir/themes"
-          ln -sfT "${theme.package}/share/themes/${theme.name}-''${theme^}" "$share_dir/themes/${theme.name}"
-          ln -sfT "${iconTheme.package}/share/icons/${iconTheme.name}-''${theme^}" "$share_dir/icons/${iconTheme.name}"
+      if [[ $OSTYPE == darwin* ]]; then
+        mkdir -p "$share_dir/icons" "$share_dir/themes"
+        ln -sfT "${theme.package}/share/themes/${theme.name}-''${theme^}" "$share_dir/themes/${theme.name}"
+        ln -sfT "${iconTheme.package}/share/icons/${iconTheme.name}-''${theme^}" "$share_dir/icons/${iconTheme.name}"
 
-          dconf write /org/gnome/desktop/interface/color-scheme "'prefer-$theme'"
+        dconf write /org/gnome/desktop/interface/color-scheme "'prefer-$theme'"
 
-          wallpaper=$(shuf -e -n1 --random-source=<(date +%Y%m%d | md5sum) ~/pictures/wallpapers/"$theme"/*)
-          noctalia msg wallpaper-set "$wallpaper"
-        ''
-      }
-
-      ${lib.optionalString isDarwin
-        # bash
-        ''
-          [[ ''${1:-} != "sync" ]] &&  osascript -e "tell app \"System Events\" to tell appearance preferences to set dark mode to ''${theme_bool}"
-        ''
-      }
+        wallpaper=$(shuf -e -n1 --random-source=<(date +%Y%m%d | md5sum) ~/pictures/wallpapers/"$theme"/*)
+        noctalia msg wallpaper-set "$wallpaper"
+      else
+        [[ ''${1:-} != "sync" ]] &&  osascript -e "tell app \"System Events\" to tell appearance preferences to set dark mode to ''${theme_bool}"
+      fi
 
       pkill -USR1 nvim
       pkill -USR1 kitty
-      ${lib.optionalString (config.me.desktop.terminal.name == "foot")
-        # bash
-        ''
-          if [[ "$theme" == "dark" ]]; then
-            pkill -USR1 foot
-          else
-            pkill -USR2 foot
-          fi
-        ''
-      }
+      if [[ "$theme" == "dark" ]]; then
+        pkill -USR1 foot
+      else
+        pkill -USR2 foot
+      fi
     '';
 }

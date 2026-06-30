@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+pkgs:
 pkgs.writeShellApplication {
   name = "tmux-sessionizer";
   runtimeInputs = with pkgs; [

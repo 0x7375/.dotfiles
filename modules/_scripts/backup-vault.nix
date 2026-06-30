@@ -1,9 +1,8 @@
-{
-  pkgs,
-  server ? "pearlman",
-  ...
-}:
+{ pkgs, ... }:
 
+let
+  server = "pearlman";
+in
 pkgs.writeShellApplication {
   name = "backup-vault";
   runtimeInputs = [ pkgs.rsync ];

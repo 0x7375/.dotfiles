@@ -1,8 +1,8 @@
-{ pkgs, ... }:
-
+pkgs:
 pkgs.writeShellApplication {
   name = "tmux-sshr";
   runtimeInputs = with pkgs; [
+    my.noctalia
     openssh
     fzf
     gnused
@@ -12,16 +12,12 @@ pkgs.writeShellApplication {
     if [[ $# -eq 1 ]]; then
       selected="$1"
     else
-      hosts="$(cut -d' ' -f1 < ~/.ssh/known_hosts 2>/dev/null | sed 's/,/ /g' | tr ' ' '\n' | sort -u)"
-      
-      selected=$(echo "$hosts" | fzf --reverse --padding 1)
+      selected=$(cut -d' ' -f1 < ~/.ssh/known_hosts 2>/dev/null | sed 's/,/ /g' | tr ' ' '\n' | sort -ur | noctalia dmenu -g world -p "Connect to...")
     fi
 
     [[ -z $selected ]] && exit 0
 
-    printf "Enter username (default: %s): " "$USER"
-    read -r username
-    username=''${username:-$USER}
+    username=$(awk -F: -v u="$USER" 'BEGIN {print u} ($3 == 0 || ($3 >= 1000 && $3 < 30000)) && $1 != u {print $1}' /etc/passwd | noctalia dmenu -g user -p "Username...")
 
     ssh -t "$username@$selected" "
       if command -v tmux &> /dev/null; then

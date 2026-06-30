@@ -21,6 +21,10 @@
               ./tmux_bigger_input_buffer.patch
             ];
           });
+          my = (prev.my or { }) // {
+            tmux-sessionizer = import ./_tmux-sessionizer.nix pkgs;
+            tmux-sshr = import ./_tmux-sshr.nix pkgs;
+          };
         })
       ];
 

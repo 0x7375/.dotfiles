@@ -23,7 +23,7 @@
           (final: prev: {
             my = (prev.my or { }) // {
               swap-theme = import ./_swap-theme.nix {
-                inherit self lib config;
+                inherit config;
                 pkgs = final;
               };
             };

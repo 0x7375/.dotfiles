@@ -13,12 +13,6 @@ let
     _7tv = "ammjkodgmmoknidbanneddgankgfejfh";
   };
 
-  flags = [
-    "--enable-features=HeliumMiddleClickAutoscroll"
-    "--no-first-run"
-    "--enable-wayland-ime=true"
-  ];
-
   policies =
     lib:
     let
@@ -151,6 +145,13 @@ in
                 buildCommand =
                   let
                     bwrapPath = builtins.head (builtins.match ".*ln -s ([^ ]+) [$]out/bin/helium.*" old.buildCommand);
+
+                    flags = [
+                      "--enable-features=HeliumMiddleClickAutoscroll"
+                      "--no-first-run"
+                      "--enable-wayland-ime=true"
+                      "--remote-debugging-port=9800"
+                    ];
                   in
                   ''
                     mkdir -p $out/bin

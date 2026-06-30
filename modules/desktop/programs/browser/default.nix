@@ -30,6 +30,7 @@
   flake.modules.generic.desktop =
     {
       config,
+      pkgs,
       lib,
       ...
     }:
@@ -50,6 +51,7 @@
 
       config = {
         vars.BROWSER = config.me.desktop.browser;
+        packages = [ pkgs.firefox ];
 
         me.desktop = {
           assign =

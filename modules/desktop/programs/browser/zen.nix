@@ -41,6 +41,8 @@ let
             "general.smoothScroll.currentVelocityWeighting" = "1";
             "general.smoothScroll.stopDecelerationWeighting" = "1";
             "mousewheel.default.delta_multiplier_y" = 300; # 250-400
+            # write the sessionstore file every 5s, used to list open tabs
+            "browser.sessionstore.interval" = 5000;
           };
     in
     "${mkUserJs (

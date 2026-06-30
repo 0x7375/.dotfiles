@@ -243,10 +243,12 @@
               cancel = [ "Escape" ];
               down = [
                 "Ctrl+n"
+                "Ctrl+j"
                 "Down"
               ];
               up = [
                 "Ctrl+p"
+                "Ctrl+k"
                 "Up"
               ];
               confirm = [
@@ -454,21 +456,14 @@
           "Mod+Shift+n" = "noctalia msg panel-toggle control-center notifications";
           "Mod+Shift+m" = "noctalia msg panel-toggle control-center weather";
           "Mod+m" = pkgs.writeShellScript "open-note" ''
-            note=$(ls $HOME/{notes,courses}/*.md | sed 's|.*/||; s/\.md$//' | ${lib.getExe pkgs.my.noctalia} dmenu -p "Note to open..." -g notebook)
+            note=$(ls -t $HOME/{notes,courses}/*.{org,md,csv} | sed -E 's|.*/||; s/\.(org|md)$//' | ${lib.getExe pkgs.my.noctalia} dmenu -p "Note to open..." -g notebook)
             [[ -n "$note" ]] && {
-              dir=notes
-              [[ -f "$HOME/courses/$note.md" ]] && dir=courses
-              $TERMINAL $EDITOR "$HOME/$dir/$note.md"
+              xdg-open "$HOME/notes/$note.md" \
+                || xdg-open "$HOME/notes/$note.csv" \
+                || xdg-open "$HOME/courses/$note.md"
             }
           '';
-          "Mod+Shift+b" = pkgs.writeShellScript "open-bookmark" ''
-            file="$HOME/notes/Bookmarks.md"
-            [[ ! -f $file ]] && exit
-            selection=$(awk -F': ' '{print $1}' "$file" | ${lib.getExe pkgs.my.noctalia} dmenu -p "Open bookmark..." -g bookmark)
-            [[ -z "$selection" ]] && exit
-            url=$(awk -F': ' -v sel="$selection" '$1 == sel {print $2}' "$file")
-            [[ -n "$url" ]] && ${config.me.desktop.open} "$url"
-          '';
+          "Mod+b" = lib.getExe (import ./_open-bookmark.nix pkgs);
           "Mod+Shift+p" = "noctalia msg panel-toggle launcher \"/session \"";
         };
       };

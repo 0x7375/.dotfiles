@@ -27,5 +27,22 @@
           };
         };
       };
+
+      systemd.services.btrfs-balance = {
+        description = "Btrfs metadata balance";
+        script = ''
+          ${lib.getExe pkgs.btrfs-progs} balance start -musage=20 / || true
+        '';
+        serviceConfig.Type = "oneshot";
+      };
+
+      systemd.timers.btrfs-balance = {
+        description = "Weekly btrfs balance";
+        wantedBy = [ "timers.target" ];
+        timerConfig = {
+          OnCalendar = "weekly";
+          Persistent = true;
+        };
+      };
     };
 }

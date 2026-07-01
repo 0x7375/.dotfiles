@@ -249,6 +249,18 @@
           autoload -U edit-command-line
           zle -N edit-command-line
 
+          fzf-file-widget() {
+            local -r selected=$(${lib.getExe pkgs.fd} . --min-depth 2 --hidden \
+              | ${lib.getExe pkgs.fzf} --height 40% --reverse --padding=1 --query="''${LBUFFER##* }")
+
+            if [[ -n $selected ]]; then
+              LBUFFER="''${LBUFFER% *} $selected"
+              [[ $LBUFFER == " $selected" ]] && LBUFFER="$selected"
+            fi
+            zle reset-prompt
+          }
+          zle -N fzf-file-widget
+
           fzf-history-widget() {
             local -r selected=$(fc -rl 1 | ${lib.getExe pkgs.fzf} --height 40% --reverse --padding=1 --query="$LBUFFER")
             
@@ -290,8 +302,11 @@
 
           zmodload zsh/complist
 
+          # force zsh not to show completion menu, which allows fzf-tab to capture the unambiguous prefix
           zstyle ':completion:*' menu no
+
           zstyle ':fzf-tab:*' use-fzf-default-opts yes
+          zstyle ':fzf-tab:*' fzf-flags --padding=1
 
           zstyle ':fzf-tab:*' switch-group 'alt-h' 'alt-l'
           zstyle ':fzf-tab:*' fzf-bindings 'ctrl-l:toggle+down'
@@ -320,6 +335,7 @@
           bindkey '\ev' edit-command-line
 
           bindkey '^T' fzf-history-widget
+          bindkey '^G' fzf-file-widget
 
           bindkey -s '^O' "lf^M"
 

@@ -2,21 +2,24 @@ if vim.g.vscode or vim.g.windows then
   return
 end
 
+local function ts_disabled(lang, buf)
+  if vim.tbl_contains({ "csv" }, lang) then
+    return true
+  end
+
+  local max_filesize = 100 * 1024 -- 100 KB
+  local ok, stats = pcall(vim.uv.fs_stat, vim.api.nvim_buf_get_name(buf))
+
+  if ok and stats and stats.size > max_filesize then
+    return true
+  end
+end
+
 require("nvim-treesitter").setup({
   indent = { enable = true },
   highlight = {
     enable = true,
-    disable = function(lang, buf)
-      if vim.tbl_contains({ "csv" }, lang) then
-        return true
-      end
-
-      local max_filesize = 100 * 1024 -- 100 KB
-      local ok, stats = pcall(vim.uv.fs_stat, vim.api.nvim_buf_get_name(buf))
-      if ok and stats and stats.size > max_filesize then
-        return true
-      end
-    end,
+    disable = ts_disabled,
   },
 })
 
@@ -80,8 +83,15 @@ require("rainbow-delimiters.setup").setup({
   },
 })
 
--- force to load for rainbow-delimiters to work, for... reasons
+-- https://github.com/Gerg-L/mnw/issues/51#issuecomment-3816875508
 vim.api.nvim_create_autocmd("FileType", {
-  pattern = vim.split("*", ","),
-  callback = function() pcall(vim.treesitter.start) end,
+  pattern = vim.treesitter.language._complete(),
+  group = vim.api.nvim_create_augroup("LoadTreesitter", {}),
+  callback = function(args)
+    local lang = vim.treesitter.language.get_lang(args.match) or args.match
+    if ts_disabled(lang, args.buf) then
+      return
+    end
+    pcall(vim.treesitter.start)
+  end,
 })

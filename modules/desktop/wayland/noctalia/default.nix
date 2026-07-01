@@ -459,14 +459,17 @@
             # Try to open an existing note and create a new one otherwise
             note=$(ls -t $HOME/{notes,courses}/*.{org,md,csv} 2>/dev/null \
               | sed -E 's|.*/||; s/\.(org|md|csv)$//' \
-              | ${lib.getExe pkgs.my.noctalia} dmenu -p "Note to open..." -g notebook)
+              | ${lib.getExe pkgs.my.noctalia} dmenu -p "Open or create a note..." -g notebook)
 
             [[ -n "$note" ]] || exit 0
 
             for dir in notes courses; do
               for ext in org md csv; do
                 file="$HOME/$dir/$note.$ext"
-                [[ -f "$file" ]] && exec $TERMINAL $EDITOR "$file"
+                [[ ! -f "$file" ]] && continue
+
+                cd "$HOME/$dir"
+                exec $TERMINAL $EDITOR "$file"
               done
             done
 

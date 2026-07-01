@@ -456,13 +456,21 @@
           "Mod+r" = "noctalia msg panel-toggle control-center notifications";
           "Mod+Shift+m" = "noctalia msg panel-toggle control-center weather";
           "Mod+m" = pkgs.writeShellScript "open-note" ''
-            note=$(ls -t $HOME/{notes,courses}/*.{org,md,csv} | sed -E 's|.*/||; s/\.(org|md|csv)$//' | ${lib.getExe pkgs.my.noctalia} dmenu -p "Note to open..." -g notebook)
-            [[ -n "$note" ]] && {
-              xdg-open "$HOME/notes/$note.org" \
-                || xdg-open "$HOME/notes/$note.md" \
-                || xdg-open "$HOME/notes/$note.csv" \
-                || xdg-open "$HOME/courses/$note.md"
-            }
+            # Try to open an existing note and create a new one otherwise
+            note=$(ls -t $HOME/{notes,courses}/*.{org,md,csv} 2>/dev/null \
+              | sed -E 's|.*/||; s/\.(org|md|csv)$//' \
+              | ${lib.getExe pkgs.my.noctalia} dmenu -p "Note to open..." -g notebook)
+
+            [[ -n "$note" ]] || exit 0
+
+            for dir in notes courses; do
+              for ext in org md csv; do
+                file="$HOME/$dir/$note.$ext"
+                [[ -f "$file" ]] && exec $TERMINAL $EDITOR "$file"
+              done
+            done
+
+            exec $TERMINAL $EDITOR "$HOME/notes/$note.org"
           '';
           "Mod+b" = lib.getExe (import ./_open-bookmark.nix pkgs);
           "Mod+Shift+p" = "noctalia msg panel-toggle launcher \"/session \"";

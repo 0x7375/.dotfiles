@@ -4,6 +4,7 @@ local M = {}
 vim.opt.showcmdloc = "winbar"
 
 local git_cache = ""
+local git_watcher = nil
 
 local function update_branch(cb)
   vim.system({ "git", "rev-parse", "--abbrev-ref", "HEAD" }, { text = true }, function(r)
@@ -25,18 +26,37 @@ local function update_branch(cb)
   end)
 end
 
+local function stop_git_watch()
+  if git_watcher then
+    if not git_watcher:is_closing() then
+      vim.uv.fs_event_stop(git_watcher)
+      git_watcher:close()
+    end
+    git_watcher = nil
+  end
+end
+
 local function setup_git_watch()
+  stop_git_watch()
+
   local git_dir = vim.fn.finddir(".git", ".;")
   if not git_dir or git_dir == "" then
     return
   end
-  local event = vim.uv.new_fs_event()
-  if not event then
+
+  git_watcher = vim.uv.new_fs_event()
+  if not git_watcher then
     return
   end
-  vim.uv.fs_event_start(event, git_dir .. "/HEAD", {}, function()
-    git_cache = ""
-    update_branch()
+
+  vim.uv.fs_event_start(git_watcher, git_dir, {}, function(err, filename)
+    if err then
+      return
+    end
+    if filename == "HEAD" then
+      git_cache = ""
+      update_branch()
+    end
   end)
 end
 

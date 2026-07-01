@@ -44,6 +44,7 @@ require("gitsigns").setup({
 local msgs = require("vim._core.ui2.messages")
 msgs.msg_clear = function() end
 
+-- 2026-07-01 TODO check this out later: https://github.com/neovim/neovim/issues/36447
 -- experimental ui that avoid hit-enter prompts, g< to open buffer
 require("vim._core.ui2").enable({
   enable = true,

@@ -453,12 +453,13 @@
           "Mod+i" = "noctalia msg bar-hide";
           "Mod+d" = "noctalia msg panel-toggle launcher";
           "Mod+c" = "noctalia msg panel-toggle clipboard";
-          "Mod+Shift+n" = "noctalia msg panel-toggle control-center notifications";
+          "Mod+r" = "noctalia msg panel-toggle control-center notifications";
           "Mod+Shift+m" = "noctalia msg panel-toggle control-center weather";
           "Mod+m" = pkgs.writeShellScript "open-note" ''
-            note=$(ls -t $HOME/{notes,courses}/*.{org,md,csv} | sed -E 's|.*/||; s/\.(org|md)$//' | ${lib.getExe pkgs.my.noctalia} dmenu -p "Note to open..." -g notebook)
+            note=$(ls -t $HOME/{notes,courses}/*.{org,md,csv} | sed -E 's|.*/||; s/\.(org|md|csv)$//' | ${lib.getExe pkgs.my.noctalia} dmenu -p "Note to open..." -g notebook)
             [[ -n "$note" ]] && {
-              xdg-open "$HOME/notes/$note.md" \
+              xdg-open "$HOME/notes/$note.org" \
+                || xdg-open "$HOME/notes/$note.md" \
                 || xdg-open "$HOME/notes/$note.csv" \
                 || xdg-open "$HOME/courses/$note.md"
             }

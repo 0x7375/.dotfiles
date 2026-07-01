@@ -258,11 +258,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1782692917,
-        "narHash": "sha256-vDa42nQWN/O65MqiuMxk87mwaRM+A7SNPQDr0UFzOLg=",
+        "lastModified": 1782859137,
+        "narHash": "sha256-h232rTuxFkmegfdDdCw50lFRI5ECWGjj3x/3gMiRxSc=",
         "ref": "refs/heads/main",
-        "rev": "48da8b84b88d0cdf1e0005a75a126f822a1435a2",
-        "revCount": 41,
+        "rev": "f25b14bb155586b40be2e6628f81ed9d4914dbe1",
+        "revCount": 42,
         "type": "git",
         "url": "https://codeberg.org/0x7E/nd"
       },

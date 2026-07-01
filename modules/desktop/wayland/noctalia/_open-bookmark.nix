@@ -46,12 +46,11 @@ pkgs.writeShellApplication {
 
     declare -A tabs
 
-    curl -s http://localhost:9800/json 2>/dev/null \
-      | jq -r '.[] | select(.type=="page") | "\(.title);\(.url)"' \
-      | add_tabs
+    add_tabs < <(curl -s http://localhost:9800/json 2>/dev/null |
+        jq -r '.[] | select(.type=="page") | "\(.title);\(.url)"')
 
     if pgrep -x zen >/dev/null 2>&1; then
-      python3 ${import ./_list-firefox-tabs.nix pkgs} | add_tabs
+        add_tabs < <(${import ./_list-firefox-tabs.nix pkgs})
     fi
 
     url_input=$(printf '%s\n' "''${!tabs[@]}" \
@@ -63,7 +62,7 @@ pkgs.writeShellApplication {
       | grep -oP ':\K[^:]+(?=:)' \
       | sort -u)
     tags=$(printf '%s\n' "$existing_tags" \
-      | noctalia dmenu -g tag -p "Tags (e.g. TAG or TAG:TAG2)")
+      | noctalia dmenu -g tag -p "Tags (e.g. TAG or TAG:TAG2)") || true
     if [[ -n "$tags" && "$tags" != :*: ]]; then
       tags=":''${tags}:"
     fi

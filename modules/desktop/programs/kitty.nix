@@ -82,6 +82,8 @@
             map alt+shift+d change_font_size all -2.0
             map alt+shift+r change_font_size all 0
             mouse_map middle release ungrabbed,grabbed
+
+            // unmap
             map ctrl+shift+r
           '';
       };

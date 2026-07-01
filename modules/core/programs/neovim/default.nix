@@ -76,6 +76,7 @@ let
             nvim-ts-autotag
             vim-indent-object
             nvim-treesitter-textobjects
+            multicursor-nvim
           ]
           ++ nvim-treesitter.withAllGrammars.dependencies
           ++ pkgs.lib.optionals unfree (

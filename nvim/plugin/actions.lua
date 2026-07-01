@@ -33,3 +33,22 @@ require("mini.move").setup({
     reindent_linewise = true,
   },
 })
+
+-- multicursor
+local mc = require("multicursor-nvim")
+mc.setup()
+
+map({ "n", "x" }, "<leader>m", function() mc.matchAddCursor(1) end)
+
+mc.addKeymapLayer(function(layerMap)
+  layerMap({ "n", "x" }, "[", mc.prevCursor)
+  layerMap({ "n", "x" }, "]", mc.nextCursor)
+
+  layerMap({ "n", "x" }, "Q", function() mc.matchSkipCursor(-1) end)
+  layerMap({ "n", "x" }, "q", function() mc.matchSkipCursor(1) end)
+
+  layerMap({ "n", "x" }, "N", function() mc.matchAddCursor(-1) end)
+  layerMap({ "n", "x" }, "n", function() mc.matchAddCursor(1) end)
+
+  layerMap("n", "<ESC>", mc.clearCursors)
+end)

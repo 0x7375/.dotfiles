@@ -85,6 +85,7 @@ let
             vim-indent-object
             nvim-treesitter-textobjects
             multicursor-nvim
+            vim-table-mode
           ]
           ++ nvim-treesitter.withAllGrammars.dependencies
           ++ pkgs.lib.optionals unfree (

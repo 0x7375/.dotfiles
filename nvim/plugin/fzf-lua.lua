@@ -102,6 +102,7 @@ fzf.setup({
     ".stignore",
     ".stversions/",
     ".stfolder/",
+    ".Trash-1000/",
   },
 })
 

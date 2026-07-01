@@ -15,6 +15,10 @@ require("nvim-ts-autotag").setup({ autotag = true })
 -- surround with motions
 require("nvim-surround")
 
+-- table mode
+vim.g.table_mode_map_prefix = "<Leader>T"
+map("n", "<leader>t", vim.cmd.TableModeToggle)
+
 -- move stuff
 require("mini.move").setup({
   mappings = {

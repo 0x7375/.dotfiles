@@ -81,6 +81,8 @@
         "fetch"
         "rebase"
         "cherry-pick"
+        "reflog"
+        "resign"
       ] (name: "${git} ${name}"));
 
       environment.interactiveShellInit =

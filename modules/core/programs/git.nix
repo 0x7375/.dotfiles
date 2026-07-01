@@ -40,6 +40,9 @@
       hj.xdg.config.files."git/config".text =
         # git_config
         ''
+          [alias]
+            resign = !git commit -S -F .git/COMMIT_EDITMSG --cleanup=strip
+
           [commit]
             gpgsign = true
 

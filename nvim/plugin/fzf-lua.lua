@@ -54,7 +54,7 @@ fzf.setup({
   },
   winopts = {
     height = 0.9,
-    width = 0.6,
+    width = 0.7,
     row = 0.5,
     backdrop = 100,
     preview = {

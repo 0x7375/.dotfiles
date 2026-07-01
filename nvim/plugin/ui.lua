@@ -56,6 +56,8 @@ require("vim._core.ui2").enable({
       search_count = "cmd",
       wildlist = "cmd",
       typed_cmd = "cmd",
+      echoerr = "cmd",
+      list_cmd = "cmd",
 
       echo = "msg",
       echomsg = "msg",
@@ -65,8 +67,6 @@ require("vim._core.ui2").enable({
       wmsg = "msg",
       shell_ret = "msg",
 
-      echoerr = "cmd",
-      list_cmd = "pager",
       lua_error = "pager",
       rpc_error = "pager",
       shell_cmd = "pager",

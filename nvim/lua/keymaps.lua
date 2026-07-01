@@ -22,10 +22,10 @@ map("n", "<ESC>", function()
 end, { desc = "Clear search highlights" })
 
 -- easy renaming
-map("n", "<leader>r", [[:%s/\v<<C-r><C-w>>/<C-r><C-w>/gI<Left><Left><Left>]])
+map("n", "<leader>r", [[:%s/<C-r><C-w>/<C-r><C-w>/gI<Left><Left><Left>]])
 
 -- cancel built-in completion using ESC
-map("i", "<Esc>", function() return vim.fn.pumvisible() == 1 and "<C-e>" or "<Esc>" end, { expr = true })
+map("i", "<ESC>", function() return vim.fn.pumvisible() == 1 and "<C-e>" or "<Esc>" end, { expr = true })
 
 vim.keymap.set("n", "<S-Tab>", "<Cmd>silent! b #<CR>zz", { desc = "Open alternate file with silent fail" })
 
@@ -72,8 +72,8 @@ local function toggle_quickfix()
 end
 
 map("n", "<leader>q", toggle_quickfix, { desc = "Toggle quickfix window" })
-map("n", "<C-n>", vim.cmd.cnext, { desc = "Next quickfix" })
-map("n", "<C-p>", vim.cmd.cprevious, { desc = "Previous quickfix" })
+map("n", "<C-n>", function() pcall(vim.cmd.cnext) end, { desc = "Next quickfix" })
+map("n", "<C-p>", function() pcall(vim.cmd.cprevious) end, { desc = "Previous quickfix" })
 --------------# end: Quickfix #--------------
 
 --------------# Scratchpad #--------------
@@ -118,21 +118,14 @@ map("n", "*", "*zz", { noremap = true })
 map("n", "#", "#zz", { noremap = true })
 
 map("n", "n", function()
-  vim.cmd("normal! nzz")
+  vim.cmd("silent! norm! nzz")
   bar.refresh()
 end)
 
 vim.keymap.set("n", "N", function()
-  vim.cmd("normal! Nzz")
+  vim.cmd("silent! norm! Nzz")
   bar.refresh()
 end)
-
-map("n", "G", "Gzz", { noremap = true })
-map("n", "}", "}zz", { noremap = true })
-map("n", "{", "{zz", { noremap = true })
-
-map("n", "<C-o>", "<C-o>zz", { noremap = true })
-map("n", "<C-i>", "<C-i>zz", { noremap = true })
 
 vim.keymap.set("c", "<CR>", function()
   local cmdtype = vim.fn.getcmdtype()
@@ -143,6 +136,13 @@ vim.keymap.set("c", "<CR>", function()
     return "<CR>"
   end
 end, { expr = true })
+
+map("n", "G", "Gzz", { noremap = true })
+map("n", "}", "}zz", { noremap = true })
+map("n", "{", "{zz", { noremap = true })
+
+map("n", "<C-o>", "<C-o>zz", { noremap = true })
+map("n", "<C-i>", "<C-i>zz", { noremap = true })
 --------------# end: Center on movement #--------------
 
 --------------# direction based window resizing #--------------

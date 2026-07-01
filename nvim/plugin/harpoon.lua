@@ -22,20 +22,20 @@ map(
 
 map("n", "<C-h>", function()
   require("harpoon"):list():select(1)
-  vim.cmd([[normal zz]])
+  return "zz"
 end, { desc = "Harpoon: select file 1" })
 
 map("n", "<C-j>", function()
   require("harpoon"):list():select(2)
-  vim.cmd([[normal zz]])
+  return "zz"
 end, { desc = "Harpoon: select file 2" })
 
 map("n", "<C-k>", function()
   require("harpoon"):list():select(3)
-  vim.cmd([[normal zz]])
+  return "zz"
 end, { desc = "Harpoon: select file 3" })
 
 map("n", "<C-l>", function()
   require("harpoon"):list():select(4)
-  vim.cmd([[normal zz]])
+  return "zz"
 end, { desc = "Harpoon: select file 4" })

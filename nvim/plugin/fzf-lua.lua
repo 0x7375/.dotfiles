@@ -3,6 +3,7 @@ if vim.g.vscode then
 end
 
 local fzf = require("fzf-lua")
+local fzf_borders = require("util.fzf-borders")
 
 fzf.setup({
   actions = {
@@ -13,10 +14,13 @@ fzf.setup({
           vim.schedule(function() pcall(vim.cmd, "cfirst") end)
         end
       end,
+      ["ctrl-s"] = fzf.actions.file_split,
+      ["ctrl-v"] = fzf.actions.file_vsplit,
     },
   },
   fzf_opts = {
-    ["--info"] = "default",
+    ["--info"] = "inline-right",
+    ["--no-separator"] = "",
     ["--layout"] = "reverse",
   },
   previewers = {
@@ -26,7 +30,6 @@ fzf.setup({
   },
   keymap = {
     builtin = {
-      ["<C-/>"] = "toggle-help",
       ["<C-a>"] = "toggle-fullscreen",
       ["<C-i>"] = "toggle-preview",
       ["<C-d>"] = "preview-page-down",
@@ -37,19 +40,20 @@ fzf.setup({
     },
   },
   winopts = {
-    height = 0.7,
+    height = 0.8,
     width = 0.6,
     backdrop = 100,
     preview = {
       scrollbar = false,
       layout = "vertical",
       vertical = "up:70%",
-      border = "single",
+      border = fzf_borders.preview_border,
     },
-    border = "single",
+    border = fzf_borders.main_border,
   },
   defaults = {
-    header = false,
+    cwd_prompt = true,
+    no_header_i = true,
     formatter = "path.filename_first",
     git_icons = false,
   },

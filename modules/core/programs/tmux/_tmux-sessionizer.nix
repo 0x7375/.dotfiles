@@ -10,7 +10,7 @@ pkgs.writeShellApplication {
     gnused
   ];
   text = ''
-    dirs=(~/ ~/.config ~/uni ~/perso ~/repos)
+    dirs=(~/ ~/.config ~/.config/nixcfg ~/uni ~/perso ~/repos)
 
     mkdir -p "''${dirs[@]}"
 

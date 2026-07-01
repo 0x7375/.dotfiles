@@ -41,12 +41,15 @@ require("gitsigns").setup({
   end,
 })
 
+local msgs = require("vim._core.ui2.messages")
+msgs.msg_clear = function() end
+
 -- experimental ui that avoid hit-enter prompts, g< to open buffer
 require("vim._core.ui2").enable({
   enable = true,
   msg = {
     targets = {
-      empty = "cmd",
+      empty = "cmd", -- ignored above anyway
       bufwrite = "cmd",
       undo = "cmd",
       confirm = "cmd",
@@ -58,8 +61,8 @@ require("vim._core.ui2").enable({
       typed_cmd = "cmd",
       echoerr = "cmd",
       list_cmd = "cmd",
+      echo = "cmd",
 
-      echo = "msg",
       echomsg = "msg",
       lua_print = "msg",
       progress = "msg",

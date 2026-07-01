@@ -62,7 +62,15 @@ let
 
             # tools
             live-command-nvim
-            undotree
+            {
+              pname = "undotree";
+              src = pkgs.fetchFromGitHub {
+                owner = "jiaoshijie";
+                repo = "undotree";
+                rev = "02b69aed427b848c4dca483fc5e9524b6019c296";
+                hash = "sha256-AwGFfTwYRE9aU99b14QS44n4DLnhzH5xXYZc0mb5Y/w=";
+              };
+            }
             vim-fugitive
             codediff-nvim
             grug-far-nvim

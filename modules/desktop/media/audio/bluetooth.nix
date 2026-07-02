@@ -53,15 +53,25 @@
       };
     };
 
-    services.pipewire.wireplumber.extraConfig."50-bt-latency" = {
-      "monitor.bluez.rules" = [
-        {
-          matches = [ { "node.name" = "~bluez_output.*"; } ];
-          actions.update-props = {
-            "latency.internal.ns" = 100000000;
-          };
-        }
-      ];
+    services.pipewire.wireplumber.extraConfig = {
+      "51-bluetooth-no-mic" = {
+        "monitor.bluez.properties" = {
+          "bluez5.roles" = [
+            "a2dp_sink"
+            "a2dp_source"
+          ];
+        };
+      };
+      "50-bt-latency" = {
+        "monitor.bluez.rules" = [
+          {
+            matches = [ { "node.name" = "~bluez_output.*"; } ];
+            actions.update-props = {
+              "latency.internal.ns" = 100000000;
+            };
+          }
+        ];
+      };
     };
   };
 }

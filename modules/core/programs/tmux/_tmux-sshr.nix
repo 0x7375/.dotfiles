@@ -1,6 +1,7 @@
 pkgs:
 pkgs.writeShellApplication {
   name = "tmux-sshr";
+  bashOptions = [ ];
   runtimeInputs = with pkgs; [
     my.noctalia
     openssh
@@ -19,16 +20,22 @@ pkgs.writeShellApplication {
 
     username=$(awk -F: -v u="$USER" 'BEGIN {print u} ($3 == 0 || ($3 >= 1000 && $3 < 30000)) && $1 != u {print $1}' /etc/passwd | noctalia dmenu -g user -p "Username...")
 
-    ssh -t "$username@$selected" "
-      if command -v tmux &> /dev/null; then
-        if tmux has-session &> /dev/null; then
-          exec tmux attach-session
-        else
-          exec tmux new-session -s \"ssh-$username@$selected\"
-        fi
-      else
-        exec \$SHELL
-      fi
+    $TERMINAL bash -c "
+      while true; do
+        ssh -t '$username@$selected' '
+          if command -v tmux &> /dev/null; then
+            if tmux has-session &> /dev/null; then
+              exec tmux attach-session
+            else
+              exec tmux new-session -s \"ssh-$username@$selected\"
+            fi
+          else
+            exec \\\$SHELL
+          fi
+        ' && break
+        echo
+        read -rp 'SSH failed, press enter to retry... '
+      done
     "
   '';
 }

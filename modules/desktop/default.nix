@@ -253,7 +253,7 @@
           "Mod+t" = "${term} -e ${getExe pkgs.my.tmux-sessionizer} ~/";
           "Mod+Shift+t" = term;
 
-          "Mod+s" = "${term} -e ${getExe pkgs.my.tmux-sshr}";
+          "Mod+s" = getExe pkgs.my.tmux-sshr;
           "Mod+Shift+s" = "noctalia msg theme-mode-toggle";
           "Mod+y" = "noctalia msg panel-toggle control-center system";
           "Mod+Alt+b" = btToggle;

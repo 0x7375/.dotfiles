@@ -482,7 +482,7 @@
     };
 
   flake.modules.nixos.laptop =
-    { pkgs, ... }:
+    { lib, pkgs, ... }:
     {
       hj.xdg.config.files."noctalia/settings.toml".value = {
         idle = {
@@ -498,7 +498,8 @@
               enabled = true;
             };
             lock-and-suspend = {
-              command = "${pkgs.my.lock} lock-and-suspend";
+              action = "command";
+              command = "${lib.getExe pkgs.my.lock} lock-and-suspend";
               resume_command = "noctalia:dpms-on";
               timeout = 600;
               enabled = true;

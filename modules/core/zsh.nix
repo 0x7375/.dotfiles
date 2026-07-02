@@ -334,8 +334,8 @@
 
           bindkey '\ev' edit-command-line
 
-          bindkey '^T' fzf-history-widget
-          bindkey '^G' fzf-file-widget
+          bindkey '^G' fzf-history-widget
+          bindkey '^T' fzf-file-widget
 
           bindkey -s '^O' "lf^M"
 

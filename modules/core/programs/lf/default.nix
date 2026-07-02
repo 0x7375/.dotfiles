@@ -128,7 +128,7 @@
               fi
           }}
 
-          map <c-g> fzf_jump
+          map <c-t> fzf_jump
 
           cmd mount-archive ''${{
             if ${getExe pkgs.file} --mime-type "$f" | grep -qE 'application/zip|application/x-tar|application/x-7z-compressed|application/octet-stream|application/gzip'; then

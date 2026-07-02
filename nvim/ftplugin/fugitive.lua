@@ -8,7 +8,7 @@ map({ "n", "x" }, "l", "-", { desc = "Fugitive: stage/unstage", remap = true, bu
 map({ "n", "x" }, "h", "=", { desc = "Fugitive: show/hide diff", remap = true, buffer = bufnr })
 map(
   { "n", "x" },
-  "cr",
+  "cR",
   function() vim.cmd.Git("resign") end,
   { desc = "Fugitive: try to sign the last commit again", remap = true, buffer = bufnr }
 )

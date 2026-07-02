@@ -115,6 +115,21 @@
           map ; find-next
           map <c-d> half-down
 
+          cmd fzf_jump ''${{
+              res="$(${getExe pkgs.fd} . | ${getExe pkgs.fzf} --reverse --header="Jump to location" || true)"
+              if [ -n "$res" ]; then
+                  if [ -d "$res" ]; then
+                      cmd="cd"
+                  else
+                      cmd="select"
+                  fi
+                  res="$(printf '%s' "$res" | sed 's/\\/\\\\/g;s/"/\\"/g')"
+                  lf -remote "send $id $cmd \"$res\""
+              fi
+          }}
+
+          map <c-g> fzf_jump
+
           cmd mount-archive ''${{
             if ${getExe pkgs.file} --mime-type "$f" | grep -qE 'application/zip|application/x-tar|application/x-7z-compressed|application/octet-stream|application/gzip'; then
               mntdir="''${f}.mnt"

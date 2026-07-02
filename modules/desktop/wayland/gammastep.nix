@@ -76,10 +76,19 @@
       };
     };
 
-  flake.modules.nixos.laptop = {
-    powerManagement.resumeCommands = # bash
-      ''
-        systemctl restart --user gammastep
-      '';
-  };
+  flake.modules.nixos.laptop =
+    {
+      config,
+      pkgs,
+      lib,
+      ...
+    }:
+    {
+      powerManagement.resumeCommands = # bash
+        ''
+          ${lib.getExe pkgs.sudo} -u ${config.me.user} \
+            env XDG_RUNTIME_DIR=/run/user/${toString config.me.uid} \
+            ${lib.getExe' pkgs.systemd "systemctl"} --user restart gammastep
+        '';
+    };
 }

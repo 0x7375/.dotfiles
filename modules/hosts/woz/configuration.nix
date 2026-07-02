@@ -35,8 +35,10 @@
       powerManagement.resumeCommands =
         # bash
         ''
+          # https://github.com/AsahiLinux/linux/issues/497
+          # broken rn..........
           # force usb to disconnect/reconnect
-          ${lib.getExe pkgs.unstable.tuxvdmtool} disconnect
+          ${lib.getExe pkgs.unstable.tuxvdmtool} disconnect || true
         '';
 
       system.stateVersion = "25.11";

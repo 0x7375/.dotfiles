@@ -92,16 +92,19 @@ pkgs.writeShellApplication {
 
         wallpaper=$(shuf -e -n1 --random-source=<(date +%Y%m%d | md5sum) ~/pictures/wallpapers/"$theme"/*)
         noctalia msg wallpaper-set "$wallpaper"
+
+        mmsg dispatch reload_config 
+
+        if [[ "$theme" == "dark" ]]; then
+          pkill -USR1 foot
+        else
+          pkill -USR2 foot
+        fi
       else
         [[ ''${1:-} != "sync" ]] &&  osascript -e "tell app \"System Events\" to tell appearance preferences to set dark mode to ''${theme_bool}"
       fi
 
       pkill -USR1 nvim
       pkill -USR1 kitty
-      if [[ "$theme" == "dark" ]]; then
-        pkill -USR1 foot
-      else
-        pkill -USR2 foot
-      fi
     '';
 }

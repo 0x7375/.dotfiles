@@ -168,7 +168,6 @@
               # env = [ "DISPLAY,:2" ];
 
               exec = map (_: _.cmd) (lib.filter (c: c.always) (lib.attrValues config.me.desktop.startup)) ++ [
-                "${getExe pkgs.bash} -c '${getExe pkgs.my.swap-theme} sync'"
                 # "${getExe pkgs.xwayland-satellite} :2"
               ];
 

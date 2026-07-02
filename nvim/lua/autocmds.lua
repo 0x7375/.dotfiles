@@ -50,7 +50,13 @@ vim.api.nvim_create_autocmd("BufReadPost", {
   end,
 })
 
+vim.api.nvim_create_autocmd("VimEnter", {
+  once = true,
+  callback = function() require("util.bar").init() end,
+})
+
 -- update winbar when needed
+local bar = require("util.bar")
 vim.api.nvim_create_autocmd({
   "BufEnter",
   "BufWritePost",
@@ -63,11 +69,17 @@ vim.api.nvim_create_autocmd({
   "DirChanged",
   "RecordingEnter",
 }, {
-  callback = function() require("util.bar").refresh() end,
+  callback = function() bar.refresh() end,
 })
+
+vim.api.nvim_create_autocmd("User", {
+  pattern = "FugitiveChanged",
+  callback = function() bar.refresh() end,
+})
+
 vim.api.nvim_create_autocmd("RecordingLeave", {
   callback = function()
-    vim.schedule(function() require("util.bar").refresh() end)
+    vim.schedule(function() bar.refresh() end)
   end,
 })
 

@@ -78,10 +78,8 @@ vim.opt.shada = "!,'1000,<50,s10,h,:10000"
 vim.opt.guicursor = ""
 vim.opt.cursorline = true
 
--- fix ^^ chars in statusline
--- vim.opt.fillchars:append("stl: ,stlnc: ")
-
-require("util.bar").init()
+-- requires a patch
+vim.opt.showcmdloc = "winbar"
 
 vim.opt.laststatus = 0
 vim.opt.cmdheight = 0

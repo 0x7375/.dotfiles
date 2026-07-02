@@ -1,84 +1,8 @@
 local M = {}
 
--- requires a patch
-vim.opt.showcmdloc = "winbar"
-
-local git_cache = ""
-local git_watcher = nil
-
-local function update_branch(cb)
-  vim.system({ "git", "rev-parse", "--abbrev-ref", "HEAD" }, { text = true }, function(r)
-    if r.code ~= 0 then
-      git_cache = ""
-      vim.schedule(cb or M.refresh)
-      return
-    end
-    local ref = vim.trim(r.stdout)
-    if ref == "HEAD" then
-      vim.system({ "git", "rev-parse", "--short", "HEAD" }, { text = true }, function(r2)
-        git_cache = r2.code == 0 and vim.trim(r2.stdout) or ""
-        vim.schedule(cb or M.refresh)
-      end)
-    else
-      git_cache = ref
-      vim.schedule(cb or M.refresh)
-    end
-  end)
-end
-
-local function stop_git_watch()
-  if git_watcher then
-    if not git_watcher:is_closing() then
-      vim.uv.fs_event_stop(git_watcher)
-      git_watcher:close()
-    end
-    git_watcher = nil
-  end
-end
-
-local function setup_git_watch()
-  stop_git_watch()
-
-  local git_dir = vim.fn.finddir(".git", ".;")
-  if not git_dir or git_dir == "" then
-    return
-  end
-
-  git_watcher = vim.uv.new_fs_event()
-  if not git_watcher then
-    return
-  end
-
-  vim.uv.fs_event_start(git_watcher, git_dir, {}, function(err, filename)
-    if err then
-      return
-    end
-    if filename == "HEAD" then
-      git_cache = ""
-      update_branch()
-    end
-  end)
-end
-
-vim.api.nvim_create_autocmd("VimEnter", {
-  once = true,
-  callback = function()
-    update_branch()
-    setup_git_watch()
-  end,
-})
-
-vim.api.nvim_create_autocmd("DirChanged", {
-  callback = function()
-    git_cache = ""
-    update_branch()
-    setup_git_watch()
-  end,
-})
-
 M.build_bar = function()
-  local branch = git_cache ~= "" and (" " .. git_cache) or ""
-  branch = " " .. branch
+  local branch = vim.fn.FugitiveStatusline():match("%[Git%((.-)%)%]") or ""
+  branch = branch ~= "" and branch .. " " or ""
 
   local set_green = "%#Directory#"
   local set_normal = "%#Dim#"
@@ -92,7 +16,7 @@ M.build_bar = function()
   end
 
   local align_right = "%="
-  local position = " %l,%c"
+  local position = "%l,%c"
 
   local search_count = ""
   local mode = vim.api.nvim_get_mode().mode
@@ -110,7 +34,7 @@ M.build_bar = function()
     recording = " @" .. reg
   end
 
-  local pending = "%S"
+  local pending = "%S "
 
   return table.concat({
     set_normal,
@@ -128,7 +52,7 @@ M.build_bar = function()
 end
 
 local filetype_exclude = {
-  "fugitive",
+  -- "fugitive",
   "nvim-pack",
   "dap-view",
   "dap-repl",

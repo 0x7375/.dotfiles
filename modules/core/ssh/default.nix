@@ -63,20 +63,12 @@
         "/etc/ssh"
       ];
 
-      persistUser = {
-        directories = [
-          {
-            directory = ".ssh";
-            how = "_intermediate";
-          }
-        ];
-        files = [
-          {
-            file = ".ssh/known_hosts";
-            how = "symlink";
-          }
-        ];
-      };
+      persistUser.directories = [
+        {
+          directory = ".ssh";
+          mode = "0700";
+        }
+      ];
 
       services.openssh.settings = {
         PasswordAuthentication = false;

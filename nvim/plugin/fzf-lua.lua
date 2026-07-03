@@ -5,12 +5,7 @@ end
 local fzf = require("fzf-lua")
 local fzf_borders = require("util.fzf-borders")
 
-local no_preview_winopts = {
-  height = 0.6,
-  preview = {
-    hidden = true,
-  },
-}
+local no_preview_winopts = { preview = { hidden = true } }
 
 fzf.setup({
   actions = {
@@ -26,9 +21,7 @@ fzf.setup({
     },
   },
   fzf_opts = {
-    ["--info"] = "inline-right",
-    ["--no-separator"] = "",
-    ["--layout"] = "reverse",
+    -- ["--layout"] = "reverse",
   },
   previewers = {
     builtin = {
@@ -47,21 +40,25 @@ fzf.setup({
     },
   },
   defaults = {
-    cwd_prompt = true,
-    no_header_i = true,
+    header = false,
     formatter = "path.filename_first",
     git_icons = false,
   },
   winopts = {
     height = 0.9,
-    width = 0.7,
-    row = 0.5,
+    width = vim.fn.round(vim.o.columns * 0.9),
+    -- row = 0.5,
     backdrop = 100,
     preview = {
+      title = false,
       scrollbar = false,
-      layout = "vertical",
-      vertical = "up:70%",
+      layout = "horizontal",
+      horizontal = "right:50%",
+      -- vertical = "up:70%",
       border = fzf_borders.preview_border,
+      winopts = {
+        number = false,
+      },
     },
     border = fzf_borders.main_border,
   },

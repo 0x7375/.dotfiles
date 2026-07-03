@@ -24,7 +24,7 @@ M.build_bar = function()
   if mode ~= "i" and vim.v.hlsearch == 1 and vim.fn.getreg("/") ~= "" then
     local s_count = vim.fn.searchcount({ recompute = 1, maxcount = 999 })
     if s_count and s_count.total and s_count.total > 0 then
-      search_count = string.format(" [%d/%d]", s_count.current, s_count.total)
+      search_count = string.format("[%d/%d]", s_count.current, s_count.total) .. " "
     end
   end
 

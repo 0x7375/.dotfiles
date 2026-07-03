@@ -13,7 +13,6 @@
         ripgrep
         fd
         tlrc
-        trash-cli
         tree
         termdown
 

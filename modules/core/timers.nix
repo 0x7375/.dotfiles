@@ -3,7 +3,6 @@
     {
       config,
       pkgs,
-      lib,
       ...
     }:
     {
@@ -48,20 +47,6 @@
           git
           openssh
         ];
-      };
-
-      systemd.timers.clean-old-trash = {
-        wantedBy = [ "timers.target" ];
-        timerConfig = {
-          OnCalendar = "daily";
-          Persistent = true;
-        };
-      };
-
-      systemd.services.clean-old-trash.serviceConfig = {
-        Type = "oneshot";
-        User = config.me.user;
-        ExecStart = "${lib.getExe' pkgs.trash-cli "trash-empty"} 15";
       };
     };
 }

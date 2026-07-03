@@ -403,7 +403,7 @@
           cmd extract ''${{
             set -f
             ${getExe pkgs.ouch} decompress $fx
-            ${getExe' pkgs.trash-cli "trash"} $f
+            rm $f
           }}
 
           map ze extract
@@ -503,10 +503,7 @@
         windowrule = [ "isnamedscratchpad:1,width:1280,height:800,appid:kitty-lf" ];
       };
 
-      packages = with pkgs; [
-        libreoffice
-        trash-cli
-      ];
+      packages = with pkgs; [ libreoffice ];
 
       xdg.mimeApps.defaultApplications = self.lib.mapMimeEntries [
         "inode/directory"

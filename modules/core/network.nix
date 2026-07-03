@@ -122,9 +122,12 @@
       # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
       networking.networkmanager = {
         enable = true;
-        connectionConfig = {
-          "ipv4.ignore-auto-dns" = true;
-          "ipv6.ignore-auto-dns" = true;
+        dns = "systemd-resolved";
+        settings = {
+          connection = {
+            "ipv4.ignore-auto-dns" = true;
+            "ipv6.ignore-auto-dns" = true;
+          };
         };
       };
 

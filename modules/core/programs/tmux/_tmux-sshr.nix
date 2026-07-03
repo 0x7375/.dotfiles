@@ -22,7 +22,7 @@ pkgs.writeShellApplication {
 
     $TERMINAL bash -c "
       while true; do
-        ssh -t '$username@$selected' '
+        TERM=xterm-256color ssh -t '$username@$selected' '
           if command -v tmux &> /dev/null; then
             if tmux has-session &> /dev/null; then
               exec tmux attach-session

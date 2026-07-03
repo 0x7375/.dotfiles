@@ -10,18 +10,24 @@ pkgs.writeShellApplication {
     gnused
   ];
   text = ''
-    dirs=(~/ ~/.config ~/.config/nixcfg ~/uni ~/perso ~/repos)
+    dirs=(
+      ".config"
+      ".config/nixcfg"
+      "uni"
+      "perso"
+      "repos"
+    )
 
     mkdir -p "''${dirs[@]}"
 
     if [[ $# -eq 1 ]]; then
       selected="$1"
     else
-      selected=$(find -L "''${dirs[@]}" \
-        -maxdepth 1 -mindepth 1 -type d ! -name '.stfolder' ! -name '.stversions' \
-        | sed "s|^$HOME|~|" \
-        | fzf --reverse --padding 1)
-      selected=''${selected/\~/$HOME}
+      selected=$(fd -L . "$HOME" "''${dirs[@]/#/$HOME/}" \
+        --max-depth 1 --min-depth 1 --type d --hidden --exclude '*.st*' \
+        | sed "s|^$HOME/||" \
+        | fzf)
+      selected=$HOME/''${selected}
     fi
 
     [[ -z $selected ]] && exit 0

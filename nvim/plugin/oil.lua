@@ -39,6 +39,7 @@ require("oil").setup({
     ["."] = "actions.toggle_hidden",
     ["<C-r>"] = "actions.refresh",
     ["gs"] = "actions.change_sort",
+    ["<TAB>"] = "actions.preview",
   },
 })
 

@@ -14,7 +14,7 @@
       };
 
       hj.xdg.config.files."zsh/.zshrc".text =
-        # bash
+        # zsh
         ''
           source /etc/profile
 
@@ -44,7 +44,7 @@
           set_prompt
         '';
 
-      hj.xdg.config.files."zsh/global-aliases.zsh".text = # bash
+      hj.xdg.config.files."zsh/global-aliases.zsh".text = # zsh
         ''
           alias -g @nout="> /dev/null"
           alias -g @nerr="2> /dev/null"
@@ -63,7 +63,7 @@
           alias -g @copy="| _smart_copy"
         '';
 
-      hj.xdg.config.files."zsh/history.zsh".text = # bash
+      hj.xdg.config.files."zsh/history.zsh".text = # zsh
         ''
           hist_dir="$XDG_STATE_HOME"/zsh
           mkdir -p "$hist_dir" > /dev/null
@@ -83,6 +83,10 @@
           SAVEHIST=5000000
 
           merge_histories() {
+            local lock_dir="$hist_dir/.merge.lock"
+            mkdir "$lock_dir" 2>/dev/null || return
+            trap 'rmdir "$lock_dir"' EXIT
+
             # Keep only the most recent occurrence of each command across all history files, sorted by timestamp
             sort -t':' -k2,2n "$hist_dir"/*_history 2>/dev/null | awk '
               {
@@ -126,7 +130,7 @@
           [[ ! -s "$HISTFILE" ]] && merge_histories
         '';
 
-      hj.xdg.config.files."zsh/opts.zsh".text = # bash
+      hj.xdg.config.files."zsh/opts.zsh".text = # zsh
         ''
           setopt autocd
           setopt globdots
@@ -153,7 +157,7 @@
           unsetopt extended_history
         '';
 
-      hj.xdg.config.files."zsh/set-prompt.sh".text = # bash
+      hj.xdg.config.files."zsh/set-prompt.sh".text = # zsh
         ''
           function is_dirty {
               [[ -n $(${lib.getExe pkgs.git} diff --shortstat 2> /dev/null | ${lib.getExe' pkgs.coreutils-full "tail"} -n1) ]] && ${lib.getExe' pkgs.coreutils-full "echo"} "*"
@@ -219,7 +223,7 @@
           }
         '';
 
-      hj.xdg.config.files."zsh/widgets.zsh".text = # bash
+      hj.xdg.config.files."zsh/widgets.zsh".text = # zsh
         ''
           function lf() {
               export LF_CD_FILE=/var/tmp/.lfcd-$$
@@ -251,7 +255,7 @@
 
           fzf-file-widget() {
             local -r selected=$(${lib.getExe pkgs.fd} . --min-depth 2 --hidden \
-              | ${lib.getExe pkgs.fzf} --height 40% --reverse --padding=1 --query="''${LBUFFER##* }")
+              | ${lib.getExe pkgs.fzf} --height 40% --reverse --no-separator --query="''${LBUFFER##* }")
 
             if [[ -n $selected ]]; then
               LBUFFER="''${LBUFFER% *} $selected"
@@ -262,7 +266,7 @@
           zle -N fzf-file-widget
 
           fzf-history-widget() {
-            local -r selected=$(fc -rl 1 | ${lib.getExe pkgs.fzf} --height 40% --reverse --padding=1 --query="$LBUFFER")
+            local -r selected=$(fc -rl 1 | ${lib.getExe pkgs.fzf} --height 40% --reverse --no-separator --query="$LBUFFER")
             
             if [[ -n $selected ]]; then
               local num=$(echo "$selected" | awk '{print $1}')
@@ -295,7 +299,7 @@
           }
         '';
 
-      hj.xdg.config.files."zsh/completion.zsh".text = # bash
+      hj.xdg.config.files."zsh/completion.zsh".text = # zsh
         ''
           mkdir -p $XDG_CACHE_HOME/zsh > /dev/null
           autoload -U compinit && compinit -d $XDG_CACHE_HOME/zsh/zcompdump
@@ -306,7 +310,7 @@
           zstyle ':completion:*' menu no
 
           zstyle ':fzf-tab:*' use-fzf-default-opts yes
-          zstyle ':fzf-tab:*' fzf-flags --padding=1
+          zstyle ':fzf-tab:*' fzf-flags --no-separator
 
           zstyle ':fzf-tab:*' switch-group 'alt-h' 'alt-l'
           zstyle ':fzf-tab:*' fzf-bindings 'ctrl-l:toggle+down'
@@ -328,7 +332,7 @@
           zstyle ':completion:*' cache-path "$XDG_CACHE_HOME/zsh/zcompcache"
         '';
 
-      hj.xdg.config.files."zsh/bindings.zsh".text = # bash
+      hj.xdg.config.files."zsh/bindings.zsh".text = # zsh
         ''
           bindkey -e
 
@@ -375,7 +379,7 @@
         let
           activeWindow = lib.optionalString pkgs.stdenv.isLinux "${getExe pkgs.lswt} -j | jq '.toplevels[] | select(.activated == true).title'";
         in
-        # bash
+        # zsh
         ''
           [[ -z $WAYLAND_DISPLAY ]] && return 0
 

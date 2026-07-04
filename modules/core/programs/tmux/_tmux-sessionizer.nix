@@ -18,7 +18,7 @@ pkgs.writeShellApplication {
       "repos"
     )
 
-    mkdir -p "''${dirs[@]}"
+    mkdir -p "''${dirs[@]/#/$HOME/}"
 
     if [[ $# -eq 1 ]]; then
       selected="$1"

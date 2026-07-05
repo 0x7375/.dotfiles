@@ -140,7 +140,6 @@
           setopt globdots
           setopt nobeep
           setopt menucomplete
-          setopt extendedglob
           setopt interactivecomments
           setopt histignorespace
           setopt histignoredups
@@ -148,6 +147,8 @@
           setopt histignorealldups
           setopt histfindnodups
           setopt prompt_subst
+          setopt autopushd
+          setopt pushdsilent
         '';
 
       hj.xdg.config.files."zsh/set-prompt.sh".text = # zsh

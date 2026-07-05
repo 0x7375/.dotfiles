@@ -24,7 +24,7 @@ pkgs.writeShellApplication {
       selected="$1"
     else
       selected=$(fd -L . "$HOME" "''${dirs[@]/#/$HOME/}" \
-        --max-depth 1 --min-depth 1 --type d --hidden --exclude '*.st*' \
+        --max-depth 1 --min-depth 1 --type d --hidden --exclude '*.st*' --format {} \
         | sed "s|^$HOME/||" \
         | fzf)
       selected=$HOME/''${selected}

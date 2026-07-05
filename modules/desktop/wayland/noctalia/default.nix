@@ -18,6 +18,7 @@
           ''
             [bar.default.monitor.${secondary}]
             auto_hide = true
+            reserve_space = false
           ''
         else
           ""

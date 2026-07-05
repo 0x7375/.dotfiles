@@ -84,25 +84,26 @@
 
           merge_histories() {
             local lock_dir="$hist_dir/.merge.lock"
-            mkdir "$lock_dir" 2>/dev/null || return
-            trap 'rmdir "$lock_dir"' EXIT
+            # A merge is going on, quit
+            command mkdir "$lock_dir" >/dev/null 2>&1 || return
 
-            # Keep only the most recent occurrence of each command across all history files, sorted by timestamp
-            sort -t':' -k2,2n "$hist_dir"/*_history 2>/dev/null | awk '
-              {
-                # Extract command content, ignoring timestamp
-                if (match($0, /^: [0-9]+:[0-9]+;/)) {
-                  cmd = substr($0, RLENGTH + 1)
-                } else { cmd = $0 }
-                
-                lines[NR]=$0
-                cmds[NR]=cmd
-                seen[cmd]=NR 
-              } 
-              END {
-                for(i=1;i<=NR;i++) 
-                  if(seen[cmds[i]]==i) print lines[i]
-              }' > "$HISTFILE"
+            {
+              # Keep only the most recent occurrence of each command across all history files, sorted by timestamp
+              # Replace every newline with a special char so sort and awk work, and add newlines back later
+              perl -0777 -pe 's/\\\n/\x01/g' "$hist_dir"/*_history 2>/dev/null \
+                | sort -t':' -k2,2n \
+                | awk '
+                    {
+                      if (match($0, /^: [0-9]+:[0-9]+;/)) cmd = substr($0, RLENGTH + 1)
+                      else cmd = $0
+                      lines[NR]=$0; cmds[NR]=cmd; seen[cmd]=NR
+                    }
+                    END { for (i=1;i<=NR;i++) if (seen[cmds[i]]==i) print lines[i] }
+                  ' \
+                | perl -pe 's/\x01/\\\n/g' > "$HISTFILE"
+            } always {
+              rmdir "$lock_dir"
+            }
           }
 
           zshaddhistory() {
@@ -120,41 +121,33 @@
               && [[ ! $_HISTLINE =~ '^ ' ]] \
               && [[ ! $_HISTLINE =~ '^[a-zA-Z0-9_-]+$' ]]; then
 
-              builtin print -r -- ": $(date +%s):0;''${(z)_HISTLINE}" >> "$HOSTFILE"
+              # Escape newlines so they're conserved in history properly
+              # Ignore commands ending with a odd number of backslashes
+              local trailing_bs="''${_HISTLINE##*[^\\]}"
+              if ((''${#trailing_bs} % 2 == 0 )); then
+                builtin print -r -- ": $(date +%s):0;''${_HISTLINE//$'\n'/$'\\\n'}" >> "$HOSTFILE"
+              fi
             fi
             
             merge_histories &!
-
             unset _HISTLINE
           }
-          [[ ! -s "$HISTFILE" ]] && merge_histories
+          merge_histories
         '';
 
       hj.xdg.config.files."zsh/opts.zsh".text = # zsh
         ''
-          setopt autocd
           setopt globdots
           setopt nobeep
-          setopt nomatch
           setopt menucomplete
           setopt extendedglob
           setopt interactivecomments
-          setopt appendhistory
-          setopt extendedhistory
           setopt histignorespace
           setopt histignoredups
           setopt banghist
-          setopt histexpiredupsfirst
-          setopt histignoredups
           setopt histignorealldups
           setopt histfindnodups
-          setopt histignorespace
-          setopt histsavenodups
-          setopt histreduceblanks
           setopt prompt_subst
-          setopt no_nomatch
-          unsetopt share_history
-          unsetopt extended_history
         '';
 
       hj.xdg.config.files."zsh/set-prompt.sh".text = # zsh
@@ -266,7 +259,10 @@
           zle -N fzf-file-widget
 
           fzf-history-widget() {
-            local -r selected=$(fc -rl 1 | ${lib.getExe pkgs.fzf} --height 40% --reverse --no-separator --query="$LBUFFER")
+            # Fzf splits on \x00 so we can draw multiline commands properly
+            local -r selected=$(fc -rl 1 \
+              | perl -0777 -pe 's/\n/\x00/g; s/\\n/\n/g' \
+              | ${lib.getExe pkgs.fzf} --read0 --height 40% --reverse --no-separator --query="$LBUFFER")
             
             if [[ -n $selected ]]; then
               local num=$(echo "$selected" | awk '{print $1}')

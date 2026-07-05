@@ -30,7 +30,7 @@
     ];
 
     boot.loader.limine.extraConfig = ''
-      remember_last_entry: yes
+      remember_last_entry: no
     '';
 
     # do not change

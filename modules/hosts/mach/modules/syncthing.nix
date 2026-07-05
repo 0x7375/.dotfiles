@@ -3,6 +3,7 @@
     {
       secrets,
       config,
+      lib,
       ...
     }:
     let
@@ -20,12 +21,12 @@
         owner = user;
       };
 
-      activation =
+      system.activationScripts.postActivation.text =
         let
           inherit (config.sops) secrets;
         in
         # bash
-        ''
+        lib.mkAfter ''
           dir="${home}/Library/Application Support/Syncthing"
           mkdir -p "$dir"
 

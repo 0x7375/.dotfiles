@@ -4,6 +4,14 @@
     {
       xdg.terminal-exec.settings.default = [ "kitty.desktop" ];
       environment.systemPackages = [ pkgs.kitty ];
+
+      xdg.desktopEntries.kitty = {
+        name = "kitty";
+        exec = "kitty -1";
+        icon = "kitty";
+        terminal = false;
+        type = "Application";
+      };
     };
 
   flake.modules.darwin.kitty = {
@@ -22,14 +30,6 @@
       me.desktop.terminal = {
         name = "kitty";
         cmd = "kitty -1";
-      };
-
-      xdg.desktopEntries.kitty = {
-        name = "kitty";
-        exec = "kitty -1";
-        icon = "kitty";
-        terminal = false;
-        type = "Application";
       };
 
       tinted.files.".config/kitty/kitty.conf" = {

@@ -12,13 +12,6 @@
 
       nixpkgs.overlays = [
         (final: prev: {
-          # adapted from: https://github.com/NixOS/nix/pull/15297
-          lix = prev.lix.overrideAttrs (old: {
-            patches = (old.patches or [ ]) ++ [ ./nix_shell_packages_env_var.patch ];
-            doCheck = false;
-            doInstallCheck = false;
-          });
-
           unstable = import inputs.nixpkgs-unstable {
             inherit (final.stdenv.hostPlatform) system;
             config.allowUnfreePredicate = config.nixpkgs.config.allowUnfreePredicate;
@@ -39,7 +32,6 @@
       };
 
       nix = {
-        package = pkgs.unstable.lix;
         extraOptions = ''
           warn-dirty = false
           trusted-users = root ${config.me.user}
@@ -84,8 +76,21 @@
     };
 
   flake.modules.nixos.core =
-    { config, ... }:
+    { config, pkgs, ... }:
     {
+      nixpkgs.overlays = [
+        (final: prev: {
+          # adapted from: https://github.com/NixOS/nix/pull/15297
+          lix = prev.lix.overrideAttrs (old: {
+            patches = (old.patches or [ ]) ++ [ ./nix_shell_packages_env_var.patch ];
+            doCheck = false;
+            doInstallCheck = false;
+          });
+        })
+      ];
+
+      nix.package = pkgs.unstable.lix;
+
       persistUser.directories = [
         ".config/nixcfg"
         ".cache/nix"

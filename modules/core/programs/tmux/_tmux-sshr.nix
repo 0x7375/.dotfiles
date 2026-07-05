@@ -2,13 +2,17 @@ pkgs:
 pkgs.writeShellApplication {
   name = "tmux-sshr";
   bashOptions = [ ];
-  runtimeInputs = with pkgs; [
-    my.noctalia
-    openssh
-    fzf
-    gnused
-    coreutils-full
-  ];
+  runtimeInputs =
+    with pkgs;
+    [
+      openssh
+      fzf
+      gnused
+      coreutils-full
+    ]
+    ++ lib.optionals (pkgs.stdenv.hostPlatform.system != "aarch64-darwin") [
+      pkgs.my.noctalia
+    ];
   text = ''
     if [[ $# -eq 1 ]]; then
       selected="$1"

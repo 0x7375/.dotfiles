@@ -152,6 +152,12 @@ in
       ...
     }:
     {
+      unfree-packages = [
+        "intelephense"
+        "ReplaceWithRegister"
+        "vim-wordmotion"
+      ];
+
       packages = [
         pkgs.my.fossify
         (mkNeovim {
@@ -160,10 +166,16 @@ in
           unfree = true;
         })
       ];
+    };
 
-      unfree-packages = [
-        "ReplaceWithRegister"
-        "vim-wordmotion"
+  flake.modules.darwin.desktop =
+    { pkgs, ... }:
+    {
+      packages = [
+        (mkNeovim {
+          inherit pkgs;
+          unfree = true;
+        }).devMode
       ];
     };
 
@@ -177,10 +189,6 @@ in
         ".cache/nvim"
         ".local/share/nvim"
         ".local/state/nvim"
-      ];
-
-      unfree-packages = [
-        "intelephense"
       ];
 
       packages = [

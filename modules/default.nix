@@ -152,7 +152,7 @@ in
           secrets
           vpnPeer
           desktop
-          alacritty
+          kitty
           network
           dev
         ])

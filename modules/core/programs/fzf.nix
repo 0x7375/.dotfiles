@@ -26,7 +26,7 @@
             "preview-border" = 0;
           };
 
-          info-command = "echo -e \\$FZF_POS/\\$FZF_MATCH_COUNT";
+          info-command = "printf '%s/%s' \"\\$FZF_POS\" \"\\$FZF_MATCH_COUNT\"";
           pointer = " >";
           prompt = " ";
           no-scrollbar = true;

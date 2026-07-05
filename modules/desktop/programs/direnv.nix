@@ -6,10 +6,6 @@
       ...
     }:
     {
-      persistUser.directories = [
-        ".cache/direnv"
-        ".local/share/direnv"
-      ];
 
       vars.DIRENV_WARN_TIMEOUT = "0";
 
@@ -57,6 +53,11 @@
   flake.modules.nixos.desktop =
     { pkgs, ... }:
     {
+      persistUser.directories = [
+        ".cache/direnv"
+        ".local/share/direnv"
+      ];
+
       packages = [ pkgs.unstable.devenv ];
     };
 }

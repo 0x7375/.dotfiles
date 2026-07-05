@@ -113,10 +113,10 @@ in
       kdeconnectDir = "Library/Preferences/kdeconnect";
       kdeconnect-nightly = pkgs.stdenv.mkDerivation rec {
         pname = "kdeconnect-nightly";
-        version = "6261";
+        version = "6325";
         src = pkgs.fetchurl {
           url = "https://origin.cdn.kde.org/ci-builds/network/kdeconnect-kde/master/macos-arm64/kdeconnect-kde-master-${version}-macos-clang-arm64.dmg";
-          hash = "sha256-iR0fstp6ynxzjy6Tnab8bccEgY/nqDBptjSXME5ox6o=";
+          hash = "sha256-f5CLB/pP8AXSdrL9rn8kt8O3odJtqm8bXhpVudauKeE=";
         };
         nativeBuildInputs = [ pkgs.undmg ];
         sourceRoot = ".";

@@ -33,9 +33,6 @@ pkgs.writeShellApplication {
       ]
     );
   text =
-    let
-      inherit (config.me.desktop) theme iconTheme;
-    in
     # bash
     ''
       themes_dir="$TINTED_DIR"
@@ -83,27 +80,36 @@ pkgs.writeShellApplication {
         ${lib.getExe pkgs.bat} cache --build > /dev/null 2>&1
       )
 
-      if [[ $OSTYPE != darwin* ]]; then
-        mkdir -p "$share_dir/icons" "$share_dir/themes"
-        ln -sfT "${theme.package}/share/themes/${theme.name}-''${theme^}" "$share_dir/themes/${theme.name}"
-        ln -sfT "${iconTheme.package}/share/icons/${iconTheme.name}-''${theme^}" "$share_dir/icons/${iconTheme.name}"
+      ${
+        if !isDarwin then
+          let
+            inherit (config.me.desktop) theme iconTheme;
+          in
+          # bash
+          ''
+            mkdir -p "$share_dir/icons" "$share_dir/themes"
+            ln -sfT "${theme.package}/share/themes/${theme.name}-''${theme^}" "$share_dir/themes/${theme.name}"
+            ln -sfT "${iconTheme.package}/share/icons/${iconTheme.name}-''${theme^}" "$share_dir/icons/${iconTheme.name}"
 
-        dconf write /org/gnome/desktop/interface/color-scheme "'prefer-$theme'"
+            dconf write /org/gnome/desktop/interface/color-scheme "'prefer-$theme'"
 
-        wallpaper=$(shuf -e -n1 --random-source=<(date +%Y%m%d | md5sum) ~/pictures/wallpapers/"$theme"/*)
-        noctalia msg wallpaper-set "$wallpaper"
+            wallpaper=$(shuf -e -n1 --random-source=<(date +%Y%m%d | md5sum) ~/pictures/wallpapers/"$theme"/*)
+            noctalia msg wallpaper-set "$wallpaper"
 
-        mmsg dispatch reload_config 
+            mmsg dispatch reload_config 
 
-        if [[ "$theme" == "dark" ]]; then
-          pkill -USR1 foot
+            if [[ "$theme" == "dark" ]]; then
+              pkill -USR1 foot
+            else
+              pkill -USR2 foot
+            fi
+          ''
         else
-          pkill -USR2 foot
-        fi
-      else
-        [[ ''${1:-} != "sync" ]] &&  osascript -e "tell app \"System Events\" to tell appearance preferences to set dark mode to ''${theme_bool}"
-      fi
-
+          # bash
+          ''
+            [[ ''${1:-} != "sync" ]] &&  osascript -e "tell app \"System Events\" to tell appearance preferences to set dark mode to ''${theme_bool}"
+          ''
+      }
       pkill -USR1 nvim
       pkill -USR1 kitty
     '';

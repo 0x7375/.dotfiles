@@ -36,16 +36,6 @@
           Defaults env_keep += "HOME XDG_CONFIG_HOME XDG_DATA_HOME XDG_CACHE_HOME"
         '';
 
-        persist.directories = [ "/var/cache/man" ];
-
-        documentation = {
-          dev.enable = true;
-          man.cache = {
-            enable = true;
-            generateAtRuntime = true;
-          };
-        };
-
         environment.etc.nixcfg.source = pkgs.lib.cleanSource inputs.self;
 
         programs.nix-index-database.comma.enable = true;
@@ -83,11 +73,21 @@
       ...
     }:
     {
+      persist.directories = [ "/var/cache/man" ];
+
       services.locate.enable = true;
 
       security.polkit.enable = true;
 
       system.userActivationScripts.userActivation.text = config.userActivation;
+
+      documentation = {
+        dev.enable = true;
+        man.cache = {
+          enable = true;
+          generateAtRuntime = true;
+        };
+      };
 
       systemd.user.services.nixcfg-setup = {
         description = "Clone dotfiles repository";

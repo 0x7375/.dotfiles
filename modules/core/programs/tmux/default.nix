@@ -97,8 +97,8 @@
               display "Reloaded tmux.conf"
             bind N neww -c "#{pane_current_path}"
 
-            bind-key -N "Kill the current window" & kill-window
-            bind-key -N "Kill the current pane" x kill-pane
+            bind -N "Kill the current window" & kill-window
+            bind -N "Kill the current pane" x kill-pane
 
             bind | split-window -h -c "#{pane_current_path}"
             bind - split-window -v -c "#{pane_current_path}"
@@ -124,14 +124,14 @@
 
             # navigate prompts
             bind -n M-p copy-mode \; \
-              send-keys -X start-of-line \; \
-              send-keys -X search-backward " "
+              send -X start-of-line \; \
+              send -X search-backward " "
 
             bind -n M-n copy-mode \; \
-              send-keys -X search-forward " "
+              send -X search-forward " "
 
-            bind / copy-mode \; send-keys /
-            bind ? copy-mode \; send-keys ?
+            bind / copy-mode \; send /
+            bind ? copy-mode \; send ?
 
             bind , swap-window -t -1\; select-window -t -1
             bind . swap-window -t +1\; select-window -t +1
@@ -168,6 +168,15 @@
             bind -T copy-mode-vi ':' send -X jump-again
             bind -T copy-mode-vi 'd' send -X halfpage-down
             bind -T copy-mode-vi 'u' send -X halfpage-up
+
+            bind -n M-> copy-mode \; \
+              send -X search-backward " " \; \
+              send -X cursor-up \; \
+              send -X end-of-line \; \
+              send -X cursor-left \; \
+              send -X begin-selection \; \
+              send -X previous-space \; \
+              send -X copy-selection-and-cancel \; paste-buffer
 
             ${lib.concatMapStringsSep "\n" (x: "run-shell ${x.rtp}") plugins}
           '';

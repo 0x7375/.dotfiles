@@ -20,6 +20,9 @@ require("oil").setup({
   win_options = {
     winbar = "%!v:lua.get_oil_winbar()",
   },
+  confirmation = {
+    border = "single",
+  },
   columns = {
     "permissions",
     "size",

@@ -67,12 +67,6 @@
             };
           };
       };
-
-      activation = # bash
-        ''
-          [[ -e /root/.nix-defexpr/channels ]] && rm -f /root/.nix-defexpr/channels
-          [[ -e /nix/var/nix/profiles/per-user/root/channels ]] && rm -f /nix/var/nix/profiles/per-user/root/channels
-        '';
     };
 
   flake.modules.nixos.core =
@@ -81,7 +75,7 @@
       nixpkgs.overlays = [
         (final: prev: {
           # adapted from: https://github.com/NixOS/nix/pull/15297
-          lix = prev.lix.overrideAttrs (old: {
+          lix = final.unstable.lix.overrideAttrs (old: {
             patches = (old.patches or [ ]) ++ [ ./nix_shell_packages_env_var.patch ];
             doCheck = false;
             doInstallCheck = false;
@@ -89,7 +83,7 @@
         })
       ];
 
-      nix.package = pkgs.unstable.lix;
+      nix.package = pkgs.lix;
 
       persistUser.directories = [
         ".config/nixcfg"

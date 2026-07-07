@@ -1,67 +1,5 @@
 { inputs, ... }:
 {
-  flake.lib.mkNoctaliaLayout =
-    {
-      main,
-      secondary ? null,
-    }:
-    let
-      label = "label";
-    in
-    # toml
-    ''
-      [notification]
-      monitors = [ "${main}" ]
-      ${
-        if secondary != null then
-          # toml
-          ''
-            [bar.default.monitor.${secondary}]
-            auto_hide = true
-            reserve_space = false
-          ''
-        else
-          ""
-      }
-
-      [lockscreen_widgets]
-      enabled = true
-      schema_version = 2
-      widget_order = [  "lockscreen-login-box@${main}", "lockscreen-widget-${label}" ]
-
-          [lockscreen_widgets.grid]
-          cell_size = 16
-          major_interval = 4
-          visible = true
-
-          [lockscreen_widgets.widget."lockscreen-login-box@${main}"]
-          box_height = 0.0
-          box_width = 0.0
-          cx = 711.0
-          cy = 765.0
-          output = "${main}"
-          rotation = 0.0
-          type = "login_box"
-
-            [lockscreen_widgets.widget."lockscreen-login-box@${main}".settings]
-            show_login_button = false
-
-          [lockscreen_widgets.widget.lockscreen-widget-${label}]
-          box_height = 128.0
-          box_width = 368.0
-          cx = 711.0
-          cy = 236.0
-          output = "${main}"
-          rotation = 0.0
-          type = "label"
-
-              [lockscreen_widgets.widget.lockscreen-widget-${label}.settings]
-              background = false
-              background_opacity = 1.0
-              shadow = false
-              title = "Locked"
-    '';
-
   flake.modules.nixos.wayland =
     {
       lib,
@@ -123,361 +61,447 @@
       inherit (config.me.services.radicale) url;
     in
     {
-      persistUser = {
-        directories = [
-          ".cache/noctalia"
-          ".config/noctalia"
-          {
-            directory = ".local/state/noctalia";
-            how = "_intermediate";
-          }
-          ".local/state/noctalia/clipboard"
-        ];
-        files = [
-          {
-            file = ".local/state/noctalia/screen_time.json";
-            how = "symlink";
-          }
-        ];
-      };
-
-      nixpkgs.overlays = [
-        (final: prev: {
-          my = (prev.my or { }) // {
-            noctalia = inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default.overrideAttrs (old: {
-              patches = (old.patches or [ ]) ++ [
-                ./truncate_ssid.patch
-                ./glyph_dmenu_cli.patch
-              ];
-            });
-            lock = import ./_lock.nix final;
-          };
-        })
-      ];
-
-      packages = with pkgs; [
-        my.noctalia
-        udisks
-        ddcutil
-      ];
-
-      hj.xdg.config.files = {
-        "noctalia/settings.toml" = {
-          generator = (pkgs.formats.toml { }).generate "noctalia-settings";
-          value = {
-            bar = {
-              default = {
-                capsule = false;
-                center = [ "workspaces" ];
-                end = [
-                  "tray"
-                  "notifications"
-                  "clipboard"
-                  "brightness"
-                  "volume"
-                  "battery"
-                  "sysmon"
-                  "ram"
-                  "bluetooth"
-                  "network"
-                  "clock"
-                ];
-                margin_edge = 0;
-                margin_ends = 0;
-                margin_h = 0;
-                margin_v = 0;
-                radius = 0;
-                reserve_space = true;
-                shadow = true;
-                start = [
-                  "mango-layout"
-                  "active_window"
-                  "media"
-                ];
-                widget_spacing = 10;
-              };
-            };
-
-            battery.warning_threshold = 20;
-            brightness.enable_ddcutil = true;
-            calendar = {
-              enabled = true;
-              account.default = {
-                name = "Default";
-                provider = "custom";
-                server_url = url;
-                type = "caldav";
-                username = "admin";
-              };
-            };
-
-            config = { };
-
-            control_center = {
-              sidebar_section = "none";
-              shortcuts = [
-                { type = "wifi"; }
-                { type = "bluetooth"; }
-                { type = "caffeine"; }
-                { type = "notification"; }
-                { type = "session"; }
-                { type = "dark_mode"; }
-              ];
-            };
-
-            desktop_widgets.enabled = false;
-            dock.enabled = false;
-
-            lockscreen = {
-              allow_empty_password = true;
-              blur_intensity = 0.99;
-            };
-
-            hooks = {
-              session_locked = "systemctl stop --user yubikey-touch-detector";
-              session_unlocked = "systemctl start --user yubikey-touch-detector";
-              theme_mode_changed = "swap-theme sync";
-              started = "swap-theme sync";
-            };
-
-            keybinds = {
-              cancel = [ "Escape" ];
-              down = [
-                "Ctrl+n"
-                "Ctrl+j"
-                "Down"
-              ];
-              up = [
-                "Ctrl+p"
-                "Ctrl+k"
-                "Up"
-              ];
-              confirm = [
-                "Ctrl+m"
-                "Return"
-              ];
-            };
-
-            location.auto_locate = true;
-
-            notification = {
-              background_opacity = 1.0;
-              position = "top_center";
-              show_app_name = false;
-            };
-
-            osd = {
-              position = "top_center";
-              kinds.media = false;
-            };
-
-            shell = {
-              avatar_path = "${config.me.home}/pictures/ghibli/kiki.jpg";
-              clipboard_auto_paste = "off";
-              clipboard_confirm_clear_history = false;
-              polkit_agent = true;
-              screen_time_enabled = true;
-              settings_show_advanced = true;
-              telemetry_enabled = true;
-              setup_wizard_enabled = false;
-
-              session.actions = [
-                {
-                  action = "lock";
-                  enabled = true;
-                  variant = "default";
-                }
-                {
-                  action = "suspend";
-                  enabled = true;
-                  variant = "default";
-                }
-                {
-                  action = "command";
-                  command = "loginctl terminate-user ${config.me.user}";
-                  enabled = true;
-                  glyph = "logout";
-                  label = "Log out";
-                  variant = "default";
-                }
-                {
-                  action = "shutdown";
-                  enabled = true;
-                  variant = "destructive";
-                }
-                {
-                  action = "reboot";
-                  enabled = true;
-                  variant = "default";
-                }
-                (
-                  let
-                    switch-to-windows = pkgs.writeShellApplication {
-                      name = "switch-to-windows";
-                      text = ''
-                        ENTRY=$(${lib.getExe pkgs.efibootmgr} | grep -i windows | grep -oP 'Boot\K[0-9A-F]+' | head -1)
-                        if [ -n "$ENTRY" ]; then
-                          sudo efibootmgr --bootnext "$ENTRY" && systemctl --no-wall reboot
-                        fi
-                      '';
-                    };
-                  in
-                  {
-                    action = "command";
-                    command = lib.getExe switch-to-windows;
-                    enabled = true;
-                    glyph = "brand-windows-filled";
-                    label = "Reboot to Windows";
-                    variant = "default";
-                  }
-                )
-                {
-                  action = "command";
-                  command = "systemctl --no-wall reboot --firmware-setup";
-                  enabled = true;
-                  glyph = "settings";
-                  label = "Reboot to UEFI";
-                  variant = "default";
-                }
-              ];
-              animation = {
-                enabled = true;
-                speed = 2.0;
-              };
-              launcher = {
-                categories = false;
-              };
-              panel = {
-                open_near_click_control_center = true;
-                session_placement = "floating";
-              };
-              shadow.alpha = 0.04;
-            };
-
-            templates = { };
-
-            nightlight.enabled = false;
-
-            theme = {
-              custom_palette = "nix";
-              source = "custom";
-              templates = {
-                enable_builtin_templates = false;
-                enable_community_templates = false;
-              };
-            };
-
-            widget = {
-              bluetooth.show_label = true;
-              sysmon.show_label = false;
-              brightness.show_label = false;
-              media.hide_when_no_media = true;
-              ram = {
-                show_label = false;
-                stat = "ram_pct";
-              };
-              tray = {
-                anchor = false;
-                capsule = false;
-                drawer = true;
-              };
-              volume.show_label = false;
-              workspaces = {
-                capsule = false;
-                display = "id";
-                empty_color = "outline";
-                focused_color = "on_surface";
-                hide_when_empty = true;
-                minimal = true;
-                occupied_color = "outline";
-                scale = 1.2;
-              };
-              mango-layout.type = "me/mango-layout:mango-layout";
-            };
-
-            plugins.enabled = [ "me/mango-layout" ];
-          };
-        };
-        "noctalia/palettes/nix.json" = {
-          generator = lib.strings.toJSON;
-          value = {
-            dark = mkScheme dark;
-            light = mkScheme light;
-          };
-        };
-        "noctalia/notification-rules.json" = {
-          generator = lib.strings.toJSON;
-          value.rules = [
+      options.me.desktop =
+        let
+          cfg = config.me.desktop;
+          mkNoctaliaLayout =
             {
-              action = "block";
-              pattern = "Youtube_Music";
+              main,
+              secondary ? null,
+            }:
+            let
+              label = "label";
+            in
+            # toml
+            ''
+              [notification]
+              monitors = [ "${main}" ]
+              ${
+                if secondary != null then
+                  # toml
+                  ''
+                    [bar.default.monitor.${secondary}]
+                    auto_hide = true
+                    reserve_space = false
+                  ''
+                else
+                  ""
+              }
+
+              [lockscreen_widgets]
+              enabled = true
+              schema_version = 2
+              widget_order = [  "lockscreen-login-box@${main}", "lockscreen-widget-${label}" ]
+
+                  [lockscreen_widgets.grid]
+                  cell_size = 16
+                  major_interval = 4
+                  visible = true
+
+                  [lockscreen_widgets.widget."lockscreen-login-box@${main}"]
+                  box_height = 0.0
+                  box_width = 0.0
+                  cx = 711.0
+                  cy = 765.0
+                  output = "${main}"
+                  rotation = 0.0
+                  type = "login_box"
+
+                    [lockscreen_widgets.widget."lockscreen-login-box@${main}".settings]
+                    show_login_button = false
+
+                  [lockscreen_widgets.widget.lockscreen-widget-${label}]
+                  box_height = 128.0
+                  box_width = 368.0
+                  cx = 711.0
+                  cy = 236.0
+                  output = "${main}"
+                  rotation = 0.0
+                  type = "label"
+
+                      [lockscreen_widgets.widget.lockscreen-widget-${label}.settings]
+                      background = false
+                      background_opacity = 1.0
+                      shadow = false
+                      title = "Locked"
+            '';
+        in
+        {
+          noctaliaLayouts = lib.mkOption {
+            type = lib.types.attrsOf lib.types.str;
+            readOnly = true;
+            default = lib.mapAttrs (
+              name: profile:
+              let
+                secondaries = builtins.filter (m: m != profile.primary) (builtins.attrNames profile.monitors);
+              in
+              mkNoctaliaLayout (
+                {
+                  main = profile.primary;
+                }
+                // lib.optionalAttrs (secondaries != [ ]) { secondary = builtins.head secondaries; }
+              )
+            ) cfg.profiles;
+          };
+        };
+
+      config = {
+        persistUser = {
+          directories = [
+            ".cache/noctalia"
+            ".config/noctalia"
+            {
+              directory = ".local/state/noctalia";
+              how = "_intermediate";
             }
-            # {
-            #   action = "hide";
-            #   pattern = "vesktop";
-            # }
+            ".local/state/noctalia/clipboard"
+          ];
+          files = [
+            {
+              file = ".local/state/noctalia/screen_time.json";
+              how = "symlink";
+            }
           ];
         };
-      };
 
-      sops.secrets.calendar_pw.owner = config.me.user;
-      sops.templates.calendar = {
-        owner = config.me.user;
-        path = config.me.home + "/.local/state/noctalia/state.toml";
-        content =
-          # toml
-          ''
-            [calendar_credentials]
-            default_password = "${config.sops.placeholder.calendar_pw}"
-          '';
-      };
+        nixpkgs.overlays = [
+          (final: prev: {
+            my = (prev.my or { }) // {
+              noctalia = inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default.overrideAttrs (old: {
+                patches = (old.patches or [ ]) ++ [
+                  ./truncate_ssid.patch
+                  ./glyph_dmenu_cli.patch
+                ];
+              });
+              lock = import ./_lock.nix final;
+            };
+          })
+        ];
 
-      hj.xdg.data.files."noctalia/plugins/mango-layout".source = ./mango_layout;
+        packages = with pkgs; [
+          my.noctalia
+          udisks
+          ddcutil
+        ];
 
-      systemd.user.services.noctalia = {
-        wantedBy = [ "mango-session.target" ];
-        partOf = [ "mango-session.target" ];
-        after = [ "kanshi.service" ];
-        requires = [ "kanshi.service" ];
-        enableDefaultPath = false;
+        hj.xdg.config.files = {
+          "noctalia/settings.toml" = {
+            generator = (pkgs.formats.toml { }).generate "noctalia-settings";
+            value = {
+              bar = {
+                default = {
+                  capsule = false;
+                  center = [ "workspaces" ];
+                  end = [
+                    "tray"
+                    "notifications"
+                    "clipboard"
+                    "brightness"
+                    "volume"
+                    "battery"
+                    "sysmon"
+                    "ram"
+                    "bluetooth"
+                    "network"
+                    "clock"
+                  ];
+                  margin_edge = 0;
+                  margin_ends = 0;
+                  margin_h = 0;
+                  margin_v = 0;
+                  radius = 0;
+                  reserve_space = true;
+                  shadow = true;
+                  start = [
+                    "mango-layout"
+                    "active_window"
+                    "media"
+                  ];
+                  widget_spacing = 10;
+                };
+              };
 
-        serviceConfig = {
-          ExecStart = lib.getExe pkgs.my.noctalia;
-          Restart = "always";
-          RestartSec = 3;
+              battery.warning_threshold = 20;
+              brightness.enable_ddcutil = true;
+              calendar = {
+                enabled = true;
+                account.default = {
+                  name = "Default";
+                  provider = "custom";
+                  server_url = url;
+                  type = "caldav";
+                  username = "admin";
+                };
+              };
+
+              config = { };
+
+              control_center = {
+                sidebar_section = "none";
+                shortcuts = [
+                  { type = "wifi"; }
+                  { type = "bluetooth"; }
+                  { type = "caffeine"; }
+                  { type = "notification"; }
+                  { type = "session"; }
+                  { type = "dark_mode"; }
+                ];
+              };
+
+              desktop_widgets.enabled = false;
+              dock.enabled = false;
+
+              lockscreen = {
+                allow_empty_password = true;
+                blur_intensity = 0.99;
+              };
+
+              hooks = {
+                session_locked = "systemctl stop --user yubikey-touch-detector";
+                session_unlocked = "systemctl start --user yubikey-touch-detector";
+                theme_mode_changed = "swap-theme sync";
+                started = "swap-theme sync";
+              };
+
+              keybinds = {
+                cancel = [ "Escape" ];
+                down = [
+                  "Ctrl+n"
+                  "Ctrl+j"
+                  "Down"
+                ];
+                up = [
+                  "Ctrl+p"
+                  "Ctrl+k"
+                  "Up"
+                ];
+                confirm = [
+                  "Ctrl+m"
+                  "Return"
+                ];
+              };
+
+              location.auto_locate = true;
+
+              notification = {
+                background_opacity = 1.0;
+                position = "top_center";
+                show_app_name = false;
+              };
+
+              osd = {
+                position = "top_center";
+                kinds.media = false;
+              };
+
+              shell = {
+                avatar_path = "${config.me.home}/pictures/ghibli/kiki.jpg";
+                clipboard_auto_paste = "off";
+                clipboard_confirm_clear_history = false;
+                polkit_agent = true;
+                screen_time_enabled = true;
+                settings_show_advanced = true;
+                telemetry_enabled = true;
+                setup_wizard_enabled = false;
+
+                session.actions = [
+                  {
+                    action = "lock";
+                    enabled = true;
+                    variant = "default";
+                  }
+                  {
+                    action = "suspend";
+                    enabled = true;
+                    variant = "default";
+                  }
+                  {
+                    action = "command";
+                    command = "loginctl terminate-user ${config.me.user}";
+                    enabled = true;
+                    glyph = "logout";
+                    label = "Log out";
+                    variant = "default";
+                  }
+                  {
+                    action = "shutdown";
+                    enabled = true;
+                    variant = "destructive";
+                  }
+                  {
+                    action = "reboot";
+                    enabled = true;
+                    variant = "default";
+                  }
+                  (
+                    let
+                      switch-to-windows = pkgs.writeShellApplication {
+                        name = "switch-to-windows";
+                        text = ''
+                          ENTRY=$(${lib.getExe pkgs.efibootmgr} | grep -i windows | grep -oP 'Boot\K[0-9A-F]+' | head -1)
+                          if [ -n "$ENTRY" ]; then
+                            sudo efibootmgr --bootnext "$ENTRY" && systemctl --no-wall reboot
+                          fi
+                        '';
+                      };
+                    in
+                    {
+                      action = "command";
+                      command = lib.getExe switch-to-windows;
+                      enabled = true;
+                      glyph = "brand-windows-filled";
+                      label = "Reboot to Windows";
+                      variant = "default";
+                    }
+                  )
+                  {
+                    action = "command";
+                    command = "systemctl --no-wall reboot --firmware-setup";
+                    enabled = true;
+                    glyph = "settings";
+                    label = "Reboot to UEFI";
+                    variant = "default";
+                  }
+                ];
+                animation = {
+                  enabled = true;
+                  speed = 2.0;
+                };
+                launcher = {
+                  categories = false;
+                };
+                panel = {
+                  open_near_click_control_center = true;
+                  session_placement = "floating";
+                };
+                shadow.alpha = 0.04;
+              };
+
+              templates = { };
+
+              nightlight.enabled = false;
+
+              theme = {
+                custom_palette = "nix";
+                source = "custom";
+                templates = {
+                  enable_builtin_templates = false;
+                  enable_community_templates = false;
+                };
+              };
+
+              widget = {
+                bluetooth.show_label = true;
+                sysmon.show_label = false;
+                brightness.show_label = false;
+                media.hide_when_no_media = true;
+                ram = {
+                  show_label = false;
+                  stat = "ram_pct";
+                };
+                tray = {
+                  anchor = false;
+                  capsule = false;
+                  drawer = true;
+                };
+                volume.show_label = false;
+                workspaces = {
+                  capsule = false;
+                  display = "id";
+                  empty_color = "outline";
+                  focused_color = "on_surface";
+                  hide_when_empty = true;
+                  minimal = true;
+                  occupied_color = "outline";
+                  scale = 1.2;
+                };
+                mango-layout.type = "me/mango-layout:mango-layout";
+              };
+
+              plugins.enabled = [ "me/mango-layout" ];
+            };
+          };
+          "noctalia/palettes/nix.json" = {
+            generator = lib.strings.toJSON;
+            value = {
+              dark = mkScheme dark;
+              light = mkScheme light;
+            };
+          };
+          "noctalia/notification-rules.json" = {
+            generator = lib.strings.toJSON;
+            value.rules = [
+              {
+                action = "block";
+                pattern = "Youtube_Music";
+              }
+              # {
+              #   action = "hide";
+              #   pattern = "vesktop";
+              # }
+            ];
+          };
         };
-      };
 
-      me.desktop = {
-        bindings = {
-          "Mod+x" = "noctalia msg notification-clear-active";
-          "Mod+i" = "noctalia msg bar-hide";
-          "Mod+d" = "noctalia msg panel-toggle launcher";
-          "Mod+c" = "noctalia msg panel-toggle clipboard";
-          "Mod+r" = "noctalia msg panel-toggle control-center notifications";
-          "Mod+Shift+m" = "noctalia msg panel-toggle control-center weather";
-          "Mod+m" = pkgs.writeShellScript "open-note" ''
-            # Try to open an existing note and create a new one otherwise
-            note=$(ls -t $HOME/{notes,courses}/*.{org,md,csv} 2>/dev/null \
-              | sed -E 's|.*/||; s/\.(org|md|csv)$//' \
-              | ${lib.getExe pkgs.my.noctalia} dmenu -p "Open or create a note..." -g notebook)
+        sops.secrets.calendar_pw.owner = config.me.user;
+        sops.templates.calendar = {
+          owner = config.me.user;
+          path = config.me.home + "/.local/state/noctalia/state.toml";
+          content =
+            # toml
+            ''
+              [calendar_credentials]
+              default_password = "${config.sops.placeholder.calendar_pw}"
+            '';
+        };
 
-            [[ -n "$note" ]] || exit 0
+        hj.xdg.data.files."noctalia/plugins/mango-layout".source = ./mango_layout;
 
-            for dir in notes courses; do
-              for ext in org md csv; do
-                file="$HOME/$dir/$note.$ext"
-                [[ ! -f "$file" ]] && continue
+        systemd.user.services.noctalia = {
+          wantedBy = [ "mango-session.target" ];
+          partOf = [ "mango-session.target" ];
+          after = [ "kanshi.service" ];
+          wants = [ "kanshi.service" ];
+          enableDefaultPath = false;
 
-                cd "$HOME/$dir"
-                exec $TERMINAL $EDITOR "$file"
+          serviceConfig = {
+            ExecStart = lib.getExe pkgs.my.noctalia;
+            Restart = "always";
+            RestartSec = 3;
+          };
+        };
+
+        me.desktop = {
+          bindings = {
+            "Mod+x" = "noctalia msg notification-clear-active";
+            "Mod+i" = "noctalia msg bar-hide";
+            "Mod+d" = "noctalia msg panel-toggle launcher";
+            "Mod+c" = "noctalia msg panel-toggle clipboard";
+            "Mod+r" = "noctalia msg panel-toggle control-center notifications";
+            "Mod+Shift+m" = "noctalia msg panel-toggle control-center weather";
+            "Mod+m" = pkgs.writeShellScript "open-note" ''
+              # Try to open an existing note and create a new one otherwise
+              note=$(ls -t $HOME/{notes,courses}/*.{org,md,csv} 2>/dev/null \
+                | sed -E 's|.*/||; s/\.(org|md|csv)$//' \
+                | ${lib.getExe pkgs.my.noctalia} dmenu -p "Open or create a note..." -g notebook)
+
+              [[ -n "$note" ]] || exit 0
+
+              for dir in notes courses; do
+                for ext in org md csv; do
+                  file="$HOME/$dir/$note.$ext"
+                  [[ ! -f "$file" ]] && continue
+
+                  cd "$HOME/$dir"
+                  exec $TERMINAL $EDITOR "$file"
+                done
               done
-            done
 
-            exec $TERMINAL $EDITOR "$HOME/notes/$note.org"
-          '';
-          "Mod+b" = lib.getExe (import ./_open-bookmark.nix pkgs);
-          "Mod+Shift+p" = "noctalia msg panel-toggle launcher \"/session \"";
+              exec $TERMINAL $EDITOR "$HOME/notes/$note.org"
+            '';
+            "Mod+b" = lib.getExe (import ./_open-bookmark.nix pkgs);
+            "Mod+Shift+p" = "noctalia msg panel-toggle launcher \"/session \"";
+          };
         };
       };
     };

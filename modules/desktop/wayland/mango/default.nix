@@ -7,9 +7,58 @@
       ...
     }:
     let
-      inherit (lib) getExe getExe';
+      inherit (lib) getExe';
+      cfg = config.me.desktop;
     in
     {
+      options.me.desktop = {
+        monitorScript = lib.mkOption {
+          type = lib.types.package;
+          readOnly = true;
+          default = pkgs.writeShellScriptBin "monitor-setup" ''
+            case "$1" in
+              ${lib.concatStringsSep "\n  " (
+                lib.mapAttrsToList (name: profile: ''
+                  ${name})
+                    ln -sf "$HOME/.config/mango/profiles/${name}.conf" "$HOME/.config/mango/monitors.conf"
+                    ln -sf "${
+                      pkgs.writeText "noctalia-layout-${name}" cfg.noctaliaLayouts.${name}
+                    }" "$HOME/.config/noctalia/layout.toml"
+                    ;;'') cfg.profiles
+              )}
+            esac
+            mmsg dispatch reload_config
+          '';
+        };
+
+        mangoProfiles = lib.mkOption {
+          type = lib.types.attrsOf lib.types.str;
+          readOnly = true;
+          default = lib.mapAttrs (
+            name: profile:
+            lib.concatStrings (
+              lib.flatten (
+                lib.mapAttrsToList (
+                  monitor: output:
+                  let
+                    inherit (output.position) x y;
+                  in
+                  [
+                    "monitorrule = name:${monitor},scale:${toString cfg.scaling},x:${toString x},y:${toString y}\n"
+                  ]
+                  ++ map (tag: ''
+                    bind = SUPER,${tag},viewcrossmon,${tag},${monitor}
+                    bind = SUPER+SHIFT,${tag},tagcrossmon,${tag},${monitor}
+                    bind = SUPER+CTRL,${tag},comboview,${tag},${monitor}
+                    tagrule = id:${tag},monitor_name:${monitor},no_hide:1,layout_name:monocle
+                  '') output.tags
+                ) profile.monitors
+              )
+            )
+          ) cfg.profiles;
+        };
+      };
+
       config = {
         nixpkgs.overlays = [
           (final: prev: {
@@ -69,6 +118,10 @@
             "org.freedesktop.impl.portal.Inhibit" = [ ];
           };
         };
+
+        hj.files = lib.mapAttrs' (
+          name: text: lib.nameValuePair ".config/mango/profiles/${name}.conf" { inherit text; }
+        ) cfg.mangoProfiles;
 
         tinted.files.".config/mango/config.conf" =
           let
@@ -231,6 +284,8 @@
                 "SUPER,btn_left,moveresize,curmove"
                 "SUPER,btn_right,moveresize,curresize"
               ];
+
+              source = [ "~/.config/mango/monitors.conf" ];
             };
           };
       };

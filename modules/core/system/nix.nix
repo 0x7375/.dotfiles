@@ -31,31 +31,35 @@
         setNixPath = false;
       };
 
-      nix = {
-        extraOptions = ''
-          warn-dirty = false
-          trusted-users = root ${config.me.user}
+      nix =
+        let
+          nixPath = pkgs.lib.mapAttrsToList (key: value: "${key}=${value}") inputs;
+        in
+        {
+          extraOptions = ''
+            warn-dirty = false
+            trusted-users = root ${config.me.user}
 
-          connect-timeout = 10
-          stalled-download-timeout = 10
-          # still build when a cache fails
-          fallback = true
-        '';
-        nixPath = pkgs.lib.mapAttrsToList (key: value: "${key}=${value}") inputs;
-        channel.enable = false;
-        settings = {
-          flake-registry = "";
-          experimental-features = [ "nix-command flakes" ];
-          use-xdg-base-directories = true;
-          substituters = [ "https://nix-community.cachix.org" ];
-          trusted-public-keys = [ "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs=" ];
-          auto-optimise-store = true;
-          keep-going = true;
-          log-lines = 20;
-        };
-        registry =
-          pkgs.lib.mapAttrs (_: flake: { inherit flake; }) (pkgs.lib.filterAttrs (_: v: v ? outputs) inputs)
-          // {
+            connect-timeout = 10
+            stalled-download-timeout = 10
+            # still build when a cache fails
+            fallback = true
+          '';
+
+          inherit nixPath;
+          channel.enable = false;
+          settings = {
+            flake-registry = "";
+            experimental-features = [ "nix-command flakes" ];
+            use-xdg-base-directories = true;
+            substituters = [ "https://nix-community.cachix.org" ];
+            trusted-public-keys = [ "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs=" ];
+            auto-optimise-store = true;
+            keep-going = true;
+            log-lines = 20;
+            nix-path = nixPath;
+          };
+          registry = {
             unstable.flake = inputs.nixpkgs-unstable;
             auto.flake = inputs.auto-update;
             n.flake = inputs.nixpkgs;
@@ -66,7 +70,7 @@
               to.url = "https://codeberg.org/0x7E/templates";
             };
           };
-      };
+        };
     };
 
   flake.modules.nixos.core =

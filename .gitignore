@@ -9,7 +9,8 @@
 !nvim
 !nvim/**
 !flake.nix
-!flake.lock
+!.tack
+!.tack/**
 
 !stylua.toml
 !stylix.toml

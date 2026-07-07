@@ -1,11 +1,10 @@
-{ inputs, ... }:
+{ self, inputs, ... }:
 
 {
   flake.modules.generic.core =
     {
       lib,
       pkgs,
-      inputs,
       ...
     }:
     {
@@ -36,7 +35,7 @@
           Defaults env_keep += "HOME XDG_CONFIG_HOME XDG_DATA_HOME XDG_CACHE_HOME"
         '';
 
-        environment.etc.nixcfg.source = pkgs.lib.cleanSource inputs.self;
+        environment.etc.nixcfg.source = pkgs.lib.cleanSource self;
 
         programs.nix-index-database.comma.enable = true;
         programs.nix-index.enable = true;

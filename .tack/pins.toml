@@ -1,0 +1,101 @@
+[shorturls]
+gh = "github:{path}"
+cb = "git+https://codeberg.org/{path}"
+codeberg = "git+ssh://git@codeberg.org/{path}"                # private repos
+nixpkgs = "https://channels.nixos.org/{path}/nixexprs.tar.xz"
+
+[all_follow]
+nixpkgs = ["nixpkgs", "nixpkgs-lib"]
+nixpkgs-nixcord = "nixpkgs"
+flake-parts = "flake-parts"
+
+# nixpkgs
+[inputs.nixpkgs]
+url = "gh:nixos/nixpkgs/nixos-26.05"
+
+[inputs.nixpkgs-darwin]
+url = "gh:nixos/nixpkgs/nixpkgs-26.05-darwin"
+
+[inputs.nixpkgs-unstable]
+url = "nixpkgs:nixos-unstable"
+
+[inputs.auto-update]
+url = "nixpkgs:nixos-unstable"
+
+
+[inputs.flake-parts]
+url = "gh:Ladas552/flake-parts"
+
+[inputs.mnw]
+url = "gh:Gerg-L/mnw"
+
+[inputs.nur]
+url = "gh:nix-community/NUR"
+follows = { nixpkgs = "auto-update" }
+
+# darwin
+[inputs.nix-darwin]
+url = "gh:nix-darwin/nix-darwin/nix-darwin-26.05"
+follows = { nixpkgs = "nixpkgs-darwin" }
+
+[inputs.nix-homebrew]
+url = "gh:zhaofengli/nix-homebrew"
+
+# [inputs.nixos-wsl]
+# url = "gh:nix-community/NixOS-WSL"
+
+
+# asahi
+[inputs.apple-silicon]
+url = "gh:nix-community/nixos-apple-silicon"
+exclude_follow = ["nixpkgs"]
+
+[inputs.asahi-firmware]
+url = "codeberg:0x7E/asahi-firmware"
+type = "fetch"
+
+[inputs.titdb]
+url = "gh:0x7375/titdb-nix"
+
+
+[inputs.hjem]
+url = "gh:feel-co/hjem"
+
+# secrets
+[inputs.sops-nix]
+url = "gh:Mic92/sops-nix"
+
+[inputs.secrets]
+url = "codeberg:0x7E/nix-secrets"
+type = "fetch"
+
+[inputs.token2]
+url = "codeberg:0x7E/token2-totp-cli"
+type = "fetch"
+
+
+[inputs.disko]
+url = "gh:nix-community/disko/latest"
+
+[inputs.preservation]
+url = "gh:nix-community/preservation"
+
+[inputs.noctalia]
+url = "gh:noctalia-dev/noctalia"
+follows = { nixpkgs = "nixpkgs-unstable" }
+
+[inputs.zen-browser]
+url = "gh:youwen5/zen-browser-flake"
+follows = { nixpkgs = "auto-update" }
+
+[inputs.nix-index-database]
+url = "gh:nix-community/nix-index-database"
+
+[inputs.nd]
+url = "cb:0x7E/nd"
+
+[inputs.karabiner-ts]
+url = "cb:0x7E/karabiner-ts"
+
+[inputs.nixcord]
+url = "gh:4evy/nixcord"

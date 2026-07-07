@@ -1,0 +1,190 @@
+{
+  "apple-silicon": {
+    "type": "github",
+    "owner": "nix-community",
+    "repo": "nixos-apple-silicon",
+    "rev": "16143c4b8989e86f830aea98e7fbbb258be177a1",
+    "narHash": "sha256-ukamDz+9oqtPEGKeUOxlSzUhxmZBv/u73LQ+RZThJbg=",
+    "lastModified": 1783459840
+  },
+  "asahi-firmware": {
+    "type": "git",
+    "url": "ssh://git@codeberg.org/0x7E/asahi-firmware",
+    "ref": "HEAD",
+    "rev": "255aa72f184e368671210e55f79d1e28f08c0df7",
+    "narHash": "sha256-91EF0ik5jyujMGoChgNgrBxhOIFI1ceOOV3V2Bdtsm8=",
+    "lastModified": 1781020630
+  },
+  "auto-update": {
+    "type": "tarball",
+    "url": "https://releases.nixos.org/nixos/unstable/nixos-26.11pre1027867.d407951447dc/nixexprs.tar.xz",
+    "rev": "d407951447dcd00442e97087bf374aad70c04cea",
+    "narHash": "sha256-FGQ8TfSm9WviNE/fQAWsKs+y4GkX8fU4EScewpw54Y8="
+  },
+  "disko": {
+    "type": "github",
+    "owner": "nix-community",
+    "repo": "disko",
+    "rev": "de5708739256238fb912c62f03988815db89ec9a",
+    "narHash": "sha256-CNzzBsRhq7gg4BMBuTDObiWDH/rFYHEuDRVOwCcwXw4=",
+    "lastModified": 1768920986
+  },
+  "flake-parts": {
+    "type": "github",
+    "owner": "Ladas552",
+    "repo": "flake-parts",
+    "rev": "00267073e997e0e408ea7c2f2ae78b76be362376",
+    "narHash": "sha256-pp2pYNIK4WquW/7GM9uZaj88mGoWJR4W4Tk/GNGGjOI=",
+    "lastModified": 1780260581
+  },
+  "hjem": {
+    "type": "github",
+    "owner": "feel-co",
+    "repo": "hjem",
+    "rev": "dd0ba9e22fb46581f843e6121de33ca7a4a80224",
+    "narHash": "sha256-so1hIImuLtTKTVUokJ/6C2D2b2D4znCx+/PAjMSAnpw=",
+    "lastModified": 1782267080
+  },
+  "karabiner-ts": {
+    "type": "git",
+    "url": "https://codeberg.org/0x7E/karabiner-ts",
+    "ref": "HEAD",
+    "rev": "5324c18639219a331409af5097ca630498278345",
+    "narHash": "sha256-wBlIuAUKFO1+C7ZCho0p2z1Dpc4szo9MSfbbAs6rCSQ=",
+    "lastModified": 1783358693
+  },
+  "mnw": {
+    "type": "github",
+    "owner": "Gerg-L",
+    "repo": "mnw",
+    "rev": "0871dbf63a53610c95db04439ed8ea4d6ec9c160",
+    "narHash": "sha256-VKKe8r4pwCGWZ3Yr9CPN129R4S3CKLSrlYqdYz3vKpM=",
+    "lastModified": 1780772958
+  },
+  "nd": {
+    "type": "git",
+    "url": "https://codeberg.org/0x7E/nd",
+    "ref": "HEAD",
+    "rev": "f25b14bb155586b40be2e6628f81ed9d4914dbe1",
+    "narHash": "sha256-h232rTuxFkmegfdDdCw50lFRI5ECWGjj3x/3gMiRxSc=",
+    "lastModified": 1782859137
+  },
+  "nix-darwin": {
+    "type": "github",
+    "owner": "nix-darwin",
+    "repo": "nix-darwin",
+    "rev": "adda04f0bf4819575b1978c2f8d78401b3c2be12",
+    "narHash": "sha256-xIbRSwDB1GBAUsWsQZUjudGfAGQt3BOpsWaO/ugVa4w=",
+    "lastModified": 1781772065
+  },
+  "nix-homebrew": {
+    "type": "github",
+    "owner": "zhaofengli",
+    "repo": "nix-homebrew",
+    "rev": "de7953a08ed4bb9245be043e468561c17b89130d",
+    "narHash": "sha256-ORqLAo/hoJdsZC7UPAuEHev6S0+XIqKEC7vjo5prz1k=",
+    "lastModified": 1781389246
+  },
+  "nix-index-database": {
+    "type": "github",
+    "owner": "nix-community",
+    "repo": "nix-index-database",
+    "rev": "96d6de10eb281b98f5cfcd1841394c03da5df77c",
+    "narHash": "sha256-RY8e+gR2/DhXsYDxGDL6Hhe9+POD9u4+llwxMBqMQDs=",
+    "lastModified": 1783414108
+  },
+  "nixcord": {
+    "type": "github",
+    "owner": "FlameFlag",
+    "repo": "nixcord",
+    "rev": "bd25941df7e494f1d31f28b4f6a8182362fec781",
+    "narHash": "sha256-ymGXQlPWLyq4iWiFUgqHB7j8hKv8a2/pm5K6BEsyEt4=",
+    "lastModified": 1783448630
+  },
+  "nixpkgs": {
+    "type": "github",
+    "owner": "nixos",
+    "repo": "nixpkgs",
+    "rev": "a50de1b7d8a586adc18d2395c19de7d6058e6030",
+    "narHash": "sha256-uslt2pqShTIXDdAHRHv2QkYLsVdY8Oqwz0EA48/RSM8=",
+    "lastModified": 1783148766
+  },
+  "nixpkgs-darwin": {
+    "type": "github",
+    "owner": "nixos",
+    "repo": "nixpkgs",
+    "rev": "846e84d25c3d00c71a4ff8ffedbf08572eb7aebb",
+    "narHash": "sha256-fKo9+KWNBiVrfG8HNx9JCMauF6o5YghH7PIQll+yryI=",
+    "lastModified": 1783284305
+  },
+  "nixpkgs-unstable": {
+    "type": "tarball",
+    "url": "https://releases.nixos.org/nixos/unstable/nixos-26.11pre1027867.d407951447dc/nixexprs.tar.xz",
+    "rev": "d407951447dcd00442e97087bf374aad70c04cea",
+    "narHash": "sha256-FGQ8TfSm9WviNE/fQAWsKs+y4GkX8fU4EScewpw54Y8="
+  },
+  "noctalia": {
+    "type": "github",
+    "owner": "noctalia-dev",
+    "repo": "noctalia",
+    "rev": "b57faefe739b69a07199763eb98e85102c402d0b",
+    "narHash": "sha256-htyNZPgi5ZfT8CpALQ7MpwU2odWNL/jifoQQ/S4WVQ4=",
+    "lastModified": 1783434244
+  },
+  "nur": {
+    "type": "github",
+    "owner": "nix-community",
+    "repo": "NUR",
+    "rev": "1c77074eac0d97610b0835d46b08b9464364ff47",
+    "narHash": "sha256-5WXZ+hUxTLWjn9oZcOHdJnXLzrCm93FVuANcgOn+eaA=",
+    "lastModified": 1783460085
+  },
+  "preservation": {
+    "type": "github",
+    "owner": "nix-community",
+    "repo": "preservation",
+    "rev": "93416f4614ad2dfed5b0dcf12f27e57d27a5ab11",
+    "narHash": "sha256-mMI9IanU+Xw+pVogD2oT0I2kTmvz2Un/Apc5+CwUpEY=",
+    "lastModified": 1757436102
+  },
+  "secrets": {
+    "type": "git",
+    "url": "ssh://git@codeberg.org/0x7E/nix-secrets",
+    "ref": "HEAD",
+    "rev": "154e960d84528b1ac9afa589dc87f509465d02e5",
+    "narHash": "sha256-SgaPEMwAKW5aWDlbVWiHAWLEtK/VFPgNFBoPQm0Oqp0=",
+    "lastModified": 1781477779
+  },
+  "sops-nix": {
+    "type": "github",
+    "owner": "Mic92",
+    "repo": "sops-nix",
+    "rev": "f1406619a3884cd5c47992a70b8b35c9c0fcb4c9",
+    "narHash": "sha256-aCWC8ngycU7OdJrU2+Je3qf+1a2ykuBvpPhZT/9tXMc=",
+    "lastModified": 1783174389
+  },
+  "titdb": {
+    "type": "github",
+    "owner": "0x7375",
+    "repo": "titdb-nix",
+    "rev": "a0bc4dc9a8c9570e7eb0e09be4ba4f2b54dfcf65",
+    "narHash": "sha256-w4eKSl9E4C44imeAhWez/vctFrbdv13BmaFxlMK5DoQ=",
+    "lastModified": 1782493730
+  },
+  "token2": {
+    "type": "git",
+    "url": "ssh://git@codeberg.org/0x7E/token2-totp-cli",
+    "ref": "HEAD",
+    "rev": "da509b5bc6f2162050414d193d736b66f4f3b85d",
+    "narHash": "sha256-GHKfaeXkCXiXSF6AjgbWc/e8+hf1UmSZMvMBQq+zABM=",
+    "lastModified": 1772240542
+  },
+  "zen-browser": {
+    "type": "github",
+    "owner": "youwen5",
+    "repo": "zen-browser-flake",
+    "rev": "36b24209358c82e0ea5404ba003ae8dc37334c86",
+    "narHash": "sha256-H6lM+h8+ZT25uWJwmYkER5yj5RJ9DP2++n5um/XH3J0=",
+    "lastModified": 1783063092
+  }
+}

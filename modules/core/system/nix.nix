@@ -1,7 +1,8 @@
+{ self, ... }:
+
 {
   flake.modules.generic.core =
     {
-      pkgs,
       config,
       inputs,
       lib,
@@ -21,7 +22,7 @@
             config.allowUnfreePredicate = config.nixpkgs.config.allowUnfreePredicate;
           };
 
-          my = prev.my or { } // inputs.self.packages.${final.stdenv.hostPlatform.system};
+          my = prev.my or { } // self.packages.${final.stdenv.hostPlatform.system};
         })
       ]
       ++ [ inputs.nur.overlays.default ];
@@ -33,7 +34,8 @@
 
       nix =
         let
-          nixPath = pkgs.lib.mapAttrsToList (key: value: "${key}=${value}") inputs;
+          flakes = lib.filterAttrs (_: input: lib.isType "flake" input) inputs;
+          nixPath = lib.mapAttrsToList (n: _: "${n}=flake:${n}") flakes;
         in
         {
           extraOptions = ''

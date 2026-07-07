@@ -1,96 +1,6 @@
 {
-  inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-26.05";
-    nixpkgs-darwin.url = "github:nixos/nixpkgs/nixpkgs-26.05-darwin";
-    nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
-
-    auto-update.url = "github:nixos/nixpkgs/nixos-unstable";
-
-    flake-parts.url = "github:hercules-ci/flake-parts";
-    mnw.url = "github:Gerg-L/mnw";
-
-    nur = {
-      url = "github:nix-community/NUR";
-      inputs.nixpkgs.follows = "auto-update";
-      inputs.flake-parts.follows = "flake-parts";
-    };
-
-    nix-darwin = {
-      url = "github:nix-darwin/nix-darwin/nix-darwin-26.05";
-      inputs.nixpkgs.follows = "nixpkgs-darwin";
-    };
-    nix-homebrew.url = "github:zhaofengli/nix-homebrew";
-    # nixos-wsl = {
-    #   url = "github:nix-community/NixOS-WSL";
-    #   inputs.nixpkgs.follows = "nixpkgs";
-    # };
-
-    apple-silicon.url = "github:nix-community/nixos-apple-silicon";
-    asahi-firmware = {
-      url = "git+ssh://git@codeberg.org/0x7E/asahi-firmware";
-      flake = false;
-    };
-    titdb = {
-      url = "github:0x7375/titdb-nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    hjem = {
-      url = "github:feel-co/hjem";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    sops-nix = {
-      url = "github:Mic92/sops-nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    secrets = {
-      url = "git+ssh://git@codeberg.org/0x7E/nix-secrets";
-      flake = false;
-    };
-    token2 = {
-      url = "git+ssh://git@codeberg.org/0x7E/token2-totp-cli";
-      flake = false;
-    };
-
-    disko = {
-      url = "github:nix-community/disko/latest";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    preservation.url = "github:nix-community/preservation";
-
-    noctalia = {
-      url = "github:noctalia-dev/noctalia";
-      inputs.nixpkgs.follows = "nixpkgs-unstable";
-    };
-
-    zen-browser = {
-      url = "github:youwen5/zen-browser-flake";
-      inputs.nixpkgs.follows = "auto-update";
-    };
-    nix-index-database = {
-      url = "github:nix-community/nix-index-database";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    nd = {
-      url = "git+https://codeberg.org/0x7E/nd";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    karabiner-ts = {
-      url = "git+https://codeberg.org/0x7E/karabiner-ts";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    nixcord = {
-      url = "github:FlameFlag/nixcord";
-      inputs.nixpkgs.follows = "nixpkgs";
-      inputs.nixpkgs-nixcord.follows = "nixpkgs";
-      inputs.flake-parts.follows = "flake-parts";
-    };
-  };
-
   outputs =
-    inputs:
+    { self, ... }@args:
     let
       import-tree =
         path:
@@ -99,8 +9,12 @@
           nixFiles = fileset.toList (fileset.fileFilter (f: f.hasExt "nix") path);
         in
         builtins.filter (p: !(hasInfix "/_" (toString p))) nixFiles;
+
+      inputs = (import ./.tack) {
+        overrides = args.tackOverrides or { };
+      };
     in
-    inputs.flake-parts.lib.mkFlake { inherit inputs; } {
+    inputs.flake-parts.lib.mkFlake { inherit inputs self; } {
       imports = [
         inputs.flake-parts.flakeModules.modules
       ]

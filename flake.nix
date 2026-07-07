@@ -87,11 +87,6 @@
       inputs.nixpkgs-nixcord.follows = "nixpkgs";
       inputs.flake-parts.follows = "flake-parts";
     };
-
-    git-hooks-nix = {
-      url = "github:cachix/git-hooks.nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
   };
 
   outputs =
@@ -110,8 +105,6 @@
         inputs.flake-parts.flakeModules.modules
       ]
       ++ (import-tree ./modules);
-
-      flake.lib.import-tree = import-tree;
 
       systems = [
         "x86_64-linux"

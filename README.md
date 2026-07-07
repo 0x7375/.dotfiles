@@ -1,12 +1,6 @@
 # NixOS configuration
 
-NixOS configuration for various machines that follows the dendritic pattern,
-uses [flake-parts](https://github.com/hercules-ci/flake-parts) for structuring
-the flake itself,
-[nix-wrappers-modules](https://github.com/BirdeeHub/nix-wrapper-modules) for
-wrapping packages, [hjem](https://github.com/feel-co/hjem) for user file
-management, [sops-nix](https://github.com/Mic92/sops-nix) for secrets and
-[disko](https://github.com/nix-community/disko) for disk partitioning.
+Over-engineered NixOS configuration for various machines.
 
 | Name       | Role    | Description                                                             |
 | :--------- | :------ | :---------------------------------------------------------------------- |
@@ -14,7 +8,8 @@ management, [sops-nix](https://github.com/Mic92/sops-nix) for secrets and
 | `wilson`   | Server  | Raspberry pi 4 2GB, previously used as a home server.                   |
 | `cray`     | Desktop | Main workstation, uses an Nvidia gpu.                                   |
 | `naitoh`   | Laptop  | Main laptop, thinkpad e14 gen4 AMD.                                     |
-| `mach`     | Laptop  | M1 Macbook, uses nix-darwin.                                            |
+| `mach`     | Laptop  | M1 Macbook using nix-darwin.                                            |
+| `woz`      | Laptop  | Same M1 Macbook, running asahi                                          | 
 | `julliard` | WSL     | Windows WSL config.                                                     |
 | `isoImg`   | ISO     | Custom NixOS iso.                                                       |
 
@@ -109,36 +104,6 @@ Flashing the iso
 sudo dd if=result/iso/nixos.iso of=/dev/disk bs=4M status=progress conv=sync
 ```
 
-## Manual installation (not used, for reference)
-
-### Partitioning
-
-```bash
-cfdisk /dev/disk
-cryptsetup luksFormat /dev/disk --label NIXLUKS
-cryptsetup open /dev/disk cryptlvm
-pvcreate /dev/mapper/cryptlvm
-vgcreate vg /dev/mapper/cryptlvm
-lvcreate -L 16G vg -n swap
-lvcreate -l 100%FREE vg -n root
-```
-
-### Formatting
-
-```bash
-mkswap /dev/disk -L NIXSWAP
-mkfs.fat -F 32 /dev/disk -n NIXBOOT
-mkfs.ext4 /dev/disk -L NIXROOT
-```
-
-### Mount
-
-```bash
-mount /dev/disk /mnt
-mount --mkdir /dev/disk /mnt/root
-swapon /dev/disk/by-label/NIXSWAP
-```
-
 ### Install
 
 Connect to wifi if needed, `nmtui`, and clone the repo
@@ -175,3 +140,4 @@ nixos-install --root /mnt --flake ~/.config/nixcfg#hostname
 - `sudo ./result/activate`
 - `sudo darwin-rebuild switch`
 - Privacy & Security -> Allow applications from `Anywhere`
+- Suffer

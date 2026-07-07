@@ -108,7 +108,6 @@
     inputs.flake-parts.lib.mkFlake { inherit inputs; } {
       imports = [
         inputs.flake-parts.flakeModules.modules
-        inputs.git-hooks-nix.flakeModule
       ]
       ++ (import-tree ./modules);
 
@@ -119,36 +118,5 @@
         "aarch64-linux"
         "aarch64-darwin"
       ];
-
-      perSystem =
-        {
-          config,
-          lib,
-          pkgs,
-          ...
-        }:
-        {
-          pre-commit.settings.hooks = {
-            stylua.enable = true;
-            nixfmt.enable = true;
-            statix = {
-              enable = true;
-              entry = "${lib.getExe pkgs.statix} fix";
-            };
-            deadnix = {
-              enable = true;
-              settings = {
-                edit = true;
-                noUnderscore = true;
-                noLambdaArg = true;
-                noLambdaPatternNames = true;
-              };
-            };
-          };
-
-          devShells.default = pkgs.mkShell {
-            shellHook = config.pre-commit.installationScript;
-          };
-        };
     };
 }

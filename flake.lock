@@ -223,11 +223,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1783280294,
-        "narHash": "sha256-zmyVIBuqhQKMdYWZY50mN890BLFSFcCmG2Oy7x7qXbw=",
+        "lastModified": 1783358693,
+        "narHash": "sha256-wBlIuAUKFO1+C7ZCho0p2z1Dpc4szo9MSfbbAs6rCSQ=",
         "ref": "refs/heads/main",
-        "rev": "21c753c32e9655f968411f170e6c02d9cea88f9d",
-        "revCount": 8,
+        "rev": "5324c18639219a331409af5097ca630498278345",
+        "revCount": 9,
         "type": "git",
         "url": "https://codeberg.org/0x7E/karabiner-ts"
       },

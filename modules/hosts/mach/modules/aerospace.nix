@@ -52,38 +52,8 @@
             mode.main.binding =
               let
                 super = "alt-ctrl";
-                fmenu = pkgs.writeShellScript "fmenu" ''
-                  #!/usr/bin/env bash
-
-                  TMP_IN=$(mktemp)
-                  TMP_OUT=$(mktemp)
-
-                  cat >"$TMP_IN"
-
-                      /Applications/Alacritty.app/Contents/MacOS/alacritty \
-                      -T "fmenu" \
-                      -o window.dimensions.columns=80 \
-                      -o window.dimensions.lines=15 \
-                      -o window.decorations=\"buttonless\" \
-                      -e sh -c "${lib.getExe pkgs.fzf} < \"$TMP_IN\" > \"$TMP_OUT\""
-
-                  cat "$TMP_OUT"
-                  rm "$TMP_IN" "$TMP_OUT"
-                '';
               in
               {
-                "${super}-m" = "exec-and-forget ${pkgs.writeShellScript "open-note" ''
-                  tmp=$(mktemp)
-                  ${lib.getExe pkgs.alacritty} -e zsh -c "ls ~/{notes,courses}/*.md | sed 's|.*/||; s/\.md$//' | ${fmenu} > $tmp"
-                  note=$(cat $tmp)
-                  rm -f $tmp
-                  if [ -n "$note" ]; then
-                    dir=notes
-                    [[ -f "$HOME/courses/$note.md" ]] && dir=courses
-                    open -na ${terminal} --args -e zsh -lc "nvim '$HOME/$dir/''${note}.md'"
-                  fi
-                ''}";
-
                 "${super}-shift-r" = [
                   "reload-config"
                   "mode main"
@@ -98,7 +68,6 @@
 
                 "${super}-t" =
                   "exec-and-forget open -na ${terminal} --args -e ${getExe pkgs.my.tmux-sessionizer} ~/";
-                "${super}-s" = "exec-and-forget open -na ${terminal} --args -e ${getExe pkgs.my.tmux-sshr}";
                 "${super}-e" = "exec-and-forget open -na ${terminal} --args -e ${getExe pkgs.lf}";
                 "${super}-shift-e" = "exec-and-forget open -na ${terminal} --args -e sudo ${getExe pkgs.lf}";
 
@@ -147,13 +116,6 @@
               };
 
             on-window-detected = [
-              {
-                "if" = {
-                  app-id = "org.alacritty";
-                  window-title-regex-substring = "dmenu";
-                };
-                run = "layout floating";
-              }
               {
                 "if".app-id = "app.zen-browser.zen";
                 run = "move-node-to-workspace 3";

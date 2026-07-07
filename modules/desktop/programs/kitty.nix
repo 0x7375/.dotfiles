@@ -2,8 +2,8 @@
   flake.modules.nixos.kitty =
     { pkgs, ... }:
     {
+      packages = [ pkgs.kitty ];
       xdg.terminal-exec.settings.default = [ "kitty.desktop" ];
-      environment.systemPackages = [ pkgs.kitty ];
 
       xdg.desktopEntries.kitty = {
         name = "kitty";
@@ -51,6 +51,8 @@
             enable_audio_bell no
             cursor_shape block
             cursor_blink_interval 0
+
+            macos_option_as_alt yes
 
             cursor none
             confirm_os_window_close 0

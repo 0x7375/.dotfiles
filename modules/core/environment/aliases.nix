@@ -43,7 +43,7 @@
         grep = "${getExe' pkgs.gnugrep "grep"} --color=always";
         ls = "${getExe' pkgs.coreutils "ls"} --color --group-directories-first -h";
         ll = "${getExe' pkgs.coreutils "ls"} -lha --color --group-directories-first";
-        lsblk = "${getExe' pkgs.util-linux "lsblk"} -o NAME,FSTYPE,SIZE,MOUNTPOINTS";
+        lsblk = "${getExe' pkgs.util-linux "lsblk"} -o NAME,FSTYPE,SIZE,MOUNTPOINT";
         tree = "${getExe pkgs.tree} -L 4";
         dif = "${getExe' pkgs.diffutils "diff"} --color";
         bc = "${getExe pkgs.bc} -l";

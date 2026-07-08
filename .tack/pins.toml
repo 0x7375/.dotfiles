@@ -7,7 +7,9 @@ nixpkgs = "https://channels.nixos.org/{path}/nixexprs.tar.xz"
 [all_follow]
 nixpkgs = ["nixpkgs", "nixpkgs-lib"]
 nixpkgs-nixcord = "nixpkgs"
+nix-darwin = "nix-darwin"
 flake-parts = "flake-parts"
+flake-compat = "flake-compat"
 
 # nixpkgs
 [inputs.nixpkgs]

@@ -29,6 +29,14 @@
     "narHash": "sha256-CNzzBsRhq7gg4BMBuTDObiWDH/rFYHEuDRVOwCcwXw4=",
     "lastModified": 1768920986
   },
+  "flake-compat": {
+    "type": "tarball",
+    "url": "https://api.flakehub.com/f/pinned/edolstra/flake-compat/1.1.0/01948eb7-9cba-704f-bbf3-3fa956735b52/source.tar.gz",
+    "rev": "ff81ac966bb2cae68946d5ed5fc4994f96d0ffec",
+    "narHash": "sha256-NeCCThCEP3eCl2l/+27kNNK7QrwZB1IJCrXfrbv5oqU=",
+    "lastModified": 1733328505,
+    "revCount": 69
+  },
   "flake-parts": {
     "type": "github",
     "owner": "Ladas552",
@@ -95,19 +103,19 @@
   },
   "nixcord": {
     "type": "github",
-    "owner": "FlameFlag",
+    "owner": "4evy",
     "repo": "nixcord",
-    "rev": "bd25941df7e494f1d31f28b4f6a8182362fec781",
-    "narHash": "sha256-ymGXQlPWLyq4iWiFUgqHB7j8hKv8a2/pm5K6BEsyEt4=",
-    "lastModified": 1783448630
+    "rev": "6c9dd68b37f50f6db57bea777e92fd67e0b2e0bb",
+    "narHash": "sha256-nuHRE13JbCT+xE76blZIfUEG8rV8eWld+gSVfjqCTZw=",
+    "lastModified": 1783482236
   },
   "nixpkgs": {
     "type": "github",
     "owner": "nixos",
     "repo": "nixpkgs",
-    "rev": "a50de1b7d8a586adc18d2395c19de7d6058e6030",
-    "narHash": "sha256-uslt2pqShTIXDdAHRHv2QkYLsVdY8Oqwz0EA48/RSM8=",
-    "lastModified": 1783148766
+    "rev": "0ad6f47ea4fe188f4bc8f0380f93ae8523337c6c",
+    "narHash": "sha256-0xIy4dVLqq47rA+mRy0hXDfjhQd4E5PoIns/RmB7nR4=",
+    "lastModified": 1783389287
   },
   "nixpkgs-darwin": {
     "type": "github",
@@ -127,17 +135,17 @@
     "type": "github",
     "owner": "noctalia-dev",
     "repo": "noctalia",
-    "rev": "b57faefe739b69a07199763eb98e85102c402d0b",
-    "narHash": "sha256-htyNZPgi5ZfT8CpALQ7MpwU2odWNL/jifoQQ/S4WVQ4=",
-    "lastModified": 1783434244
+    "rev": "b9b4bc3408a906f392a8d277d172ef440debc5cc",
+    "narHash": "sha256-+Qg4wlqjEf4CRxkLtQ4tvsk5U2CAbWDZfCdXuyLBoo8=",
+    "lastModified": 1783495226
   },
   "nur": {
     "type": "github",
     "owner": "nix-community",
     "repo": "NUR",
-    "rev": "1c77074eac0d97610b0835d46b08b9464364ff47",
-    "narHash": "sha256-5WXZ+hUxTLWjn9oZcOHdJnXLzrCm93FVuANcgOn+eaA=",
-    "lastModified": 1783460085
+    "rev": "d8e63f1083b5c13751fc490bd4cd73d35ce4acfd",
+    "narHash": "sha256-0SVPAncylaM8hqNL+te/SXZ06cxb1xwHvARjP7hJYIE=",
+    "lastModified": 1783501032
   },
   "preservation": {
     "type": "github",

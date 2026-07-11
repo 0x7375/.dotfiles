@@ -6,18 +6,10 @@
       ...
     }:
     {
-      systemd.user.timers.battery-check = {
-        wantedBy = [ "timers.target" ];
-        timerConfig = {
-          OnBootSec = "1m";
-          OnUnitActiveSec = "1m";
-        };
-      };
-
       systemd.user.services.battery-check = {
+        wantedBy = [ "default.target" ];
         path = with pkgs; [
-          gnugrep
-          acpi
+          config.services.upower.package
           libnotify
           systemd
           my.notify
@@ -32,33 +24,50 @@
             critical_level=${critical_level}
             full_level=90
 
-            critical_file=/tmp/batterycritical
-            full_file=/tmp/batteryfull
+            full_notified=false
+            critical_notified=false
+            action_pid=""
 
-            is_discharging() { acpi -b | grep -q "Discharging"; }
+            upower --monitor-detail | while read -r key value; do
+              case "$key" in
+                "state:") state="$value" ;;
+                "percentage:") 
+                  percentage="''${value%\%}"
+                  percentage="''${percentage%%.*}"
+                  ;;
+                *) continue ;;
+              esac
 
-            battery_level=$(acpi -b | grep -E "remaining|charged|zero" | grep -P -o '[0-9]+(?=%)' || echo 0)
+              [[ -z "$state" || -z "$percentage" ]] && continue
 
-            is_discharging && rm -f $full_file
+              if [[ "$state" == "discharging" ]]; then
+                full_notified=false
 
-            if [[ $battery_level -ge $full_level && ! -f $full_file ]] && ! is_discharging; then
-                notify "Battery Charged" "Battery is fully charged." -i "battery-4"
-                touch $full_file
-            fi
-
-            if [[ $battery_level -le $critical_level ]] && is_discharging; then
-              notify "Very low battery" "System will ${action} in 120 seconds!" -i battery -u critical -t 120000
-
-              sleep 120
-
-              if is_discharging; then
-                systemctl ${action}
+                if [[ "$percentage" -le "$critical_level" ]] && ! $critical_notified; then
+                  critical_notified=true
+                  notify "Very low battery" "System will ${action} in 120 seconds!" -i battery -u critical -t 120000
+                  
+                  (sleep 120 && systemctl ${action}) &
+                  action_pid=$!
+                fi
               else
-                rm $critical_file
+                $critical_notified && {
+                  critical_notified=false
+                  kill "$action_pid" 2>/dev/null || true
+                }
+
+                if [[ "$percentage" -ge "$full_level" ]] && ! $full_notified; then
+                  full_notified=true
+                  notify "Battery Charged" "Battery is fully charged." -i "battery-4"
+                fi
               fi
-            fi
+            done
           '';
-        serviceConfig.Type = "oneshot";
+        serviceConfig = {
+          Type = "simple";
+          Restart = "always";
+          RestartSec = 10;
+        };
       };
     };
 }

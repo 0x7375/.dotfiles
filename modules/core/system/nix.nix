@@ -65,6 +65,7 @@
             unstable.flake = inputs.nixpkgs-unstable;
             auto.flake = inputs.auto-update;
             n.flake = inputs.nixpkgs;
+            nixpkgs.flake = inputs.nixpkgs;
             t = {
               from.type = "indirect";
               from.id = "tmpl";

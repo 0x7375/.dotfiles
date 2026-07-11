@@ -21,20 +21,28 @@
               ./tmux_bigger_input_buffer.patch
             ];
           });
-          my = (prev.my or { }) // {
-            tmux-sessionizer = import ./_tmux-sessionizer.nix pkgs;
-            tmux-sshr = import ./_tmux-sshr.nix pkgs;
-          };
+          my =
+            (prev.my or { })
+            // {
+              tmux-sessionizer = import ./_tmux-sessionizer.nix pkgs;
+            }
+            // lib.optionalAttrs (options ? me.desktop) {
+              tmux-sshr = import ./_tmux-sshr.nix pkgs;
+            };
         })
       ];
 
-      packages = with pkgs; [
-        my.tmux-sessionizer
-        my.tmux-sshr
-        less
-        fzf
-        coreutils
-      ];
+      packages =
+        with pkgs;
+        [
+          my.tmux-sessionizer
+          less
+          fzf
+          coreutils
+        ]
+        ++ (lib.optionals (options ? me.desktop) [
+          my.tmux-sshr
+        ]);
 
       programs.tmux = {
         enable = true;

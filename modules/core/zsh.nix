@@ -361,17 +361,19 @@
         '';
     };
 
+  flake.modules.nixos.core = {
+    persistUser.directories = [
+      ".cache/zsh"
+      ".local/state/zsh"
+    ];
+  };
+
   flake.modules.nixos.desktop =
     { pkgs, lib, ... }:
     let
       inherit (lib) getExe getExe';
     in
     {
-      persistUser.directories = [
-        ".cache/zsh"
-        ".local/state/zsh"
-      ];
-
       hj.xdg.config.files."zsh/longcmd-notify.zsh".text =
         let
           activeWindow = lib.optionalString pkgs.stdenv.isLinux "${getExe pkgs.lswt} -j | jq '.toplevels[] | select(.activated == true).title'";

@@ -185,12 +185,6 @@ in
       ...
     }:
     {
-      persistUser.directories = [
-        ".cache/nvim"
-        ".local/share/nvim"
-        ".local/state/nvim"
-      ];
-
       packages = [
         (mkNeovim {
           inherit pkgs;
@@ -200,6 +194,12 @@ in
     };
 
   flake.modules.nixos.core = {
+    persistUser.directories = [
+      ".cache/nvim"
+      ".local/share/nvim"
+      ".local/state/nvim"
+    ];
+
     xdg.mimeApps.defaultApplications = self.lib.mapMimeEntries [
       "text/plain"
       "text/markdown"

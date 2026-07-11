@@ -5,6 +5,7 @@
     {
       config,
       inputs,
+      pkgs,
       lib,
       ...
     }:
@@ -31,6 +32,8 @@
         setFlakeRegistry = false;
         setNixPath = false;
       };
+
+      packages = [ pkgs.unstable.tack ];
 
       nix =
         let

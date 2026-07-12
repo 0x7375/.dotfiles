@@ -5,6 +5,7 @@ end
 -- lsp
 require("lspconfig")
 
+-- https://github.com/neovim/nvim-lspconfig/blob/master/doc/configs.md
 vim.lsp.enable({
   "lua_ls",
   "nixd",
@@ -31,6 +32,7 @@ vim.lsp.enable({
   "sourcekit",
   "mpls",
   "org",
+  "rust_analyzer",
 })
 
 -- toggle virtual text

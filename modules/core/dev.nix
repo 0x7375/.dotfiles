@@ -23,7 +23,6 @@
         # haskell
         # ghc
 
-        # php
         php
         # nodePackages.intelephense
 
@@ -35,6 +34,10 @@
         gcc
         bear
         gdb
+
+        rustc
+        cargo
+        clippy
 
         python3
         taplo

@@ -105,9 +105,11 @@ let
             gnumake
             cargo
             rustc
+            clippy
 
             # LSPs
             lua-language-server
+            rust-analyzer
             nixd
             typescript-language-server
             jdt-language-server
@@ -129,6 +131,7 @@ let
             shfmt
             phpPackages.php-codesniffer
             libxml2
+            rustfmt
 
             # Linters
             shellcheck

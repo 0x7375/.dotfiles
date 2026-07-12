@@ -30,6 +30,16 @@
         {
           image = name + ":" + version;
 
+          environment = {
+            USE_HEADLESS = "false";
+            USE_XVFB = "true";
+          };
+
+          extraOptions = [
+            "--shm-size=1g"
+            # "--pids-limit=-1"
+          ];
+
           imageFile = pkgs.dockerTools.pullImage {
             imageName = name;
             imageDigest = "sha256:01a46a2865d9a6db5eb8ead04ec0dd33b8fbe233e8565ae70b50d4cc0af4cfb0";

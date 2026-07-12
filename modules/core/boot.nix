@@ -109,6 +109,7 @@
           boot.initrd.luks.devices.crypted = {
             allowDiscards = true;
             crypttabExtraOpts = [
+              "tpm2-device=auto"
               "fido2-device=auto"
               "token-timeout=0"
             ];

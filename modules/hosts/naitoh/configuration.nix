@@ -1,8 +1,16 @@
 {
   flake.modules.nixos.naitoh =
-    { config, ... }:
     {
-      services.auto-cpufreq.enable = true;
+      pkgs,
+      lib,
+      config,
+      ...
+    }:
+    {
+      # conflicts with kde
+      # services.auto-cpufreq.enable = true;
+
+      hardware.graphics.enable = true;
 
       systemd.services.systemd-suspend.serviceConfig.ExecStart = [
         ""
@@ -13,16 +21,52 @@
         HibernateDelaySec = "30m";
       };
 
-      # systemd.services.disable-lid-wakeup = {
-      #   description = "Disable lid switch as wake source for suspend/hibernate";
-      #   wantedBy = [ "multi-user.target" ];
-      #   after = [ "multi-user.target" ];
-      #   serviceConfig = {
-      #     Type = "oneshot";
-      #     ExecStart = "${getExe pkgs.bash} -c 'echo LID > /proc/acpi/wakeup'";
-      #     RemainAfterExit = true;
+      boot.kernelParams = [ "consoleblank=60" ];
+
+      users.users.${config.me.user}.openssh.authorizedKeys.keys = config.me.hosts.mach.sshPublicKeys;
+
+      security.pam.services = lib.genAttrs [ "sudo" "su" "polkit-1" "login" ] (_: {
+        unixAuth = lib.mkForce true;
+      });
+
+      services.journald.extraConfig = ''
+        SystemMaxFileSize=40M
+        SystemMaxUse=200M
+      '';
+    
+      # nixpkgs.overlays = [
+      #   (final: prev: {
+      #     kdePackages = prev.unstable.kdePackages;
+      #   })
+      # ];
+
+      # unfree-packages = [ "mdk-sdk" ];
+
+      # services.desktopManager.plasma6.enable = true;
+      # packages = with pkgs; [
+      #   kdePackages.plasma-bigscreen
+      #   jellyfin-desktop
+      #   fladder
+      # ];
+      # programs.kdeconnect.enable = true;
+
+      # services.getty.autologinUser = null;
+
+      # services.greetd = {
+      #   enable = true;
+      #   settings = {
+      #     initial_session = {
+      #       command = "plasma-bigscreen-wayland";
+      #       inherit (config.me) user;
+      #     };
+      #     default_session = {
+      #       command = "plasma-bigscreen-wayland";
+      #       inherit (config.me) user;
+      #     };
       #   };
       # };
+
+      services.logind.settings.Login.HandleLidSwitch = "ignore";
 
       # do not change
       # For more information, see `man configuration.nix` or https://nixos.org/manual/nixos/stable/options#opt-system.stateVersion .

@@ -97,11 +97,11 @@ in
           btrfs
           syncthingClient
           vpnPeer
-          desktop
-          wayland
-          dev
-          laptop
-          kitty
+          # desktop
+          # wayland
+          # dev
+          # laptop
+          # kitty
           preservation
         ]
       );

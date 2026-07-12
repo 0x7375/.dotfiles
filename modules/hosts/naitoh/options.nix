@@ -6,10 +6,10 @@
         encryption.enable = true;
         secureBoot.enable = true;
       };
-      desktop = {
-        scaling = 1.2;
-        barFontSize = 11;
-      };
+      # desktop = {
+      #   scaling = 1.2;
+      #   barFontSize = 11;
+      # };
     };
   };
 }

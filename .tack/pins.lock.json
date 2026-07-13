@@ -3,17 +3,17 @@
     "type": "github",
     "owner": "nix-community",
     "repo": "nixos-apple-silicon",
-    "rev": "16143c4b8989e86f830aea98e7fbbb258be177a1",
-    "narHash": "sha256-ukamDz+9oqtPEGKeUOxlSzUhxmZBv/u73LQ+RZThJbg=",
-    "lastModified": 1783459840
+    "rev": "9e46a0edd8a6d96538d146a4bb4477e7fae8b1a0",
+    "narHash": "sha256-DjIkyK48jWUxYCCoTDS9L5PgGg6/RFRSRXW2dSFpJg8=",
+    "lastModified": 1783669315
   },
   "asahi-firmware": {
     "type": "git",
     "url": "ssh://git@codeberg.org/0x7E/asahi-firmware",
     "ref": "HEAD",
-    "rev": "255aa72f184e368671210e55f79d1e28f08c0df7",
-    "narHash": "sha256-91EF0ik5jyujMGoChgNgrBxhOIFI1ceOOV3V2Bdtsm8=",
-    "lastModified": 1781020630
+    "rev": "2b13653c7e0351331c8e22675b50006f075d94c3",
+    "narHash": "sha256-Uf8DiaJCn1YYAyaN4caLp+N38w8hTk2w3+08929/CW4=",
+    "lastModified": 1783946559
   },
   "auto-update": {
     "type": "tarball",

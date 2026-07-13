@@ -38,19 +38,21 @@
       # boot.kernelPackages = lib.mkForce (pkgs.linuxPackagesFor fairy-dust);
       # boot.initrd.kernelModules = [ "typec_displayport" ];
 
-      # force it to use the apple-silicon nixpkgs input otherwise cache doesn't work
-      hardware.asahi.pkgs = lib.mkForce (
-        import inputs.apple-silicon.inputs.nixpkgs {
-          system = "aarch64-linux";
-          overlays = [ inputs.apple-silicon.overlays.default ];
-        }
-      );
+      hardware.asahi = {
+        enable = true;
+        peripheralFirmwareDirectory = inputs.asahi-firmware;
+        # force it to use the apple-silicon nixpkgs input otherwise cache doesn't work
+        pkgs = lib.mkForce (
+          import inputs.apple-silicon.inputs.nixpkgs {
+            system = "aarch64-linux";
+            overlays = [ inputs.apple-silicon.overlays.default ];
+          }
+        );
+      };
 
       boot.initrd.kernelModules = [ ];
       boot.kernelModules = [ ];
       boot.extraModulePackages = [ ];
-
-      hardware.asahi.peripheralFirmwareDirectory = inputs.asahi-firmware;
 
       nixpkgs.hostPlatform = lib.mkDefault "aarch64-linux";
     };

@@ -52,7 +52,7 @@
 
         py = "python";
 
-        temp = "cd $(mktemp -d)";
+        temp = "temp=\"mktemp -d\"; cd $temp";
         ".." = "cd ..";
         "..." = "cd ../..";
         "...." = "cd ../../..";
@@ -83,7 +83,13 @@
         "cherry-pick"
         "reflog"
         "resign"
-      ] (name: "${git} ${name}"));
+      ] (name: "${git} ${name}"))
+
+      // (lib.genAttrs [
+        "run"
+        "check"
+        "clippy"
+      ] (name: "${getExe pkgs.cargo} ${name}"));
 
       environment.interactiveShellInit =
         let

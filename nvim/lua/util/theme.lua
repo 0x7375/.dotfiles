@@ -9,7 +9,7 @@ M.apply = function(colors)
   vim.g.colors_name = "nix"
 
   local highlights = {
-    Normal = { fg = colors.fg1 },
+    Normal = { fg = colors.fg1, bg = colors.bg0 },
     NormalFloat = { link = "Normal" },
     NormalNC = { link = "Normal" },
     Folded = { fg = colors.fg4 },

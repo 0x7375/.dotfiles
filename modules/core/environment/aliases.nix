@@ -24,6 +24,8 @@
         nr = "nix run";
         nl = "nix repl";
 
+        nds = "nd switch";
+
         v = "$EDITOR";
 
         extract = "${getExe' pkgs.atool "aunpack"}";

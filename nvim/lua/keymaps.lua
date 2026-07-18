@@ -174,6 +174,10 @@ local change_width = function(d)
   end
 end
 
+-- never using those
+map("n", "<c-w>-", "<nop>")
+map("n", "<c-w>+", "<nop>")
+
 map("n", "<M-h>", function() change_width("left") end, { desc = "Resize window left" })
 map("n", "<M-l>", function() change_width("right") end, { desc = "Resize window right" })
 map("n", "<M-k>", function() change_width("up") end, { desc = "Resize window up" })

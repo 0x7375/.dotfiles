@@ -75,6 +75,15 @@
               to.type = "git";
               to.url = "https://codeberg.org/0x7E/templates";
             };
+            nixcfg = {
+              from.type = "indirect";
+              from.id = "nixcfg";
+              to = {
+                type = "git";
+                url = "file://${config.me.flakeDir}";
+                submodules = true;
+              };
+            };
           };
         };
     };

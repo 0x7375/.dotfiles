@@ -12,7 +12,6 @@ pkgs.writeShellApplication {
   text = ''
     dirs=(
       ".config"
-      ".config/nixcfg"
       "uni"
       "perso"
       "repos"

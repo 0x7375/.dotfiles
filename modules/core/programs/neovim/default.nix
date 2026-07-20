@@ -152,6 +152,7 @@ in
   flake.modules.generic.core =
     {
       pkgs,
+      config,
       ...
     }:
     {
@@ -169,6 +170,8 @@ in
           unfree = true;
         })
       ];
+
+      hj.xdg.config.files."nvim".source = "${config.me.flakeDir}/nvim";
     };
 
   flake.modules.darwin.desktop =

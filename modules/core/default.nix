@@ -31,6 +31,13 @@
       };
 
       config = {
+        assertions = [
+          {
+            assertion = (self.submodules or true) == true;
+            message = "Unable to build without submodules. Append '?submodules=1#' to the URI.";
+          }
+        ];
+
         security.sudo.extraConfig = ''
           Defaults env_keep += "HOME XDG_CONFIG_HOME XDG_DATA_HOME XDG_CACHE_HOME"
         '';

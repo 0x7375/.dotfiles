@@ -7,7 +7,40 @@
         jq
         # karabiner
         nodejs_24
+
+        bacon
       ];
+
+      hj.xdg.config.files."bacon/prefs.toml".text = # toml
+        ''
+          help_line = false
+          hide_scrollbar = true
+          [keybindings]
+          g = "scroll-to-top"
+          shift-g = "scroll-to-bottom"
+          k = "scroll-lines(-1)"
+          j = "scroll-lines(1)"
+          ctrl-u = "scroll-page(-1)"
+          ctrl-d = "scroll-page(1)"
+
+          [skin]
+          status_fg = 0
+          status_bg = 7
+
+          project_name_badge_fg = 0
+          project_name_badge_bg = 7
+
+          job_label_badge_fg = 0
+          job_label_badge_bg = 6
+
+          computing_fg = 0
+          computing_bg = 6
+
+          status_key_fg = 0
+          command_error_badge_fg = 0
+          errors_badge_fg = 0
+          warnings_badge_fg = 0
+        '';
     };
 
   flake.modules.nixos.dev =

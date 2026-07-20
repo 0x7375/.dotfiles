@@ -15,6 +15,7 @@
     let
       inherit (lib) getExe getExe';
       git = "${getExe' pkgs.git "git"}";
+      cargo = "${getExe pkgs.cargo}";
     in
     {
       aliases = {
@@ -24,7 +25,7 @@
         nr = "nix run";
         nl = "nix repl";
 
-        nds = "nd switch";
+        sw = "nd switch";
 
         v = "$EDITOR";
 
@@ -61,6 +62,8 @@
 
         sys = "systemctl";
         jrl = "journalctl";
+
+        doc = "${cargo} doc --no-deps";
       }
       // (lib.genAttrs [
         "diff"
@@ -91,7 +94,7 @@
         "run"
         "check"
         "clippy"
-      ] (name: "${getExe pkgs.cargo} ${name}"));
+      ] (name: "${cargo} ${name}"));
 
       environment.interactiveShellInit =
         let

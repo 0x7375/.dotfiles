@@ -1,0 +1,3 @@
+[submodule "nvim"]
+	path = nvim
+	url = codeberg:0x7E/miv

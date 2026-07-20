@@ -6,8 +6,6 @@
 
 !modules
 !modules/**
-!nvim
-!nvim/**
 !flake.nix
 !.tack
 !.tack/**

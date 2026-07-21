@@ -49,6 +49,9 @@
           [credential]
             helper = "store"
 
+          [submodule]
+            recurse = true
+
           [gpg]
             format = "ssh"
 

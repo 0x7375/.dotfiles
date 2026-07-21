@@ -192,6 +192,16 @@
             }
           }
 
+          bump-nvim() {
+            ${
+              # bash
+              cdDotfiles ''
+                ${git} add nvim
+                ${git} commit -m "chore: update nvim" -- nvim
+              ''
+            }
+          }
+
           vpn() {
             if [[ $# -eq 0 ]]; then
               echo "Usage: vpn <start|stop|restart|show|list> [interface(s)]"

@@ -2,6 +2,7 @@
   flake.modules.nixos.desktop =
     {
       config,
+      lib,
       ...
     }:
     {
@@ -16,6 +17,11 @@
       virtualisation.spiceUSBRedirection.enable = true;
 
       virtualisation.vmVariant = {
+        me.boot = {
+          encryption.enable = lib.mkForce false;
+          debug.enable = lib.mkForce true;
+        };
+
         virtualisation = {
           memorySize = 8192;
           cores = 8;

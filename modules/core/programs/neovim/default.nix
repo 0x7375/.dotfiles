@@ -36,7 +36,7 @@ let
         };
 
         start =
-          with pkgs.vimPlugins;
+          with pkgs.unstable.vimPlugins;
           [
             # ui
             cloak-nvim
@@ -72,7 +72,8 @@ let
               };
             }
             vim-fugitive
-            codediff-nvim
+            diffs-nvim
+            diffview-plus-nvim
             grug-far-nvim
             orgmode
 

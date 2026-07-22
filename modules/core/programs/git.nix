@@ -31,7 +31,12 @@
       allSigningKeys = hosts.yubikey.sshPublicKeys ++ hosts.mach.sshPublicKeys;
     in
     {
-      packages = [ pkgs.git ];
+      packages = with pkgs; [
+        git
+        difftastic
+      ];
+
+      vars.DFT_COLOR = "always";
 
       hj.xdg.config.files."git/ignore".text = ''
         .DS_Store
@@ -48,6 +53,9 @@
 
           [credential]
             helper = "store"
+
+          [diff]
+            external = "difft"
 
           [submodule]
             recurse = true

@@ -111,13 +111,11 @@
           # setup a socket that will be used to open files remotely from tmux
           v() {
             if [ -n "$TMUX" ]; then
-              local session
-              session=$(tmux display-message -p '#S' 2>/dev/null)
-              if [ -n "$session" ]; then
-                command nvim --listen "/tmp/nvim-$session.sock" "$@"
-                return
-              fi
+              local session=$(tmux display-message -p '#S' 2>/dev/null)
+              [ -n "$session" ] && command nvim --listen "/tmp/nvim-$session.sock" "$@" 2> /dev/null || command nvim "$@"
+              return
             fi
+
             command nvim "$@"
           }
 

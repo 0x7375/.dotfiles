@@ -27,8 +27,6 @@
 
         sw = "nd switch";
 
-        v = "$EDITOR";
-
         extract = "${getExe' pkgs.atool "aunpack"}";
         compress = "${getExe' pkgs.atool "apack"}";
 
@@ -110,6 +108,19 @@
         in
         # bash
         ''
+          # setup a socket that will be used to open files remotely from tmux
+          v() {
+            if [ -n "$TMUX" ]; then
+              local session
+              session=$(tmux display-message -p '#S' 2>/dev/null)
+              if [ -n "$session" ]; then
+                command nvim --listen "/tmp/nvim-$session.sock" "$@"
+                return
+              fi
+            fi
+            command nvim "$@"
+          }
+
           fixpdf() {
               ${getExe' pkgs.poppler-utils "pdftocairo"} -pdf "$1" "''${1%.pdf}-fixed.pdf"
           }

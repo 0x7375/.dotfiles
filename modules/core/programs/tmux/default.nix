@@ -11,6 +11,7 @@
       inherit (lib) getExe;
       plugins = with pkgs.tmuxPlugins; [
         fzf-tmux-url
+        fingers
       ];
     in
     {
@@ -25,6 +26,7 @@
             (prev.my or { })
             // {
               tmux-sessionizer = import ./_tmux-sessionizer.nix pkgs;
+              tmux-jump = import ./_tmux-jump.nix pkgs;
             }
             // lib.optionalAttrs (options ? me.desktop) {
               tmux-sshr = import ./_tmux-sshr.nix pkgs;
@@ -52,6 +54,11 @@
             set -g @plugin 'wfxr/tmux-fzf-url'
             set -g @fzf-url-history-limit '2000'
             set -g @fzf-url-fzf-options '-w 60% -h 50% --multi -0 --no-preview --border=sharp --tac'
+
+            set -g @plugin 'Morantron/tmux-fingers'
+            set -g @fingers-pattern-0 '[A-Za-z0-9_./-]+\.[A-Za-z0-9]+:[0-9]+(:[0-9]+)?'
+            set -g @fingers-main-action '${getExe pkgs.my.tmux-jump}'
+            set -g @fingers-key y
 
             set -g default-terminal "tmux-256color"
             ${lib.optionalString (options ? me.desktop) ''

@@ -25,8 +25,7 @@
 
           my = prev.my or { } // self.packages.${final.stdenv.hostPlatform.system};
         })
-      ]
-      ++ [ inputs.nur.overlays.default ];
+      ];
 
       nixpkgs.flake = {
         setFlakeRegistry = false;

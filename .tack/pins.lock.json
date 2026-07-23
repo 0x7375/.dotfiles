@@ -45,6 +45,14 @@
     "narHash": "sha256-pp2pYNIK4WquW/7GM9uZaj88mGoWJR4W4Tk/GNGGjOI=",
     "lastModified": 1780260581
   },
+  "helium": {
+    "type": "github",
+    "owner": "amaanq",
+    "repo": "helium-flake",
+    "rev": "11e0f53dd6538e562fd3e085db34fb0503af9371",
+    "narHash": "sha256-WwMugZH8Uy5vrtBeQypxqEuwPzMtQjGuAtt1qKpev9g=",
+    "lastModified": 1784798039
+  },
   "hjem": {
     "type": "github",
     "owner": "feel-co",
@@ -146,14 +154,6 @@
     "rev": "b9b4bc3408a906f392a8d277d172ef440debc5cc",
     "narHash": "sha256-+Qg4wlqjEf4CRxkLtQ4tvsk5U2CAbWDZfCdXuyLBoo8=",
     "lastModified": 1783495226
-  },
-  "nur": {
-    "type": "github",
-    "owner": "nix-community",
-    "repo": "NUR",
-    "rev": "d8e63f1083b5c13751fc490bd4cd73d35ce4acfd",
-    "narHash": "sha256-0SVPAncylaM8hqNL+te/SXZ06cxb1xwHvARjP7hJYIE=",
-    "lastModified": 1783501032
   },
   "preservation": {
     "type": "github",

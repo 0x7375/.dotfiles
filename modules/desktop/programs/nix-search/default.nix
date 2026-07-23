@@ -25,7 +25,6 @@
             "nixpkgs"
             "nixos"
             "home-manager"
-            "nur"
             "noogle"
             "darwin"
           ];
@@ -51,7 +50,6 @@
           [[ ! -d ~/repos/home-manager ]] && echo "Cloning home-manager..." && git clone https://github.com/nix-community/home-manager "''${SHALLOW[@]}"
           [[ ! -d ~/repos/nix-darwin ]] && echo "Cloning nix-darwin..." && git clone https://github.com/nix-darwin/nix-darwin "''${SHALLOW[@]}"
           [[ ! -d ~/repos/nixpkgs ]] && echo "Cloning nixpkgs..." && git clone https://github.com/nixos/nixpkgs "''${SHALLOW[@]}"
-          [[ ! -d ~/repos/nur-combined ]] && echo "Cloning nix-darwin..." && git clone https://github.com/nix-community/nur-combined "''${SHALLOW[@]}"
         '';
     };
 }

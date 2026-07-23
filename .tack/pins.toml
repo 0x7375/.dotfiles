@@ -31,10 +31,6 @@ url = "gh:Ladas552/flake-parts"
 [inputs.mnw]
 url = "gh:Gerg-L/mnw"
 
-[inputs.nur]
-url = "gh:nix-community/NUR"
-follows = { nixpkgs = "auto-update" }
-
 # darwin
 [inputs.nix-darwin]
 url = "gh:nix-darwin/nix-darwin/nix-darwin-26.05"
@@ -89,6 +85,10 @@ follows = { nixpkgs = "nixpkgs-unstable" }
 [inputs.noctalia]
 url = "gh:noctalia-dev/noctalia"
 follows = { nixpkgs = "nixpkgs-unstable" }
+
+[inputs.helium]
+url = "gh:amaanq/helium-flake"
+follows = { nixpkgs = "auto-update" }
 
 [inputs.zen-browser]
 url = "gh:youwen5/zen-browser-flake"

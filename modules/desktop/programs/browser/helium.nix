@@ -76,7 +76,7 @@ let
           userSettings = {
             uiAccentCustom = true;
             uiAccentCustom0 = "#98971a";
-            cloudStorageEnabled = lib.mkForce false;
+            cloudStorageEnabled = false;
             importedLists = [ ];
             advancedUserEnabled = true;
             firewallPaneMinimized = false;
@@ -132,40 +132,29 @@ let
       "Popups"
     ];
 in
-{
+{ inputs, ... }: {
+
   flake.modules.generic.desktop =
     { pkgs, ... }:
     {
       nixpkgs.overlays = [
-        (final: _: {
-          helium = final.nur.repos.forkprince.helium-nightly.overrideAttrs (
-            old:
-            if (!final.stdenv.isDarwin) then
-              {
-                buildCommand =
-                  let
-                    bwrapPath = builtins.head (builtins.match ".*ln -s ([^ ]+) [$]out/bin/helium.*" old.buildCommand);
-
-                    flags = [
-                      "--enable-features=HeliumMiddleClickAutoscroll"
-                      "--no-first-run"
-                      "--enable-wayland-ime=true"
-                      "--remote-debugging-port=9800"
-                    ];
-                  in
-                  ''
-                    mkdir -p $out/bin
-                    cp ${bwrapPath} $out/bin/helium
-                    sed -i 's|--tmpfs /etc|--tmpfs /etc --ro-bind /etc/chromium /etc/chromium|' $out/bin/helium
-                    sed -i 's|-container-init "\$@"|-container-init ${builtins.concatStringsSep " " flags} "\$@"|' $out/bin/helium
-                  ''
-                  +
-                    builtins.replaceStrings [ "mkdir -p $out/bin\nln -s ${bwrapPath} $out/bin/helium\n" ] [ "" ]
-                      old.buildCommand;
-              }
-            else
-              { }
-          );
+        (final: prev: {
+          helium = inputs.helium.packages.${final.stdenv.hostPlatform.system}.default.overrideAttrs (old: {
+            postFixup =
+              (old.postFixup or "")
+              + (
+                let
+                  flags = [
+                    "--enable-features=HeliumMiddleClickAutoscroll"
+                    "--no-first-run"
+                    "--remote-debugging-port=9800"
+                  ];
+                in
+                ''
+                  wrapProgram $out/bin/helium --add-flags '${builtins.concatStringsSep " " flags}'
+                ''
+              );
+          });
         })
       ];
 
@@ -189,6 +178,7 @@ in
 
   flake.modules.darwin.desktop =
     {
+      config,
       lib,
       pkgs,
       ...
@@ -201,8 +191,8 @@ in
           );
         in
         ''
-          install -d -m 0755 "/Library/Preferences"
-          install -m 0644 ${managedPlist} "/Library/Preferences/net.imput.helium.plist"
+          install -d -m 0755 "/Library/Managed Preferences/${config.me.user}"
+          install -m 0644 ${managedPlist} "/Library/Managed Preferences/${config.me.user}/net.imput.helium.plist"
         '';
     };
 }

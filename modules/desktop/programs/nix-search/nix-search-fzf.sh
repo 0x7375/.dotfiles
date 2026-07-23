@@ -61,7 +61,6 @@ _edit_source() {
     case "$source_url" in
     *nix-community/home-manager*) repo_path="$HOME/repos/home-manager" ;;
     *nix-darwin/nix-darwin*) repo_path="$HOME/repos/nix-darwin" ;;
-    *nix-community/nur-combined*) repo_path="$HOME/repos/nur-combined" ;;
     *) repo_path="$HOME/repos/nixpkgs" ;;
     esac
 

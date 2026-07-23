@@ -9,6 +9,10 @@
         ".local/share/jellyfin-desktop"
       ];
 
+      unfree-packages = [
+        "mdk-sdk"
+      ];
+
       packages = with pkgs; [
         imagemagick
         # kdePackages.kdenlive
@@ -19,6 +23,7 @@
         vlc
         celluloid
         jellyfin-media-player
+        fladder
       ];
     };
 }

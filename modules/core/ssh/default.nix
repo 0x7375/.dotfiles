@@ -79,10 +79,5 @@
         ];
         PermitRootLogin = "prohibit-password"; # keys only for root
       };
-
-      services.fail2ban = {
-        enable = true;
-        maxretry = 10;
-      };
     };
 }

@@ -20,10 +20,10 @@ let
     in
     {
       DefaultSearchProviderEnabled = true;
-      DefaultSearchProviderName = "Startpage";
-      DefaultSearchProviderSearchURL = "https://startpage.com/do/dsearch?prfe=d7a6edf2bdae7d159fd3c7281470fb1b1611b9ebc58099d433766aab83750a24485b18c6615e9979c5ef4f823efb2326568630359a4cfaca9f87b8eda4b78324a831f096405c6b39160f84ca&query={searchTerms}";
-      DefaultSearchProviderIconURL = "https://startpage.com/favicon.ico";
-      DefaultSearchProviderNewTabURL = "https://startpage.com/";
+      DefaultSearchProviderName = "Google";
+      DefaultSearchProviderSearchURL = "https://www.google.com/search?q={searchTerms}";
+      DefaultSearchProviderIconURL = "https://google.com//favicon.ico";
+      DefaultSearchProviderNewTabURL = "https://google.com/";
 
       DefaultCookiesSetting = 4;
 

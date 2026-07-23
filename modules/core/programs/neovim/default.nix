@@ -23,10 +23,10 @@ let
       initLua = builtins.readFile (root + /nvim/init.lua);
 
       providers = {
-        ruby.enable = true;
-        python3.enable = true;
-        nodeJs.enable = true;
-        perl.enable = true;
+        ruby.enable = false;
+        python3.enable = false;
+        nodeJs.enable = false;
+        perl.enable = false;
       };
 
       plugins = {

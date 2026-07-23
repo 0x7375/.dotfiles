@@ -20,7 +20,6 @@
 
         sly
         gimp
-        vlc
         celluloid
         jellyfin-media-player
         fladder

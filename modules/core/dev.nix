@@ -1,13 +1,17 @@
 {
+  flake.modules.darwin.dev = { pkgs, ... }: {
+    packages = with pkgs; [
+      # karabiner
+      nodejs_24
+    ];
+  };
+
   flake.modules.generic.dev =
     { pkgs, ... }:
     {
       packages = with pkgs; [
         gnumake
         jq
-        # karabiner
-        nodejs_24
-
         bacon
       ];
 
@@ -51,7 +55,8 @@
         delve
 
         # nodePackages.eas-cli
-        nodejs_24
+        # nodejs_24
+        # deno
 
         # haskell
         # ghc

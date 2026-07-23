@@ -82,6 +82,10 @@ url = "gh:nix-community/disko/latest"
 [inputs.preservation]
 url = "gh:nix-community/preservation"
 
+[inputs.mango]
+url = "gh:mangowm/mango"
+follows = { nixpkgs = "nixpkgs-unstable" }
+
 [inputs.noctalia]
 url = "gh:noctalia-dev/noctalia"
 follows = { nixpkgs = "nixpkgs-unstable" }

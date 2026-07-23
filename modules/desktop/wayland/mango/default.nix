@@ -1,3 +1,5 @@
+{ inputs, ... }:
+
 {
   flake.modules.nixos.wayland =
     {
@@ -62,7 +64,7 @@
       config = {
         nixpkgs.overlays = [
           (final: prev: {
-            mangowc = final.unstable.mango.overrideAttrs (old: rec {
+            mangowc = inputs.mango.packages.${pkgs.stdenv.hostPlatform.system}.default.overrideAttrs (old: {
               patches = [ ./no_border_in_monocle.patch ];
             });
           })

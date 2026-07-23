@@ -64,6 +64,8 @@
         jrl = "journalctl";
 
         doc = "${cargo} doc --no-deps";
+        log = "${git} log --ext-diff";
+        show = "${git} show --ext-diff";
       }
       // (lib.genAttrs [
         "diff"
@@ -73,7 +75,6 @@
         "push"
         "pull"
         "clone"
-        "log"
         "branch"
         "remote"
         "reset"

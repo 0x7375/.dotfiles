@@ -12,27 +12,7 @@
       inherit (pkgs.stdenv) isLinux;
       previewer = lib.getExe (import ./_previewer.nix { inherit isLinux pkgs; });
       cleaner = pkgs.writeShellScript "cleaner" ''
-        width="$2"
-        height="$3"
-        x="$4"
-        y="$5"
-        next="$6"
-
-        if [ -n "$next" ] && [ ! -d "$next" ]; then
-          exit 0
-        fi
-
-        printf -v blank '%*s' "$width" '''
-        col=$((x + 1))
-
-        args=()
-        i=0
-        while [ "$i" -lt "$height" ]; do
-          args+=("$((y + i + 1))" "$col" "$blank")
-          i=$((i + 1))
-        done
-
-        printf '\033[%d;%dH%s' "''${args[@]}" >/dev/tty
+        exec kitten icat --clear --stdin no --transfer-mode memory </dev/null >/dev/tty
       '';
     in
     {

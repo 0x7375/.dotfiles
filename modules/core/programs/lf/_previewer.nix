@@ -27,7 +27,7 @@ pkgs.writeShellApplication {
     );
   text = ''
     kitty_preview() {
-      kitten icat --image-id 1 --stdin no --transfer-mode memory --place "''${width}x''${height}@''${x}x''${y}" "$1" </dev/null >/dev/tty
+      kitten icat --stdin no --transfer-mode memory --place "''${width}x''${height}@''${x}x''${y}" "$1" </dev/null >/dev/tty
       exit 1
     }
 

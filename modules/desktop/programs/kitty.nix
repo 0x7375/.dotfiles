@@ -44,6 +44,7 @@
             allow_remote_control yes
 
             disable_ligatures always
+            progress_bar hidden
 
             window_padding_width 20
             hide_window_decorations yes
@@ -85,7 +86,6 @@
             map alt+shift+r change_font_size all 0
             mouse_map middle release ungrabbed,grabbed
 
-            // unmap
             map ctrl+shift+r
           '';
       };

@@ -34,7 +34,7 @@
         assertions = [
           {
             assertion = (self.submodules or true) == true;
-            message = "Unable to build without submodules. Append '?submodules=1#' to the URI.";
+            message = "Unable to build without submodules. Append '?submodules=1#' to the URI like: .?submodules=1#host";
           }
         ];
 

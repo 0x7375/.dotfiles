@@ -4,7 +4,7 @@
   flake.modules.nixos.naitoh = { lib, ... }: {
     disko.devices.disk.main = {
       type = "disk";
-      device = "/dev/nvme0n1";
+      device = "/dev/disk/by-id/nvme-SAMSUNG_MZVLB256HBHQ-000L2_S4DXNF0M702613";
       content = {
         type = "gpt";
         partitions = {
@@ -22,27 +22,39 @@
               ];
             };
           };
-          luks = {
+          root = {
             size = "100%";
             content = {
-              type = "luks";
-              name = "crypted";
-              passwordFile = "/tmp/secret.key";
-              extraOpenArgs = [ ];
-              content = {
-                type = "btrfs";
-                extraArgs = [
-                  "-f"
-                  "-L"
-                  "NIXROOT"
-                ];
-                subvolumes = self.lib.mkBtrfsSubvolumes {
-                  inherit lib;
-                  home = true;
-                  swap = true;
-                  swapSize = "16G";
-                };
+              type = "btrfs";
+              extraArgs = [
+                "-f"
+                "-L"
+                "NIXROOT"
+              ];
+              subvolumes = self.lib.mkBtrfsSubvolumes {
+                inherit lib;
+                home = true;
+                swap = true;
+                swapSize = "16G";
               };
+            };
+          };
+        };
+      };
+    };
+
+    disko.devices.disk.nvme = {
+      type = "disk";
+      device = "/dev/disk/by-id/nvme-KBG5AZNT512G_LA_KIOXIA_82DPG3MSQBGK";
+      content = {
+        type = "gpt";
+        partitions = {
+          primary = {
+            size = "100%";
+            content = {
+              type = "filesystem";
+              format = "ext4";
+              mountpoint = "/mnt/nvme";
             };
           };
         };

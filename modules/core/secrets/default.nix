@@ -64,6 +64,9 @@
       lib,
       ...
     }:
+    let
+      persistDir = if config.preservation.enable then "/persist" else "";
+    in
     {
       options.me.tpm.enable = lib.mkEnableOption "Setup tpm and decrypt sops-nix secrets using tpm";
 
@@ -75,7 +78,7 @@
           persist.files = [ "/etc/tpm_key" ];
 
           sops.age = {
-            keyFile = "/persist/etc/tpm_key";
+            keyFile = "${persistDir}/etc/tpm_key";
             plugins = with pkgs; [ unstable.age-plugin-tpm ];
           };
 
@@ -88,7 +91,7 @@
           };
         })
         (lib.mkIf (!config.me.tpm.enable) {
-          sops.age.sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
+          sops.age.sshKeyPaths = [ "${persistDir}/etc/ssh/ssh_host_ed25519_key" ];
         })
       ];
     };

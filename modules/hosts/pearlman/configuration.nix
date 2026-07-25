@@ -24,8 +24,6 @@
         unixAuth = lib.mkForce true;
       });
 
-      sops.age.keyFile = lib.mkForce "/etc/tpm_key";
-
       systemd.services.blank-tty = {
         wantedBy = [ "multi-user.target" ];
         after = [ "getty.target" ];

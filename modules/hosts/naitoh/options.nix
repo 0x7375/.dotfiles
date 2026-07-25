@@ -1,11 +1,7 @@
 {
   flake.modules.nixos.naitoh = {
     me = {
-      tpm.enable = true;
-      boot = {
-        encryption.enable = true;
-        secureBoot.enable = true;
-      };
+      tpm.enable = false;
       # desktop = {
       #   scaling = 1.2;
       #   barFontSize = 11;

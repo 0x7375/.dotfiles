@@ -13,9 +13,7 @@
       swapSize ? "8G",
     }:
     {
-      "@blank" = {
-        inherit mountOptions;
-      };
+      "@blank" = { };
       "@root" = {
         mountpoint = "/";
         inherit mountOptions;

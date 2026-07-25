@@ -89,9 +89,9 @@
     "type": "git",
     "url": "https://codeberg.org/0x7E/nd",
     "ref": "HEAD",
-    "rev": "6b7717bbe8539c973eb6dd37c21b6c2f1499691c",
-    "narHash": "sha256-NlIvBUYLIBRl4XchS4kwXCA+qck+C+QBKwoEuomc+XU=",
-    "lastModified": 1784907555
+    "rev": "372121f6d09ce1b65049f718d04adf25fdb32d15",
+    "narHash": "sha256-DZHWbAGpjFV6yLAz4gxSy/iqz6UP2f6EFoqC172Z3RE=",
+    "lastModified": 1784949201
   },
   "nix-darwin": {
     "type": "github",

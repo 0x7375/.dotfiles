@@ -211,7 +211,7 @@
           "Shift+Print" = "${getExe screenshot} monitor";
           "Mod+Print" = getExe screenrecord;
 
-          "Mod+t" = "${term} -e ${getExe pkgs.my.tmux-sessionizer} ~/";
+          "Mod+t" = "${term} -e ${getExe pkgs.my.tmux-sessionizer} ${config.me.home}";
           "Mod+Shift+t" = term;
 
           "Mod+s" = getExe pkgs.my.tmux-sshr;

@@ -15,10 +15,9 @@
         tlrc
         tree
         termdown
+        caligula
 
-        nix-melt
         nix-output-monitor
-        # my.nd
         inputs.nd.packages.${pkgs.stdenv.hostPlatform.system}.default
         my.nlink
         my.dump-dotfiles

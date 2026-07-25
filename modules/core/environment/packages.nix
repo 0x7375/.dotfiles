@@ -16,6 +16,7 @@
         tree
         termdown
         caligula
+        jq
 
         nix-output-monitor
         inputs.nd.packages.${pkgs.stdenv.hostPlatform.system}.default

@@ -58,10 +58,20 @@
   flake.modules.nixos.core =
     { config, ... }:
     {
-      persist.directories = [
+      persist = {
+        directories = [
         "/var/lib/fail2ban"
-        "/etc/ssh"
+        {
+          directory = "/etc/ssh";
+          how = "_intermediate";
+        }
       ];
+        files = [
+        { file = "/etc/ssh/ssh_host_ed25519_key"; how = "symlink"; }
+        { file = "/etc/ssh/ssh_host_rsa_key"; how = "symlink"; }
+        { file = "/etc/ssh/ssh_host_rsa_key.pub"; how = "symlink"; }
+      ];
+      };
 
       persistUser.directories = [
         {

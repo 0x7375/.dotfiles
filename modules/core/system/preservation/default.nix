@@ -61,7 +61,7 @@
     };
 
   flake.modules.nixos.preservation =
-    { pkgs, config, ... }:
+    { lib, pkgs, config, ... }:
     {
       preservation.enable = true;
 
@@ -126,18 +126,30 @@
       # https://notashelf.dev/posts/impermanence
       boot.initrd.systemd = {
         enable = true;
-        services.rollback = {
+        services.rollback = 
+          let
+            toSystemdDevice = device: lib.concatStringsSep "-" (lib.tail (map (lib.replaceString "-" "\\x2d" ) (lib.splitString "/" device))) + ".device";
+
+            luks = config.me.boot.encryption.enable;
+            root = config.fileSystems."/";
+            systemdDevice = toSystemdDevice root.device;
+          in 
+        {
           description = "Rollback BTRFS root subvolume to a pristine state";
           wantedBy = [ "initrd.target" ];
-          after = [ "systemd-cryptsetup@crypted.service" ];
+          after = if luks then [ "systemd-cryptsetup@crypted.service"  ] else [ systemdDevice ];
+          requires = lib.optionals (!luks) [ systemdDevice ];
           before = [ "sysroot.mount" ];
-
           unitConfig.DefaultDependencies = "no";
           serviceConfig.Type = "oneshot";
-          script = ''
+          script = 
+            let 
+              device = if luks then "/dev/mapper/crypted" else root.device;
+            in
+            ''
             mkdir -p /mnt
 
-            mount -o subvol=/ /dev/mapper/crypted /mnt
+            mount -t btrfs -o subvol=/ ${device} /mnt
 
             btrfs subvolume list -o /mnt/@root |
               cut -f9 -d' ' |

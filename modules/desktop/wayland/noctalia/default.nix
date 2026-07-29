@@ -388,7 +388,27 @@
                 mango-layout.type = "me/mango-layout:mango-layout";
               };
 
-              plugins.enabled = [ "me/mango-layout" ];
+              plugins.enabled = [
+                "me/mango-layout"
+                "nightwatch75/file-search"
+              ];
+
+              plugin_settings."nightwatch75/file-search" = {
+                show_hidden = true;
+                exclude_dirs = builtins.concatStringsSep "," [
+                  ".git"
+                  "node_modules"
+                  ".cache"
+                  ".venv"
+                  ".stfolder"
+                  ".stversions"
+                  ".expo"
+                  "doc"
+                  "bin"
+                  "target"
+                  ".Trash-1000"
+                ];
+              };
             };
           };
           "noctalia/palettes/nix.json" = {
@@ -449,6 +469,8 @@
             "Mod+c" = "noctalia msg panel-toggle clipboard";
             "Mod+r" = "noctalia msg panel-toggle control-center notifications";
             "Mod+Shift+m" = "noctalia msg panel-toggle control-center weather";
+            "Mod+Shift+f" = "noctalia msg panel-toggle launcher \"/fs \"";
+
             "Mod+m" = pkgs.writeShellScript "open-note" ''
               # Try to open an existing note and create a new one otherwise
               note=$(ls -t $HOME/{notes,courses}/*.{org,md,csv} 2>/dev/null \

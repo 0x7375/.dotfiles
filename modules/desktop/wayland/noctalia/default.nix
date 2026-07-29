@@ -333,35 +333,6 @@
                     enabled = true;
                     variant = "default";
                   }
-                  (
-                    let
-                      switch-to-windows = pkgs.writeShellApplication {
-                        name = "switch-to-windows";
-                        text = ''
-                          ENTRY=$(${lib.getExe pkgs.efibootmgr} | grep -i windows | grep -oP 'Boot\K[0-9A-F]+' | head -1)
-                          if [ -n "$ENTRY" ]; then
-                            sudo efibootmgr --bootnext "$ENTRY" && systemctl --no-wall reboot
-                          fi
-                        '';
-                      };
-                    in
-                    {
-                      action = "command";
-                      command = lib.getExe switch-to-windows;
-                      enabled = true;
-                      glyph = "brand-windows-filled";
-                      label = "Reboot to Windows";
-                      variant = "default";
-                    }
-                  )
-                  {
-                    action = "command";
-                    command = "systemctl --no-wall reboot --firmware-setup";
-                    enabled = true;
-                    glyph = "settings";
-                    label = "Reboot to UEFI";
-                    variant = "default";
-                  }
                 ];
                 animation = {
                   enabled = true;

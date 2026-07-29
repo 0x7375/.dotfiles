@@ -1,3 +1,8 @@
+if not noctalia.commandExists("mmsg") then
+    noctalia.notifyError("Mango Layout", "Cannot find mango in PATH")
+    return
+end
+
 local layout_names = {
   S = "Scroller",
   T = "Tile",
@@ -30,6 +35,10 @@ local layout_icons = {
 
 barWidget.setGlyph("question-mark")
 barWidget.setText("")
+
+function onClick()
+    noctalia.runAsync("mmsg dispatch switch_layout")
+end
 
 noctalia.runStream("mmsg watch all-monitors", function(line)
   local data = noctalia.json.decode(line)

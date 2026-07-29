@@ -204,8 +204,6 @@
                   ];
                   margin_edge = 0;
                   margin_ends = 0;
-                  margin_h = 0;
-                  margin_v = 0;
                   radius = 0;
                   reserve_space = true;
                   shadow = true;
@@ -275,7 +273,7 @@
                   "Ctrl+k"
                   "Up"
                 ];
-                confirm = [
+                validate = [
                   "Ctrl+m"
                   "Return"
                 ];
@@ -464,7 +462,7 @@
         me.desktop = {
           bindings = {
             "Mod+x" = "noctalia msg notification-clear-active";
-            "Mod+i" = "noctalia msg bar-hide";
+            "Mod+i" = "noctalia msg bar-toggle";
             "Mod+d" = "noctalia msg panel-toggle launcher";
             "Mod+c" = "noctalia msg panel-toggle clipboard";
             "Mod+r" = "noctalia msg panel-toggle control-center notifications";

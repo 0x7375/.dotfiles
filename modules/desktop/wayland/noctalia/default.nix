@@ -107,9 +107,6 @@
                   rotation = 0.0
                   type = "login_box"
 
-                    [lockscreen_widgets.widget."lockscreen-login-box@${main}".settings]
-                    show_login_button = false
-
                   [lockscreen_widgets.widget.lockscreen-widget-${label}]
                   box_height = 128.0
                   box_width = 368.0
@@ -222,7 +219,10 @@
               };
 
               battery.warning_threshold = 20;
-              brightness.enable_ddcutil = true;
+              brightness = {
+                enable_ddcutil = true;
+                sync_all_monitors = true;
+              };
               calendar = {
                 enabled = true;
                 account.default = {
@@ -382,9 +382,8 @@
                   empty_color = "outline";
                   focused_color = "on_surface";
                   hide_when_empty = true;
-                  minimal = true;
+                  style = "minimal";
                   occupied_color = "outline";
-                  scale = 1.2;
                 };
                 mango-layout.type = "me/mango-layout:mango-layout";
               };

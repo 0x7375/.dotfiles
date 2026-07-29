@@ -9,6 +9,22 @@
     {
       imports = [ "${modulesPath}/installer/cd-dvd/installation-cd-minimal.nix" ];
 
+      boot.supportedFilesystems = lib.mkForce [
+        "btrfs"
+        "cifs"
+        "ext2"
+        "ext3"
+        "ext4"
+        "f2fs"
+        "iso9660"
+        "ntfs"
+        "overlay"
+        "squashfs"
+        "tmpfs"
+        "vfat"
+        "xfs"
+      ];
+
       isoImage.squashfsCompression = "gzip -Xcompression-level 1";
 
       systemd.services.sshd.wantedBy = pkgs.lib.mkForce [ "multi-user.target" ];

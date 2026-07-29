@@ -32,13 +32,7 @@
         setNixPath = false;
       };
 
-      sops.secrets.github_token.owner = config.me.user;
-
-      packages = [
-        (pkgs.writeShellScriptBin "tack" ''
-          GITHUB_TOKEN=$(cat "${config.sops.secrets.github_token.path}") exec ${lib.getExe pkgs.unstable.tack} "$@"
-        '')
-      ];
+      packages = [ pkgs.unstable.tack ];
 
       nix =
         let
@@ -126,5 +120,22 @@
           extraArgs = "--keep 5";
         };
       };
+    };
+
+  flake.modules.generic.secrets =
+    {
+      lib,
+      pkgs,
+      config,
+      ...
+    }:
+    {
+      sops.secrets.github_token.owner = config.me.user;
+
+      packages = [
+        (pkgs.writeShellScriptBin "tack" ''
+          GITHUB_TOKEN=$(cat "${config.sops.secrets.github_token.path}") exec ${lib.getExe pkgs.unstable.tack} "$@"
+        '')
+      ];
     };
 }

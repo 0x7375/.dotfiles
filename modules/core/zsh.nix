@@ -85,7 +85,7 @@
           merge_histories() {
             local lock_dir="$hist_dir/.merge.lock"
             # A merge is going on, quit
-            command mkdir "$lock_dir" >/dev/null 2>&1 || return
+            command mkdir "$lock_dir" >/dev/null 2>&1 || return 0
 
             {
               # Keep only the most recent occurrence of each command across all history files, sorted by timestamp
@@ -131,6 +131,7 @@
             
             merge_histories &!
             unset _HISTLINE
+            return $rc
           }
           merge_histories
         '';
@@ -212,8 +213,11 @@
 
           function set_prompt {
               # Last character is U+202F to navigate previous/next prompt in tmux (show unicode with ga in vim)
-              [[ -n ''${ZSH_VERSION-} ]] && PS1='%(?.%f.%F{red}$? )$(get_ssh_info)%F{reset}$(get_env)%~%F{cyan}$(get_git_info)%F{reset}$(get_prompt_symbol)%f '
-              [[ -n ''${BASH_VERSION-} ]] && PS1='\[\033[31m\]$(r=$?; [ $r -ne 0 ] && printf "$r ")\[\033[0m\]$(get_ssh_info)$(get_env)\w\[\033[36m\]$(get_git_info)\[\033[0m\]$(get_prompt_symbol) '
+              if [[ -n ''${ZSH_VERSION-} ]]; then
+                PS1='%(?.%f.%F{red}$? )$(get_ssh_info)%F{reset}$(get_env)%~%F{cyan}$(get_git_info)%F{reset}$(get_prompt_symbol)%f '
+              elif [[ -n ''${BASH_VERSION-} ]]; then
+                PS1='\[\033[31m\]$(r=$?; [ $r -ne 0 ] && printf "$r ")\[\033[0m\]$(get_ssh_info)$(get_env)\w\[\033[36m\]$(get_git_info)\[\033[0m\]$(get_prompt_symbol) '
+              fi
           }
         '';
 

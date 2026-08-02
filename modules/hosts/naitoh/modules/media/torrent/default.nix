@@ -124,7 +124,6 @@
           QUI__CHECK_FOR_UPDATES = "false";
           HOME = config.nixflix.torrentClients.qbittorrent.profileDir;
           XDG_CONFIG_HOME = config.nixflix.torrentClients.qbittorrent.profileDir;
-
         };
 
         preStart = lib.mkAfter ''

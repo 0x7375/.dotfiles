@@ -175,9 +175,9 @@
     "type": "git",
     "url": "ssh://git@codeberg.org/0x7E/nix-secrets",
     "ref": "HEAD",
-    "rev": "5c8b423a6cc2dad5449dbe00d579cf50029ef359",
-    "narHash": "sha256-QmUVa9fifxyFr19w5gz2SGbl/4mTCWmNgxuSa/nMqfE=",
-    "lastModified": 1785634894
+    "rev": "a766bc0a6e916fd45a32f4056162628f869df8e2",
+    "narHash": "sha256-hzwLsgNcvRxk+++Q1sHm8hN5f+pO8PtCSSKH7gn1Zsk=",
+    "lastModified": 1785639065
   },
   "sops-nix": {
     "type": "github",

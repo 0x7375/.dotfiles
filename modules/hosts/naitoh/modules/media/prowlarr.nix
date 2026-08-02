@@ -9,7 +9,7 @@
         };
         prowlarr = {
           subdomain = "indexer";
-          inherit (config.nixflix.radarr.config.hostConfig) port;
+          inherit (config.nixflix.prowlarr.config.hostConfig) port;
         };
       };
 
@@ -17,7 +17,6 @@
       me.hostSecrets."prowlarr/pw" = { };
 
       me.hostSecrets."indexers/c411" = { };
-      me.hostSecrets."indexers/torr9" = { };
       me.hostSecrets."indexers/tr4ker" = { };
 
       networking.enableIPv6 = false;
@@ -25,7 +24,6 @@
       nixflix = {
         flaresolverr.enable = true;
         prowlarr = {
-
           enable = true;
           openFirewall = true;
           config = {
@@ -33,8 +31,8 @@
             hostConfig.password._secret = config.sops.secrets."prowlarr/pw".path;
             indexers =
               let
-                solver = [ "flaresolverr" ];
-                withSolver = name: { inherit name solver; };
+                tags = [ "flaresolverr" ];
+                withSolver = name: { inherit name tags; };
               in
               [
                 { name = "World-torrent"; }
@@ -51,10 +49,6 @@
                 {
                   name = "C411";
                   apikey._secret = config.sops.secrets."indexers/c411".path;
-                }
-                {
-                  name = "Torr9";
-                  passkey._secret = config.sops.secrets."indexers/torr9".path;
                 }
                 {
                   name = "TR4KER";

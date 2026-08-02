@@ -20,10 +20,17 @@
 
       me.hostSecrets."restic_pw" = { };
 
-      sops.secrets.rclone_config = {
-        sopsFile = "${secrets}/${hostname}/rclone-config.ini";
-        format = "ini";
-      };
+      me.hostSecrets."backblaze/account" = { };
+      me.hostSecrets."backblaze/key" = { };
+      sops.templates."rclone.ini".content =
+        # ini
+        ''
+          [backblaze]
+          type        = b2
+          account     = ${config.sops.placeholder."backblaze/account"}
+          key         = ${config.sops.placeholder."backblaze/key"}
+          hard_delete = true
+        '';
 
       vars.RESTIC_PASSWORD_FILE = config.sops.secrets."restic_pw".path;
 
@@ -52,7 +59,7 @@
             {
               initialize = true;
               passwordFile = config.sops.secrets."restic_pw".path;
-              rcloneConfigFile = config.sops.secrets.rclone_config.path;
+              rcloneConfigFile = config.sops.secrets."rclone.ini".path;
               repository = remotes.${remote}.path + name;
               inherit paths;
               inherit exclude;

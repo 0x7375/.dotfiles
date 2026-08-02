@@ -109,11 +109,12 @@
       // self.lib.notifyOnServiceFailure "nginx"
       // self.lib.notifyOnServiceFailure "acme-${domain}";
 
-      sops.secrets.cloudflare = {
-        sopsFile = "${secrets}/${hostname}/cloudflare.env";
-        format = "dotenv";
-        key = "";
-      };
+      me.hostSecrets.cloudflare_dns_token = { };
+      sops.templates."cloudflare.env".content =
+        # bash
+        ''
+          CLOUDFLARE_DNS_API_TOKEN=${config.sops.placeholder.cloudflare}
+        '';
 
       persist.directories = [ "/var/lib/acme" ];
 

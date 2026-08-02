@@ -1,13 +1,8 @@
 {
   flake.modules.nixos.naitoh =
-    {
-      secrets,
-      config,
-      ...
-    }:
+    { config, ... }:
     let
       inherit (config.me.services.attic) port url;
-      inherit (config.me) hostname;
     in
     {
       nixpkgs.overlays = [
@@ -22,19 +17,18 @@
 
       networking.firewall.allowedTCPPorts = [ port ];
 
-      sops.secrets.attic = {
-        sopsFile = "${secrets}/${hostname}/attic.env";
-        format = "dotenv";
-        key = "";
-      };
+      me.hostSecrets.attic_token = { };
+      sops.templates."attic.env".content =
+        # bash
+        ''
+          ATTIC_SERVER_TOKEN_RS256_SECRET_BASE64=${config.sops.placeholder.attic_token}
+        '';
 
       persist.directories = [ "/var/lib/atticd" ];
 
-      # systemd.services.atticd.unitConfig.RequiresMountsFor = [ "/var/lib/atticd" ];
-
       services.atticd = {
         enable = true;
-        environmentFile = config.sops.secrets.attic.path;
+        environmentFile = config.sops.templates."attic.env".path;
         settings = {
           listen = "[::]:${toString port}";
           api-endpoint = url + "/";

@@ -12,7 +12,7 @@
     }:
     let
       inherit (config.me) services;
-      inherit (services.ntfy) url port;
+      inherit (services.ntfy) port;
     in
     {
       me.services.ntfy = {
@@ -21,7 +21,7 @@
         webSockets = true;
       };
 
-      persist.directories = [ "/var/lib/ntfy-hs" ];
+      persist.directories = [ "/var/lib/private/ntfy-sh" ];
 
       services.ntfy-sh = {
         enable = true;
@@ -29,7 +29,6 @@
           base-url = "http://localhost:" + toString port;
           listen-http = ":" + toString port;
           auth-default-access = "read-write";
-          cache-file = "/var/lib/ntfy-sh/cache.db";
         };
       };
       networking.firewall.allowedTCPPorts = [ port ];
@@ -38,7 +37,7 @@
         description = "Send notification when a service fails";
         serviceConfig = {
           Type = "oneshot";
-          ExecStart = "${lib.getExe pkgs.curl} -d \"Service %i failed\" ${url}/status";
+          ExecStart = "${lib.getExe pkgs.curl} -d \"Service %i failed\" http://localhost:${toString port}/status";
         };
       };
     };

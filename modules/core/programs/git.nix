@@ -184,24 +184,30 @@
     {
       config,
       lib,
-      secrets,
       ...
     }:
     let
       inherit (config.me) user;
     in
     {
-      sops.secrets.git-config = {
-        sopsFile = "${secrets}/uni-git-config.ini";
-        format = "ini";
+      sops.secrets.full_name.owner = user;
+      sops.secrets.uni_email.owner = user;
+      sops.templates."uni-git-config.ini" = {
         owner = user;
+        content =
+          # ini
+          ''
+            [user]
+            name = ${config.sops.placeholder.full_name}
+            email = ${config.sops.placeholder.uni_email}
+          '';
       };
 
       hj.xdg.config.files."git/config".text = lib.mkAfter ''
         [includeIf "hasconfig:remote.*.url:uni:*/**"]
-          path = ${config.sops.secrets.git-config.path}
+          path = ${config.sops.templates."uni-git-config.ini".path}
         [includeIf "hasconfig:remote.*.url:forge:**"]
-          path = ${config.sops.secrets.git-config.path}
+          path = ${config.sops.templates."uni-git-config.ini".path}
       '';
     };
 }

@@ -16,7 +16,6 @@
 
       packages = [ pkgs.attic-client ];
 
-      # TODO: generate/create public cache
       systemd.services.attic-watch-store = {
         description = "Attic watch store";
         wantedBy = [ config.me.target ];

@@ -1,3 +1,5 @@
+{ self, ... }:
+
 {
   flake.modules.nixos.naitoh =
     { config, ... }:
@@ -17,14 +19,16 @@
 
       networking.firewall.allowedTCPPorts = [ port ];
 
-      me.hostSecrets.attic_token = { };
+      me.hostSecrets.attic_server_token = { };
       sops.templates."attic.env".content =
         # bash
         ''
-          ATTIC_SERVER_TOKEN_RS256_SECRET_BASE64=${config.sops.placeholder.attic_token}
+          ATTIC_SERVER_TOKEN_RS256_SECRET_BASE64=${config.sops.placeholder.attic_server_token}
         '';
 
-      persist.directories = [ "/var/lib/atticd" ];
+      persist.directories = [ "/var/lib/private/atticd" ];
+
+      systemd.services.atticd = self.lib.afterSopsService;
 
       services.atticd = {
         enable = true;

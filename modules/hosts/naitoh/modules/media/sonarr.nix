@@ -1,3 +1,5 @@
+{ self, ... }:
+
 {
   flake.modules.nixos.naitoh =
     {
@@ -36,6 +38,8 @@
             }
           ];
       };
+
+      systemd.services.sonarr-config = self.lib.afterSopsService;
 
       nixflix.sonarr = {
         enable = true;

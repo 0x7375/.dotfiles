@@ -113,7 +113,7 @@
       sops.templates."cloudflare.env".content =
         # bash
         ''
-          CLOUDFLARE_DNS_API_TOKEN=${config.sops.placeholder.cloudflare}
+          CLOUDFLARE_DNS_API_TOKEN=${config.sops.placeholder.cloudflare_dns_token}
         '';
 
       persist.directories = [ "/var/lib/acme" ];
@@ -124,7 +124,7 @@
         certs."${domain}" = {
           extraDomainNames = [ "*.${domain}" ];
           dnsProvider = "cloudflare";
-          environmentFile = config.sops.secrets.cloudflare.path;
+          environmentFile = config.sops.templates."cloudflare.env".path;
           webroot = null;
         };
       };

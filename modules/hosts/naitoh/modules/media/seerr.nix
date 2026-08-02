@@ -21,6 +21,11 @@
       systemd.services.seerr-setup = afterSopsService;
       systemd.services.seerr-user-settings = afterSopsService;
 
+      systemd.services.seerr-jellyfin = {
+        after = [ "jellyfin.service" ];
+        requires = [ "jellyfin.service" ];
+      };
+
       nixflix.seerr = {
         enable = true;
         openFirewall = true;

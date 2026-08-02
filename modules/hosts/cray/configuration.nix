@@ -1,5 +1,6 @@
 {
-  flake.modules.nixos.cray = {
+  flake.modules.nixos.cray = { pkgs, lib, ... }: {
+    systemd.coredump.enable = lib.mkForce true;
     boot.supportedFilesystems = [ "ntfs" ];
 
     boot.binfmt.emulatedSystems = [ "aarch64-linux" ];

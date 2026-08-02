@@ -35,9 +35,11 @@
 
       systemd.services."service-failure-notify@" = {
         description = "Send notification when a service fails";
+        after = [ "ntfy-sh.service" ];
+        requires = [ "ntfy-sh.service" ];
         serviceConfig = {
           Type = "oneshot";
-          ExecStart = "${lib.getExe pkgs.curl} -d \"Service %i failed\" http://localhost:${toString port}/status";
+          ExecStart = "${lib.getExe pkgs.curl} --retry 5 --retry-connrefused --retry-delay 2 -d \"Service %i failed\" http://localhost:${toString port}/status";
         };
       };
     };

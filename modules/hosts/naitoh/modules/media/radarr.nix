@@ -1,3 +1,5 @@
+{ self, ... }:
+
 {
   flake.modules.nixos.naitoh =
     {
@@ -32,6 +34,8 @@
             }
           ];
       };
+
+      systemd.services.radarr-config = self.lib.afterSopsService;
 
       nixflix.radarr = {
         enable = true;

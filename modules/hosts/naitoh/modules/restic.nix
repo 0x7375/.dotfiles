@@ -59,7 +59,7 @@
             {
               initialize = true;
               passwordFile = config.sops.secrets."restic_pw".path;
-              rcloneConfigFile = config.sops.secrets."rclone.ini".path;
+              rcloneConfigFile = config.sops.templates."rclone.ini".path;
               repository = remotes.${remote}.path + name;
               inherit paths;
               inherit exclude;

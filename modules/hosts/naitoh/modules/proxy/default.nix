@@ -1,7 +1,7 @@
 { self, ... }:
 
 {
-  flake.modules.nixos.pearlman =
+  flake.modules.nixos.naitoh =
     {
       lib,
       secrets,
@@ -13,6 +13,7 @@
       mkSubDomain =
         {
           port,
+          path ? "",
           webSockets ? false,
           extraConfig ? "",
           ...
@@ -20,10 +21,17 @@
         {
           forceSSL = true;
           useACMEHost = domain;
-          locations."/" = {
-            proxyPass = "http://127.0.0.1:${toString port}";
-            proxyWebsockets = webSockets;
-            inherit extraConfig;
+          locations = {
+            "/" = {
+              proxyPass = "http://127.0.0.1:${toString port}";
+              proxyWebsockets = webSockets;
+              inherit extraConfig;
+            };
+          }
+          // lib.optionalAttrs (path != "") {
+            "= /" = {
+              return = "302 /${path}";
+            };
           };
         };
 
@@ -94,14 +102,20 @@
         ) config.me.services;
       };
 
-      systemd.services =
-        self.lib.notifyOnServiceFailure "nginx" // self.lib.notifyOnServiceFailure "acme-${domain}";
+      systemd.services = {
+        "acme-${domain}" = self.lib.afterSopsService;
+        "acme-order-renew-${domain}" = self.lib.afterSopsService;
+      }
+      // self.lib.notifyOnServiceFailure "nginx"
+      // self.lib.notifyOnServiceFailure "acme-${domain}";
 
       sops.secrets.cloudflare = {
         sopsFile = "${secrets}/${hostname}/cloudflare.env";
         format = "dotenv";
         key = "";
       };
+
+      persist.directories = [ "/var/lib/acme" ];
 
       security.acme = {
         acceptTerms = true;

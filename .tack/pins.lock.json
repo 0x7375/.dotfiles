@@ -125,6 +125,14 @@
     "narHash": "sha256-nuHRE13JbCT+xE76blZIfUEG8rV8eWld+gSVfjqCTZw=",
     "lastModified": 1783482236
   },
+  "nixflix": {
+    "type": "github",
+    "owner": "kiriwalawren",
+    "repo": "nixflix",
+    "rev": "f518c76ce58c5108c584b5f13c9eb00e881ad734",
+    "narHash": "sha256-IxWzHKBYxWVciypxWWmqjfOzvABgrCOcT3wQVYBv1oY=",
+    "lastModified": 1784475101
+  },
   "nixpkgs": {
     "type": "github",
     "owner": "nixos",
@@ -167,9 +175,9 @@
     "type": "git",
     "url": "ssh://git@codeberg.org/0x7E/nix-secrets",
     "ref": "HEAD",
-    "rev": "07892ac33ff8f42d808089ee2b06a85b370d09c2",
-    "narHash": "sha256-R54VuT635RIh3h+/4v2HFdaAjTdLEkl4KFNIDLNN8lY=",
-    "lastModified": 1784994680
+    "rev": "03509f0026936c0bfc658e91022cd80e71f833c1",
+    "narHash": "sha256-mbu77vGxP9g/dG3oq3bXl0C+TF8vSPbJLZAtGq+KcyU=",
+    "lastModified": 1785606868
   },
   "sops-nix": {
     "type": "github",

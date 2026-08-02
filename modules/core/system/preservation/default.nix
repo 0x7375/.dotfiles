@@ -61,7 +61,12 @@
     };
 
   flake.modules.nixos.preservation =
-    { lib, pkgs, config, ... }:
+    {
+      lib,
+      pkgs,
+      config,
+      ...
+    }:
     {
       preservation.enable = true;
 
@@ -91,7 +96,7 @@
       nixpkgs.overlays = [
         (final: prev: {
           my = (prev.my or { }) // {
-            fs-diff = import ./_fs-diff.nix pkgs;
+            fs-diff = import ./_fs-diff.nix config pkgs;
           };
         })
       ];
@@ -126,50 +131,51 @@
       # https://notashelf.dev/posts/impermanence
       boot.initrd.systemd = {
         enable = true;
-        services.rollback = 
+        services.rollback =
           let
-            toSystemdDevice = device: lib.concatStringsSep "-" (lib.tail (map (lib.replaceString "-" "\\x2d" ) (lib.splitString "/" device))) + ".device";
+            toSystemdDevice =
+              device:
+              lib.concatStringsSep "-" (
+                lib.tail (map (lib.replaceString "-" "\\x2d") (lib.splitString "/" device))
+              )
+              + ".device";
 
             luks = config.me.boot.encryption.enable;
             root = config.fileSystems."/";
             systemdDevice = toSystemdDevice root.device;
-          in 
-        {
-          description = "Rollback BTRFS root subvolume to a pristine state";
-          wantedBy = [ "initrd.target" ];
-          after = if luks then [ "systemd-cryptsetup@crypted.service"  ] else [ systemdDevice ];
-          requires = lib.optionals (!luks) [ systemdDevice ];
-          before = [ "sysroot.mount" ];
-          unitConfig.DefaultDependencies = "no";
-          serviceConfig.Type = "oneshot";
-          script = 
-            let 
-              device = if luks then "/dev/mapper/crypted" else root.device;
-            in
-            ''
-            mkdir -p /mnt
+          in
+          {
+            description = "Rollback BTRFS root subvolume to a pristine state";
+            wantedBy = [ "initrd.target" ];
+            after = if luks then [ "systemd-cryptsetup@crypted.service" ] else [ systemdDevice ];
+            requires = lib.optionals (!luks) [ systemdDevice ];
+            before = [ "sysroot.mount" ];
+            unitConfig.DefaultDependencies = "no";
+            serviceConfig.Type = "oneshot";
+            script = ''
+              mkdir -p /mnt
 
-            mount -t btrfs -o subvol=/ ${device} /mnt
+              mount -t btrfs -o subvol=/ ${root.device} /mnt
 
-            btrfs subvolume list -o /mnt/@root |
-              cut -f9 -d' ' |
-              while read subvolume; do
-                echo "deleting /$subvolume subvolume..."
-                btrfs subvolume delete "/mnt/$subvolume"
-              done &&
-              echo "deleting @root subvolume..." &&
-              btrfs subvolume delete /mnt/@root &&
-              echo "deleting @home subvolume..." &&
-              btrfs subvolume delete /mnt/@home
+              btrfs subvolume list -o /mnt/@root |
+                cut -f9 -d' ' |
+                while read subvolume; do
+                  echo "deleting /$subvolume subvolume..."
+                  btrfs subvolume delete "/mnt/$subvolume"
+                done &&
+                echo "deleting @root subvolume..." &&
+                btrfs subvolume delete /mnt/@root &&
+                echo "deleting @home subvolume..." &&
+                btrfs subvolume delete /mnt/@home
 
-            echo "restoring blank root subvolume..."
-            btrfs subvolume snapshot /mnt/@blank /mnt/@root
-            echo "restoring blank @home subvolume..."
-            btrfs subvolume snapshot /mnt/@blank /mnt/@home
+              echo "restoring blank root subvolume..."
+              btrfs subvolume snapshot /mnt/@blank /mnt/@root
+              echo "restoring blank @home subvolume..."
+              btrfs subvolume snapshot /mnt/@blank /mnt/@home
 
-            umount /mnt
-          '';
-        };
+              umount /mnt
+            '';
+          };
       };
 
       sops.age.sshKeyPaths = pkgs.lib.optionals (!config.me.tpm.enable) [

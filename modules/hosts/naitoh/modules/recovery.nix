@@ -1,5 +1,5 @@
 {
-  flake.modules.nixos.pearlman =
+  flake.modules.nixos.naitoh =
     { config, pkgs, ... }:
     {
       services.watchdogd.enable = true;

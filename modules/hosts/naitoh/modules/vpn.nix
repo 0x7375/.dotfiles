@@ -1,5 +1,7 @@
+{ self, ... }:
+
 {
-  flake.modules.nixos.pearlman =
+  flake.modules.nixos.naitoh =
     {
       lib,
       config,
@@ -14,7 +16,6 @@
       wgPort = 1637;
 
       peerKeys = {
-        naitoh = "apB8TVyEJ7G/gLe5b3ckvUYJSSKv85rl1jWkZoiEQgE=";
         shannon = "D3+XcAKleaWTA8FNUprJTmqqHnG9K9wLKnZs2/K9mGo=";
         lamarr = "vEKQ3Lpxn8JScQRMS8t6lq6dGWXiB9oyBgr2gSTfvxA=";
         mach = "z2/QJTGzNBiq4MKPqFDtuPJsCE1Tb/7VG6oYCExeYVg=";
@@ -27,9 +28,7 @@
 
     in
     {
-      me.hostSecrets."vpn/pk" = {
-        owner = config.me.user;
-      };
+      me.hostSecrets."vpn/pk".owner = config.me.user;
       sops.secrets = builtins.listToAttrs (
         map (name: {
           name = "${name}/vpn/psk";
@@ -47,6 +46,8 @@
       # };
 
       networking.firewall.allowedUDPPorts = [ wgPort ];
+
+      systemd.services.wg-quick-home = self.lib.afterSopsService;
 
       networking.wg-quick.interfaces.${home} = {
         address = [ "${host.ips.vpn}/24" ];

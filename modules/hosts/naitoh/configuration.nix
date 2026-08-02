@@ -6,6 +6,19 @@
       ...
     }:
     {
+      persist.directories = [
+        "/data/main"
+        "/var/lib/containers"
+        "/var/lib/postgresql"
+        "/var/lib/recyclarr"
+      ];
+
+      virtualisation.podman = {
+        enable = true;
+        dockerSocket.enable = true;
+        dockerCompat = true;
+      };
+
       # automatically turn off display after 60s of inactivity
       boot.kernelParams = [ "consoleblank=60" ];
 

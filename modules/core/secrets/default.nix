@@ -1,4 +1,9 @@
 {
+  flake.lib.afterSopsService = {
+    after = [ "sops-install-secrets.service" ];
+    requires = [ "sops-install-secrets.service" ];
+  };
+
   flake.modules.generic.secrets =
     {
       pkgs,
@@ -11,6 +16,7 @@
       options.me.hostSecrets = lib.mkOption {
         type = lib.types.attrsOf lib.types.attrs;
         default = { };
+        example = lib.literalExpression ''{ "secret/path" = { owner = "bla"; }; }'';
         description = "Secrets that automatically map to the host's sops default.yaml";
       };
 

@@ -1,5 +1,5 @@
 # List non-persisted files
-pkgs:
+config: pkgs:
 pkgs.writeShellApplication {
   name = "fs-diff";
   runtimeInputs = with pkgs; [
@@ -10,7 +10,7 @@ pkgs.writeShellApplication {
   text = ''
     set -euo pipefail
 
-    DEVICE="/dev/mapper/crypted"
+    DEVICE="${config.fileSystems."/".device}"
 
     TMPDIR=$(mktemp -d)
     MNT_ROOT="$TMPDIR/root"

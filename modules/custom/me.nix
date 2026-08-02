@@ -31,7 +31,7 @@
 
         server = mkOption {
           type = types.str;
-          default = "pearlman";
+          default = "naitoh";
           description = "Server hostname";
         };
 

@@ -6,7 +6,7 @@
     in
     {
       me.desktop.modes = {
-        DP-2 = "1920x1080@120Hz";
+        HDMI-A-1 = "1920x1080@120Hz";
         HDMI-A-2 = "1920x1080@240Hz";
       };
 
@@ -21,7 +21,7 @@
                 y = 0;
               };
             };
-            DP-2 = {
+            HDMI-A-1 = {
               tags = [ "5" ];
               position = {
                 x = 0;
@@ -35,8 +35,8 @@
           monitors.HDMI-A-2.tags = all;
         };
         desktop_left_only = {
-          primary = "DP-2";
-          monitors.DP-2.tags = all;
+          primary = "HDMI-A-1";
+          monitors.HDMI-A-1.tags = all;
         };
       };
     };

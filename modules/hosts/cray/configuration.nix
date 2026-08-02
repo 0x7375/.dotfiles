@@ -28,7 +28,7 @@
     time.hardwareClockInLocalTime = true;
 
     tinted.files.".config/mango/config.conf".value.exec-once = [
-      "mmsg dispatch viewcrossmon,5,DP-2 && mmsg dispatch viewcrossmon,1,HDMI-A-2"
+      "mmsg dispatch viewcrossmon,5,HDMI-A-1 && mmsg dispatch viewcrossmon,1,HDMI-A-2"
     ];
 
     hj.xdg.config.files."noctalia/settings.toml".value.shell.session.actions = [

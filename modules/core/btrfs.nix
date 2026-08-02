@@ -2,13 +2,18 @@
   flake.modules.nixos.btrfs =
     {
       pkgs,
+      config,
       lib,
       ...
     }:
     {
       packages = [ pkgs.btdu ];
 
-      aliases.btdu = "sudo mkdir -p /mnt/crypted; sudo mount -o subvol=/ /dev/mapper/crypted /mnt/crypted && sudo ${lib.getExe pkgs.btdu} /mnt/crypted && sudo umount -l /mnt/crypted";
+      aliases.btdu =
+        let
+          mountDir = "/mnt/btrfs";
+        in
+        "sudo mkdir -p ${mountDir}; sudo mount -o subvol=/ ${config.fileSystems."/".device} ${mountDir} && sudo ${lib.getExe pkgs.btdu} ${mountDir} && sudo umount -l ${mountDir}";
 
       services.btrfs.autoScrub = {
         enable = true;

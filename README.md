@@ -4,12 +4,12 @@ Over-engineered NixOS configuration for various machines.
 
 | Name       | Role    | Description                                                             |
 | :--------- | :------ | :---------------------------------------------------------------------- |
-| `pearlman` | Server  | Unowhy Y13 2020 laptop (N3450). Runs syncthing, media stack and others. |
+| `pearlman` | Server  | Unowhy Y13 2020 laptop (N3450), previously used as a home server.       |
 | `wilson`   | Server  | Raspberry pi 4 2GB, previously used as a home server.                   |
 | `cray`     | Desktop | Main workstation, uses an Nvidia gpu.                                   |
-| `naitoh`   | Laptop  | Main laptop, thinkpad e14 gen4 AMD.                                     |
+| `naitoh`   | Server  | Laptop thinkpad e14 gen4 AMD, current home server.                      |
 | `mach`     | Laptop  | M1 Macbook using nix-darwin.                                            |
-| `woz`      | Laptop  | Same M1 Macbook, running asahi                                          | 
+| `woz`      | Laptop  | Main laptop, same M1 Macbook, running asahi                             | 
 | `julliard` | WSL     | Windows WSL config.                                                     |
 | `isoImg`   | ISO     | Custom NixOS iso.                                                       |
 

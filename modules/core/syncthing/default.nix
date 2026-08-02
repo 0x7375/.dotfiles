@@ -1,3 +1,5 @@
+{ self, ... }:
+
 {
   flake.modules.nixos.syncthing =
     {
@@ -6,14 +8,8 @@
       config,
       ...
     }:
-    let
-      afterSops = {
-        after = [ "sops-install-secrets.service" ];
-        requires = [ "sops-install-secrets.service" ];
-      };
-    in
     {
-      systemd.services.syncthing-init = afterSops // {
+      systemd.services.syncthing-init = self.lib.afterSopsService // {
         wantedBy = lib.mkForce [ config.me.target ];
         after = lib.mkForce [ "syncthing.service" ];
 
@@ -23,7 +19,7 @@
           done
         '';
       };
-      systemd.services.syncthing = afterSops;
+      systemd.services.syncthing = self.lib.afterSopsService;
 
       # allow watching more files
       boot.kernel.sysctl."fs.inotify.max_user_watches" = 524288;

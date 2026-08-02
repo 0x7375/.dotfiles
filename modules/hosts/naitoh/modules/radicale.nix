@@ -1,5 +1,7 @@
+{ self, ... }:
+
 {
-  flake.modules.nixos.pearlman =
+  flake.modules.nixos.naitoh =
     {
       config,
       ...
@@ -9,6 +11,8 @@
     in
     {
       me.hostSecrets.radicale_users.owner = "radicale";
+
+      systemd.services.radicale = self.lib.afterSopsService;
 
       services.radicale = {
         enable = true;

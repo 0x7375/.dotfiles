@@ -1,7 +1,7 @@
 { self, ... }:
 
 {
-  flake.modules.nixos.pearlman =
+  flake.modules.nixos.naitoh =
     {
       secrets,
       config,
@@ -29,23 +29,12 @@
 
       services.restic.backups =
         let
-          mediaDirs = [
-            config.services.jellyfin.dataDir
-            (config.services.qbittorrent.profileDir + "/qBittorrent")
-            config.services.radarr.dataDir
-            config.services.sonarr.dataDir
-            config.services.prowlarr.dataDir
-            config.services.bazarr.dataDir
-            "/var/lib/cleanuparr"
-            "/var/lib/seerr"
-          ];
-
           backupConfig =
             let
               remotes = {
                 local = {
                   time = "18:00:00";
-                  path = "/mnt/ssd/backups/restic/";
+                  path = "/data/main/backups/restic/";
                 };
                 backblaze = {
                   time = "22:00:00";
@@ -109,7 +98,7 @@
             );
         in
         (createBackups "syncthing" {
-          paths = [ "/mnt/ssd/syncthing" ];
+          paths = [ "/data/main/syncthing" ];
           day = "Sat";
           exclude = [
             ".stfolder"
@@ -118,11 +107,11 @@
           ];
         })
         // (createBackups "media" {
-          paths = mediaDirs;
+          paths = [ "/data/main/.state" ];
           day = "Sun";
         })
         // (createBackups "git" {
-          paths = [ "/mnt/ssd/backups/git" ];
+          paths = [ "/data/main/backups/git" ];
           day = "Mon";
         });
 

@@ -88,7 +88,12 @@
         }) activeFolders;
 
         persist.directories = lib.optionals isServer (
-          lib.mapAttrsToList (_: f: cfg.dataRoot + f.serverPath) activeFolders
+          lib.mapAttrsToList (_: f: {
+            directory = cfg.dataRoot + f.serverPath;
+            user = "syncthing";
+            group = "syncthing";
+            mode = "0755";
+          }) activeFolders
         );
 
         persistUser.directories = lib.optionals (!isServer) (

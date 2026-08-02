@@ -1,3 +1,5 @@
+{ self, ... }:
+
 {
   flake.modules.nixos.secrets =
     {
@@ -14,11 +16,10 @@
 
       packages = [ pkgs.attic-client ];
 
+      # TODO: generate/create public cache
       systemd.services.attic-watch-store = {
         description = "Attic watch store";
         wantedBy = [ config.me.target ];
-        after = [ "sops-install-secrets.service" ];
-        requires = [ "sops-install-secrets.service" ];
         environment.ATTIC_SERVER = url;
         serviceConfig = {
           LoadCredential = [ "token:${config.sops.secrets.attic_access_token.path}" ];
@@ -27,17 +28,18 @@
             TOKEN=$(cat $CREDENTIALS_DIRECTORY/token)
             ${lib.getExe pkgs.attic-client} login local ${url} $TOKEN
           '';
-          ExecStart = "${lib.getExe pkgs.attic-client} watch-store cache";
+          ExecStart = "${lib.getExe pkgs.attic-client} watch-store default";
           Restart = "always";
           RestartSec = 3;
           KillMode = "control-group";
           KillSignal = "SIGTERM";
         };
-      };
+      }
+      // self.lib.afterSopsService;
 
       nix.settings = {
-        substituters = [ "${url}/cache" ];
-        trusted-public-keys = [ "cache:Vi/f16RngGbWkPLDlM/TBMOE+DEQcnvw8OFCUKdYgC4=" ];
+        substituters = [ "${url}/default" ];
+        trusted-public-keys = [ "default:VbeXg6jEaGj+UQTVyrZIMsyUCZy8Qooy4DiRyrqsikM=" ];
       };
     };
 }

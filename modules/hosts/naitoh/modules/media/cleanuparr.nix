@@ -1,5 +1,5 @@
 {
-  flake.modules.nixos.pearlman =
+  flake.modules.nixos.naitoh =
     {
       pkgs,
       config,
@@ -15,7 +15,7 @@
         webSockets = true;
       };
 
-      systemd.tmpfiles.settings.cleanuparr."/var/lib/cleanuparr".d = {
+      systemd.tmpfiles.settings.cleanuparr."/data/main/.state/cleanuparr".d = {
         group = "root";
         user = "root";
         mode = "0755";
@@ -26,15 +26,15 @@
       virtualisation.oci-containers.containers.cleanuparr =
         let
           name = "ghcr.io/cleanuparr/cleanuparr";
-          version = "2.7.7";
+          version = "2.10";
         in
         {
           image = name + ":" + version;
 
           imageFile = pkgs.dockerTools.pullImage {
             imageName = name;
-            imageDigest = "sha256:834072365f22211aa8f25103b7896f566641e2f5ccc50bb9050afd0696f4cade";
-            sha256 = "ckoUNy8BYHNr57T4CQNOLa2myjEfDk3O/3l2S8b0b4A=";
+            imageDigest = "sha256:9f74fa60bbf84c82b86f69fbef75189dd3e38408f99fd9c1895736185c4620b9";
+            sha256 = "lkXBgq6WXg/zT5n7mbd3DHjhSShmz5EiBPg94hHw/1o=";
 
             finalImageTag = version;
           };
@@ -44,7 +44,7 @@
           ];
 
           volumes = [
-            "/var/lib/cleanuparr/:/config"
+            "/data/main/.state/cleanuparr/:/config"
           ];
 
           ports = [ "${toString port}:${toString port}" ];

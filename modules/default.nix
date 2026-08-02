@@ -55,6 +55,7 @@ let
       ++ lib.optionals isNixos [
         inputs.disko.nixosModules.disko
         inputs.preservation.nixosModules.default
+        inputs.nixflix.nixosModules.default
         self.modules.nixos.overrides
       ]
       ++ extraModules;
@@ -92,16 +93,10 @@ in
         [
           boot
           secrets
-          networkEnvironment
+          network
           keyd
           btrfs
-          syncthingClient
-          vpnPeer
-          # desktop
-          # wayland
-          # dev
-          # laptop
-          # kitty
+          syncthing
           preservation
         ]
       );
@@ -125,15 +120,15 @@ in
         ]
       );
 
-      pearlman = mkHost "nixos" "pearlman" (
-        with scope.nixos;
-        [
-          boot
-          secrets
-          syncthing
-          network
-        ]
-      );
+      # pearlman = mkHost "nixos" "pearlman" (
+      #   with scope.nixos;
+      #   [
+      #     boot
+      #     secrets
+      #     syncthing
+      #     network
+      #   ]
+      # );
 
       isoImg = mkHost "nixos" "isoImg" (
         with scope.nixos;

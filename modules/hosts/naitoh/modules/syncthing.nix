@@ -1,5 +1,5 @@
 {
-  flake.modules.nixos.pearlman =
+  flake.modules.nixos.naitoh =
     {
       lib,
       config,
@@ -22,7 +22,9 @@
 
       networking.firewall.allowedTCPPorts = [ port ];
 
-      me.syncthing.dataRoot = "/mnt/ssd/syncthing/";
+      me.syncthing.dataRoot = "/data/main/syncthing/";
+
+      persist.directories = [ "/var/lib/syncthing" ];
 
       services.syncthing = {
         enable = lib.mkForce true;
@@ -35,7 +37,7 @@
           lib.mapAttrs (_: v: { inherit (v.syncthing) id; }) syncthingHosts;
       };
 
-      systemd.tmpfiles.settings.syncthing."/mnt/ssd/syncthing".d = {
+      systemd.tmpfiles.settings.syncthing."/data/main/syncthing".d = {
         group = "syncthing";
         mode = "0755";
         user = "syncthing";

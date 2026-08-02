@@ -1,10 +1,10 @@
 {
-  flake.modules.nixos.pearlman =
+  flake.modules.nixos.naitoh =
     { config, pkgs, ... }:
     {
       me.services.bazarr = {
         subdomain = "subtitles";
-        port = 6767;
+        port = config.services.bazarr.listenPort;
       };
 
       services.bazarr = {
@@ -12,6 +12,7 @@
         package = pkgs.auto.bazarr;
         openFirewall = true;
         group = config.me.mediaGroup;
+        dataDir = "/data/main/.state/bazarr";
       };
     };
 }

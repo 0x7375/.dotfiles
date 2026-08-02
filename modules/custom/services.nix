@@ -18,10 +18,18 @@
               description = "Network port";
             };
 
+            path = mkOption {
+              type = types.str;
+              default = "";
+              description = "Path appended to the url";
+            };
+
             url = mkOption {
               type = types.str;
               readOnly = true;
-              default = "https://${config.subdomain}.${parentConfig.me.domain}";
+              default = "https://${config.subdomain}.${parentConfig.me.domain}${
+                lib.optionalString (config.path != "") "/" + config.path
+              }";
               description = "Constructed public URL for this service";
             };
 

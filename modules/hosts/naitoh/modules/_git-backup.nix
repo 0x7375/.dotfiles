@@ -1,10 +1,13 @@
 {
-  flake.modules.nixos.pearlman =
+  flake.modules.nixos.naitoh =
     {
       pkgs,
       ...
     }:
     {
+      # TODO: add ssh key to nix-secrets
+      # me.hostSecrets."codeberg_id" = { };
+
       systemd.services.git-backup = {
         path = with pkgs; [
           git
@@ -19,7 +22,7 @@
             remote_url="https://codeberg.org"
             user="0x7E"
             remote="''${remote_url}/''${user}"
-            backup_dir="/mnt/ssd/backups/git"
+            backup_dir="/data/main/backups/git"
             mkdir -p "$backup_dir"
 
             export GIT_SSH_COMMAND="ssh -i /root/.ssh/id_backup_codeberg -o IdentitiesOnly=yes -o StrictHostKeyChecking=no"
@@ -37,6 +40,7 @@
               pyplanet
               15-puzzle
               token2-totp-cli
+              asahi-firmware
             )
 
             for repo in "''${private[@]}"; do

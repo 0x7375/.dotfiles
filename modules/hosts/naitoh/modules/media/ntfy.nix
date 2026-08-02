@@ -3,7 +3,7 @@
     ${service}.unitConfig.OnFailure = "service-failure-notify@%N.service";
   };
 
-  flake.modules.nixos.pearlman =
+  flake.modules.nixos.naitoh =
     {
       lib,
       pkgs,
@@ -20,6 +20,8 @@
         port = 8719;
         webSockets = true;
       };
+
+      persist.directories = [ "/var/lib/ntfy-hs" ];
 
       services.ntfy-sh = {
         enable = true;

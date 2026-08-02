@@ -15,7 +15,6 @@
       ''
       + builtins.concatStringsSep "\n" (
         lib.map (v: "Host ${v}\n  ForwardAgent yes\n") [
-          "pearlman"
           "cray"
           "naitoh"
           "woz"
@@ -60,17 +59,26 @@
     {
       persist = {
         directories = [
-        "/var/lib/fail2ban"
-        {
-          directory = "/etc/ssh";
-          how = "_intermediate";
-        }
-      ];
+          "/var/lib/fail2ban"
+          {
+            directory = "/etc/ssh";
+            how = "_intermediate";
+          }
+        ];
         files = [
-        { file = "/etc/ssh/ssh_host_ed25519_key"; how = "symlink"; }
-        { file = "/etc/ssh/ssh_host_rsa_key"; how = "symlink"; }
-        { file = "/etc/ssh/ssh_host_rsa_key.pub"; how = "symlink"; }
-      ];
+          {
+            file = "/etc/ssh/ssh_host_ed25519_key";
+            how = "symlink";
+          }
+          {
+            file = "/etc/ssh/ssh_host_rsa_key";
+            how = "symlink";
+          }
+          {
+            file = "/etc/ssh/ssh_host_rsa_key.pub";
+            how = "symlink";
+          }
+        ];
       };
 
       persistUser.directories = [

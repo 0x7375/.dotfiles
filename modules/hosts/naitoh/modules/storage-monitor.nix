@@ -1,5 +1,5 @@
 {
-  flake.modules.nixos.pearlman =
+  flake.modules.nixos.naitoh =
     {
       pkgs,
       config,
@@ -48,7 +48,7 @@
             }
 
             check_filesystem "root" "$(get_usage /)"
-            check_filesystem "data" "$(get_usage /data)"
+            check_filesystem "data" "$(get_usage /data/shared)"
           '';
 
         serviceConfig.Type = "oneshot";

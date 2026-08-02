@@ -5,7 +5,6 @@
       h = lib.mapAttrs (name: _: name) config.me.hosts;
       inherit (h)
         cray
-        naitoh
         woz
 
         cutler
@@ -19,7 +18,6 @@
       groups = rec {
         linux = [
           cray
-          naitoh
           woz
         ];
         windows = [ cutler ];

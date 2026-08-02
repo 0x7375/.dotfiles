@@ -6,13 +6,13 @@
       ...
     }:
     {
-      systemd.timers.auto-input = {
-        wantedBy = [ "timers.target" ];
-        timerConfig = {
-          OnCalendar = "daily";
-          Persistent = true;
-        };
-      };
+      # systemd.timers.auto-input = {
+      #   wantedBy = [ "timers.target" ];
+      #   timerConfig = {
+      #     OnCalendar = "daily";
+      #     Persistent = true;
+      #   };
+      # };
 
       systemd.services.auto-input = {
         script = ''
@@ -42,7 +42,7 @@
           User = config.me.user;
         };
         path = with pkgs; [
-          lix
+          nix
           git
           openssh
         ];

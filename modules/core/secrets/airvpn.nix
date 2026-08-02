@@ -1,3 +1,4 @@
+# ip v6 NOTE temporarily disabled because prowlarr fails with ipv6 enabled
 let
   dns = {
     v4 = "10.128.0.1";
@@ -39,7 +40,8 @@ in
             endpoint=${endpoint}
             preshared-key=${config.sops.placeholder."airvpn/psk"}
             preshared-key-flags=0
-            allowed-ips=0.0.0.0/0;::/0;
+            allowed-ips=0.0.0.0/0;
+            ; allowed-ips=0.0.0.0/0;::/0;
             persistent-keepalive=15
 
             [ipv4]
@@ -47,10 +49,10 @@ in
             dns=${dns.v4};
             method=manual
 
-            [ipv6]
-            address=${ip.v6}/128
-            dns=${dns.v6};
-            method=manual
+            ; [ipv6]
+            ; address=${ip.v6}/128
+            ; dns=${dns.v6};
+            ; method=manual
           '';
       };
 
@@ -60,7 +62,7 @@ in
       };
     };
 
-  flake.modules.nixos.pearlman =
+  flake.modules.nixos.naitoh =
     {
       config,
       pkgs,
@@ -91,9 +93,9 @@ in
                 ip route add ${dns.v4} dev airvpn
                 ip rule add from ${ip.v4} table ${table}
 
-                ip -6 rule add from ${ip.v6} table ${table}
-                ip rule add oif %i table ${table}
-                ip -6 rule add oif %i table ${table}
+                # ip -6 rule add from ${ip.v6} table ${table}
+                ip rule add oif airvpn table ${table}
+                # ip -6 rule add oif airvpn table ${table}
               '';
           preDownFile =
             writeScriptFile "preDown.sh"
@@ -102,18 +104,20 @@ in
                 ip route del ${dns.v4} dev airvpn
                 ip rule del from ${ip.v4} table ${table}
 
-                ip -6 rule del from ${ip.v6} table ${table}
-                ip rule del oif %i table ${table}
-                ip -6 rule del oif %i table ${table}
+                # ip -6 rule del from ${ip.v6} table ${table}
+                ip rule del oif airvpn table ${table}
+                # ip -6 rule del oif airvpn table ${table}
               '';
         in
         # ini
         ''
           [Interface]
-          Address = ${ip.v4}/32,${ip.v6}/128
+          Address = ${ip.v4}/32
+          # Address = ${ip.v4}/32,${ip.v6}/128
           PrivateKey = ${config.sops.placeholder."airvpn/sk"}
           MTU = 1320
-          DNS = ${dns.v4}, ${dns.v6}
+          DNS = ${dns.v4}
+          # DNS = ${dns.v4}, ${dns.v6}
           Table = ${table}
           PostUp = ${postUpFile}
           PreDown = ${preDownFile}
@@ -121,7 +125,8 @@ in
           [Peer]
           PublicKey = ${config.sops.placeholder."airvpn/pk"}
           PresharedKey = ${config.sops.placeholder."airvpn/psk"}
-          AllowedIPs = 0.0.0.0/0,::/0
+          AllowedIPs = 0.0.0.0/0
+          # AllowedIPs = 0.0.0.0/0,::/0
           Endpoint = ${endpoint}
           PersistentKeepalive = 15
         '';

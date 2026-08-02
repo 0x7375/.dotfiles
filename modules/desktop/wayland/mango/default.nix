@@ -155,6 +155,7 @@
             stripHash = true;
             generator = lib.generators.toKeyValue { mkKeyValue = mkMangoKeyValue; };
             value = p: {
+              numlockon = 1;
               repeat_rate = 30;
               repeat_delay = 200;
               xkb_rules_layout = "us";

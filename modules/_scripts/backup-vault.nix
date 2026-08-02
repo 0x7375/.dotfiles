@@ -1,7 +1,7 @@
 { pkgs, ... }:
 
 let
-  server = "pearlman";
+  server = "naitoh";
 in
 pkgs.writeShellApplication {
   name = "backup-vault";
@@ -9,7 +9,7 @@ pkgs.writeShellApplication {
   text =
     # bash
     ''
-      REMOTE_PATH=/data/backups/vault-export
+      REMOTE_PATH=/data/main/backups/vault-export
       REMOTE="root@${server}"
 
       USAGE="Usage: backup-vault <export.json> <usb-mount-path>"

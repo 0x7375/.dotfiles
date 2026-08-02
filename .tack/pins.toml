@@ -31,6 +31,10 @@ url = "gh:Ladas552/flake-parts"
 [inputs.mnw]
 url = "gh:Gerg-L/mnw"
 
+[inputs.nixflix]
+url = "gh:kiriwalawren/nixflix"
+follows = { nixpkgs = "auto-update" }
+
 # darwin
 [inputs.nix-darwin]
 url = "gh:nix-darwin/nix-darwin/nix-darwin-26.05"

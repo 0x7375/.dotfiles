@@ -88,20 +88,18 @@
     };
 
   flake.modules.nixos.core =
-    { config, pkgs, ... }:
+    { config, ... }:
     {
       nixpkgs.overlays = [
         (final: prev: {
-          # adapted from: https://github.com/NixOS/nix/pull/15297
-          lix = final.unstable.lix.overrideAttrs (old: {
-            patches = (old.patches or [ ]) ++ [ ./nix_shell_packages_env_var.patch ];
-            doCheck = false;
-            doInstallCheck = false;
-          });
+          nix = final.unstable.nix.override {
+            nix-cli = final.unstable.nix.nix-cli.overrideAttrs (old: {
+              # https://github.com/NixOS/nix/pull/15297
+              patches = (old.patches or [ ]) ++ [ ./nix_shell_packages_env_var.patch ];
+            });
+          };
         })
       ];
-
-      nix.package = pkgs.lix;
 
       persistUser.directories = [
         ".config/nixcfg"

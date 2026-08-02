@@ -1,5 +1,5 @@
 {
-  flake.modules.nixos.pearlman =
+  flake.modules.nixos.naitoh =
     {
       secrets,
       config,
@@ -27,6 +27,10 @@
         format = "dotenv";
         key = "";
       };
+
+      persist.directories = [ "/var/lib/atticd" ];
+
+      # systemd.services.atticd.unitConfig.RequiresMountsFor = [ "/var/lib/atticd" ];
 
       services.atticd = {
         enable = true;

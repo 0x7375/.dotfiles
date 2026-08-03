@@ -283,7 +283,7 @@
               return 1
             fi
 
-            local device=$(kdeconnect-cli --list-devices --name-only | ${lib.getExe pkgs.fzf} --height 40% --reverse)
+            local device=$(kdeconnect-cli --list-available --name-only | ${lib.getExe pkgs.fzf} --height 40% --reverse)
 
             if [ -z "$device" ]; then
               return 1

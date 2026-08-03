@@ -16,11 +16,11 @@ let
           name=${hostname}
         '';
 
-      "certificate.pem".text = ''
-        -----BEGIN CERTIFICATE-----
-        ${config.me.host.kdeconnect.cert}
-        -----END CERTIFICATE-----
-      '';
+      # "certificate.pem".text = ''
+      #   -----BEGIN CERTIFICATE-----
+      #   ${config.me.host.kdeconnect.cert}
+      #   -----END CERTIFICATE-----
+      # '';
 
       "trusted_devices".text = lib.concatMapAttrsStringSep "\n" (
         name: _:

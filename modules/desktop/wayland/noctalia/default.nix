@@ -392,6 +392,8 @@
                 };
               };
 
+              wallpaper.transition_on_startup = true;
+
               widget = {
                 bluetooth.show_label = true;
                 sysmon.show_label = false;

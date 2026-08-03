@@ -1,5 +1,4 @@
 { pkgs, ... }:
-
 let
   server = "naitoh";
 in
@@ -11,36 +10,52 @@ pkgs.writeShellApplication {
     ''
       REMOTE_PATH=/data/main/backups/vault-export
       REMOTE="root@${server}"
+      USAGE="Usage: backup-vault <export-file>... <usb-mount-path>"
 
-      USAGE="Usage: backup-vault <export.json> <usb-mount-path>"
-      EXPORT_FILE="''${1:?$USAGE}"
-      USB_PATH="''${2:?$USAGE}"
+      (( $# >= 2 )) || { echo "$USAGE"; exit 1; }
 
-      [[ -f "$EXPORT_FILE" ]] || { echo "File not found: $EXPORT_FILE"; exit 1; }
-      [[ -d "$USB_PATH" ]]    || { echo "USB path not found: $USB_PATH"; exit 1; }
+      USB_PATH="''${*: -1}"
+      EXPORT_FILES=("''${@:1:$#-1}")
 
-      FILENAME="bitwarden_$(date +%Y%m%d_%H%M%S).json"
+      [[ -d "$USB_PATH" ]] || { echo "USB path not found: $USB_PATH"; exit 1; }
+      for f in "''${EXPORT_FILES[@]}"; do
+        [[ -f "$f" ]] || { echo "File not found: $f"; exit 1; }
+      done
 
       confirm() {
-          read -rn1 -p "$1 [Y/n] " REPLY
-          echo
-          [[ "''${REPLY:-Y}" =~ ^[Yy]$ ]]
+        read -rn1 -p "$1 [Y/n] " REPLY
+        echo
+        [[ "''${REPLY:-Y}" =~ ^[Yy]$ ]]
+      }
+
+      stamp_name() {
+        local f="$1" base ext
+        base="$(basename "''${f%.*}")"
+        ext="''${f##*.}"
+        echo "''${base}_$(date +%Y%m%d_%H%M%S).''${ext}"
       }
 
       if confirm "Copy to server?"; then
-          ssh "$REMOTE" -- mkdir -p "$REMOTE_PATH"
-          scp "$EXPORT_FILE" "$REMOTE:$REMOTE_PATH/$FILENAME" && \
-          echo "* Copied to $REMOTE -> $REMOTE_PATH/$FILENAME"
+        ssh "$REMOTE" -- mkdir -p "$REMOTE_PATH"
+        for f in "''${EXPORT_FILES[@]}"; do
+          name="$(stamp_name "$f")"
+          scp "$f" "$REMOTE:$REMOTE_PATH/$name" && \
+          echo "* Copied to $REMOTE -> $REMOTE_PATH/$name"
+        done
       fi
 
       if confirm "Copy to USB?"; then
-          cp "$EXPORT_FILE" "$USB_PATH/$FILENAME" && \
-          echo "* Copied to USB -> $USB_PATH/$FILENAME"
+        for f in "''${EXPORT_FILES[@]}"; do
+          name="$(stamp_name "$f")"
+          cp "$f" "$USB_PATH/$name" && \
+          echo "* Copied to USB -> $USB_PATH/$name"
+        done
       fi
 
-      if confirm "Delete original?"; then
-          shred -u "$EXPORT_FILE" && \
-          echo "* Deleted $EXPORT_FILE"
+      if confirm "Delete originals?"; then
+        for f in "''${EXPORT_FILES[@]}"; do
+          shred -u "$f" && echo "* Deleted $f"
+        done
       fi
     '';
 }

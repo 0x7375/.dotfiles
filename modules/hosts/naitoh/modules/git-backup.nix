@@ -2,11 +2,11 @@
   flake.modules.nixos.naitoh =
     {
       pkgs,
+      config,
       ...
     }:
     {
-      # TODO: add ssh key to nix-secrets
-      # me.hostSecrets."codeberg_id" = { };
+      me.hostSecrets."codeberg_id" = { };
 
       systemd.services.git-backup = {
         path = with pkgs; [
@@ -25,7 +25,9 @@
             backup_dir="/data/main/backups/git"
             mkdir -p "$backup_dir"
 
-            export GIT_SSH_COMMAND="ssh -i /root/.ssh/id_backup_codeberg -o IdentitiesOnly=yes -o StrictHostKeyChecking=no"
+            export GIT_SSH_COMMAND="ssh -i ${
+              config.sops.secrets."codeberg_id".path
+            } -o IdentitiesOnly=yes -o StrictHostKeyChecking=no"
 
             repos=$(curl -s "''${remote_url}/api/v1/users/$user/repos" | jq -r '.[].clone_url')
 

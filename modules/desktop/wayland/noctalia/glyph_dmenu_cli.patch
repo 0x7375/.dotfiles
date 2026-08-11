@@ -11,7 +11,7 @@ index 86d2d74b9..108c485ca 100644
    inline constexpr Command kDmenuCmd{
        "dmenu",
 diff --git a/src/launcher/dmenu_cli.cpp b/src/launcher/dmenu_cli.cpp
-index db246ce42..8551b98fa 100644
+index db246ce42..64f60dce2 100644
 --- a/src/launcher/dmenu_cli.cpp
 +++ b/src/launcher/dmenu_cli.cpp
 @@ -44,6 +44,7 @@ namespace noctalia::launcher {
@@ -22,6 +22,16 @@ index db246ce42..8551b98fa 100644
  
      // Read all of stdin.
      std::string candidates;
+@@ -92,7 +93,8 @@ namespace noctalia::launcher {
+     }
+ 
+     // Header line is the prompt, then candidate bytes follow on the same connection.
+-    if (!writeAll(fd, prompt.data(), prompt.size())
++    const std::string header = prompt + '\0' + glyph + '\n';
++    if (!writeAll(fd, header.data(), header.size())
+         || ::write(fd, "\n", 1) != 1
+         || !writeAll(fd, candidates.data(), candidates.size())) {
+       std::println(stderr, "error: write() failed: {}", std::strerror(errno));
 diff --git a/src/launcher/dmenu_ipc.cpp b/src/launcher/dmenu_ipc.cpp
 index c135fc918..bb0705807 100644
 --- a/src/launcher/dmenu_ipc.cpp

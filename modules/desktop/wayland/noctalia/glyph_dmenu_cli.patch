@@ -1,3 +1,15 @@
+diff --git a/src/cli/schema_dmenu.h b/src/cli/schema_dmenu.h
+index 86d2d74b9..108c485ca 100644
+--- a/src/cli/schema_dmenu.h
++++ b/src/cli/schema_dmenu.h
+@@ -8,6 +8,7 @@ namespace noctalia::cli {
+ 
+   inline constexpr std::array kDmenuFlags{
+       Flag{"--prompt", "-p", "<text>", "Set the launcher prompt", {}, {}, false, false},
++      Flag{"--glyph", "-g", "<text>", "Set the icon used", {}, {}, false, false},
+   };
+   inline constexpr Command kDmenuCmd{
+       "dmenu",
 diff --git a/src/launcher/dmenu_cli.cpp b/src/launcher/dmenu_cli.cpp
 index db246ce42..8551b98fa 100644
 --- a/src/launcher/dmenu_cli.cpp

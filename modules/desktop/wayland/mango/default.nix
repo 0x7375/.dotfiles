@@ -64,7 +64,7 @@
       config = {
         nixpkgs.overlays = [
           (final: prev: {
-            mangowc = inputs.mango.packages.${pkgs.stdenv.hostPlatform.system}.default.overrideAttrs (old: {
+            mangowc = final.unstable.mango.overrideAttrs (old: {
               patches = [ ./no_border_in_monocle.patch ];
             });
           })

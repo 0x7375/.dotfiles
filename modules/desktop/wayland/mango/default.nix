@@ -226,6 +226,7 @@
                     "WAYLAND_DISPLAY"
                     "XDG_CURRENT_DESKTOP"
                     "XDG_SESSION_DESKTOP"
+                    "XDG_SESSION_ID"
                     "LIBVA_DRIVER_NAME"
                     "GBM_BACKEND"
                     "__GLX_VENDOR_LIBRARY_NAME"

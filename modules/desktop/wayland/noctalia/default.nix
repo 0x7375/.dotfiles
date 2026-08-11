@@ -379,8 +379,6 @@
                 shadow.alpha = 0.04;
               };
 
-              templates = { };
-
               nightlight.enabled = false;
 
               theme = {
@@ -396,11 +394,11 @@
 
               widget = {
                 bluetooth.show_label = true;
-                sysmon.show_label = false;
+                sysmon.show_value = false;
                 brightness.show_label = false;
                 media.hide_when_no_media = true;
                 ram = {
-                  show_label = false;
+                  show_value = false;
                   stat = "ram_pct";
                 };
                 tray = {
@@ -411,7 +409,7 @@
                 volume.show_label = false;
                 workspaces = {
                   capsule = false;
-                  display = "id";
+                  label_source = "id";
                   empty_color = "outline";
                   focused_color = "on_surface";
                   hide_when_empty = true;

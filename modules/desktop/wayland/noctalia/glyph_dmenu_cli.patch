@@ -1,71 +1,15 @@
 diff --git a/src/launcher/dmenu_cli.cpp b/src/launcher/dmenu_cli.cpp
-index 967fe8c40..da986f54d 100644
+index db246ce42..8551b98fa 100644
 --- a/src/launcher/dmenu_cli.cpp
 +++ b/src/launcher/dmenu_cli.cpp
-@@ -34,9 +34,14 @@ namespace noctalia::launcher {
-     void printUsage() {
-       std::println(
-           stderr,
--          "Usage: noctalia dmenu [-p prompt]\n"
-+          "Usage: noctalia dmenu [OPTIONS]\n"
-+          "\n"
-           "Reads newline-separated items from stdin, presents them in the launcher,\n"
-           "and prints the selection to stdout."
-+          "\n"
-+          "Options:\n"
-+          "  -p, --prompt   Set the launcher input placeholder\n"
-+          "  -g, --glyph    Set the icon before each row\n"
-       );
-     }
+@@ -44,6 +44,7 @@ namespace noctalia::launcher {
+     if (parsed->helpRequested)
+       return 0;
+     const std::string prompt{parsed->value("--prompt")};
++    const std::string glyph{parsed->value("--glyph")};
  
-@@ -44,16 +49,33 @@ namespace noctalia::launcher {
- 
-   int runDmenuCli(int argc, char** argv) {
-     std::string prompt;
-+    std::string glyph;
-+
-     for (int i = 2; i < argc; ++i) {
-       const char* arg = argv[i];
-+
-+      // Prompt
-       if ((std::strcmp(arg, "-p") == 0 || std::strcmp(arg, "--prompt") == 0) && i + 1 < argc) {
-         prompt = argv[++i];
-       } else if (std::strncmp(arg, "--prompt=", 9) == 0) {
-         prompt = arg + 9;
--      } else if (std::strcmp(arg, "-h") == 0 || std::strcmp(arg, "--help") == 0) {
-+      } 
-+
-+      // Glyph
-+      else if ((std::strcmp(arg, "-g") == 0 || std::strcmp(arg, "--glyph") == 0) && i + 1 < argc) {
-+        glyph = argv[++i];
-+      } else if (std::strncmp(arg, "--glyph=", 8) == 0) {
-+        glyph = arg + 8;
-+      } 
-+
-+      // Help
-+      else if (std::strcmp(arg, "-h") == 0 || std::strcmp(arg, "--help") == 0) {
-         printUsage();
-         return 0;
--      } else {
-+      } 
-+
-+      // Unknown
-+      else {
-         std::println(stderr, "error: unknown argument: {}", arg);
-         printUsage();
-         return 2;
-@@ -106,8 +128,9 @@ namespace noctalia::launcher {
-       return 1;
-     }
- 
--    // Header line is the prompt, then candidate bytes follow on the same connection.
--    if (!writeAll(fd, prompt.data(), prompt.size())
-+    // Header line is the prompt and glyph, then candidate bytes follow on the same connection.
-+    std::string header = prompt + '\0' + glyph + '\n';
-+    if (!writeAll(fd, header.data(), header.size())
-         || ::write(fd, "\n", 1) != 1
-         || !writeAll(fd, candidates.data(), candidates.size())) {
-       std::println(stderr, "error: write() failed: {}", std::strerror(errno));
+     // Read all of stdin.
+     std::string candidates;
 diff --git a/src/launcher/dmenu_ipc.cpp b/src/launcher/dmenu_ipc.cpp
 index c135fc918..bb0705807 100644
 --- a/src/launcher/dmenu_ipc.cpp
@@ -109,21 +53,23 @@ index c135fc918..bb0705807 100644
    );
    m_launcherPanel->addProvider(std::move(provider));
 diff --git a/src/launcher/dmenu_stdin_provider.cpp b/src/launcher/dmenu_stdin_provider.cpp
-index 2b2aaa2a0..d7d92ea10 100644
+index 2b2aaa2a0..77e2ec47d 100644
 --- a/src/launcher/dmenu_stdin_provider.cpp
 +++ b/src/launcher/dmenu_stdin_provider.cpp
-@@ -15,8 +15,8 @@ namespace {
+@@ -15,8 +15,10 @@ namespace {
  
  } // namespace
  
 -DmenuStdinProvider::DmenuStdinProvider(std::vector<std::string> lines, std::string id, Completion completion)
 -    : m_id(std::move(id)), m_completion(std::move(completion)) {
-+DmenuStdinProvider::DmenuStdinProvider(std::vector<std::string> lines, std::string id, std::string glyph, Completion completion)
++DmenuStdinProvider::DmenuStdinProvider(
++    std::vector<std::string> lines, std::string id, std::string glyph, Completion completion
++)
 +    : m_id(std::move(id)), m_glyph(std::move(glyph)), m_completion(std::move(completion)) {
    m_lines.reserve(lines.size());
    for (auto& raw : lines) {
      if (raw.empty()) {
-@@ -36,20 +36,22 @@ DmenuStdinProvider::DmenuStdinProvider(std::vector<std::string> lines, std::stri
+@@ -36,20 +38,22 @@ DmenuStdinProvider::DmenuStdinProvider(std::vector<std::string> lines, std::stri
  }
  
  std::vector<LauncherResult> DmenuStdinProvider::query(std::string_view text) const {
@@ -151,7 +97,7 @@ index 2b2aaa2a0..d7d92ea10 100644
      return result;
    };
 diff --git a/src/launcher/dmenu_stdin_provider.h b/src/launcher/dmenu_stdin_provider.h
-index 51cf27360..bb46f2ce5 100644
+index 50ff0e45f..139da039d 100644
 --- a/src/launcher/dmenu_stdin_provider.h
 +++ b/src/launcher/dmenu_stdin_provider.h
 @@ -16,7 +16,7 @@ public:
@@ -161,9 +107,9 @@ index 51cf27360..bb46f2ce5 100644
 -  DmenuStdinProvider(std::vector<std::string> lines, std::string id, Completion completion);
 +  DmenuStdinProvider(std::vector<std::string> lines, std::string id, std::string glyph, Completion completion);
  
-   [[nodiscard]] std::string_view prefix() const override { return ""; }
+   [[nodiscard]] std::string_view defaultPrefix() const override { return ""; }
    [[nodiscard]] std::string_view id() const override { return m_id; }
-@@ -32,12 +32,14 @@ private:
+@@ -31,12 +31,14 @@ private:
    struct Line {
      std::string raw;
      std::string title;

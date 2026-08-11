@@ -82,6 +82,7 @@ url = "gh:nix-community/disko/latest"
 [inputs.preservation]
 url = "gh:nix-community/preservation"
 
+# TODO: replace with pkgs.noctalia later
 [inputs.noctalia]
 url = "gh:noctalia-dev/noctalia"
 follows = { nixpkgs = "nixpkgs-unstable" }

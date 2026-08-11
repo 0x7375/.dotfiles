@@ -181,6 +181,24 @@
           ddcutil
         ];
 
+        sops.secrets.calendar_pw.owner = config.me.user;
+
+        hj.xdg.data.files."noctalia/plugins/mango-layout".source = ./mango_layout;
+
+        systemd.user.services.noctalia = {
+          wantedBy = [ "mango-session.target" ];
+          partOf = [ "mango-session.target" ];
+          after = [ "kanshi.service" ];
+          wants = [ "kanshi.service" ];
+          enableDefaultPath = false;
+
+          serviceConfig = {
+            ExecStart = lib.getExe pkgs.my.noctalia;
+            Restart = "always";
+            RestartSec = 3;
+          };
+        };
+
         hj.xdg.config.files = {
           "noctalia/settings.toml" = {
             generator = (pkgs.formats.toml { }).generate "noctalia-settings";
@@ -461,24 +479,6 @@
               #   pattern = "vesktop";
               # }
             ];
-          };
-        };
-
-        sops.secrets.calendar_pw.owner = config.me.user;
-
-        hj.xdg.data.files."noctalia/plugins/mango-layout".source = ./mango_layout;
-
-        systemd.user.services.noctalia = {
-          wantedBy = [ "mango-session.target" ];
-          partOf = [ "mango-session.target" ];
-          after = [ "kanshi.service" ];
-          wants = [ "kanshi.service" ];
-          enableDefaultPath = false;
-
-          serviceConfig = {
-            ExecStart = lib.getExe pkgs.my.noctalia;
-            Restart = "always";
-            RestartSec = 3;
           };
         };
 

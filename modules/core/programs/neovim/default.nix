@@ -2,7 +2,7 @@
 
 let
   root = ./../../../..;
-
+  unstable = pkgs: inputs.nixpkgs-unstable.legacyPackages.${pkgs.stdenv.hostPlatform.system};
   mkNeovim =
     {
       pkgs,
@@ -10,15 +10,13 @@ let
       unfree ? false,
     }:
     inputs.mnw.lib.wrap pkgs {
-      neovim =
-        inputs.nixpkgs-unstable.legacyPackages.${pkgs.stdenv.hostPlatform.system}.neovim-unwrapped.overrideAttrs
-          (_: {
-            doCheck = false;
-            doInstallCheck = false;
-            patches = [
-              ./allow_showcmdloc_winbar.patch
-            ];
-          });
+      neovim = (unstable pkgs).neovim-unwrapped.overrideAttrs (_: {
+        doCheck = false;
+        doInstallCheck = false;
+        patches = [
+          ./allow_showcmdloc_winbar.patch
+        ];
+      });
 
       initLua = builtins.readFile (root + /nvim/init.lua);
 
@@ -36,7 +34,7 @@ let
         };
 
         start =
-          with pkgs.unstable.vimPlugins;
+          with (unstable pkgs).vimPlugins;
           [
             # ui
             cloak-nvim

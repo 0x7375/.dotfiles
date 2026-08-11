@@ -43,8 +43,8 @@
       nixflix.jellyfin = {
         enable = true;
         openFirewall = true;
-        package = pkgs.jellyfin.override {
-          jellyfin-web = pkgs.jellyfin-web.overrideAttrs (old: {
+        package = pkgs.auto.jellyfin.override {
+          jellyfin-web = pkgs.auto.jellyfin-web.overrideAttrs (old: {
             postInstall =
               (old.postInstall or "")
               + (
@@ -52,8 +52,8 @@
                   abyss = pkgs.fetchFromGitHub {
                     owner = "AumGupta";
                     repo = "abyss-jellyfin";
-                    rev = "9204088a6c503c41375510208b4a8646680732c7";
-                    hash = "sha256-MbgjQX4HFxwEKj6MIN44bUZKLzbT8zUIrMVI8RPhx2c=";
+                    tag = "v1.2.2";
+                    hash = "sha256-wevE9AowUtxPCIfbCvKZXbUyJ2Nh4/qqau7ImDJjCtU=";
                   };
                 in
                 # bash
@@ -95,26 +95,7 @@
           password._secret = config.sops.secrets."jellyfin/admin_pw".path;
         };
 
-        system = {
-          enableGroupingMoviesIntoCollections = true;
-          pluginRepositories = {
-            "Intro Skipper" = {
-              url = "https://raw.githubusercontent.com/intro-skipper/manifest/54236b3456e64b1d48320d36221024849069de20/10.11/manifest.json";
-              hash = "sha256-ENwn7Ei3WU2REcxnFNwzF6NGFUcnH2kJ4E5TKbpcDII=";
-            };
-          };
-        };
-
-        plugins =
-          let
-            inherit (inputs.nixflix.lib.jellyfinPlugins) fromRepo;
-          in
-          {
-            "Intro Skipper".package = fromRepo {
-              version = "1.10.11.17";
-              hash = "sha256-cfEnLqKeEGpQSth3NPjDnxCkgv2pePfgCXfVIOrYSiQ=";
-            };
-          };
+        system.enableGroupingMoviesIntoCollections = true;
 
         branding.customCss =
           # css

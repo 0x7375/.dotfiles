@@ -33,7 +33,7 @@
             config.sops.secrets."codeberg_id".path
           } -o IdentitiesOnly=yes -o StrictHostKeyChecking=no"
 
-          [[ ! -d "$DIR" ]] && git clone git@codeberg.org:0x7E/nixcfg "$DIR"
+          [[ ! -d "$DIR" ]] && git clone --recurse-submodules git@codeberg.org:0x7E/nixcfg "$DIR"
           cd "$DIR"
 
           git fetch origin
@@ -44,7 +44,7 @@
           git config user.name "flake-bot"
           git config user.email "actions@noreply"
 
-          if nix flake check --all-systems; then
+          if nix flake check --all-systems .?submodules=1; then
             git add .
             if ! git diff --cached --quiet; then
               last_msg=$(git log -1 --pretty=%s)

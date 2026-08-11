@@ -3,10 +3,14 @@
 
 pkgs.writeShellApplication {
   name = "zaread";
-  runtimeInputs = with pkgs; [
-    libreoffice
-    file
-  ];
+  runtimeInputs =
+    with pkgs;
+    [
+      file
+    ]
+    ++ lib.optionals stdenv.isLinux [
+      libreoffice
+    ];
   text = ''
     ## zaread - a simple script created by paoloap.
 

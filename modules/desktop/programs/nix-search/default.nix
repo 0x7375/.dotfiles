@@ -9,6 +9,7 @@
     {
       pkgs,
       lib,
+      config,
       inputs,
       ...
     }:
@@ -38,18 +39,37 @@
           bind-key m new-window ${lib.getExe (pkgs.writeShellScriptBin "nst" (builtins.readFile ./nix-search-fzf.sh))}
         '';
 
-      # clone repos to allow for an "open source locally" bind
-      userActivation = # bash
-        ''
-          export PATH=${pkgs.git}/bin:$PATH
+      systemd.timers.clone-repos = {
+        wantedBy = [ "timers.target" ];
+        timerConfig = {
+          OnCalendar = "daily";
+          Persistent = true;
+        };
+      };
 
-          mkdir -p $HOME/repos
-          cd $HOME/repos
-
+      systemd.services.clone-repos = {
+        script = ''
+          mkdir -p "$HOME/repos"
           SHALLOW=("--depth=1" "--single-branch" "--no-tags")
-          [[ ! -d ~/repos/home-manager ]] && echo "Cloning home-manager..." && git clone https://github.com/nix-community/home-manager "''${SHALLOW[@]}"
-          [[ ! -d ~/repos/nix-darwin ]] && echo "Cloning nix-darwin..." && git clone https://github.com/nix-darwin/nix-darwin "''${SHALLOW[@]}"
-          [[ ! -d ~/repos/nixpkgs ]] && echo "Cloning nixpkgs..." && git clone https://github.com/nixos/nixpkgs "''${SHALLOW[@]}"
+
+          while read -r name url; do
+            [[ -z "$name" ]] && continue
+            target="$HOME/repos/$name"
+            [[ -d "$target" ]] && git -C "$target" pull || git clone "$url" "$target" "''${SHALLOW[@]}"
+          done <<EOF
+          home-manager https://github.com/nix-community/home-manager
+          nix-darwin https://github.com/nix-darwin/nix-darwin
+          nixpkgs https://github.com/nixos/nixpkgs
+          EOF
         '';
+        serviceConfig = {
+          Type = "oneshot";
+          User = config.me.user;
+        };
+        path = with pkgs; [
+          git
+          openssh
+        ];
+      };
     };
 }

@@ -130,10 +130,14 @@
     {
       sops.secrets.github_token.owner = config.me.user;
 
-      packages = [
-        (pkgs.writeShellScriptBin "tack" ''
-          GITHUB_TOKEN=$(cat "${config.sops.secrets.github_token.path}") exec ${lib.getExe pkgs.unstable.tack} "$@"
-        '')
+      nixpkgs.overlays = [
+        (final: prev: {
+          tack = prev.writeShellScriptBin "tack" ''
+            GITHUB_TOKEN=$(cat "${config.sops.secrets.github_token.path}") exec ${lib.getExe final.unstable.tack} "$@"
+          '';
+        })
       ];
+
+      packages = [ pkgs.tack ];
     };
 }

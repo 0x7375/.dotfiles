@@ -17,9 +17,9 @@
   },
   "auto-update": {
     "type": "tarball",
-    "url": "https://releases.nixos.org/nixos/unstable/nixos-26.11pre1050399.279b4a8275f0/nixexprs.tar.xz",
-    "rev": "279b4a8275f032c566576b3f181fa0f27197f588",
-    "narHash": "sha256-qemNveuexlWhK0Qc6Y8o+gtSVTIj5xljzTAXQZxTHWA="
+    "url": "https://releases.nixos.org/nixos/unstable/nixos-26.11pre1051473.2fcb964de67f/nixexprs.tar.xz",
+    "rev": "2fcb964de67fcf60b43471c55d5d99e61a9ccb5a",
+    "narHash": "sha256-OETwiymkMwunF+pfL25DzLMF2/YpMcJUjVd9qZ0YdsM="
   },
   "disko": {
     "type": "github",
@@ -49,9 +49,9 @@
     "type": "github",
     "owner": "amaanq",
     "repo": "helium-flake",
-    "rev": "11e0f53dd6538e562fd3e085db34fb0503af9371",
-    "narHash": "sha256-WwMugZH8Uy5vrtBeQypxqEuwPzMtQjGuAtt1qKpev9g=",
-    "lastModified": 1784798039
+    "rev": "665980fd9bc94cfbebbf5828807e9bad72553b77",
+    "narHash": "sha256-zPgkh4jwlsP0cgtF8EH/Ox7NwXiZ+ChoNjQ0AFiVEGQ=",
+    "lastModified": 1786341406
   },
   "hjem": {
     "type": "github",
@@ -199,8 +199,8 @@
     "type": "github",
     "owner": "youwen5",
     "repo": "zen-browser-flake",
-    "rev": "36b24209358c82e0ea5404ba003ae8dc37334c86",
-    "narHash": "sha256-H6lM+h8+ZT25uWJwmYkER5yj5RJ9DP2++n5um/XH3J0=",
-    "lastModified": 1783063092
+    "rev": "64791844717b786a93dde8f76c8a35222e53cf53",
+    "narHash": "sha256-cyMeyF4QCZF7YL5+ynYZMDIA2LChF3L51ZLP6BvJ1L4=",
+    "lastModified": 1786424696
   }
 }

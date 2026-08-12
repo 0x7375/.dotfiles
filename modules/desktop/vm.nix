@@ -16,6 +16,9 @@
       programs.virt-manager.enable = true;
       virtualisation.spiceUSBRedirection.enable = true;
 
+      # shut up
+      systemd.services.libvirt-guests.enable = lib.mkForce false;
+
       virtualisation.vmVariant = {
         me.boot = {
           encryption.enable = lib.mkForce false;

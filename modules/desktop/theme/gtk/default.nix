@@ -102,6 +102,7 @@
           GTK_THEME = theme.name;
           GTK2_RC_FILES = "${config.me.home}/.config/gtk-2.0/gtkrc";
           XCURSOR_SIZE = toString config.me.desktop.cursorTheme.size;
+          XCURSOR_THEME = toString config.me.desktop.cursorTheme.name;
         };
 
         persistUser.directories = [

@@ -220,7 +220,7 @@
           "Mod+Alt+b" = btToggle;
           "Mod+Shift+i" = getExe wizToggle;
 
-          "Mod+Shift+c" = getExe (
+          "Mod+Shift+e" = getExe (
             pkgs.writeShellApplication {
               name = "color-picker";
               runtimeInputs = with pkgs; [

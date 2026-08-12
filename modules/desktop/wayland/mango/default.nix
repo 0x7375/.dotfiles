@@ -77,6 +77,7 @@
             ''
               [[ $(tty) == "/dev/tty1" ]] && {
                 export XDG_SESSION_TYPE=wayland
+                export XDG_SESSION_DESKTOP=mango
                 export XDG_CURRENT_DESKTOP=mango
                 exec mango
               }
@@ -246,7 +247,7 @@
                 "SUPER,f,togglefullscreen"
                 "SUPER,Return,togglefloating"
                 "SUPER,g,toggleoverview"
-                "SUPER,c,centerwin"
+                "SUPER+SHIFT,c,centerwin"
 
                 "SUPER,a,switch_layout"
 

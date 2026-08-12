@@ -1,0 +1,55 @@
+{
+  flake.modules.nixos.naitoh =
+    {
+      config,
+      lib,
+      pkgs,
+      ...
+    }:
+    let
+      ratioFilter = pkgs.rustPlatform.buildRustPackage {
+        pname = "ratio-filter";
+        version = "0";
+        src = ./_ratio-filter;
+        cargoLock.lockFile = ./_ratio-filter/Cargo.lock;
+      };
+    in
+    {
+      me.services.autobrr = {
+        subdomain = "auto";
+        inherit (config.services.autobrr.settings) port;
+      };
+
+      me.hostSecrets.autobrr_session.owner = config.services.qbittorrent.user;
+
+      services.autobrr = {
+        enable = true;
+        openFirewall = true;
+        package = pkgs.auto.autobrr;
+        secretFile = config.sops.secrets.autobrr_session.path;
+        settings = {
+          host = "0.0.0.0";
+          checkForUpdates = false;
+        };
+      };
+
+      systemd.services.ratio-filter = {
+        script = ''
+          PW=$(cat "${config.sops.secrets."qbittorrent/pw".path}")
+          ${ratioFilter}/bin/ratio-filter http://localhost:${toString config.nixflix.torrentClients.qbittorrent.webuiPort} $PW
+        '';
+        serviceConfig = {
+          Type = "oneshot";
+          User = config.services.qbittorrent.user;
+        };
+      };
+
+      systemd.timers.ratio-filter = {
+        wantedBy = [ "timers.target" ];
+        timerConfig = {
+          OnCalendar = "daily";
+          Persistent = true;
+        };
+      };
+    };
+}

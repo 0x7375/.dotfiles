@@ -83,27 +83,25 @@
           SAVEHIST=5000000
 
           merge_histories() {
-            local lock_dir="$hist_dir/.merge.lock"
-            # A merge is going on, quit
-            command mkdir "$lock_dir" >/dev/null 2>&1 || return 0
+            zmodload zsh/system 2>/dev/null
+            local lock_file="$hist_dir/.merge.lock"
 
-            {
-              # Keep only the most recent occurrence of each command across all history files, sorted by timestamp
-              # Replace every newline with a special char so sort and awk work, and add newlines back later
-              perl -0777 -pe 's/\\\n/\x01/g' "$hist_dir"/*_history 2>/dev/null \
-                | sort -t':' -k2,2n \
-                | awk '
-                    {
-                      if (match($0, /^: [0-9]+:[0-9]+;/)) cmd = substr($0, RLENGTH + 1)
-                      else cmd = $0
-                      lines[NR]=$0; cmds[NR]=cmd; seen[cmd]=NR
-                    }
-                    END { for (i=1;i<=NR;i++) if (seen[cmds[i]]==i) print lines[i] }
-                  ' \
-                | perl -pe 's/\x01/\\\n/g' > "$HISTFILE"
-            } always {
-              rmdir "$lock_dir"
-            }
+            # Quit if a merge is going on
+            zsystem flock -t 0 "$lock_file" 2>/dev/null || return 0
+
+            # Keep only the most recent occurrence of each command across all history files, sorted by timestamp
+            # Replace every newline with a special char so sort and awk work, and add newlines back later
+            perl -0777 -pe 's/\\\n/\x01/g' "$hist_dir"/*_history 2>/dev/null \
+              | sort -t':' -k2,2n \
+              | awk '
+                  {
+                    if (match($0, /^: [0-9]+:[0-9]+;/)) cmd = substr($0, RLENGTH + 1)
+                    else cmd = $0
+                    lines[NR]=$0; cmds[NR]=cmd; seen[cmd]=NR
+                  }
+                  END { for (i=1;i<=NR;i++) if (seen[cmds[i]]==i) print lines[i] }
+                ' \
+              | perl -pe 's/\x01/\\\n/g' > "$HISTFILE"
           }
 
           zshaddhistory() {

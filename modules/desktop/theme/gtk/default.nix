@@ -28,9 +28,9 @@
             if colorScheme == "dark" then "-dark" else ""
           }/gtk-${version}.0/gtk.css");
 
-          # window.csd {
-          #   border-radius: 0;
-          # }
+          /* window.csd {
+          *   border-radius: 0;
+          }*/ 
 
           window.solid-csd,
           window.solid-csd.maximized,
@@ -39,8 +39,6 @@
             border: none;
             box-shadow: none;
           }
-
-
         '';
     in
     {

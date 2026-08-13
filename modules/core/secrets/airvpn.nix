@@ -41,7 +41,7 @@ in
             preshared-key=${config.sops.placeholder."airvpn/psk"}
             preshared-key-flags=0
             allowed-ips=0.0.0.0/0;
-            ; allowed-ips=0.0.0.0/0;::/0;
+            # allowed-ips=0.0.0.0/0;::/0;
             persistent-keepalive=15
 
             [ipv4]
@@ -49,10 +49,10 @@ in
             dns=${dns.v4};
             method=manual
 
-            ; [ipv6]
-            ; address=${ip.v6}/128
-            ; dns=${dns.v6};
-            ; method=manual
+            # [ipv6]
+            # address=${ip.v6}/128
+            # dns=${dns.v6};
+            # method=manual
           '';
       };
 

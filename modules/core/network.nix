@@ -123,12 +123,6 @@
       networking.networkmanager = {
         enable = true;
         dns = "systemd-resolved";
-        settings = {
-          connection = {
-            "ipv4.ignore-auto-dns" = true;
-            "ipv6.ignore-auto-dns" = true;
-          };
-        };
       };
 
       users.users.${config.me.user}.extraGroups = [ "networkmanager" ];

@@ -1,3 +1,5 @@
+{ self, ... }:
+
 {
   flake.modules.generic.core =
     {
@@ -51,6 +53,8 @@
       ...
     }:
     {
+      systemd.services."hjem-activate@" = self.lib.afterSopsService;
+
       users.mutableUsers = false;
 
       sops.secrets.user_pw.neededForUsers = true;

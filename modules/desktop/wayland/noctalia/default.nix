@@ -147,17 +147,7 @@
           directories = [
             ".cache/noctalia"
             ".config/noctalia"
-            {
-              directory = ".local/state/noctalia";
-              how = "_intermediate";
-            }
-            ".local/state/noctalia/clipboard"
-          ];
-          files = [
-            {
-              file = ".local/state/noctalia/screen_time.json";
-              how = "symlink";
-            }
+            ".local/state/noctalia"
           ];
         };
 

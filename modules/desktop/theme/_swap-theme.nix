@@ -28,7 +28,7 @@ pkgs.writeShellApplication {
         dconf
         dunst
         swaybg
-        mangowc
+        mango
         my.noctalia
       ]
     );

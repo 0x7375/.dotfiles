@@ -201,8 +201,11 @@ in
   flake.modules.nixos.core = {
     persistUser.directories = [
       ".cache/nvim"
+      ".cache/mnw"
       ".local/share/nvim"
+      ".local/share/mnw"
       ".local/state/nvim"
+      ".local/state/mnw"
     ];
 
     xdg.mimeApps.defaultApplications = self.lib.mapMimeEntries [

@@ -17,20 +17,23 @@
         monitorScript = lib.mkOption {
           type = lib.types.package;
           readOnly = true;
-          default = pkgs.writeShellScriptBin "monitor-setup" ''
-            case "$1" in
-              ${lib.concatStringsSep "\n  " (
-                lib.mapAttrsToList (name: profile: ''
-                  ${name})
-                    ln -sf "$HOME/.config/mango/profiles/${name}.conf" "$HOME/.config/mango/monitors.conf"
-                    ln -sf "${
-                      pkgs.writeText "noctalia-layout-${name}" cfg.noctaliaLayouts.${name}
-                    }" "$HOME/.config/noctalia/layout.toml"
-                    ;;'') cfg.profiles
-              )}
-            esac
-            mmsg dispatch reload_config
-          '';
+          default =
+            pkgs.writeShellScriptBin "monitor-setup"
+              # bash
+              ''
+                case "$1" in
+                  ${lib.concatStringsSep "\n  " (
+                    lib.mapAttrsToList (name: profile: ''
+                      ${name})
+                        ln -sf "$HOME/.config/mango/profiles/${name}.conf" "$HOME/.config/mango/monitors.conf"
+                        ln -sf "${
+                          pkgs.writeText "noctalia-layout-${name}" cfg.noctaliaLayouts.${name}
+                        }" "$HOME/.config/noctalia/layout.toml"
+                        ;;'') cfg.profiles
+                  )}
+                esac
+                ${lib.getExe' pkgs.mango "mmsg"} dispatch reload_config
+              '';
         };
 
         mangoProfiles = lib.mkOption {
@@ -64,8 +67,16 @@
       config = {
         nixpkgs.overlays = [
           (final: prev: {
-            mangowc = final.unstable.mango.overrideAttrs (old: {
+            # pinned to 15.4 until ipc tag client count is fixed
+            mango = final.unstable.mango.overrideAttrs (old: rec {
+              version = "0.15.4";
               patches = [ ./no_border_in_monocle.patch ];
+
+              src = pkgs.fetchFromGitHub {
+                inherit (old.src) owner repo;
+                tag = version;
+                hash = "sha256-f5l8fsEqaX37sw4tAXpKQ4D3MOfrSQyulAvmUJgkqh8=";
+              };
             });
           })
         ];
@@ -94,7 +105,7 @@
 
         packages = with pkgs; [
           wl-clipboard-rs
-          mangowc
+          mango
 
           # required for vesktop to open links for example
           xdg-utils

@@ -2,7 +2,7 @@ pkgs:
 pkgs.writeShellApplication {
   name = "open-bookmark";
   runtimeInputs = with pkgs; [
-    my.noctalia
+    noctalia
     coreutils
     xdg-utils
     curl

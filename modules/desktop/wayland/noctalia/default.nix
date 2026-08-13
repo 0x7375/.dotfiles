@@ -153,20 +153,28 @@
 
         nixpkgs.overlays = [
           (final: prev: {
+            noctalia = final.unstable.noctalia.overrideAttrs (old: rec {
+              version = "4dd6f29dbaafde7b11d61ce12685d01441d4a483";
+              src = pkgs.fetchFromGitHub {
+                inherit (old.src) owner repo;
+                rev = version;
+                hash = "sha256-Kc3xbv2+z0+aV+t4IL1BfoTtB9MS0zHyI38oiv7zHxc=";
+              };
+
+              patches = (old.patches or [ ]) ++ [
+                ./truncate_ssid.patch
+                ./glyph_dmenu_cli.patch
+              ];
+            });
+
             my = (prev.my or { }) // {
-              noctalia = inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default.overrideAttrs (old: {
-                patches = (old.patches or [ ]) ++ [
-                  ./truncate_ssid.patch
-                  ./glyph_dmenu_cli.patch
-                ];
-              });
               lock = import ./_lock.nix final;
             };
           })
         ];
 
         packages = with pkgs; [
-          my.noctalia
+          noctalia
           udisks
           ddcutil
         ];
@@ -183,7 +191,7 @@
           enableDefaultPath = false;
 
           serviceConfig = {
-            ExecStart = lib.getExe pkgs.my.noctalia;
+            ExecStart = lib.getExe pkgs.noctalia;
             Restart = "always";
             RestartSec = 3;
           };
@@ -486,7 +494,7 @@
               # Try to open an existing note and create a new one otherwise
               note=$(ls -t $HOME/{notes,courses}/*.{org,md,csv} 2>/dev/null \
                 | sed -E 's|.*/||; s/\.(org|md|csv)$//' \
-                | ${lib.getExe pkgs.my.noctalia} dmenu -p "Open or create a note..." -g notebook)
+                | ${lib.getExe pkgs.noctalia} dmenu -p "Open or create a note..." -g notebook)
 
               [[ -n "$note" ]] || exit 0
 

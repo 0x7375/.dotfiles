@@ -82,11 +82,6 @@ url = "gh:nix-community/disko/latest"
 [inputs.preservation]
 url = "gh:nix-community/preservation"
 
-# TODO: replace with pkgs.noctalia later
-[inputs.noctalia]
-url = "gh:noctalia-dev/noctalia"
-follows = { nixpkgs = "nixpkgs-unstable" }
-
 [inputs.helium]
 url = "gh:amaanq/helium-flake"
 follows = { nixpkgs = "auto-update" }
@@ -97,6 +92,9 @@ follows = { nixpkgs = "auto-update" }
 
 [inputs.nix-index-database]
 url = "gh:nix-community/nix-index-database"
+
+[inputs.npr]
+url = "gh:manic-systems/npr"
 
 [inputs.nd]
 url = "cb:0x7E/nd"

@@ -2,7 +2,7 @@ pkgs:
 pkgs.writeShellApplication {
   name = "lock";
   runtimeInputs = with pkgs; [
-    my.noctalia
+    noctalia
     networkmanager
   ];
   bashOptions = [ ];

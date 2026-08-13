@@ -11,7 +11,7 @@ pkgs.writeShellApplication {
       coreutils-full
     ]
     ++ lib.optionals (pkgs.stdenv.hostPlatform.system != "aarch64-darwin") [
-      pkgs.my.noctalia
+      pkgs.noctalia
     ];
   text = ''
     if [[ $# -eq 1 ]]; then

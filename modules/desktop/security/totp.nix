@@ -22,7 +22,7 @@
 
       me.desktop.bindings."Mod+u" = pkgs.writeShellScript "totp-menu" ''
         tokens=$(${lib.getExe pkgs.token2-cli} get_all 2>&1 | grep -iv "touch")
-        selected=$(echo "$tokens" | awk -F'] | - ' '{print $2}' | ${lib.getExe pkgs.my.noctalia} dmenu -p "Copy OTP..." -g password)
+        selected=$(echo "$tokens" | awk -F'] | - ' '{print $2}' | ${lib.getExe pkgs.noctalia} dmenu -p "Copy OTP..." -g password)
 
         [ -z "$selected" ] && exit 0
 
@@ -31,7 +31,7 @@
 
         ${lib.getExe pkgs.my.notify} "Security key" "Touch required" -i "fingerprint" -t 0
         ${lib.getExe pkgs.token2-cli} read_entry --app-name "$app" --account-name "$account" 2>&1 | tail -n 1 | awk '{print $NF}' | tr -d '\r\n' | ${config.me.desktop.copy}
-        ${lib.getExe pkgs.my.noctalia} msg notification-clear-active
+        ${lib.getExe pkgs.noctalia} msg notification-clear-active
       '';
 
       nixpkgs.config.permittedInsecurePackages = [

@@ -38,12 +38,12 @@ pkgs.writeShellApplication {
         exit 0
       fi
 
-      mode=$(printf "region\nmonitor\nwindow" | ${getExe pkgs.my.noctalia} dmenu -p "Recording scope..." -g app-window)
+      mode=$(printf "region\nmonitor\nwindow" | ${getExe pkgs.noctalia} dmenu -p "Recording scope..." -g app-window)
       [[ -z "$mode" ]] && exit 0
 
       audio_list=$(wpctl status | awk '/\[vol:/ { sub(/.*│[ *]*/, ""); sub(/ *\[vol:.*/, ""); sub(/\. /, " "); print }')
       no_audio="No audio"
-      audio_choice=$(printf "$no_audio\n%s" "$audio_list" | ${getExe pkgs.my.noctalia} dmenu -p "Audio to capture...")
+      audio_choice=$(printf "$no_audio\n%s" "$audio_list" | ${getExe pkgs.noctalia} dmenu -p "Audio to capture...")
       [[ -z "$audio_choice" ]] && exit 0
 
       audio_flag=""

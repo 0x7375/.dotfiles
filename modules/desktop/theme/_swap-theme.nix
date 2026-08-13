@@ -29,7 +29,7 @@ pkgs.writeShellApplication {
         dunst
         swaybg
         mango
-        my.noctalia
+        noctalia
       ]
     );
   text =

@@ -27,7 +27,7 @@
         requires = [ "noctalia.service" ];
         serviceConfig = {
           ExecStartPre = pkgs.writeShellScript "wait-for-noctalia" ''
-            until ${lib.getExe pkgs.my.noctalia} msg status >/dev/null 2>&1; do
+            until ${lib.getExe pkgs.noctalia} msg status >/dev/null 2>&1; do
               sleep 0.1
             done
           '';
@@ -56,7 +56,7 @@
             brightness_night=15
 
             set_brightness() {
-              ${getExe pkgs.my.noctalia} msg theme-mode-set $1
+              ${getExe pkgs.noctalia} msg theme-mode-set $1
               shift
 
               ${getExe pkgs.brillo} -S "$1" &

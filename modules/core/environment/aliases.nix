@@ -269,7 +269,7 @@
               local result
 
               if result=$(nix eval --json --apply "$sanitize" "$target" 2>/dev/null); then
-                  echo "$result" | jq -rC
+                  printf "%s\n" "$result" | jq -rC
               else
                   nix eval "$target"
               fi

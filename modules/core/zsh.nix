@@ -86,6 +86,7 @@
             zmodload zsh/system 2>/dev/null
             local lock_file="$hist_dir/.merge.lock"
 
+            touch "$lock_file"
             # Quit if a merge is going on
             zsystem flock -t 0 "$lock_file" 2>/dev/null || return 0
 

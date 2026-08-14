@@ -530,15 +530,15 @@
           ];
           behavior = {
             screen-off = {
-              command = "noctalia:dpms-off";
-              resume_command = "noctalia:dpms-on";
+              command = "noctalia msg dpms-off";
+              resume_command = "noctalia msg dpms-on";
               timeout = 300;
               enabled = true;
             };
             lock-and-suspend = {
               action = "command";
               command = "${lib.getExe pkgs.my.lock} lock-and-suspend";
-              resume_command = "noctalia:dpms-on";
+              resume_command = "noctalia msg dpms-on";
               timeout = 600;
               enabled = true;
             };

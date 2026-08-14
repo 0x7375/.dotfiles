@@ -14,5 +14,7 @@
         group = config.me.mediaGroup;
         dataDir = "/data/main/.state/bazarr";
       };
+
+      systemd.services.bazarr.serviceConfig.UMask = "0002";
     };
 }

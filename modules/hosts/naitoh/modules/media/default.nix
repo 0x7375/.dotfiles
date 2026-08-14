@@ -27,7 +27,7 @@
             mkDir = user: {
               inherit user;
               group = "media";
-              mode = "0775";
+              mode = "02775";
             };
 
             mkMediaDirs = base: {

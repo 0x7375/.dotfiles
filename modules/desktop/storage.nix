@@ -16,11 +16,15 @@ let
           name=${hostname}
         '';
 
-      # "certificate.pem".text = ''
-      #   -----BEGIN CERTIFICATE-----
-      #   ${config.me.host.kdeconnect.cert}
-      #   -----END CERTIFICATE-----
-      # '';
+      "certificate.pem" = {
+        type = "copy";
+        permissions = "0600";
+        text = ''
+          -----BEGIN CERTIFICATE-----
+          ${config.me.host.kdeconnect.cert}
+          -----END CERTIFICATE-----
+        '';
+      };
 
       "trusted_devices".text = lib.concatMapAttrsStringSep "\n" (
         name: _:
@@ -71,7 +75,11 @@ in
           inherit config lib;
         })
         // {
-          "kdeconnect/privateKey.pem".source = config.sops.secrets."kdeconnect/key".path;
+          "kdeconnect/privateKey.pem" = {
+            source = config.sops.secrets."kdeconnect/key".path;
+            permissions = "0600";
+            type = "copy";
+          };
         };
 
       xdg.mimeApps.defaultApplications = self.lib.mapMimeEntries [

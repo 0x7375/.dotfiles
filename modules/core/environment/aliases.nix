@@ -41,6 +41,8 @@
 
         ffmpeg = "${getExe' pkgs.ffmpeg-full "ffmpeg"} -hide_banner";
 
+        qalc = "${getExe pkgs.libqalculate} -s autocalc";
+
         grep = "${getExe' pkgs.gnugrep "grep"} --color=always";
         ls = "${getExe' pkgs.coreutils "ls"} --color --group-directories-first -h";
         ll = "${getExe' pkgs.coreutils "ls"} -lha --color --group-directories-first";

@@ -76,6 +76,7 @@
         RUSTUP_HOME = "${XDG_DATA_HOME}/rustup";
         ERRFILE = "${XDG_CACHE_HOME}/X11/xsession-errors";
         ANDROID_USER_HOME = "${XDG_DATA_HOME}/android";
+        W3M_DIR = "${XDG_CONFIG_HOME}/w3m";
       };
 
       aliases = {

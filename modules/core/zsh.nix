@@ -378,7 +378,7 @@
     {
       hj.xdg.config.files."zsh/longcmd-notify.zsh".text =
         let
-          activeWindow = lib.optionalString pkgs.stdenv.isLinux "${getExe pkgs.lswt} -j | jq '.toplevels[] | select(.activated == true).title'";
+          activeWindow = lib.optionalString pkgs.stdenv.isLinux "${getExe' pkgs.mango "mmsg"} get all-monitors | jq -r '.monitors[] | select(.active == true) | .active_client.title'";
         in
         # zsh
         ''

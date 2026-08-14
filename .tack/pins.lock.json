@@ -81,9 +81,9 @@
     "type": "git",
     "url": "https://codeberg.org/0x7E/nd",
     "ref": "HEAD",
-    "rev": "372121f6d09ce1b65049f718d04adf25fdb32d15",
-    "narHash": "sha256-DZHWbAGpjFV6yLAz4gxSy/iqz6UP2f6EFoqC172Z3RE=",
-    "lastModified": 1784949201
+    "rev": "a0f6db71c0a061ab9317b45047bfd945f98ae28c",
+    "narHash": "sha256-bYb2gaBiuSod2TppyHStOylDbRqMu8LqSJvL7JN6WOw=",
+    "lastModified": 1786666241
   },
   "nix-darwin": {
     "type": "github",
@@ -167,9 +167,9 @@
     "type": "git",
     "url": "ssh://git@codeberg.org/0x7E/nix-secrets",
     "ref": "HEAD",
-    "rev": "f59e4f54ab83bc597c4c44a727d4ee2e1656646e",
-    "narHash": "sha256-RgcQaFLLwVXw/G4m9bMBzNb9IPrAY79ROItnBsybBMU=",
-    "lastModified": 1785791600
+    "rev": "be01d64320900a32dbedf1df50a995c1b33f3cd7",
+    "narHash": "sha256-kCVCA4pEQ26MFIK7QlZBCqHjls+vUA9Vc2xMQm3NlW4=",
+    "lastModified": 1786648628
   },
   "sops-nix": {
     "type": "github",

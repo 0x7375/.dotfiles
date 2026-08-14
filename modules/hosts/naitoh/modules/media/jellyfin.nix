@@ -10,6 +10,14 @@
         webSockets = true;
       };
 
+      hardware.graphics = {
+        enable = true;
+        extraPackages = with pkgs; [
+          rocmPackages.clr
+          rocmPackages.clr.icd
+        ];
+      };
+
       persist.directories = [
         {
           directory = "/var/cache/jellyfin";
@@ -105,6 +113,21 @@
 
         users.${config.me.user}.password._secret = config.sops.secrets."jellyfin/user_pw".path;
         apiKey._secret = config.sops.secrets."jellyfin/api_key".path;
+
+        encoding = {
+          hardwareAccelerationType = "vaapi";
+          allowHevcEncoding = true;
+          hardwareDecodingCodecs = [
+            "h264"
+            "hevc"
+            "mpeg2video"
+            "vc1"
+            "vp8"
+            "vp9"
+          ];
+          enableTonemapping = true;
+          enableEnhancedNvdecDecoder = false;
+        };
       };
     };
 }

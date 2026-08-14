@@ -153,6 +153,7 @@
 
         nixpkgs.overlays = [
           (final: prev: {
+            # pinned until 5.0.0-beta.9 so my dmenu patch works
             noctalia = final.unstable.noctalia.overrideAttrs (old: rec {
               version = "4dd6f29dbaafde7b11d61ce12685d01441d4a483";
               src = pkgs.fetchFromGitHub {
@@ -164,6 +165,7 @@
               patches = (old.patches or [ ]) ++ [
                 ./truncate_ssid.patch
                 ./glyph_dmenu_cli.patch
+                ./original_critical_toast.patch
               ];
             });
 
@@ -406,7 +408,7 @@
                 };
               };
 
-              wallpaper.transition_on_startup = true;
+              wallpaper.transition_on_startup = false;
 
               widget = {
                 bluetooth.show_label = true;

@@ -55,15 +55,6 @@
           completion-delay=50ms
           new-message-bell = false
 
-          [hooks]
-          mail-received=${pkgs.writeShellScript "notify-new" ''
-            ACTIVE_WINDOW=$(${lib.getExe' pkgs.mango "mmsg"} get all-monitors | jq -r '.monitors[] | select(.active == true) | .active_client.title')
-
-            [[ "$ACTIVE_WINDOW" != "aerc" ]] && {
-              ${lib.getExe pkgs.my.notify} -i mail "New mail from $AERC_FROM_NAME" "$AERC_SUBJECT"
-            }
-          ''};
-
           [filters]
           text/plain=colorize
           text/calendar=calendar
@@ -182,7 +173,6 @@
           / = :toggle-key-passthrough<Enter>/
           q = :close<Enter>
           O = :open<Enter>
-          o = :open<Enter>
           S = :save<space>
           | = :pipe<space>
           D = :delete<Enter>
@@ -270,4 +260,19 @@
           <C-PgDn> = :next-tab<Enter>
         '';
     };
+
+  flake.modules.generic.desktop = { pkgs, lib, ... }: {
+    hj.xdg.config.files."aerc/aerc.conf".text =
+      # ini
+      ''
+        [hooks]
+        mail-received=${pkgs.writeShellScript "notify-new" ''
+          ACTIVE_WINDOW=$(${lib.getExe' pkgs.mango "mmsg"} get all-monitors | jq -r '.monitors[] | select(.active == true) | .active_client.title')
+
+          [[ "$ACTIVE_WINDOW" != "aerc" ]] && {
+            ${lib.getExe pkgs.my.notify} -i mail "New mail from $AERC_FROM_NAME" "$AERC_SUBJECT"
+          }
+        ''};
+      '';
+  };
 }

@@ -200,16 +200,16 @@
                 asyncio.run(main())
               '';
 
-          screenshot = import ./_screenshot.nix pkgs;
-          screenrecord = import ./_screenrecord.nix pkgs;
+          screenshot = import ./_screenshot.nix { inherit pkgs config; };
+          screenrecord = import ./_screenrecord.nix { inherit pkgs config; };
         in
         {
           XF86MonBrightnessUp = "noctalia msg brightness-up all";
           XF86MonBrightnessDown = "noctalia msg brightness-down all";
-          Print = "${getExe screenshot} region";
-          "Alt+Sys_Req" = "${getExe screenshot} window";
+          Print = "${getExe screenshot} area";
           "Shift+Print" = "${getExe screenshot} monitor";
-          "Mod+Print" = getExe screenrecord;
+          "Mod+Print" = "${getExe screenrecord} area";
+          "Mod+Shift+Print" = "${getExe screenrecord} monitor";
 
           "Mod+t" = "${term} -e ${getExe pkgs.my.tmux-sessionizer} ${config.me.home}";
           "Mod+Shift+t" = term;

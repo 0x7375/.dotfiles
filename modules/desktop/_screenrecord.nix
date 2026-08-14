@@ -1,4 +1,4 @@
-pkgs:
+{ config, pkgs, ... }:
 pkgs.writeShellApplication {
   name = "screenrecord";
   runtimeInputs = with pkgs; [
@@ -17,6 +17,8 @@ pkgs.writeShellApplication {
   text =
     let
       inherit (pkgs.lib) getExe;
+      # TODO: make this shit better
+      inherit (config.tinted.files.".config/mango/config.conf".value config.tinted.hex.dark) borderpx;
     in
     # bash
     ''
@@ -31,15 +33,20 @@ pkgs.writeShellApplication {
         thumb="/tmp/thumb.png"
         ffmpeg -y -i "$filepath" -vframes 1 "$thumb" 2>/dev/null
 
-        action=$(notify-send -i "$thumb" "Recording Saved" "$filepath" --action="open=open")
+        action=$(notify-send -i "$thumb" "Recording Saved" "$filepath" --action="delete=delete" --action="open=open")
         [[ "$action" == "open" ]] && xdg-open "$filepath"
+        [[ "$action" == "delete" ]] && rm "$filepath"
         rm -f "$thumb"
 
         exit 0
       fi
 
-      mode=$(printf "region\nmonitor\nwindow" | ${getExe pkgs.noctalia} dmenu -p "Recording scope..." -g app-window)
-      [[ -z "$mode" ]] && exit 0
+      usage() {
+        echo "Usage: screenrecord {area|monitor}"
+        exit 1
+      }
+
+      [[ -z "$1" ]] && usage
 
       audio_list=$(wpctl status | awk '/\[vol:/ { sub(/.*│[ *]*/, ""); sub(/ *\[vol:.*/, ""); sub(/\. /, " "); print }')
       no_audio="No audio"
@@ -57,28 +64,37 @@ pkgs.writeShellApplication {
       folder="$(xdg-user-dir VIDEOS)/"
       filepath="$folder$file"
 
-      active_mon=$(mmsg get focusing-client | jq .monitor)
-      enc_opts="$audio_flag -x yuv420p -c h264_nvenc -p preset=p7 -p tune=hq -p cq=20 -p b=0"
+      # enc_opts="$audio_flag -x yuv420p -c h264_nvenc -p preset=p7 -p tune=hq -p rc=vbr -p cq=20 -p b=0"
+      enc_opts="$audio_flag -c h264_nvenc -p preset=p7 -p tune=hq -p rc=constqp -p qp=18 -p color_primaries=bt709 -p color_trc=bt709 -p colorspace=bt709"
+      # yuv420p requires even dimensions
+      filter="scale=out_color_matrix=bt709,format=yuv420p,pad=ceil(iw/2)*2:ceil(ih/2)*2"
 
-      case "$mode" in
-        region)
-          geom=$(slurp)
-          [[ -z "$geom" ]] && exit 1
-          record_cmd="wf-recorder -g \"$geom\" -f \"$filepath\" $enc_opts"
+      case "$1" in
+        area)
+          clients=$(mmsg get all-clients | jq -r '.clients[] | select(.is_visible) | (if .is_fullscreen then 0 else ${toString borderpx} end) as $b | "\(.x + $b),\(.y + $b) \(.width - 2*$b)x\(.height - 2*$b)"')
+          selection=$(echo "$clients" | slurp -f "%o %x,%y %wx%h")
+          [[ -z "$selection" ]] && exit 1
+
+          read -r mon geom <<< "$selection"
+          IFS=' x' read -r _ w h <<< "$geom"
+
+          # fallback to software encoding (fails with hw enc)
+          if (( w < 160 || h < 160 )); then
+            enc_opts="$audio_flag -c libx264 -p preset=superfast -p crf=18"
+          fi
+
+          record_cmd="wf-recorder -o \"$mon\" -g \"$geom\" -F \"$filter\" -f \"$filepath\" $enc_opts"
           ;;
         monitor)
-          record_cmd="wf-recorder -o \"$active_mon\" -f \"$filepath\" $enc_opts"
-          ;;
-        window)
-          geom=$(mmsg get monitor "$active_mon" | jq -r '"\(.x),\(.y) \(.width)x\(.height)"')
-          record_cmd="wf-recorder -g \"$geom\" -f \"$filepath\" $enc_opts"
+          active_mon=$(mmsg get focusing-client | jq .monitor)
+          record_cmd="wf-recorder -o \"$active_mon\" -F \"$filter\" -f \"$filepath\" $enc_opts"
           ;;
         *)
-          exit 1
+          usage
           ;;
       esac
 
-      ${getExe pkgs.my.notify} -i video "Recording Started" "Mode: $mode" -t 2000
+      ${getExe pkgs.my.notify} -i video "Recording Started" "Mode: $1" -t 2000
 
       eval "$record_cmd"
     '';

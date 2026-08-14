@@ -1,4 +1,4 @@
-pkgs:
+{ config, pkgs, ... }:
 pkgs.writeShellApplication {
   name = "screenshot";
   runtimeInputs = with pkgs; [
@@ -10,38 +10,50 @@ pkgs.writeShellApplication {
     wl-clipboard
     xdg-utils
   ];
-  text = ''
-    time=$(date -u "+%s" | cut -c 7-)
-    file="Screenshot-$(date -u +%d-%m-%Y-"$time").png"
-    folder="$(xdg-user-dir SCREENSHOTS)/"
-    filepath="$folder$file"
+  text =
+    let
+      # TODO: make this shit better
+      inherit (config.tinted.files.".config/mango/config.conf".value config.tinted.hex.dark) borderpx;
+    in
+    # bash
+    ''
+      time=$(date -u "+%s" | cut -c 7-)
+      file="Screenshot-$(date -u +%d-%m-%Y-"$time").png"
+      folder="$(xdg-user-dir SCREENSHOTS)/"
+      filepath="$folder$file"
 
-    [[ -z "$1" ]] && exit 1
-
-    active_mon=$(mmsg get focusing-client | jq .monitor)
-
-    case "$1" in
-      region)
-        grim -g "$(slurp)" "$filepath"
-        ;;
-      monitor)
-        grim -o "$active_mon" "$filepath"
-        ;;
-      window)
-        geom=$(mmsg get monitor "$active_mon" | jq -r '"\(.x),\(.y) \(.width)x\(.height)"')
-        grim -g "$geom" "$filepath"
-        ;;
-      *)
-        echo "Usage: screenshot {region|window|monitor}"
+      usage() {
+        echo "Usage: screenshot {area|monitor}"
         exit 1
-        ;;
-    esac
+      }
 
-    wl-copy < "$filepath"
+      [[ -z "$1" ]] && usage
 
-    (
-     action=$(notify-send -i "$filepath" -a "Screenshot saved" "$filepath" --action="open=open")
-     [[ "$action" == "open" ]] && xdg-open "$filepath"
-    ) &
-  '';
+      active_mon=$(mmsg get focusing-client | jq .monitor)
+
+      case "$1" in
+        area)
+          clients=$(mmsg get all-clients | jq -r '.clients[] | select(.is_visible) | (if .is_fullscreen then 0 else ${toString borderpx} end) as $b | "\(.x + $b),\(.y + $b) \(.width - 2*$b)x\(.height - 2*$b)"')
+          geom=$(echo "$clients" | slurp)
+          [[ -z "$geom" ]] && exit 1
+          
+          grim -g "$geom" "$filepath"
+          ;;
+        monitor)
+          active_mon=$(mmsg get focusing-client | jq -r .monitor)
+          grim -o "$active_mon" "$filepath"
+          ;;
+        *)
+          usage
+          ;;
+      esac
+
+      wl-copy < "$filepath"
+
+      (
+       action=$(notify-send -i "$filepath" "Screenshot saved" "$filepath" --action="delete=delete" --action="open=open")
+       [[ "$action" == "open" ]] && xdg-open "$filepath"
+       [[ "$action" == "delete" ]] && rm "$filepath"
+      ) &
+    '';
 }

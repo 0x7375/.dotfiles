@@ -47,10 +47,6 @@
               };
               ExcludedFileNames = builtins.readFile ./blacklist.txt;
               Interface = "airvpn";
-              MaxConnections = 400;
-              MaxConnectionsPerTorrent = 100;
-              MaxUploads = 20;
-              MaxUploadsPerTorrent = 4;
               Preallocation = true;
               QueueingSystemEnabled = false;
               PeXEnabled = true;

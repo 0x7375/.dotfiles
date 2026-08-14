@@ -64,8 +64,14 @@ pkgs.writeShellApplication {
       folder="$(xdg-user-dir VIDEOS)/"
       filepath="$folder$file"
 
-      # enc_opts="$audio_flag -x yuv420p -c h264_nvenc -p preset=p7 -p tune=hq -p rc=vbr -p cq=20 -p b=0"
-      enc_opts="$audio_flag -c h264_nvenc -p preset=p7 -p tune=hq -p rc=constqp -p qp=18 -p color_primaries=bt709 -p color_trc=bt709 -p colorspace=bt709"
+      color_opts="-p color_primaries=bt709 -p color_trc=bt709 -p colorspace=bt709"
+
+      if [[ -c "/dev/nvidia0" ]]; then
+        enc_opts="$audio_flag -c h264_nvenc -p preset=p7 -p tune=hq -p rc=constqp -p qp=18 $color_opts"
+      else
+        enc_opts="$audio_flag -c libx264 -p preset=superfast -p crf=18 $color_opts"
+      fi
+
       # yuv420p requires even dimensions
       filter="scale=out_color_matrix=bt709,format=yuv420p,pad=ceil(iw/2)*2:ceil(ih/2)*2"
 

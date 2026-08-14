@@ -35,6 +35,8 @@
         cp = "cp -v";
         mv = "mv -v";
 
+        # makes sudo work with aliases
+        sudo = "sudo ";
         su = "su -";
 
         free = "${getExe' pkgs.procps "free"} -h";

@@ -66,6 +66,7 @@
       users.users.root = {
         initialPassword = "root";
         initialHashedPassword = lib.mkForce null;
+        shell = pkgs.zsh;
       };
     };
 

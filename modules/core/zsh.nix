@@ -204,19 +204,22 @@
               fi
           }
 
-          function get_ssh_info() {
-              if [[ -n ''${SSH_CONNECTION-} ]]; then
+          function get_machine_info() {
+              if pgrep -u $(logname) sshd > /dev/null 2>&1; then
                   [[ -n ''${ZSH_VERSION-} ]] && echo "%F{yellow}%n%F{reset}@%F{cyan}%m:"
                   [[ -n ''${BASH_VERSION-} ]] && echo "\[\033[33m\]\u\[\033[0m\]@\[\033[36m\]\h:\[\033[0m\]"
+              elif [[ $USER != "${config.me.user}" ]]; then
+                  [[ -n ''${ZSH_VERSION-} ]] && echo "%F{yellow}%n:"
+                  [[ -n ''${BASH_VERSION-} ]] && echo "\[\033[33m\]\u:\[\033[0m\]"
               fi
           }
 
           function set_prompt {
               # Last character is U+202F to navigate previous/next prompt in tmux (show unicode with ga in vim)
               if [[ -n ''${ZSH_VERSION-} ]]; then
-                PS1='%(?.%f.%F{red}$? )$(get_ssh_info)%F{reset}$(get_env)%~%F{cyan}$(get_git_info)%F{reset}$(get_prompt_symbol)%f '
+                PS1='%(?.%f.%F{red}$? )$(get_machine_info)%F{reset}$(get_env)%~%F{cyan}$(get_git_info)%F{reset}$(get_prompt_symbol)%f '
               elif [[ -n ''${BASH_VERSION-} ]]; then
-                PS1='\[\033[31m\]$(r=$?; [ $r -ne 0 ] && printf "$r ")\[\033[0m\]$(get_ssh_info)$(get_env)\w\[\033[36m\]$(get_git_info)\[\033[0m\]$(get_prompt_symbol) '
+                PS1='\[\033[31m\]$(r=$?; [ $r -ne 0 ] && printf "$r ")\[\033[0m\]$(get_machine_info)$(get_env)\w\[\033[36m\]$(get_git_info)\[\033[0m\]$(get_prompt_symbol) '
               fi
           }
         '';

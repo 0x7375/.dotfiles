@@ -35,6 +35,8 @@
         cp = "cp -v";
         mv = "mv -v";
 
+        su = "su -";
+
         free = "${getExe' pkgs.procps "free"} -h";
         df = "${getExe' pkgs.coreutils "df"} -h";
         du = "${getExe' pkgs.coreutils "du"} -h";

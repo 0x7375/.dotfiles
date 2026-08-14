@@ -5,17 +5,40 @@
     {
       config,
       lib,
+      pkgs,
       ...
     }:
+    let
+      inherit (config.me) user;
+      mirrorToRoot = lib.mapAttrs (
+        name: file:
+        (removeAttrs file [
+          "target"
+          "relativeTo"
+        ])
+        // {
+          target = name;
+        }
+      );
+    in
     {
       imports = [
         (lib.mkAliasOptionModule [ "hj" ] [ "hjem" "users" config.me.user ])
       ];
 
       hjem = {
-        users.${config.me.user}.enable = true;
+        users.${user}.enable = true;
+        users.root = {
+          enable = true;
+          files = mirrorToRoot config.hjem.users.${user}.files;
+          xdg.config.files = mirrorToRoot config.hjem.users.${user}.xdg.config.files;
+        };
         clobberByDefault = true;
       };
+
+      activation = ''
+        ${lib.getExe' pkgs.systemd "systemctl"} start hjem-activate@root.service || true
+      '';
     };
 
   flake.modules.nixos.core =

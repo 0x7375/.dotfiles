@@ -197,6 +197,8 @@
           function get_prompt_symbol() {
               if [[ $SHLVL -gt ${if pkgs.stdenv.isLinux then "1" else "2"} || -n ''${DIRENV_LOADED-} ]]; then
                   echo " ::"
+              elif [[ $USER = "root" ]]; then
+                  echo " #"
               else
                   echo " %%"
               fi

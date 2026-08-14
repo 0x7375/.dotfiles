@@ -12,13 +12,16 @@
       inherit (config.me.services.attic) url;
     in
     {
-      sops.secrets.attic_access_token = { };
+      sops.secrets.attic_access_token.owner = config.me.user;
 
-      sops.templates.attic_netrc.content = ''
-        machine cache.0xaa.me
-        login attic
-        password ${config.sops.placeholder.attic_access_token}
-      '';
+      sops.templates.attic_netrc = {
+        owner = config.me.user;
+        content = ''
+          machine cache.0xaa.me
+          login attic
+          password ${config.sops.placeholder.attic_access_token}
+        '';
+      };
 
       packages = [ pkgs.attic-client ];
 

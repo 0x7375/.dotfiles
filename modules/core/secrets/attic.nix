@@ -14,6 +14,12 @@
     {
       sops.secrets.attic_access_token = { };
 
+      sops.templates.attic_netrc.content = ''
+        machine cache.0xaa.me
+        login attic
+        password ${config.sops.placeholder.attic_access_token}
+      '';
+
       packages = [ pkgs.attic-client ];
 
       systemd.services.attic-watch-store = {
@@ -39,6 +45,7 @@
       nix.settings = {
         substituters = [ "${url}/default" ];
         trusted-public-keys = [ "default:VbeXg6jEaGj+UQTVyrZIMsyUCZy8Qooy4DiRyrqsikM=" ];
+        netrc-file = config.sops.templates.attic_netrc.path;
       };
     };
 }

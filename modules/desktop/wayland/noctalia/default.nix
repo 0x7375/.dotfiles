@@ -166,6 +166,7 @@
                 ./truncate_ssid.patch
                 ./glyph_dmenu_cli.patch
                 ./original_critical_toast.patch
+                ./hide_discord_toast_body.patch
               ];
             });
 

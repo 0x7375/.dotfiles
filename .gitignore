@@ -6,6 +6,8 @@
 
 !modules
 !modules/**
+modules/**/target/
+
 !flake.nix
 !.tack
 !.tack/**

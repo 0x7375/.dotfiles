@@ -41,6 +41,8 @@
         serviceConfig = {
           Type = "oneshot";
           User = config.services.qbittorrent.user;
+          StateDirectory = "ratio-filter";
+          WorkingDirectory = "%S/ratio-filter";
         };
       };
 

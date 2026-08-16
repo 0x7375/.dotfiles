@@ -1,9 +1,11 @@
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 use std::{
-    env, fmt,
+    collections::HashMap,
+    env, fmt, fs,
     process::exit,
     time::{SystemTime, UNIX_EPOCH},
 };
+use ureq::Agent;
 
 const GRACE_PERIOD_DAYS: u64 = 7;
 const GRACE_PERIOD_SECONDS: u64 = GRACE_PERIOD_DAYS * 60 * 60 * 24;
@@ -17,9 +19,20 @@ struct Torrent {
     hash: String,
     name: String,
     seeding_time: u64,
+    added_on: u64,
     last_activity: u64,
     ratio: f32,
     size: f32,
+    uploaded: u64,
+    downloaded: u64,
+    tracker: String,
+}
+
+#[derive(Serialize, Deserialize, Default)]
+struct Stats {
+    week: u64,
+    trackers: HashMap<String, i64>,
+    torrents: HashMap<String, i64>,
 }
 
 fn elapsed(time: u64) -> u64 {
@@ -30,11 +43,20 @@ fn elapsed(time: u64) -> u64 {
         .saturating_sub(time)
 }
 
+fn get_sunday_midnight() -> u64 {
+    let now = SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .unwrap()
+        .as_secs();
+    let days = now / DAY_IN_SEC;
+    now - (((days + 4) % 7) * DAY_IN_SEC) - (now % DAY_IN_SEC)
+}
+
 impl fmt::Display for Torrent {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(
             f,
-            "[{name}...]\tSize: {size:.2}GB\t| Ratio: {ratio:.2}\t| Days: {days:.1}\t| Score: {score:.2}",
+            "[{name}...]\tSize: {size:.2} GB\t| Ratio: {ratio:.2}\t| Days: {days:.1}\t| Score: {score:.2}",
             name = self.name.chars().take(40).collect::<String>(),
             size = self.size / (1024 * 1024 * 1024) as f32,
             ratio = self.ratio,
@@ -54,23 +76,18 @@ impl Torrent {
     }
 }
 
-fn main() {
-    let mut args = env::args();
-    args.next();
-    let (Some(url), Some(pw), dry, None) = (args.next(), args.next(), args.next(), args.next())
-    else {
-        eprintln!("Usage: <url> <password> [--dry]");
-        exit(1);
-    };
+struct ConnectionInfo {
+    agent: Agent,
+    url: String,
+}
 
-    let agent = ureq::agent();
-
-    let response = agent
-        .post(format!("{}/api/v2/auth/login", &url))
-        .header("Referer", &url)
-        .send_form([("username", "admin"), ("password", &pw)]);
-
-    match response {
+fn login(conn: &ConnectionInfo, pw: &str) {
+    match conn
+        .agent
+        .post(format!("{}/api/v2/auth/login", conn.url))
+        .header("Referer", &conn.url)
+        .send_form([("username", "admin"), ("password", pw)])
+    {
         Ok(r) => {
             if !r.headers().contains_key("set-cookie") {
                 eprintln!("Login failed, did not get an auth cookie");
@@ -81,18 +98,100 @@ fn main() {
             eprintln!("Login failed: {e}");
             exit(1);
         }
-    };
+    }
+}
 
-    let mut torrents = agent
+fn get_torrents(conn: &ConnectionInfo) -> Vec<Torrent> {
+    conn.agent
         .get(format!(
             "{}/api/v2/torrents/info?category={TARGET_CATEGORY}",
-            &url
+            &conn.url
         ))
         .call()
         .unwrap()
         .body_mut()
         .read_json::<Vec<Torrent>>()
-        .unwrap();
+        .unwrap()
+}
+
+fn delete_torrents(conn: &ConnectionInfo, to_delete: &[Torrent]) {
+    let hashes: Vec<String> = to_delete.iter().map(|t| t.hash.clone()).collect();
+    let response = conn
+        .agent
+        .post(format!("{}/api/v2/torrents/delete", conn.url))
+        .header("Referer", &conn.url)
+        .send_form([
+            ("hashes", hashes.join("|")),
+            ("deleteFiles", "true".to_string()),
+        ]);
+
+    if let Err(e) = response {
+        eprintln!("Failed to delete torrents: {e}");
+        exit(1)
+    }
+}
+
+fn track_weekly_stats(torrents: &[Torrent], is_dry: bool) {
+    let current_sunday = get_sunday_midnight();
+
+    let mut stats: Stats = fs::read_to_string("stats.json")
+        .ok()
+        .and_then(|s| serde_json::from_str(&s).ok())
+        .unwrap_or_default();
+
+    if stats.week != current_sunday {
+        stats.week = current_sunday;
+        stats.trackers.clear();
+    }
+
+    let mut current_torrents = HashMap::new();
+
+    for t in torrents {
+        let net = t.uploaded as i64 - t.downloaded as i64;
+        let diff = match stats.torrents.get(&t.hash) {
+            Some(&prev) => net - prev,
+            None if t.added_on >= current_sunday => net,
+            None => 0,
+        };
+
+        *stats.trackers.entry(t.tracker.clone()).or_default() += diff;
+        current_torrents.insert(t.hash.clone(), net);
+    }
+
+    stats.torrents = current_torrents;
+
+    for (tracker, net) in &stats.trackers {
+        let tracker = tracker.split("/").nth(2).unwrap_or(tracker);
+
+        println!("{tracker}:\t{:+.2} GB", *net as f64 / 1_073_741_824.0);
+    }
+
+    if let Ok(json) = serde_json::to_string(&stats)
+        && !is_dry
+    {
+        let _ = fs::write("stats.json", json);
+    }
+}
+
+fn main() {
+    let mut args = env::args();
+    args.next();
+    let (Some(url), Some(pw), dry, None) = (args.next(), args.next(), args.next(), args.next())
+    else {
+        eprintln!("Usage: <url> <password> [--dry]");
+        exit(1);
+    };
+
+    let agent = ureq::agent();
+    let conn = ConnectionInfo { agent, url };
+
+    login(&conn, &pw);
+
+    let mut torrents = get_torrents(&conn);
+
+    println!("--- WEEKLY SUMMARY ---");
+    let is_dry = dry == Some("--dry".to_string());
+    track_weekly_stats(&torrents, is_dry);
 
     torrents.sort_by(|a, b| {
         let score_a = if a.seeding_time < GRACE_PERIOD_SECONDS {
@@ -139,20 +238,8 @@ fn main() {
         println!("{}", torrent);
     }
 
-    if dry != Some("--dry".to_string()) {
-        let hashes: Vec<String> = to_delete.iter().map(|t| t.hash.clone()).collect();
-        let response = agent
-            .post(format!("{}/api/v2/torrents/delete", &url))
-            .header("Referer", &url)
-            .send_form([
-                ("hashes", hashes.join("|")),
-                ("deleteFiles", "true".to_string()),
-            ]);
-
-        if let Err(e) = response {
-            eprintln!("Failed to delete torrents: {e}");
-            exit(1)
-        }
+    if !is_dry {
+        delete_torrents(&conn, &to_delete);
     }
 
     println!("Deleted {} torrents.", to_delete.len());

@@ -50,6 +50,7 @@ pkgs.writeShellApplication {
           cp "$f" "$USB_PATH/$name" && \
           echo "* Copied to USB -> $USB_PATH/$name"
         done
+        sync
       fi
 
       if confirm "Delete originals?"; then

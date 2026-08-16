@@ -19,22 +19,25 @@
         media_naming.episodes.rename = true;
         custom_formats =
           let
-            allProfiles = [
-              { name = "Any"; }
-              { name = "HD - 720p/1080p"; }
-              { name = "HD-720p"; }
-              { name = "HD-1080p"; }
-              { name = "Ultra-HD"; }
+            profiles = [
+              "Any"
+              "HD - 720p/1080p"
+              "HD-720p"
+              "HD-1080p"
+              "Ultra-HD"
             ];
+            assign = score: map (name: { inherit name score; }) profiles;
           in
           [
+            # Not original language
             {
-              trash_ids = [ "ae575f95ab639ba5d15f663bf019e3e8" ]; # Language: Not Original
-              assign_scores_to = allProfiles;
+              trash_ids = [ "ae575f95ab639ba5d15f663bf019e3e8" ];
+              assign_scores_to = assign (-10000);
             }
+            # Season Packs
             {
-              trash_ids = [ "3bc5f395426614e155e585a2f056cdf1" ]; # Season Packs
-              assign_scores_to = allProfiles;
+              trash_ids = [ "3bc5f395426614e155e585a2f056cdf1" ];
+              assign_scores_to = assign 1000;
             }
           ];
       };

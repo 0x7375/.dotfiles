@@ -21,6 +21,14 @@
 
       networking.enableIPv6 = false;
 
+      systemd.services.prowlarr.preStart = ''
+        DATA_DIR="${config.nixflix.prowlarr.dataDir}" 
+
+        mkdir -p "$DATA_DIR/Definitions/Custom"
+        cp ${./c411.yml} "$DATA_DIR/Definitions/Custom/c411-custom.yml"
+        chmod 644 "$DATA_DIR/Definitions/Custom/c411-custom.yml"
+      '';
+
       nixflix = {
         flaresolverr.enable = true;
         prowlarr = {
@@ -47,12 +55,18 @@
                 (withSolver "Internet Archive")
                 (withSolver "Torrent9")
                 {
-                  name = "C411";
+                  name = "C411 (Custom)";
                   apikey._secret = config.sops.secrets."indexers/c411".path;
+                  priority = 10;
+                  multilang = true;
+                  multilanguage = 5;
                 }
                 {
                   name = "TR4KER";
                   apikey._secret = config.sops.secrets."indexers/tr4ker".path;
+                  priority = 10;
+                  multilang = true;
+                  multilanguage = 5;
                 }
               ];
           };

@@ -19,18 +19,20 @@
         media_naming.movie.rename = true;
         custom_formats =
           let
-            allProfiles = [
-              { name = "Any"; }
-              { name = "HD - 720p/1080p"; }
-              { name = "HD-720p"; }
-              { name = "HD-1080p"; }
-              { name = "Ultra-HD"; }
+            profiles = [
+              "Any"
+              "HD - 720p/1080p"
+              "HD-720p"
+              "HD-1080p"
+              "Ultra-HD"
             ];
+            assign = score: map (name: { inherit name score; }) profiles;
           in
           [
+            # Not original language
             {
-              trash_ids = [ "d6e9318c875905d6cfb5bee961afcea9" ]; # Language: Not Original
-              assign_scores_to = allProfiles;
+              trash_ids = [ "d6e9318c875905d6cfb5bee961afcea9" ];
+              assign_scores_to = assign (-10000);
             }
           ];
       };

@@ -7,6 +7,13 @@ let
       kdeconnectHosts = lib.filterAttrs (
         n: h: n != hostname && h.kdeconnect.id != null && h.kdeconnect.cert != null
       ) config.me.hosts;
+
+      wrap64 =
+        s:
+        if builtins.stringLength s <= 64 then
+          s
+        else
+          builtins.substring 0 64 s + "\n" + wrap64 (builtins.substring 64 (builtins.stringLength s - 64) s);
     in
     {
       "config".text = # ini
@@ -21,7 +28,7 @@ let
         permissions = "0600";
         text = ''
           -----BEGIN CERTIFICATE-----
-          ${config.me.host.kdeconnect.cert}
+          ${wrap64 config.me.host.kdeconnect.cert}
           -----END CERTIFICATE-----
         '';
       };
@@ -66,9 +73,19 @@ in
       ];
 
       programs.kdeconnect.enable = true;
-      me.desktop.startup.kdeconnect = lib.getExe' pkgs.kdePackages.kdeconnect-kde "kdeconnectd";
 
       me.hostSecrets."kdeconnect/key" = { };
+
+      systemd.user.services.kdeconnect = {
+        wantedBy = [ "graphical-session.target" ];
+        after = [ "graphical-session.target" ];
+        unitConfig = {
+          ConditionPathExists = config.sops.secrets."kdeconnect/key".path;
+        };
+        serviceConfig = {
+          ExecStart = lib.getExe' pkgs.kdePackages.kdeconnect-kde "kdeconnectd";
+        };
+      };
 
       hj.xdg.config.files =
         lib.mapAttrs' (n: v: lib.nameValuePair "kdeconnect/${n}" v) (mkKdeConnectConfig {

@@ -7,6 +7,7 @@
     {
       persistUser.directories = [
         ".local/share/jellyfin-desktop"
+        ".local/share/nl.jknaapen.fladder"
       ];
 
       unfree-packages = [

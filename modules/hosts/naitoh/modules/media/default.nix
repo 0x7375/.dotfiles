@@ -2,7 +2,7 @@
 
 {
   flake.modules.nixos.naitoh =
-    { lib, ... }:
+    { pkgs, lib, ... }:
     {
       options.me.mediaGroup = lib.mkOption {
         type = lib.types.str;
@@ -12,6 +12,8 @@
       };
 
       config = {
+        services.recyclarr.package = pkgs.auto.recyclarr;
+
         nixflix = {
           enable = true;
           mediaDir = "/data/shared/media";

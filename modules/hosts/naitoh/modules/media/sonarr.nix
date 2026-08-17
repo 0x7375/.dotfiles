@@ -4,6 +4,7 @@
   flake.modules.nixos.naitoh =
     {
       config,
+      pkgs,
       ...
     }:
     {
@@ -47,6 +48,7 @@
       nixflix.sonarr = {
         enable = true;
         openFirewall = true;
+        package = pkgs.auto.sonarr;
         config = {
           mediaManagement.autoUnmonitorPreviouslyDownloadedEpisodes = true;
           apiKey._secret = config.sops.secrets."sonarr/api_key".path;

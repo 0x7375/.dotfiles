@@ -1,6 +1,6 @@
 {
   flake.modules.nixos.naitoh =
-    { config, ... }:
+    { pkgs, config, ... }:
     {
       me.services = {
         flaresolverr = {
@@ -29,10 +29,13 @@
         chmod 644 "$DATA_DIR/Definitions/Custom/c411-custom.yml"
       '';
 
+      services.flaresolverr.package = pkgs.auto.flaresolverr;
+
       nixflix = {
         flaresolverr.enable = true;
         prowlarr = {
           enable = true;
+          package = pkgs.auto.prowlarr;
           openFirewall = true;
           config = {
             apiKey._secret = config.sops.secrets."prowlarr/api_key".path;

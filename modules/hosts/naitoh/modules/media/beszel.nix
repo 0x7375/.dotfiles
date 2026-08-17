@@ -1,6 +1,8 @@
+{ self, ... }:
+
 {
   flake.modules.nixos.naitoh =
-    { lib, config, ... }:
+    { config, ... }:
     let
       inherit (config.services.beszel.hub) port;
     in
@@ -30,12 +32,23 @@
         USER_PASSWORD=${config.sops.placeholder."beszel/pw"}
       '';
 
-      systemd.services.beszel-hub.serviceConfig.LoadCredential = [
-        "id_ed25519:${config.sops.secrets."beszel/key".path}"
+      systemd.services.beszel-hub = {
+        serviceConfig.LoadCredential = [
+          "id_ed25519:${config.sops.secrets."beszel/key".path}"
+        ];
+        preStart = ''
+          install -D -m 600 "$CREDENTIALS_DIRECTORY/id_ed25519" "$STATE_DIRECTORY/beszel_data/id_ed25519"
+        '';
+      }
+      // self.lib.afterSopsService;
+
+      systemd.services.beszel-agent = self.lib.afterSopsService;
+
+      nixpkgs.overlays = [
+        (final: prev: {
+          inherit (final.unstable) beszel;
+        })
       ];
-      systemd.services.beszel-hub.preStart = ''
-        install -D -m 600 "$CREDENTIALS_DIRECTORY/id_ed25519" "$STATE_DIRECTORY/beszel_data/id_ed25519"
-      '';
 
       services.beszel = {
         hub = {

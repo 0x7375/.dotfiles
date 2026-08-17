@@ -105,6 +105,7 @@
       services.qui = {
         enable = true;
         user = config.services.qbittorrent.user;
+        package = pkgs.auto.qui;
         group = config.services.qbittorrent.group;
         openFirewall = true;
         secretFile = config.sops.secrets.qui_session.path;

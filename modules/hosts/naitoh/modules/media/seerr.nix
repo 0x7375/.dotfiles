@@ -4,6 +4,7 @@
   flake.modules.nixos.naitoh =
     {
       config,
+      pkgs,
       ...
     }:
     let
@@ -28,6 +29,7 @@
 
       nixflix.seerr = {
         enable = true;
+        package = pkgs.auto.seerr;
         openFirewall = true;
         apiKey._secret = config.sops.secrets."seerr/api_key".path;
       };

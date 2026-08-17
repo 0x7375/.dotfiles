@@ -17,7 +17,7 @@
         script =
           let
             action = if config.me.hostname != "woz" then "hibernate" else "suspend";
-            critical_level = if action == "hibernate" then "7" else "12";
+            critical_level = if action == "hibernate" then "6" else "9";
           in
           # bash
           ''

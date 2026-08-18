@@ -99,6 +99,9 @@ url = "gh:manic-systems/npr"
 [inputs.nd]
 url = "cb:0x7E/nd"
 
+[inputs.graine]
+url = "cb:0x7E/graine"
+
 [inputs.karabiner-ts]
 url = "cb:0x7E/karabiner-ts"
 

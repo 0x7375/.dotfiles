@@ -45,6 +45,14 @@
     "narHash": "sha256-pp2pYNIK4WquW/7GM9uZaj88mGoWJR4W4Tk/GNGGjOI=",
     "lastModified": 1780260581
   },
+  "graine": {
+    "type": "git",
+    "url": "https://codeberg.org/0x7E/graine",
+    "ref": "HEAD",
+    "rev": "c0e5349d569d011d7e97e11c707b991d20fdc190",
+    "narHash": "sha256-+nmskc13s+K9VoBVK2rlQLi7MBL3kzrSKMmGHiB8iAk=",
+    "lastModified": 1787064717
+  },
   "helium": {
     "type": "github",
     "owner": "amaanq",

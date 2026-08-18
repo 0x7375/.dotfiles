@@ -1,4 +1,4 @@
-{ self, ... }:
+{ inputs, self, ... }:
 
 {
   flake.modules.nixos.naitoh =
@@ -7,14 +7,6 @@
       pkgs,
       ...
     }:
-    let
-      ratioFilter = pkgs.rustPlatform.buildRustPackage {
-        pname = "ratio-filter";
-        version = "0";
-        src = ./_ratio-filter;
-        cargoLock.lockFile = ./_ratio-filter/Cargo.lock;
-      };
-    in
     {
       me.services.autobrr = {
         subdomain = "auto";
@@ -36,20 +28,23 @@
         };
       };
 
-      systemd.services.ratio-filter = {
-        script = ''
-          PW=$(cat "${config.sops.secrets."qbittorrent/pw".path}")
-          ${ratioFilter}/bin/ratio-filter http://localhost:${toString config.nixflix.torrentClients.qbittorrent.webuiPort} $PW
-        '';
-        serviceConfig = {
-          Type = "oneshot";
-          User = config.services.qbittorrent.user;
-          StateDirectory = "ratio-filter";
-          WorkingDirectory = "%S/ratio-filter";
+      systemd.services.graine =
+        let
+          graine = inputs.graine.packages.${pkgs.stdenv.hostPlatform.system}.default;
+        in
+        {
+          script = ''
+            export QBIT_PW=$(cat "${config.sops.secrets."qbittorrent/pw".path}")
+            exec ${graine} http://localhost:${toString config.nixflix.torrentClients.qbittorrent.webuiPort}
+          '';
+          serviceConfig = {
+            Type = "oneshot";
+            StateDirectory = "ratio-filter";
+            WorkingDirectory = "%S/ratio-filter";
+          };
         };
-      };
 
-      systemd.timers.ratio-filter = {
+      systemd.timers.graine = {
         wantedBy = [ "timers.target" ];
         timerConfig = {
           OnCalendar = "daily";

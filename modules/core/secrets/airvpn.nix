@@ -116,8 +116,6 @@ in
           # Address = ${ip.v4}/32,${ip.v6}/128
           PrivateKey = ${config.sops.placeholder."airvpn/sk"}
           MTU = 1320
-          DNS = ${dns.v4}
-          # DNS = ${dns.v4}, ${dns.v6}
           Table = ${table}
           PostUp = ${postUpFile}
           PreDown = ${preDownFile}

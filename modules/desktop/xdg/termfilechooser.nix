@@ -9,16 +9,7 @@
     {
       nixpkgs.overlays = [
         (final: prev: {
-          xdg-desktop-portal-termfilechooser =
-            prev.xdg-desktop-portal-termfilechooser.overrideAttrs
-              (old: rec {
-                version = "caf24e77189f500b6a27ef502ef01d3a96196510";
-                src = pkgs.fetchFromGitHub {
-                  inherit (old.src) repo owner;
-                  rev = "${version}";
-                  sha256 = "2A+y6twdfLl/Fy4Feop3tMGfTytxX80acTrFQ56kjS4=";
-                };
-              });
+          inherit (final.unstable) xdg-desktop-portal-termfilechooser;
 
           file-handler = pkgs.stdenv.mkDerivation {
             name = "file-handler";
@@ -73,7 +64,7 @@
         ''
           [filechooser]
           env=PATH='${env}/bin'
-          env=TERMCMD='${terminal.executable} -T filechooser -e'
+          env=TERMCMD='${lib.getExe pkgs.${terminal.name}} -T filechooser -e'
           cmd='${pkgs.xdg-desktop-portal-termfilechooser}/share/xdg-desktop-portal-termfilechooser/lf-wrapper.sh'
           default_dir=$XDG_DOWNLOAD_DIR
         '';

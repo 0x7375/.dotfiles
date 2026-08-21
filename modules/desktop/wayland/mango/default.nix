@@ -220,6 +220,7 @@
                 "isfloating:1,title:Organizer"
                 "isfloating:1,title:Preferences"
                 "isfloating:1,appid:Main|Matplotlib"
+                "isglobal:1,isfloating:1,title:Picture in picture"
               ]
               ++ assignRules
               ++ floatingRules;
@@ -280,10 +281,10 @@
                 "SUPER+CTRL,h,exchange_client,left"
                 "SUPER+CTRL,l,exchange_client,right"
 
-                "SUPER+SHIFT,h,resizewin,-30,0"
-                "SUPER+SHIFT,j,resizewin,0,30"
-                "SUPER+SHIFT,k,resizewin,0,-30"
-                "SUPER+SHIFT,l,resizewin,30,0"
+                "SUPER+SHIFT,h,resizewin,-30,+0"
+                "SUPER+SHIFT,j,resizewin,+0,+30"
+                "SUPER+SHIFT,k,resizewin,+0,-30"
+                "SUPER+SHIFT,l,resizewin,+30,+0"
               ]
               ++ (lib.mapAttrsToList mkMangoBind config.me.desktop.bindings);
 

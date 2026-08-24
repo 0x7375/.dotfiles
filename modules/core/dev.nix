@@ -77,7 +77,29 @@
         unstable.rustc
         unstable.cargo
         unstable.clippy
-        inputs.maudfmt.packages.${pkgs.stdenv.hostPlatform.system}.default
+        (pkgs.rustPlatform.buildRustPackage (
+          let
+            src = pkgs.fetchFromGitHub {
+              owner = "0x7375";
+              repo = "maudfmt";
+              rev = "c9fb0cf82c57686e62bf627d8dbaabd7c8fd70e1";
+              hash = "sha256-67PiX92voaew8/JlzxfyiBRaO7982A263gG7B2ywnl8=";
+            };
+          in
+          {
+            pname = "maudfmt";
+            version = "unstable-2026-08-24";
+            inherit src;
+            cargoLock = {
+              lockFile = "${src}/Cargo.lock";
+              outputHashes = {
+                "prettyplease-0.2.37" = "sha256-fnhSiVKs/uhOJMNEnKj20z6Dm3bSz2k7mFThYtba/GE=";
+              };
+            };
+
+            doCheck = false;
+          }
+        ))
 
         tailwindcss_4
 

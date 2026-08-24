@@ -96,9 +96,6 @@ url = "gh:nix-community/nix-index-database"
 [inputs.npr]
 url = "gh:manic-systems/npr"
 
-[inputs.maudfmt]
-url = "gh:Jeosas/maudfmt"
-
 [inputs.nd]
 url = "cb:0x7E/nd"
 

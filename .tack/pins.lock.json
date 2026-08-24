@@ -77,14 +77,6 @@
     "narHash": "sha256-wBlIuAUKFO1+C7ZCho0p2z1Dpc4szo9MSfbbAs6rCSQ=",
     "lastModified": 1783358693
   },
-  "maudfmt": {
-    "type": "github",
-    "owner": "Jeosas",
-    "repo": "maudfmt",
-    "rev": "85712c73ff8ec04324899ab0b4e81c35916f19cf",
-    "narHash": "sha256-s1q5iFiYxh9YS1kEr5sn8V8WEG0eNXbkfdVhLnCf9cU=",
-    "lastModified": 1785450963
-  },
   "mnw": {
     "type": "github",
     "owner": "Gerg-L",

@@ -15,7 +15,10 @@ pkgs.writeShellApplication {
 
     loc="''${raw_loc//[<>]/}"
 
-    if [[ "$loc" =~ ^https?:// ]]; then
+    if [[ "$loc" =~ ^https?:// ]] || [[ "$loc" =~ ^([0-9]+\.){3}[0-9]+(:[0-9]+)? ]] || [[ "$loc" =~ ^localhost(:[0-9]+)? ]]; then
+      if [[ ! "$loc" =~ ^https?:// ]]; then
+        loc="http://$loc"
+      fi
       xdg-open "$loc" >/dev/null 2>&1 &
       exit 0
     fi

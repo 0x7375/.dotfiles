@@ -56,10 +56,14 @@
             set -g @fzf-url-fzf-options '-w 60% -h 50% --multi -0 --no-preview --border=sharp --tac'
 
             set -g @plugin 'Morantron/tmux-fingers'
-            set -g @fingers-pattern-0 '[A-Za-z0-9_./-]+\.[A-Za-z0-9]+:[0-9]+(:[0-9]+)?'
-            set -g @fingers-pattern-1 'https?://[a-zA-Z0-9./?=_%:-]+'
-            set -g @fingers-main-action '${getExe pkgs.my.tmux-jump}'
-            set -g @fingers-key y
+
+            set -g @fingers-pattern-fileloc '[A-Za-z0-9_./-]+\.[A-Za-z0-9]+:[0-9]+(:[0-9]+)?'
+            set -g @fingers-pattern-httpurl 'https?://[a-zA-Z0-9./?=_%:&~+-]+'
+
+            set -g @fingers-enable-bindings 0
+
+            bind Y run -b "#{@fingers-cli} start #{pane_id} --main-action 'tmux load-buffer -w -'"
+            bind y run -b "#{@fingers-cli} start #{pane_id} --patterns fileloc,httpurl --main-action '${getExe pkgs.my.tmux-jump}'"
 
             set -g default-terminal "tmux-256color"
             ${lib.optionalString (options ? me.desktop) ''

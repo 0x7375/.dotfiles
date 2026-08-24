@@ -35,7 +35,7 @@
         {
           script = ''
             export QBIT_PW=$(cat "${config.sops.secrets."qbittorrent/pw".path}")
-            exec ${graine} http://localhost:${toString config.nixflix.torrentClients.qbittorrent.webuiPort}
+            exec ${graine}/bin/graine http://localhost:${toString config.nixflix.torrentClients.qbittorrent.webuiPort}
           '';
           serviceConfig = {
             Type = "oneshot";

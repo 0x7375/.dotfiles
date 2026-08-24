@@ -134,12 +134,15 @@ let
             shellcheck
             statix
             deadnix
+            oxlint
           ]
           ++ (with (unstable pkgs); [
             rust-analyzer
             cargo
             rustc
             clippy
+            clang
+            mold
           ])
         )
         ++ pkgs.lib.optionals unfree [ pkgs.intelephense ];

@@ -57,6 +57,7 @@
 
             set -g @plugin 'Morantron/tmux-fingers'
             set -g @fingers-pattern-0 '[A-Za-z0-9_./-]+\.[A-Za-z0-9]+:[0-9]+(:[0-9]+)?'
+            set -g @fingers-pattern-1 'https?://[a-zA-Z0-9./?=_%:-]+'
             set -g @fingers-main-action '${getExe pkgs.my.tmux-jump}'
             set -g @fingers-key y
 

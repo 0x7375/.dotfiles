@@ -115,6 +115,9 @@ let
             bash-language-server
             emmet-language-server
             vscode-langservers-extracted
+            tailwindcss-language-server
+            rustywind
+            eslint
             gopls
             texlab
             sqls
@@ -129,7 +132,6 @@ let
             typstyle
             shfmt
             phpPackages.php-codesniffer
-            libxml2
             rustfmt
 
             # Linters

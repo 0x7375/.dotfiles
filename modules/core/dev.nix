@@ -1,3 +1,5 @@
+{ inputs, ... }:
+
 {
   flake.modules.darwin.dev = { pkgs, ... }: {
     packages = with pkgs; [
@@ -72,9 +74,12 @@
         bear
         gdb
 
-        rustc
-        cargo
-        clippy
+        unstable.rustc
+        unstable.cargo
+        unstable.clippy
+        inputs.maudfmt.packages.${pkgs.stdenv.hostPlatform.system}.default
+
+        tailwindcss_4
 
         python3
         taplo

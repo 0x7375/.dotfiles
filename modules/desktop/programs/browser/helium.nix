@@ -125,7 +125,7 @@ let
       };
     }
     // mkDisabledPermissions [
-      "Notifications"
+      # "Notifications"
       "Geolocation"
       "Cameras"
       "Microphone"

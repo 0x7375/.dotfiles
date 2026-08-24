@@ -102,13 +102,9 @@ let
           [
             tree-sitter
             gnumake
-            cargo
-            rustc
-            clippy
 
             # LSPs
             lua-language-server
-            rust-analyzer
             nixd
             typescript-language-server
             jdt-language-server
@@ -139,6 +135,12 @@ let
             statix
             deadnix
           ]
+          ++ (with (unstable pkgs); [
+            rust-analyzer
+            cargo
+            rustc
+            clippy
+          ])
         )
         ++ pkgs.lib.optionals unfree [ pkgs.intelephense ];
     };

@@ -47,8 +47,6 @@
 
       networking.firewall.allowedUDPPorts = [ wgPort ];
 
-      systemd.services.wg-quick-home = self.lib.afterSopsService;
-
       networking.wg-quick.interfaces.${home} = {
         address = [ "${host.ips.vpn}/24" ];
         listenPort = wgPort;

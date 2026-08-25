@@ -43,8 +43,6 @@
           ];
       };
 
-      systemd.services.sonarr-config = self.lib.afterSopsService;
-
       nixflix.sonarr = {
         enable = true;
         openFirewall = true;

@@ -15,8 +15,6 @@
 
       me.hostSecrets.autobrr_session.owner = config.services.qbittorrent.user;
 
-      systemd.services.autobrr = self.lib.afterSopsService;
-
       services.autobrr = {
         enable = true;
         openFirewall = true;

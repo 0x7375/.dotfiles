@@ -39,10 +39,7 @@
         preStart = ''
           install -D -m 600 "$CREDENTIALS_DIRECTORY/id_ed25519" "$STATE_DIRECTORY/beszel_data/id_ed25519"
         '';
-      }
-      // self.lib.afterSopsService;
-
-      systemd.services.beszel-agent = self.lib.afterSopsService;
+      };
 
       nixpkgs.overlays = [
         (final: prev: {

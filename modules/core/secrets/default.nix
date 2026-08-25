@@ -1,9 +1,4 @@
 {
-  flake.lib.afterSopsService = {
-    after = [ "sops-install-secrets.service" ];
-    requires = [ "sops-install-secrets.service" ];
-  };
-
   flake.modules.generic.secrets =
     {
       pkgs,
@@ -77,9 +72,6 @@
       options.me.tpm.enable = lib.mkEnableOption "Setup tpm and decrypt sops-nix secrets using tpm";
 
       config = lib.mkMerge [
-        {
-          sops.useSystemdActivation = true;
-        }
         (lib.mkIf config.me.tpm.enable {
           persist.files = [ "/etc/tpm_key" ];
 

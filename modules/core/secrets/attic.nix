@@ -42,8 +42,7 @@
           KillMode = "control-group";
           KillSignal = "SIGTERM";
         };
-      }
-      // self.lib.afterSopsService;
+      };
 
       nix.settings = {
         substituters = [ "${url}/default" ];

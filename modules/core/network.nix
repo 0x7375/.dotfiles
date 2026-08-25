@@ -154,8 +154,6 @@
         owner = config.me.user;
       };
 
-      systemd.services.NetworkManager-ensure-profiles = self.lib.afterSopsService;
-
       networking.networkmanager.ensureProfiles = {
         environmentFiles = [ config.sops.secrets.networkingEnvironment.path ];
         profiles = {

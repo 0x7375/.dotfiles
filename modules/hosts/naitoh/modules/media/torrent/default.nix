@@ -99,8 +99,7 @@
             '')
           ];
         };
-      }
-      // self.lib.afterSopsService;
+      };
 
       services.qui = {
         enable = true;

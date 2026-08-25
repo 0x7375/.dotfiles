@@ -28,8 +28,6 @@
 
       persist.directories = [ "/var/lib/private/atticd" ];
 
-      systemd.services.atticd = self.lib.afterSopsService;
-
       services.atticd = {
         enable = true;
         environmentFile = config.sops.templates."attic.env".path;

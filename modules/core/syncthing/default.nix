@@ -9,7 +9,7 @@
       ...
     }:
     {
-      systemd.services.syncthing-init = self.lib.afterSopsService // {
+      systemd.services.syncthing-init = {
         wantedBy = lib.mkForce [ config.me.target ];
         after = lib.mkForce [ "syncthing.service" ];
 
@@ -19,7 +19,6 @@
           done
         '';
       };
-      systemd.services.syncthing = self.lib.afterSopsService;
 
       # allow watching more files
       boot.kernel.sysctl."fs.inotify.max_user_watches" = 524288;

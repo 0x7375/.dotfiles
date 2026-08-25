@@ -12,8 +12,6 @@
     {
       me.hostSecrets.radicale_users.owner = "radicale";
 
-      systemd.services.radicale = self.lib.afterSopsService;
-
       services.radicale = {
         enable = true;
         settings = {

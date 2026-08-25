@@ -21,7 +21,6 @@
           stateDir = "/data/main/.state";
           postgres.enable = true;
           recyclarr.enable = true;
-          serviceDependencies = [ "sops-install-secrets.service" ];
         };
 
         systemd.tmpfiles.settings."arr-media" =

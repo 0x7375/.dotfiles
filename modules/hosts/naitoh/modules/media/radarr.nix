@@ -38,8 +38,6 @@
           ];
       };
 
-      systemd.services.radarr-config = self.lib.afterSopsService;
-
       nixflix.radarr = {
         enable = true;
         openFirewall = true;

@@ -102,12 +102,8 @@
         ) config.me.services;
       };
 
-      systemd.services = {
-        "acme-${domain}" = self.lib.afterSopsService;
-        "acme-order-renew-${domain}" = self.lib.afterSopsService;
-      }
-      // self.lib.notifyOnServiceFailure "nginx"
-      // self.lib.notifyOnServiceFailure "acme-${domain}";
+      systemd.services =
+        self.lib.notifyOnServiceFailure "nginx" // self.lib.notifyOnServiceFailure "acme-${domain}";
 
       me.hostSecrets.cloudflare_dns_token = { };
       sops.templates."cloudflare.env".content =

@@ -4,6 +4,8 @@
 !README.md
 !LICENSE
 
+!secrets
+!secrets/**
 !modules
 !modules/**
 !flake.nix

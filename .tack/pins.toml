@@ -67,10 +67,6 @@ url = "gh:feel-co/hjem"
 [inputs.sops-nix]
 url = "gh:Mic92/sops-nix"
 
-[inputs.secrets]
-url = "codeberg:0x7E/nix-secrets"
-type = "fetch"
-
 [inputs.token2]
 url = "codeberg:0x7E/token2-totp-cli"
 type = "fetch"

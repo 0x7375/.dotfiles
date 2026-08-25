@@ -39,7 +39,7 @@ let
       inherit lib;
       specialArgs = {
         inherit inputs;
-        inherit (inputs) secrets;
+        secrets = ../secrets;
       };
       modules = [
         inputs.sops-nix.${mod}.sops

@@ -2,7 +2,6 @@
   flake.modules.generic.core =
     {
       pkgs,
-      lib,
       config,
       ...
     }:
@@ -272,6 +271,8 @@
           [[ "$ACTIVE_WINDOW" != "aerc" ]] && {
             ${lib.getExe pkgs.my.notify} -i mail "New mail from $AERC_FROM_NAME" "$AERC_SUBJECT"
           }
+
+          true
         ''};
       '';
   };

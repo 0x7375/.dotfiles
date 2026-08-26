@@ -77,10 +77,25 @@
                 ];
               }
             );
+
+            settingsYml = pkgs.writeText "settings.yml"
+              # yaml
+            ''
+              resource_providers:
+                - name: local-sonarr-formats
+                  type: custom-formats
+                  path: /var/lib/recyclarr/custom_formats
+                  service: sonarr
+                - name: local-radarr-formats
+                  type: custom-formats
+                  path: /var/lib/recyclarr/custom_formats
+                  service: radarr
+            '';
           in
           [
             "d /var/lib/recyclarr/custom_formats 0755 recyclarr recyclarr - -"
-            "L+ /var/lib/recyclarr/custom_formats/personal-blocklist.json - - - - ${personalBlocklistFile}"
+            "L+ /var/lib/recyclarr/custom_formats/personal-blocklist.json 0644 recyclarr recyclarr - ${personalBlocklistFile}"
+            "L+ /var/lib/recyclarr/settings.yml 0644 recyclarr recyclarr - ${settingsYml}"
           ];
 
         systemd.services = lib.mkMerge (

@@ -35,6 +35,11 @@
               trash_ids = [ "d6e9318c875905d6cfb5bee961afcea9" ];
               assign_scores_to = assign (-10000);
             }
+            # Blacklisted group
+            {
+              trash_ids = [ config.me.blocklistId ];
+              assign_scores_to = assign (-10000);
+            }
           ];
       };
 

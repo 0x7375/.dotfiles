@@ -1,5 +1,3 @@
-{ self, ... }:
-
 {
   flake.modules.nixos.naitoh =
     {
@@ -39,6 +37,11 @@
             {
               trash_ids = [ "3bc5f395426614e155e585a2f056cdf1" ];
               assign_scores_to = assign 1000;
+            }
+            # Blacklisted group
+            {
+              trash_ids = [ config.me.blocklistId ];
+              assign_scores_to = assign (-10000);
             }
           ];
       };

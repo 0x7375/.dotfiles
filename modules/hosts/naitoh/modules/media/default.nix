@@ -2,13 +2,25 @@
 
 {
   flake.modules.nixos.naitoh =
-    { pkgs, lib, ... }:
     {
-      options.me.mediaGroup = lib.mkOption {
-        type = lib.types.str;
-        default = "media";
-        description = "Media group name";
-        internal = true;
+      config,
+      pkgs,
+      lib,
+      ...
+    }:
+    {
+      options.me = {
+        blocklistId = lib.mkOption {
+          type = lib.types.str;
+          default = "b90c2a8f113e4b7b9f3d53b2169824de";
+        };
+
+        mediaGroup = lib.mkOption {
+          type = lib.types.str;
+          default = "media";
+          description = "Media group name";
+          internal = true;
+        };
       };
 
       config = {
@@ -43,6 +55,33 @@
             };
           in
           mkMediaDirs "/mnt/ssd" // mkMediaDirs "/mnt/hdd" // mkMediaDirs "/mnt/nvme";
+
+        systemd.tmpfiles.rules =
+          let
+            personalBlocklistFile = pkgs.writeText "personal-blocklist.json" (
+              builtins.toJSON {
+                trash_id = config.me.blocklistId;
+                trash_scores = {
+                  default = -10000;
+                };
+                name = "Personal Blocklist";
+                includeCustomFormatWhenRenaming = false;
+                specifications = [
+                  {
+                    name = "Blacklisted Groups Regex";
+                    implementation = "ReleaseTitleSpecification";
+                    negate = false;
+                    required = true;
+                    fields.value = "\\b(y2flix|nextbadgrouptoblacklist)\\b";
+                  }
+                ];
+              }
+            );
+          in
+          [
+            "d /var/lib/recyclarr/custom_formats 0755 recyclarr recyclarr - -"
+            "L+ /var/lib/recyclarr/custom_formats/personal-blocklist.json - - - - ${personalBlocklistFile}"
+          ];
 
         systemd.services = lib.mkMerge (
           map (service: self.lib.notifyOnServiceFailure service) [

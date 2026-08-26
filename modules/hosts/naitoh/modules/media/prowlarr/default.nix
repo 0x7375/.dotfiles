@@ -25,8 +25,12 @@
         DATA_DIR="${config.nixflix.prowlarr.dataDir}" 
 
         mkdir -p "$DATA_DIR/Definitions/Custom"
+
         cp ${./c411.yml} "$DATA_DIR/Definitions/Custom/c411-custom.yml"
         chmod 644 "$DATA_DIR/Definitions/Custom/c411-custom.yml"
+
+        cp ${./tr4ker.yml} "$DATA_DIR/Definitions/Custom/tr4ker-custom.yml"
+        chmod 644 "$DATA_DIR/Definitions/Custom/tr4ker-custom.yml"
       '';
 
       services.flaresolverr.package = pkgs.auto.flaresolverr;
@@ -65,7 +69,7 @@
                   multilanguage = 5;
                 }
                 {
-                  name = "TR4KER";
+                  name = "TR4KER (Custom)";
                   apikey._secret = config.sops.secrets."indexers/tr4ker".path;
                   priority = 10;
                   multilang = true;

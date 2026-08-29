@@ -4,25 +4,10 @@
   flake.modules.nixos.woz =
     {
       lib,
-      pkgs,
       modulesPath,
       ...
     }:
-    let
-      fairy-dust = pkgs.linux-asahi.kernel.overrideAttrs (old: rec {
-        src = pkgs.fetchFromGitHub {
-          owner = "AsahiLinux";
-          repo = "linux";
-          rev = "fairydust";
-          hash = "sha256-wnNrbpa3dYceQU7ZeJ7eJH6k9QMqswctK/4xxGI9SZE=";
-        };
-
-        version = "7.0.11";
-        modDirVersion = version;
-      });
-    in
     {
-
       imports = [
         (modulesPath + "/installer/scan/not-detected.nix")
       ];
@@ -32,12 +17,6 @@
         "usbhid"
       ];
 
-      # system.extraDependencies = [
-      #   (pkgs.linuxPackagesFor fairy-dust.kernel)
-      # ];
-      # boot.kernelPackages = lib.mkForce (pkgs.linuxPackagesFor fairy-dust);
-      # boot.initrd.kernelModules = [ "typec_displayport" ];
-
       hardware.asahi = {
         enable = true;
         peripheralFirmwareDirectory = inputs.asahi-firmware;
@@ -45,7 +24,28 @@
         pkgs = lib.mkForce (
           import inputs.apple-silicon.inputs.nixpkgs {
             system = "aarch64-linux";
-            overlays = [ inputs.apple-silicon.overlays.default ];
+            overlays = [
+              inputs.apple-silicon.overlays.default
+              (final: prev: {
+                # silent uboot
+                uboot-asahi = prev.uboot-asahi.overrideAttrs (old: {
+                  postPatch = (old.postPatch or "") + ''
+                    cat >> configs/${old.defconfig} <<'EOF'
+                    CONFIG_SILENT_CONSOLE=y
+                    CONFIG_BOOTDELAY=1
+                    EOF
+                    # force silent
+                    sed -i '/static bool console_update_silent(void)/,/^}/ s/^{/{\n\tgd->flags |= GD_FLG_SILENT;\n\treturn false;/' common/console.c
+
+                    # suppress the uboot version info line
+                    sed -i '/^int console_announce_r(void)/,/^}/ s/^{/{\n\tif (gd->flags \& GD_FLG_SILENT)\n\t\treturn 0;/' common/console.c
+
+                    # suppress uboot image
+                    sed -i 's/ret = show_splash(dev);/ret = 0;/g' drivers/video/video-uclass.c
+                  '';
+                });
+              })
+            ];
           }
         );
       };

@@ -6,8 +6,6 @@
       ...
     }:
     {
-      sops.secrets.aerc_posteo_pw.owner = config.me.user;
-
       packages = with pkgs; [
         aerc
         w3m
@@ -28,7 +26,7 @@
         permissions = "0600";
         text =
           let
-            skFile = "${config.me.home}/.config/sops/age/${config.me.host.sopsDecryptionKey}";
+            skFile = "${config.me.home}/.config/age/${config.me.host.sopsDecryptionKey}";
             decryptCmd = "age -d -i ${skFile} ${config.sops.secrets.aerc_posteo_pw.path}";
           in
           # ini

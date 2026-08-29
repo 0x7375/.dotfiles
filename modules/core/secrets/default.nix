@@ -48,6 +48,12 @@
           permissions = "0600";
         };
 
+        hj.xdg.config.files."age/sk_prf_main" = {
+          text = builtins.readFile ./age-fido2-main.txt;
+          type = "copy";
+          permissions = "0600";
+        };
+
         vars.SOPS_AGE_KEY_FILE = "${config.me.home}/.config/sops/age/${config.me.host.sopsDecryptionKey}";
       };
     };

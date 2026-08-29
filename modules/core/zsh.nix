@@ -153,10 +153,6 @@
 
       hj.xdg.config.files."zsh/set-prompt.sh".text = # zsh
         ''
-          function is_dirty {
-              [[ -n $(${lib.getExe pkgs.git} diff --shortstat 2> /dev/null | ${lib.getExe' pkgs.coreutils-full "tail"} -n1) ]] && ${lib.getExe' pkgs.coreutils-full "echo"} "*"
-          }
-
           function get_git_info() {
               local -r ref=$(${lib.getExe pkgs.git} rev-parse --abbrev-ref HEAD 2>/dev/null)
 
@@ -167,7 +163,16 @@
                 branch=$ref
               fi
 
-              local -r dirty_status="$(is_dirty)"
+              local dirty_status=""
+              
+              ${lib.getExe' pkgs.coreutils-full "timeout"} 0.05s ${lib.getExe pkgs.git} --no-optional-locks diff-index --quiet HEAD -- 2>/dev/null
+              local exit_code=$?
+              
+              if [[ $exit_code == 124 ]]; then
+                  dirty_status="?"
+              elif [[ $exit_code != 0 ]]; then
+                  dirty_status="*"
+              fi
 
               if [[ -n $branch ]]; then
                   ${lib.getExe' pkgs.coreutils-full "echo"} " $branch$dirty_status"

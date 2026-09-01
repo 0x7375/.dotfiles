@@ -43,7 +43,7 @@
               public = mkOption {
                 type = types.str;
                 default =
-                  if cfg.host.securityKey.name == "main" then
+                  if config.securityKey.name == "main" then
                     "sk-ssh-ed25519@openssh.com AAAAGnNrLXNzaC1lZDI1NTE5QG9wZW5zc2guY29tAAAAIKtQ/n+Lg+BZdaGKAkJNykyf93bjvr++lCnEeHQuV6oTAAAABHNzaDo= main-sk"
                   else
                     "sk-ssh-ed25519@openssh.com AAAAGnNrLXNzaC1lZDI1NTE5QG9wZW5zc2guY29tAAAAIGTDz1++tiT0SytsEP3XzTshTI6Edd+o6nMTVl/iLxzSAAAABHNzaDo= backup-sk";

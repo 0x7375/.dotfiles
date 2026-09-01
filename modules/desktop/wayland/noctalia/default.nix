@@ -147,6 +147,7 @@
             ".cache/noctalia"
             ".config/noctalia"
             ".local/state/noctalia"
+            ".config/Bitwarden CLI"
           ];
         };
 

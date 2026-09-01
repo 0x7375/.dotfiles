@@ -8,6 +8,14 @@
       modulesPath,
       ...
     }:
+    let
+      # kernels are cross built from my desktop, they have to be in the cache to rebuild woz
+      crossPkgs = import inputs.apple-silicon.inputs.nixpkgs {
+        localSystem = "x86_64-linux";
+        crossSystem = "aarch64-linux";
+        overlays = [ inputs.apple-silicon.overlays.default ];
+      };
+    in
     {
       imports = [
         (modulesPath + "/installer/scan/not-detected.nix")
@@ -49,15 +57,10 @@
         peripheralFirmwareDirectory = inputs.asahi-firmware;
       };
 
-      # kernel is cross built from my desktop, it has to be in the cache to rebuild woz
+      boot.kernelPackages = lib.mkForce (pkgs.linuxPackagesFor crossPkgs.linux-asahi.kernel);
+
       specialisation.fairydust.configuration =
         let
-          crossPkgs = import inputs.apple-silicon.inputs.nixpkgs {
-            localSystem = "x86_64-linux";
-            crossSystem = "aarch64-linux";
-            overlays = [ inputs.apple-silicon.overlays.default ];
-          };
-
           fairyDustKernel = crossPkgs.buildLinux {
             pname = "linux-asahi-fairydust";
             version = "7.1.9-fairydust";

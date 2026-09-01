@@ -28,7 +28,6 @@
           name = "0x7E"
       '';
 
-      allSigningKeys = hosts.yubikey.sshPublicKeys ++ hosts.mach.sshPublicKeys;
     in
     {
       packages = with pkgs; [
@@ -97,7 +96,7 @@
             insteadOf = "forge:"
 
           [user]
-            signingkey = "${pkgs.writeText "key.pub" host.sshSigning.key}"
+            signingkey = "${pkgs.writeText "key.pub" host.sshKey.public}"
 
           [includeIf "hasconfig:remote.*.url:github:*/**"]
             path = "${github}"
@@ -118,7 +117,11 @@
             path = "${codeberg}"
         '';
 
-      hj.files.".ssh/allowed_signers".text = lib.concatMapStrings (k: "* ${k}\n") allSigningKeys;
+      hj.files.".ssh/allowed_signers".text = lib.concatMapStrings (k: "* ${k}\n") [
+        hosts.mainKey.sshKey.public
+        hosts.backupKey.sshKey.public
+        hosts.mach.sshKey.public
+      ];
     };
 
   flake.modules.darwin.core =
@@ -159,7 +162,7 @@
           Type = "oneshot";
           ExecStartPre = "${lib.getExe' pkgs.coreutils "sleep"} 1";
           Environment = "SSH_AUTH_SOCK=%t/ssh-agent";
-          ExecStart = "${lib.getExe' pkgs.openssh "ssh-add"} %h/.ssh/${host.sshSigning.path}";
+          ExecStart = "${lib.getExe' pkgs.openssh "ssh-add"} ${host.sshKey.privatePath}";
           RemainAfterExit = "yes";
         };
       };

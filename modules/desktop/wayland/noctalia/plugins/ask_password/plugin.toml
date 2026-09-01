@@ -1,0 +1,13 @@
+id = "me/ask-password"
+name = "Ask Password"
+version = "1.0.0"
+plugin_api = 22
+min_noctalia = "5.0.0"
+author = "me"
+description = "Generic masked password prompter"
+
+[[panel]]
+id = "ask-password"
+entry = "ask-password.luau"
+height = 235
+position = "center"

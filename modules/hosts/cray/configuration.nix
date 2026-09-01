@@ -1,9 +1,9 @@
 {
-  flake.modules.nixos.cray = { pkgs, lib, ... }: {
+  flake.modules.nixos.cray = { lib, ... }: {
     systemd.coredump.enable = lib.mkForce true;
     boot.supportedFilesystems = [ "ntfs" ];
 
-    boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
+    # boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
 
     vars = {
       LIBVA_DRIVER_NAME = "nvidia";

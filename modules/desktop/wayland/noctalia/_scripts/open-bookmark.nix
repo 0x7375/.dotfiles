@@ -50,7 +50,7 @@ pkgs.writeShellApplication {
         jq -r '.[] | select(.type=="page") | "\(.title);\(.url)"')
 
     if pgrep -x zen >/dev/null 2>&1; then
-        add_tabs < <(${import ./_list-firefox-tabs.nix pkgs})
+        add_tabs < <(${import ./list-firefox-tabs.nix pkgs})
     fi
 
     url_input=$(printf '%s\n' "''${!tabs[@]}" \

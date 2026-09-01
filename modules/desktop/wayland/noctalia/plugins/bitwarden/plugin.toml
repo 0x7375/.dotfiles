@@ -1,0 +1,35 @@
+id = "me/bitwarden"
+name = "Bitwarden FIDO2"
+version = "1.0.0"
+plugin_api = 8
+author = "me"
+min_noctalia = "5.0.0"
+dependencies = ["bitwarden-cli", "wtype"]
+
+[[service]]
+id = "service"
+entry = "service.luau"
+
+[[launcher_provider]]
+id = "finder"
+entry = "launcher.luau"
+prefix = "bw"
+
+[[setting]]
+key = "export_encrypt_cmd"
+type = "string"
+label_key = "settings.export_encrypt_cmd.label"
+default = "age"
+
+[[setting]]
+key = "export_out_path"
+type = "string"
+label_key = "settings.export_out_path.label"
+default = "~/downloads/bitwarden_export.json.age"
+
+[[setting]]
+key = "decrypt_cmd"
+type = "string"
+label_key = "settings.decrypt_cmd.label"
+default = ""
+description_key = "Command to execute that returns the master password"

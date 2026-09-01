@@ -13,6 +13,7 @@ pkgs.writers.writePython3 "list-firefox-tabs"
     home = os.getenv("HOME")
     file_path = Path(home + "/.zen/nix/sessionstore-backups/recovery.jsonlz4")
     with open(file_path, "rb") as f:
+        # skip header
         f.read(8)
         data = f.read()
 

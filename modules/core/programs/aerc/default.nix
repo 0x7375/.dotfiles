@@ -3,6 +3,7 @@
     {
       pkgs,
       config,
+      lib,
       ...
     }:
     {
@@ -26,8 +27,8 @@
         permissions = "0600";
         text =
           let
-            skFile = "${config.me.home}/.config/age/${config.me.host.sopsDecryptionKey}";
-            decryptCmd = "age -d -i ${skFile} ${config.sops.secrets.aerc_posteo_pw.path}";
+            inherit (config.me.host.securityKey) name;
+            decryptCmd = "${pkgs.my.fido2-decrypt} ${config.me.host.securityKey.prfPath} ${./aerc_pw_${name}.age}";
           in
           # ini
           ''

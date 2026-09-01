@@ -36,25 +36,22 @@
         sops.age.sshKeyPaths = [ ];
         sops.age.plugins = [ pkgs.age-plugin-fido2-hmac ];
 
-        hj.xdg.config.files."sops/age/sk_backup" = {
-          text = builtins.readFile ./age-fido2-backup.txt;
-          type = "copy";
-          permissions = "0600";
-        };
+        hj.xdg.config.files =
+          let
+            mkKeyConfig = path: {
+              text = builtins.readFile path;
+              type = "copy";
+              permissions = "0600";
+            };
+          in
+          {
+            "sops/age/fido2/backup" = mkKeyConfig ./keys/fido2/backup;
+            "sops/age/fido2/main" = mkKeyConfig ./keys/fido2/main;
+            "sops/age/prf/main" = mkKeyConfig ./keys/prf/main;
+            "sops/age/prf/backup" = mkKeyConfig ./keys/prf/backup;
+          };
 
-        hj.xdg.config.files."sops/age/sk_main" = {
-          text = builtins.readFile ./age-fido2-main.txt;
-          type = "copy";
-          permissions = "0600";
-        };
-
-        hj.xdg.config.files."age/sk_prf_main" = {
-          text = builtins.readFile ./age-fido2-main.txt;
-          type = "copy";
-          permissions = "0600";
-        };
-
-        vars.SOPS_AGE_KEY_FILE = "${config.me.home}/.config/sops/age/${config.me.host.sopsDecryptionKey}";
+        vars.SOPS_AGE_KEY_FILE = config.me.host.securityKey.fido2Path;
       };
     };
 

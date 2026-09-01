@@ -5,9 +5,18 @@
       lib,
       ...
     }:
+    let
+      inherit (config.me.hosts) mainKey backupKey;
+    in
     {
-      users.users.root.openssh.authorizedKeys.keys = config.me.hosts.yubikey.sshPublicKeys;
-      users.users.${config.me.user}.openssh.authorizedKeys.keys = config.me.hosts.yubikey.sshPublicKeys;
+      users.users.root.openssh.authorizedKeys.keys = [
+        mainKey.sshKey.public
+        backupKey.sshKey.public
+      ];
+      users.users.${config.me.user}.openssh.authorizedKeys.keys = [
+        mainKey.sshKey.public
+        backupKey.sshKey.public
+      ];
 
       programs.ssh.extraConfig = ''
         Host *
@@ -21,14 +30,14 @@
         ]
       );
 
-      hj.files.".ssh/sk_main" = {
-        text = builtins.readFile ./sk_main;
+      hj.files.".ssh/main_sk" = {
+        text = builtins.readFile ./main_sk;
         type = "copy";
         permissions = "0600";
       };
 
-      hj.files.".ssh/sk_backup" = {
-        text = builtins.readFile ./sk_backup;
+      hj.files.".ssh/backup_sk" = {
+        text = builtins.readFile ./backup_sk;
         type = "copy";
         permissions = "0600";
       };

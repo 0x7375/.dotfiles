@@ -1,4 +1,3 @@
-{ inputs, ... }:
 {
   flake.modules.nixos.wayland =
     {
@@ -163,16 +162,97 @@
               };
 
               patches = (old.patches or [ ]) ++ [
-                ./truncate_ssid.patch
-                ./glyph_dmenu_cli.patch
-                ./original_critical_toast.patch
-                ./hide_discord_toast_body.patch
+                ./patches/truncate_ssid.patch
+                ./patches/glyph_dmenu_cli.patch
+                ./patches/original_critical_toast.patch
+                ./patches/hide_discord_toast_body.patch
               ];
             });
 
-            my = (prev.my or { }) // {
-              lock = import ./_lock.nix final;
-            };
+            my =
+              let
+                expectScript =
+                  final.writeScript "fido2-expect"
+                    # expect
+                    ''
+                      #!${lib.getExe final.expect} -f
+                      set outfile [lindex $argv 0]
+                      set infile  [lindex $argv 1]
+                      set ageargs [lrange $argv 2 end]
+                      gets stdin pin
+
+                      log_user 0
+                      set timeout -1
+
+                      spawn age {*}$ageargs -o $outfile $infile
+
+                      expect {
+                          -re {PIN.*: $} { send -- "$pin\r"; exp_continue }
+                          -re {.*waiting.*} { exit 1 }
+                          timeout { exit 1 }
+                          eof
+                      }
+
+                      catch {wait} result
+                      set code [lindex $result 3]
+                      if {$code ne "" && $code != 0} { exit 1 }
+                      if {![file exists $outfile]} { exit 1 }
+                      exit 0
+                    '';
+
+                mkPinLoop = final.writeShellScript "fido2-pin-loop" ''
+                  PIN_FILE="/run/user/$(id -u)/noctalia_password"
+                  CMD_DESC="$1"; shift
+                  RUN="$1"; shift
+
+                  RETRY="0"
+                  while true; do
+                    rm -f "$PIN_FILE"
+                    mkfifo -m 600 "$PIN_FILE"
+
+                    ${final.lib.getExe final.noctalia} msg panel-open me/ask-password:ask-password "$RETRY::$CMD_DESC" >/dev/null 2>&1
+
+                    PIN=$(cat "$PIN_FILE")
+                    rm -f "$PIN_FILE"
+                    [ -z "$PIN" ] && exit 1
+
+                    if printf "%s\n" "$PIN" | "$RUN" "$@"; then
+                      ${final.lib.getExe final.noctalia} msg panel-close me/ask-password:ask-password >/dev/null 2>&1
+                      exit 0
+                    fi
+                    RETRY="1"
+                  done
+                '';
+              in
+              (prev.my or { })
+              // {
+                lock = import ./_scripts/lock.nix final;
+
+                fido2-decrypt = final.writeShellScript "fido2-decrypt" ''
+                  if [ "$#" -ne 2 ]; then exit 1; fi
+                  IDFILE="$1"
+                  SECFILE="$2"
+                  OUTFILE=$(mktemp -p "$XDG_RUNTIME_DIR")
+                  trap 'shred -u "$OUTFILE" 2>/dev/null || rm -f "$OUTFILE"' EXIT
+
+                  CMD_DESC="age -d -i $(basename "$IDFILE") $(basename "$SECFILE")"
+
+                  ${mkPinLoop} "$CMD_DESC" ${expectScript} "$OUTFILE" "$SECFILE" -d -i "$IDFILE" \
+                    && cat "$OUTFILE"
+                '';
+
+                fido2-encrypt = final.writeShellScript "fido2-encrypt" ''
+                  INFILE=$(mktemp -p "$XDG_RUNTIME_DIR")
+                  OUTFILE=$(mktemp -p "$XDG_RUNTIME_DIR")
+                  trap 'shred -u "$INFILE" "$OUTFILE" 2>/dev/null || rm -f "$INFILE" "$OUTFILE"' EXIT
+                  cat > "$INFILE"
+
+                  CMD_DESC="age -e $*"
+
+                  ${mkPinLoop} "$CMD_DESC" ${expectScript} "$OUTFILE" "$INFILE" -e "$@" \
+                    && cat "$OUTFILE"
+                '';
+              };
           })
         ];
 
@@ -180,11 +260,18 @@
           noctalia
           udisks
           ddcutil
+          age-plugin-fido2prf
+          bitwarden-cli
+          wtype
         ];
 
         sops.secrets.calendar_pw.owner = config.me.user;
 
-        hj.xdg.data.files."noctalia/plugins/mango-layout".source = ./mango_layout;
+        hj.xdg.data.files = {
+          "noctalia/plugins/mango-layout".source = ./plugins/mango_layout;
+          "noctalia/plugins/ask-password".source = ./plugins/ask_password;
+          "noctalia/plugins/bitwarden".source = ./plugins/bitwarden;
+        };
 
         systemd.user.services.noctalia = {
           wantedBy = [ "mango-session.target" ];
@@ -440,24 +527,38 @@
 
               plugins.enabled = [
                 "me/mango-layout"
+                "me/ask-password"
+                "me/bitwarden"
                 "nightwatch75/file-search"
               ];
 
-              plugin_settings."nightwatch75/file-search" = {
-                show_hidden = true;
-                exclude_dirs = builtins.concatStringsSep "," [
-                  ".git"
-                  "node_modules"
-                  ".cache"
-                  ".venv"
-                  ".stfolder"
-                  ".stversions"
-                  ".expo"
-                  "doc"
-                  "bin"
-                  "target"
-                  ".Trash-1000"
-                ];
+              plugin_settings = {
+                "nightwatch75/file-search" = {
+                  show_hidden = true;
+                  exclude_dirs = builtins.concatStringsSep "," [
+                    ".git"
+                    "node_modules"
+                    ".cache"
+                    ".venv"
+                    ".stfolder"
+                    ".stversions"
+                    ".expo"
+                    "doc"
+                    "bin"
+                    "target"
+                    ".Trash-1000"
+                  ];
+                };
+
+                "me/bitwarden" =
+                  let
+                    inherit (config.me.host.securityKey) name;
+                    inherit (config.me.hosts) backupKey mainKey;
+                  in
+                  {
+                    decrypt_cmd = "${pkgs.my.fido2-decrypt} ${config.me.host.securityKey.prfPath} ${./secrets/bitwarden_pw_${name}.age}";
+                    export_encrypt_cmd = "${pkgs.my.fido2-encrypt} -i ${mainKey.securityKey.prfPath} -i ${backupKey.securityKey.prfPath}";
+                  };
               };
             };
           };
@@ -492,6 +593,7 @@
             "Mod+r" = "noctalia msg panel-toggle control-center notifications";
             "Mod+Shift+m" = "noctalia msg panel-toggle control-center weather";
             "Mod+Shift+f" = "noctalia msg panel-toggle launcher \"/fs \"";
+            "Mod+Shift+b" = "noctalia msg plugin me/bitwarden:service all toggle_menu";
 
             "Mod+m" = pkgs.writeShellScript "open-note" ''
               # Try to open an existing note and create a new one otherwise
@@ -513,7 +615,7 @@
 
               exec $TERMINAL $EDITOR "$HOME/notes/$note.org"
             '';
-            "Mod+b" = lib.getExe (import ./_open-bookmark.nix pkgs);
+            "Mod+b" = lib.getExe (import ./_scripts/open-bookmark.nix pkgs);
             "Mod+Shift+p" = "noctalia msg panel-toggle launcher \"/session \"";
           };
         };

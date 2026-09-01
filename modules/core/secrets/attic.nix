@@ -1,5 +1,3 @@
-{ self, ... }:
-
 {
   flake.modules.nixos.secrets =
     {
@@ -27,7 +25,9 @@
 
       systemd.services.attic-watch-store = {
         description = "Attic watch store";
-        wantedBy = [ config.me.target ];
+        wantedBy = [ "multi-user.target" ];
+        wants = [ "network-online.target" ];
+        after = [ "network-online.target" ];
         environment.ATTIC_SERVER = url;
         serviceConfig = {
           LoadCredential = [ "token:${config.sops.secrets.attic_access_token.path}" ];
@@ -39,6 +39,7 @@
           ExecStart = "${lib.getExe pkgs.attic-client} watch-store default";
           Restart = "always";
           RestartSec = 3;
+          StartLimitIntervalSec = "infinity";
           KillMode = "control-group";
           KillSignal = "SIGTERM";
         };

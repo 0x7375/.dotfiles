@@ -1,25 +1,11 @@
-{ self, ... }:
-
 {
   flake.modules.nixos.syncthing =
     {
       pkgs,
-      lib,
       config,
       ...
     }:
     {
-      systemd.services.syncthing-init = {
-        wantedBy = lib.mkForce [ config.me.target ];
-        after = lib.mkForce [ "syncthing.service" ];
-
-        serviceConfig.ExecStartPre = pkgs.writeShellScript "wait-for-syncthing" ''
-          until ${lib.getExe pkgs.curl} -sf http://127.0.0.1:8384/rest/noauth/health > /dev/null; do
-            sleep 0.2
-          done
-        '';
-      };
-
       # allow watching more files
       boot.kernel.sysctl."fs.inotify.max_user_watches" = 524288;
 

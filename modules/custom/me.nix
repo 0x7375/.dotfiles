@@ -47,12 +47,6 @@
           description = "System hostname";
         };
 
-        target = mkOption {
-          type = types.str;
-          default = "multi-user.target";
-          description = "Target to gate expensive services behind";
-        };
-
         networkIps = mkOption {
           type = types.attrsOf (types.attrsOf (types.either types.str (types.attrsOf types.str)));
           default = {

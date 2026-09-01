@@ -81,7 +81,6 @@
         "clone"
         "branch"
         "remote"
-        "reset"
         "revert"
         "restore"
         "stash"

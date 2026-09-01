@@ -528,7 +528,7 @@ local function doExport()
     local password = noctalia.string.trim(result.stdout or "")
     local safePw = shellQuote(password)
     
-    local exportCmd = `BW_PASSWORD={safePw} bw --raw --passwordenv BW_PASSWORD export --format json | {exportPipe} > {outPath}`
+    local exportCmd = `BW_PASSWORD={safePw} BW_SESSION=$(bw unlock --raw --passwordenv BW_PASSWORD) bw --raw export --format json | {exportPipe} > {outPath}`
 
     noctalia.runAsync(exportCmd, function(expRes)
       opInFlight = false

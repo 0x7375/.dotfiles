@@ -1,5 +1,5 @@
 {
-  flake.modules.nixos.cray = { lib, ... }: {
+  flake.modules.nixos.cray = { config, lib, ... }: {
     systemd.coredump.enable = lib.mkForce true;
     boot.supportedFilesystems = [ "ntfs" ];
 
@@ -21,6 +21,11 @@
       cores = 5;
       max-jobs = 4;
     };
+
+    users.users.${config.me.user}.openssh.authorizedKeys.keys = [
+      # woz ssh key to use this machine as a builder for kernel stuff
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIADlBu2PbXjFL1AZYCuyOKDep9/eLiTrqf//42O7oRE7 root@woz"
+    ];
 
     tinted.files.".config/mango/config.conf".value.mouse_accel_profile = "1";
 

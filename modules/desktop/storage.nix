@@ -1,69 +1,15 @@
 { self, ... }:
-let
-  mkKdeConnectConfig =
-    { config, lib }:
-    let
-      inherit (config.me) hostname;
-      kdeconnectHosts = lib.filterAttrs (
-        n: h: n != hostname && h.kdeconnect.id != null && h.kdeconnect.cert != null
-      ) config.me.hosts;
-
-      wrap64 =
-        s:
-        if builtins.stringLength s <= 64 then
-          s
-        else
-          builtins.substring 0 64 s + "\n" + wrap64 (builtins.substring 64 (builtins.stringLength s - 64) s);
-    in
-    {
-      "config".text = # ini
-        ''
-          [General]
-          keyAlgorithm=EC
-          name=${hostname}
-        '';
-
-      "certificate.pem" = {
-        type = "copy";
-        permissions = "0600";
-        text = ''
-          -----BEGIN CERTIFICATE-----
-          ${wrap64 config.me.host.kdeconnect.cert}
-          -----END CERTIFICATE-----
-        '';
-      };
-
-      "trusted_devices".text = lib.concatMapAttrsStringSep "\n" (
-        name: _:
-        let
-          h = config.me.hosts.${name};
-        in
-        ''
-          [${h.kdeconnect.id}]
-          certificate="-----BEGIN CERTIFICATE-----\n${h.kdeconnect.cert}\n-----END CERTIFICATE-----\n"
-          name=${name}
-          protocolVersion=8
-          type=${h.kdeconnect.type}
-        ''
-      ) kdeconnectHosts;
-    };
-in
 {
-  flake.modules.generic.desktop =
-    { config, ... }:
-    {
-      me.hostSecrets."kdeconnect/key".owner = config.me.user;
-    };
-
   flake.modules.nixos.desktop =
     {
       lib,
-      config,
       pkgs,
       ...
     }:
     {
       services.udisks2.enable = true;
+
+      persistUser.directories = [ ".config/kdeconnect" ];
 
       packages = with pkgs; [
         nemo
@@ -74,30 +20,13 @@ in
 
       programs.kdeconnect.enable = true;
 
-      me.hostSecrets."kdeconnect/key" = { };
-
       systemd.user.services.kdeconnect = {
         wantedBy = [ "graphical-session.target" ];
         after = [ "graphical-session.target" ];
-        unitConfig = {
-          ConditionPathExists = config.sops.secrets."kdeconnect/key".path;
-        };
         serviceConfig = {
           ExecStart = lib.getExe' pkgs.kdePackages.kdeconnect-kde "kdeconnectd";
         };
       };
-
-      hj.xdg.config.files =
-        lib.mapAttrs' (n: v: lib.nameValuePair "kdeconnect/${n}" v) (mkKdeConnectConfig {
-          inherit config lib;
-        })
-        // {
-          "kdeconnect/privateKey.pem" = {
-            source = config.sops.secrets."kdeconnect/key".path;
-            permissions = "0600";
-            type = "copy";
-          };
-        };
 
       xdg.mimeApps.defaultApplications = self.lib.mapMimeEntries [
         "application/bzip2"
@@ -129,13 +58,10 @@ in
 
   flake.modules.darwin.desktop =
     {
-      lib,
-      config,
       pkgs,
       ...
     }:
     let
-      kdeconnectDir = "Library/Preferences/kdeconnect";
       kdeconnect-nightly = pkgs.stdenv.mkDerivation rec {
         pname = "kdeconnect-nightly";
         version = "6325";
@@ -153,11 +79,5 @@ in
     in
     {
       packages = [ kdeconnect-nightly ];
-
-      me.hostSecrets."kdeconnect/key".path = "${kdeconnectDir}/privateKey.pem";
-
-      hj.files = lib.mapAttrs' (n: v: lib.nameValuePair "${kdeconnectDir}/${n}" v) (mkKdeConnectConfig {
-        inherit config lib;
-      });
     };
 }

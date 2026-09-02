@@ -165,7 +165,7 @@
 
               local dirty_status=""
               
-              ${lib.getExe' pkgs.coreutils-full "timeout"} 0.05s ${lib.getExe pkgs.git} --no-optional-locks diff-index --quiet HEAD -- 2>/dev/null
+              ${lib.getExe' pkgs.coreutils-full "timeout"} 0.05s ${lib.getExe pkgs.git} diff-index --quiet HEAD -- 2>/dev/null
               local exit_code=$?
               
               if [[ $exit_code == 124 ]]; then

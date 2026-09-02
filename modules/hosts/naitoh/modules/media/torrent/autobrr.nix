@@ -7,6 +7,10 @@
       pkgs,
       ...
     }:
+
+    let
+      graine = inputs.graine.packages.${pkgs.stdenv.hostPlatform.system}.default;
+    in
     {
       me.services.autobrr = {
         subdomain = "auto";
@@ -26,21 +30,19 @@
         };
       };
 
-      systemd.services.graine =
-        let
-          graine = inputs.graine.packages.${pkgs.stdenv.hostPlatform.system}.default;
-        in
-        {
-          script = ''
-            export QBIT_PW=$(cat "${config.sops.secrets."qbittorrent/pw".path}")
-            exec ${graine}/bin/graine http://localhost:${toString config.nixflix.torrentClients.qbittorrent.webuiPort}
-          '';
-          serviceConfig = {
-            Type = "oneshot";
-            StateDirectory = "ratio-filter";
-            WorkingDirectory = "%S/ratio-filter";
-          };
+      packages = [ graine ];
+
+      systemd.services.graine = {
+        script = ''
+          export QBIT_PW=$(cat "${config.sops.secrets."qbittorrent/pw".path}")
+          exec ${graine}/bin/graine http://localhost:${toString config.nixflix.torrentClients.qbittorrent.webuiPort}
+        '';
+        serviceConfig = {
+          Type = "oneshot";
+          StateDirectory = "ratio-filter";
+          WorkingDirectory = "%S/ratio-filter";
         };
+      };
 
       systemd.timers.graine = {
         wantedBy = [ "timers.target" ];

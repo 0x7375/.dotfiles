@@ -14,6 +14,19 @@
       crossPkgs = import inputs.apple-silicon.inputs.nixpkgs {
         localSystem = "x86_64-linux";
         crossSystem = "aarch64-linux";
+        overlays = [
+          inputs.apple-silicon.overlays.default
+          # (final: prev: {
+          #   linux-asahi = prev.linux-asahi.override {
+          #     extraMakeFlags = [ "-j20" ];
+          #   };
+          # })
+        ];
+      };
+
+      systemCrossPkgs = import pkgs.path {
+        localSystem = "x86_64-linux";
+        crossSystem = "aarch64-linux";
         overlays = [ inputs.apple-silicon.overlays.default ];
       };
     in
@@ -59,6 +72,9 @@
       };
 
       boot.kernelPackages = lib.mkOverride 2 (
+        # crossPkgs.linux-asahi.kernel.overrideAttrs (old: {
+        #   makeFlags = (old.makeFlags or [ ]) ++ [ "-j20" ];
+        # })
         (pkgs.linuxPackagesFor crossPkgs.linux-asahi.kernel).extend (
           _: _: {
             inherit (pkgs.linuxPackages) cpupower;
@@ -66,24 +82,35 @@
         )
       );
 
+      persist.directories = [
+        "/root/.ssh"
+      ];
+
       specialisation.fairydust.configuration =
         let
-          fairyDustKernel = crossPkgs.buildLinux {
+          fairyDustKernel = systemCrossPkgs.buildLinux {
             pname = "linux-asahi-fairydust";
-            version = "7.1.9-fairydust";
-            modDirVersion = "7.1.9";
-            extraMeta.branch = "fairydust";
-            src = crossPkgs.fetchFromGitHub {
+
+            version = "7.0.11-fairydust";
+            modDirVersion = "7.0.11";
+            extraMeta.branch = "7.0.11";
+
+            # extraMakeFlags = [ "-j20" ];
+
+            src = systemCrossPkgs.fetchFromGitHub {
               owner = "AsahiLinux";
               repo = "linux";
-              rev = "96775a0e72995e79e13b93755d456cb128dcdc81";
-              hash = "sha256-3WoZ33v0mrb/cesfGPVzl8QEYLS1ASecPb+OEhpc7q0=";
+              rev = "77e0fe0c47e847221988f6397167bc23fec2a042";
+              hash = "sha256-wnNrbpa3dYceQU7ZeJ7eJH6k9QMqswctK/4xxGI9SZE=";
             };
+
+            ignoreConfigErrors = true;
+
             kernelPatches = [
               {
                 name = "Asahi config";
                 patch = null;
-                structuredExtraConfig = with crossPkgs.lib.kernel; {
+                structuredExtraConfig = with systemCrossPkgs.lib.kernel; {
                   ARM64_16K_PAGES = yes;
                   ARM64_MEMORY_MODEL_CONTROL = yes;
                   ARM64_ACTLR_STATE = yes;
@@ -92,6 +119,10 @@
                   HID_APPLE = module;
                   APPLE_PMGR_MISC = yes;
                   APPLE_PMGR_PWRSTATE = yes;
+                  APPLE_MAILBOX = yes;
+                  APPLE_RTKIT = yes;
+                  APPLE_RTKIT_HELPER = yes;
+                  RUST_FW_LOADER_ABSTRACTIONS = yes;
                 };
                 features.rust = true;
               }

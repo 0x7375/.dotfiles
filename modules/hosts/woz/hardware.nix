@@ -4,6 +4,7 @@
   flake.modules.nixos.woz =
     {
       lib,
+      config,
       pkgs,
       modulesPath,
       ...
@@ -57,7 +58,13 @@
         peripheralFirmwareDirectory = inputs.asahi-firmware;
       };
 
-      boot.kernelPackages = lib.mkForce (pkgs.linuxPackagesFor crossPkgs.linux-asahi.kernel);
+      boot.kernelPackages = lib.mkOverride 2 (
+        (pkgs.linuxPackagesFor crossPkgs.linux-asahi.kernel).extend (
+          _: _: {
+            inherit (pkgs.linuxPackages) cpupower;
+          }
+        )
+      );
 
       specialisation.fairydust.configuration =
         let
@@ -93,8 +100,36 @@
         in
         {
           system.nixos.tags = [ "fairydust" ];
-          boot.kernelPackages = lib.mkForce (pkgs.linuxPackagesFor fairyDustKernel);
+          boot.kernelPackages = lib.mkOverride 1 (
+            (pkgs.linuxPackagesFor fairyDustKernel).extend (
+              _: _: {
+                inherit (pkgs.linuxPackages) cpupower;
+              }
+            )
+          );
         };
+
+      # NOTE: for next build: override kernels to use 20 cores explicitely, maybe don't use the nixpkgs from the apple-silicon input to save a nixpkgs instance ig
+      nix.buildMachines = [
+        {
+          hostName = "cray";
+          systems = [ "x86_64-linux" ];
+          protocol = "ssh-ng";
+
+          maxJobs = 2;
+
+          sshUser = config.me.user;
+          sshKey = "/root/.ssh/nix_builder";
+          supportedFeatures = [
+            "benchmark"
+            "big-parallel"
+            "kvm"
+            "nixos-test"
+          ];
+        }
+      ];
+
+      nix.distributedBuilds = true;
 
       boot.initrd.kernelModules = [ ];
       boot.kernelModules = [ ];
